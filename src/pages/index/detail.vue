@@ -14,7 +14,7 @@
 					<div class="user-info">
 						<div class="user">
 							<div class="name">
-								{{postInfo.users.nickname || '匿名'}}
+								{{postInfo.users.nickname || i18n.users.cryptonym}}
 								<text v-show="postInfo.isFocus">{{i18n.users.focus}}</text>
 							</div>
 							<div class="more">
@@ -43,8 +43,8 @@
 		</div>
 		<div class="comment">
 			<div class="clearfix header">
-				<div class="title"><text class="mr-4">评论</text>{{postInfo.commentNumber}}</div>
-				<div class="praise"><text class="mr-4">赞</text>{{postInfo.praise}}</div>
+				<div class="title"><text class="mr-4">{{i18n.index.comment}}</text>{{postInfo.commentNumber}}</div>
+				<div class="praise"><text class="mr-4">{{i18n.index.praise}}</text>{{postInfo.praise}}</div>
 			</div>
 			<div class="comment-list">
 				<view class="comment-item" v-for="(item, index) in commentList" :key="item.id">
@@ -61,7 +61,7 @@
 					</view>
 					<view class="right">
 						<view class="top">
-							<view class="name">{{ item.users.nickname || '匿名'}}<text
+							<view class="name">{{ item.users.nickname || i18n.users.cryptonym}}<text
 									class="address">ID:{{item.users.userAddress.slice(-4)}}</text></view>
 							<view class="like" :class="{ highlight: item.isPraise }">
 								<view class="num">{{ item.praise }}</view>
@@ -83,7 +83,7 @@
 						</view>
 						<view class="bottom">
 							{{ $moment(item.utcTime).format('yyyy-MM-DD HH:mm:ss') }}
-							<view class="reply" @tap="comment(item)">回复</view>
+							<view class="reply" @tap="comment(item)">{{i18n.index.reply}}</view>
 						</view>
 					</view>
 				</view>
@@ -101,12 +101,12 @@
 			</div>
 			<div class="item" @tap="comment()">
 				<fa-FontAwesome type="far fa-comment-alt" size="28" class="mr-10" color="#666">
-				</fa-FontAwesome>评论
+				</fa-FontAwesome>{{i18n.index.comment}}
 			</div>
 			<div class="item" :class="{ highlight: postInfo.isPraise }" @tap="praise('topic')">
 				<u-icon v-show="!postInfo.isPraise" class="mr-10" name="thumb-up" :size="30" color="#666"></u-icon>
 				<u-icon v-show="postInfo.isPraise" class="mr-10" name="thumb-up-fill" color="#f04a82" :size="30">
-				</u-icon>赞
+				</u-icon>{{i18n.index.praise}}
 			</div>
 		</div>
 		<inputComment ref="inputComment" :isShow="isShowComment" :placeholder="placeholder"
