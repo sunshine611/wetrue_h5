@@ -9,7 +9,7 @@
 								<image v-if="userInfo.portrait" :src="userInfo.portrait"></image>
 								<image v-else src="../../static/default_head.png"></image>
 								<u-gap height="1"></u-gap>
-								{{userInfo.userName||'匿名'}}
+								{{userInfo.nickname||'匿名'}}
 							</div>
 							<div class="address" @tap="copy" id="copy">{{address}}</div>
 						</div>
@@ -46,7 +46,7 @@
 					</u-cell-item>
 				</u-cell-group>
 			</div>
-			<!-- <div class="version">版本号：{{version}}</div> -->
+			<div class="version">版本号：{{version}}</div>
 		</div>
 		<div class="login" v-else>
 			<div class="login-box">

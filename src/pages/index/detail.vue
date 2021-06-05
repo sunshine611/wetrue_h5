@@ -15,9 +15,10 @@
 						<div class="user">
 							<div class="name">
 								{{postInfo.users.nickname || '匿名'}}
-								<text v-show="postInfo.isFocus">已关注</text>
+								<text v-show="postInfo.isFocus">{{i18n.users.focus}}</text>
 							</div>
 							<div class="more">
+								<text class="mr-24">{{postInfo.read}} Read</text>
 								<fa-FontAwesome type="fas fa-star" size="28" class="mr-10" color="#ffc107"
 									v-show="postInfo.isStar" @tap="star(postInfo)">
 								</fa-FontAwesome>
@@ -42,8 +43,8 @@
 		</div>
 		<div class="comment">
 			<div class="clearfix header">
-				<div class="title"><text class="mr-6">评论</text>{{postInfo.commentNumber}}</div>
-				<div class="praise"><text class="mr-6">赞</text>{{postInfo.praise}}</div>
+				<div class="title"><text class="mr-4">评论</text>{{postInfo.commentNumber}}</div>
+				<div class="praise"><text class="mr-4">赞</text>{{postInfo.praise}}</div>
 			</div>
 			<div class="comment-list">
 				<view class="comment-item" v-for="(item, index) in commentList" :key="item.id">

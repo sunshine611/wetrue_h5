@@ -10,7 +10,7 @@
 				<div class="form-title">{{i18n.ImportCreate}}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.mnemonic" type="textarea" class="textarea" :clearable="false" height="160"
-					:custom-style="{padding:'15rpx'}" placeholder="one two three..." />
+					:custom-style="{padding:'15rpx'}" placeholder="one two three..." maxlength="220" />
 				<div class="warnning" v-show="warning.mnemonic">{{i18n.login.mnemonicWarning}}</div>
 				<u-gap height="30"></u-gap>
 				<div class="form-title">{{i18n.Setpassword}}</div>
@@ -26,7 +26,7 @@
 			</u-button>
 			<u-gap height="25"></u-gap>
 			<div class="clearfix">
-				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.index}}</div>
+				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.home.index}}</div>
 				<div class="pull-right mnemonic" @tap="goUrl('mnemonic')">{{i18n.Create + ''+ i18n.Mnemonic}}</div>
 			</div>
 		</div>

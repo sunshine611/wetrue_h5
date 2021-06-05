@@ -4,6 +4,7 @@ export default {
 		hotRecommend: '热点推荐',
 		newPic :'最新图片',
 		myFocus: '我的关注',
+		index:'首页',
 	},
 	login:{
 		login:'登录',
@@ -19,7 +20,10 @@ export default {
 		importWallet:'导入钱包',
 		createWallet:'创建钱包',
 	},
-	index:'首页',
+	users:{
+		cryptonym:'匿名',
+		focus:'已关注',
+	},
 	wetrue:'微触',
 	chooselanguage: "Choose Language",
 	edit: "编辑",

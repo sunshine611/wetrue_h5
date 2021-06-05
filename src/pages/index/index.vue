@@ -34,8 +34,8 @@
 					<div class="user-info">
 						<div class="user">
 							<div class="name">
-								{{item.users.nickname || '匿名'}}
-								<text v-show="item.isFocus">已关注</text>
+								{{item.users.nickname || i18n.users.cryptonym}}
+								<text v-show="item.isFocus">{{i18n.users.focus}}</text>
 							</div>
 							<div class="more">
 								<fa-FontAwesome type="fas fa-angle-down" size="36" class="mr-10" color="#cecece"

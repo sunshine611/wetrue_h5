@@ -3,7 +3,8 @@ export default {
 		newRelease: 'Latest release',
 		hotRecommend: 'Hot recommends',
 		newPic: 'Latest pictures',
-		myFocus: 'My attention'
+		myFocus: 'My attention',
+		index:'Index',
 	},
 	login:{
 		login:'Login',
@@ -19,8 +20,11 @@ export default {
 		importWallet:'Import wallet',
 		createWallet:'Create wallet',
 	},
-	index:'Index',
-	wetrue:'Wetrue',
+	users:{
+		cryptonym:'cryptonym',
+		focus:'focus',
+	},
+	wetrue:'WeTrue',
 	chooselanguage: "选择语言",
 	edit: "Edit",
 	balance: "Balance",

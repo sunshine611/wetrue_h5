@@ -21,7 +21,7 @@
 			<u-button size="default" type="primary" shape="circle" ripple @tap="createAccount" :throttle-time="200">{{i18n.login.rebuild}}</u-button>
 			<u-gap height="25"></u-gap>
 			<div class="clearfix">
-				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.index}}</div>
+				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.home.index}}</div>
 				<div class="pull-right mnemonic" @tap="goUrl('login')">{{i18n.login.mnemonicLogin}}</div>
 			</div>
 		</div>
