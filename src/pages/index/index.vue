@@ -189,7 +189,7 @@
 				} else if (this.cateInfo.value === 3) {
 					url = '/Image/list';
 				} else if (this.cateInfo.value === 4) {
-					url = '/User/contentList';
+					url = '/Content/focusList';
 				}
 				this.$http.post(url, params).then(res => {
 					if (res.code === 200) {
