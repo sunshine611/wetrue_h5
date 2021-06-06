@@ -3,17 +3,17 @@
 		<div class="check-box">
 			<div class="title">
 				<u-image width="92rpx" height="46rpx" src="../../static/logo.png" class="inline mr-5"></u-image>
-				验证临时密码
+				{{i18n.login.verify +' '+ i18n.login.securePassword}}
 			</div>
 			<u-gap height="60"></u-gap>
 			<div class="form">
 				<u-gap height="14"></u-gap>
-				<u-input v-model="form.password" class="password" placeholder="请输入临时密码"
+				<u-input v-model="form.password" class="password" placeholder="Password..."
 					:custom-style="{padding:'10rpx 20rpx'}" />
 			</div>
 			<u-gap height="40"></u-gap>
 			<u-button size="default" type="primary" shape="circle" ripple @click="check" :throttle-time="3000"
-				:loading="btnLoading">验证
+				:loading="btnLoading">{{i18n.login.verify}}
 			</u-button>
 			<u-gap height="25"></u-gap>
 			<div class="t-c">
@@ -52,7 +52,7 @@
 					this.btnLoading = true;
 					const secretKey = await this.keystoreToSecretKey(this.form.password);
 					if (!!secretKey) {
-						this.uShowToast('验证成功');
+						this.uShowToast('OK');
 						this.$store.commit('user/SET_PASSWORD', this.form.password);
 						this.getConfigInfo();
 						this.connectAe();
@@ -64,7 +64,7 @@
 						}, 1000);
 					}
 				} catch (error) {
-					this.uShowToast('验证失败');
+					this.uShowToast('Error');
 					this.btnLoading = false;
 				}
 			}
