@@ -31,7 +31,7 @@
 			</view>
 		</view>
 		<view class="all-reply">
-			<view class="all-reply-top"><text class="mr-6">全部回复</text>{{ replyList.length }}</view>
+			<view class="all-reply-top"><text class="mr-6">{{ i18n.index.allReply }}</text>{{ replyList.length }}</view>
 			<view class="item" v-for="(item, index) in replyList" :key="index">
 				<view class="comment">
 					<view class="top">
@@ -107,6 +107,12 @@
 			this.hash = option.hash;
 			this.getCommentInfo();
 			this.getReply();
+		},
+		computed: {
+			//国际化
+			i18n() {
+				return this.$_i18n.messages[this.$_i18n.locale]
+			},
 		},
 		methods: {
 			//获取评论详情

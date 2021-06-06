@@ -79,7 +79,7 @@
 		</div>
 		<u-action-sheet :list="moreList" v-model="moreShow" @click="handleOpera"></u-action-sheet>
 		<div class="empty" v-show="postList.length === 0">
-			<u-empty :text="i18n.noData" mode="list"></u-empty>
+			<u-empty :text="i18n.index.noData" mode="list"></u-empty>
 		</div>
 		<u-loadmore bg-color="rgba(0,0,0,0)" margin-bottom="20" :status="more" v-show="postList.length > 0" />
 	</view>
@@ -160,17 +160,17 @@
 			//显示更多操作
 			moreList() {
 				return [{
-					text: this.i18n.Following,
-					subText: this.i18n.FollowUser
+					text: this.i18n.index.focus,
+					subText: this.i18n.index.focusText
 				}, {
-					text: this.i18n.complain,
-					subText: this.i18n.complainContent
+					text: this.i18n.index.complain,
+					subText: this.i18n.index.complainText
 				}, {
-					text: this.i18n.Aeternal,
-					subText: this.i18n.AeternalContent
+					text: this.i18n.index.aeternal,
+					subText: this.i18n.index.aeternalText
 				}, {
-					text: this.i18n.AEKnow,
-					subText: this.i18n.AEKnowContent
+					text: this.i18n.index.aeknow,
+					subText: this.i18n.index.aeknowText
 				}]
 			}
 		},
@@ -237,13 +237,13 @@
 				this.moreShow = true;
 				if (this.currentForum.isFocus) {
 					this.moreList[0] = {
-						text: this.i18n.cancelFollowing,
-						subText: this.i18n.cancelFollowingUser
+						text: this.i18n.index.cancelFocus,
+						subText: this.i18n.index.cancelFocusText
 					}
 				} else {
 					this.moreList[0] = {
-						text: this.i18n.Following,
-						subText: this.i18n.FollowUser
+						text: this.i18n.index.focus,
+						subText: this.i18n.index.focusText
 					}
 				}
 			},

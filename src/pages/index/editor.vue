@@ -5,8 +5,8 @@
 				<u-button type="primary" size="mini" :disabled="form.text.length===0" @click="release"  :loading="btnLoading">发布</u-button>
 			</div>
 		</u-navbar>
-		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="2000"
-			placeholder="WeTrue 记你所想..." :clearable="false" />
+		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="5000"
+			:placeholder="i18n.index.wetrueTips" :clearable="false" />
 	</div>
 </template>
 
@@ -26,12 +26,18 @@
 		activated(){
 			this.isPassword();
 		},
+		computed: {
+			//国际化
+			i18n() {
+				return this.$_i18n.messages[this.$_i18n.locale]
+			},
+		},
 		methods: {
 			//发布
 			async release() {
 				this.btnLoading = true;
 				uni.showLoading({
-					title: '发布中...'
+					title: this.i18n.index.inChain
 				});
 				let payload = {
 					content: this.form.text

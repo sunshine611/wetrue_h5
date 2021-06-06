@@ -14,9 +14,9 @@
 					<div class="user-info">
 						<div class="user">
 							<div class="name">
-								{{postInfo.users.nickname || i18n.users.cryptonym}}
+								{{postInfo.users.nickname || i18n.users.cryptonym}}					
 								<text v-show="postInfo.isFocus">{{i18n.users.focus}}</text>
-							</div>
+							</div>					
 							<div class="more">
 								<text class="mr-24">{{postInfo.read}} Read</text>
 								<fa-FontAwesome type="fas fa-star" size="28" class="mr-10" color="#ffc107"
@@ -27,7 +27,8 @@
 							</div>
 						</div>
 						<div class="time">
-							<text>ID:{{postInfo.users.userAddress.slice(-4)}}</text>{{$moment(postInfo.utcTime).fromNow()}}
+							<text>ID:{{postInfo.users.userAddress.slice(-4)}}</text>
+							{{$moment(postInfo.utcTime).fromNow()}}
 						</div>
 					</div>
 				</div>
@@ -77,7 +78,7 @@
 								<view class="text"><text class="name">{{item.users.nickname || item.users.userAddress.slice(-4)}}</text>：<u-parse class="parse" :html="item.payload"></u-parse></view>
 							</view>
 							<view class="all-reply" @tap="goUrl('reply?hash='+item.hash)" v-if="!!item.commentList">
-								共{{ item.replyNumber }}条回复
+								{{ item.replyNumber + i18n.index.theReply }}
 								<u-icon class="more" name="arrow-right" :size="26"></u-icon>
 							</view>
 						</view>
@@ -89,7 +90,7 @@
 				</view>
 			</div>
 			<div class="pt-100 pb-100" v-show="commentList.length === 0">
-				<u-empty :text="i18n.noData" mode="list"></u-empty>
+				<u-empty :text="i18n.index.noData" mode="list"></u-empty>
 			</div>
 		</div>
 		<u-loadmore bg-color="rgba(0,0,0,0)" margin-bottom="20" :status="more" v-show="commentList.length > 0" />
@@ -97,7 +98,7 @@
 		<div class="bar-opera" v-show="!isShowComment">
 			<div class="item" @tap="reward">
 				<fa-FontAwesome type="fas fa-coins" size="28" class="mr-10" color="#666"></fa-FontAwesome>
-				打赏
+				{{i18n.index.reward}}
 			</div>
 			<div class="item" @tap="comment()">
 				<fa-FontAwesome type="far fa-comment-alt" size="28" class="mr-10" color="#666">
@@ -214,7 +215,7 @@
 			comment(item) {
 				if (!this.validLogin()) {
 					uni.showToast({
-						title: '请先登陆',
+						title: this.i18n.index.pleaseLogin,
 						icon: 'none'
 					});
 					setTimeout(() => {
@@ -227,11 +228,11 @@
 				this.isShowComment = true;
 				if (item) {
 					let name = !!item.users.nickname ? item.users.nickname : item.users.userAddress.slice(-4)
-					this.placeholder = '回复@' + name;
+					this.placeholder = this.i18n.index.reply +' @' + name;
 					this.commentType = 'reply';
 					this.currentComment = item;
 				} else {
-					this.placeholder = '写评论...';
+					this.placeholder = this.i18n.index.comment + '...';
 					this.commentType = 'comment';
 				}
 			},
@@ -239,7 +240,7 @@
 			async submitComment(content) {
 				let res;
 				uni.showLoading({
-					title: '上链中'
+					title: this.i18n.index.inChain
 				});
 				if(this.commentType==='comment'){
 					let payload = {
