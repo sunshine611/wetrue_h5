@@ -46,7 +46,7 @@
 				<div class="praise"><text class="mr-6">赞</text>{{postInfo.praise}}</div>
 			</div>
 			<div class="comment-list">
-				<view class="comment-item" v-for="(item, index) in commentList" :key="item.id">
+				<view class="comment-item" v-for="item in commentList" :key="item.hash">
 					<view class="left">
 						<div class="head-box">
 							<image class="user-head" mode="aspectFill" :src="item.users.portrait"
