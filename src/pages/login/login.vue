@@ -35,6 +35,7 @@
 
 <script>
 	import {
+		generateSaveHDWallet,
 		getHdWalletAccountFromMnemonic
 	} from '@aeternity/aepp-sdk/es/utils/hd-wallet'
 	import {
@@ -67,6 +68,12 @@
 		methods: {
 			//导入助记词
 			async importMnemonic() {
+				try{
+					await generateSaveHDWallet(this.form.mnemonic, 0);
+				}catch(err){
+					this.warning.mnemonic = true;
+					return;
+				}
 				if (!this.form.mnemonic) {
 					this.warning.mnemonic = true;
 					return;
