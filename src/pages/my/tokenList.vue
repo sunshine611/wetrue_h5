@@ -7,7 +7,7 @@
         :key="item.contract"
         :title="item.tokenname"
         :value="balanceFormat(item.balance)"
-        @click="goUrl('tokenTransferRecode?contract=' + item.contract)"
+        @click="goUrl(`tokenTransferRecode?contract=${item.contract}&tokenName=${item.tokenname}`)"
       ></u-cell-item>
     </u-cell-group>
   </div>

@@ -5,23 +5,23 @@
         <u-cell-item
           v-if="item.sender_id === token"
           :title="
-            `接收方地址：${item.sender_id.slice(0, 6)}...${item.sender_id.slice(
-              -5
+            `接收方地址：${item.recipient_id.slice(0, 6)}...${item.recipient_id.slice(
+              -4
             )}`
           "
           :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          :value="balanceFormat(item.amount)"
+          :value="balanceFormat(item.amount) + tokenName"
           @click="view(item.txhash)"
         ></u-cell-item>
         <u-cell-item
           v-else
           :title="
             `发送方地址：${item.sender_id.slice(0, 6)}...${item.sender_id.slice(
-              -5
+              -4
             )}`
           "
           :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          :value="balanceFormat(item.amount)"
+          :value="balanceFormat(item.amount) + tokenName"
           @click="view(item.txhash)"
         ></u-cell-item>
       </div>
@@ -40,6 +40,7 @@ export default {
   components: { uEmpty },
   data() {
     return {
+      tokenName: "", //token名字
       contract: "", //合约编号
       recodeList: [], //转账记录列表
     };
@@ -52,6 +53,7 @@ export default {
     },
   },
   onLoad(option) {
+    this.tokenName = option.tokenName;
     this.contract = option.contract;
     this.isPassword();
     this.getTokenRecodeList();
@@ -75,9 +77,9 @@ export default {
         });
     },
     //查看详情
-    view(hash){
-      window.open('https://www.aeknow.org/block/transaction/' + hash);
-    }
+    view(hash) {
+      window.open("https://www.aeknow.org/block/transaction/" + hash);
+    },
   },
 };
 </script>
