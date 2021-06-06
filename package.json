@@ -89,10 +89,10 @@
     "jest": "^25.4.0",
     "mini-types": "*",
     "miniprogram-api-typings": "*",
-    "postcss-comment": "^2.0.0",
-    "vue-template-compiler": "^2.6.11",
     "node-sass": "^4.9.4",
-    "sass-loader": "^6.0.6"
+    "postcss-comment": "^2.0.0",
+    "sass-loader": "^10.2.0",
+    "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
     "Android >= 4",

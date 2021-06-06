@@ -107,7 +107,7 @@ const mixins = {
 			}
 		},
 		//AE交易
-		async connectAe(payload, type) {
+		async connectAe() {
 			try {
 				const secretKey = await this.keystoreToSecretKey(store.state.user.password);
 				const node = await Node({
