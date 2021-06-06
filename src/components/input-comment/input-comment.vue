@@ -8,7 +8,7 @@
 						:maxlength="100000" />
 				</view>
 				<div class="comment-submit">
-					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">发送</u-button>
+					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">{{i18n.components.send}}</u-button>
 				</div>
 			</view>
 		</view>
@@ -34,10 +34,16 @@
 				btnLoading: false,
 			}
 		},
+		computed: {
+			//国际化
+			i18n() {
+				return this.$_i18n.messages[this.$_i18n.locale]
+			},
+		},
 		methods: {
 			submitComment() {
 				if (!this.content) {
-					this.uShowToast('请输入内容');
+					this.uShowToast(this.i18n.components.enterContent);
 					return false;
 				}
 				this.btnLoading = true;
