@@ -9,22 +9,22 @@
 								<image v-if="userInfo.portrait" :src="userInfo.portrait"></image>
 								<image v-else src="../../static/default_head.png"></image>
 								<u-gap height="1"></u-gap>
-								{{userInfo.userName||'匿名'}}
+								{{userInfo.nickname || i18n.users.cryptonym}}
 							</div>
 							<div class="address" @tap="copy" id="copy">{{address}}</div>
 						</div>
 						<div class="user-bottom">
 							<div class="item">
 								<div class="value">{{userInfo.active||0}}</div>
-								<div class="label">活跃度</div>
+								<div class="label">{{i18n.my.active}}</div>
 							</div>
 							<div class="item">
 								<div class="value">{{userInfo.focus||0}}</div>
-								<div class="label">关注</div>
+								<div class="label">{{i18n.my.focus}}</div>
 							</div>
 							<div class="item">
 								<div class="value">{{userInfo.fans||0}}</div>
-								<div class="label">粉丝</div>
+								<div class="label">{{i18n.my.fans}}</div>
 							</div>
 						</div>
 					</div>
@@ -46,18 +46,18 @@
 					</u-cell-item>
 				</u-cell-group>
 			</div>
-			<!-- <div class="version">版本号：{{version}}</div> -->
+			<div class="version">{{i18n.my.version}}：{{version}}</div>
 		</div>
 		<div class="login" v-else>
 			<div class="login-box">
 				<div class="item" @tap="goUrl('../login/login')">
 					<fa-FontAwesome slot="icon" type="fas fa-wallet" size="48" class="mr-20" color="#f04a82">
-					</fa-FontAwesome>导入钱包
+					</fa-FontAwesome>{{i18n.login.login}}
 				</div>
 				<u-gap height="80"></u-gap>
 				<div class="item" @tap="goUrl('../login/mnemonic')">
 					<fa-FontAwesome slot="icon" type="fas fa-plus-circle" size="48" class="mr-20" color="#f04a82">
-					</fa-FontAwesome>创建钱包
+					</fa-FontAwesome>{{i18n.login.createAccount}}
 				</div>
 			</div>
 		</div>
