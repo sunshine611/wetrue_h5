@@ -3,11 +3,11 @@
 		<div class="login-box">
 			<div class="title">
 				<u-image width="92rpx" height="46rpx" src="../../static/logo.png" class="inline mr-5"></u-image>
-				{{i18n.Create+''+i18n.Account}}
+				{{i18n.login.createAccount}}
 			</div>
 			<u-gap height="60"></u-gap>
 			<div class="form">
-				<div class="form-title">{{i18n.Create+''+i18n.Account}}</div>
+				<div class="form-title">{{i18n.login.createAccount}}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.address" type="textarea" class="address" :clearable="false" height="120"
 					:custom-style="{padding:'15rpx'}" disabled />
