@@ -64,7 +64,7 @@
 						}, 1000);
 					}
 				} catch (error) {
-					this.uShowToast('Error');
+					alert(error)
 					this.btnLoading = false;
 				}
 			}

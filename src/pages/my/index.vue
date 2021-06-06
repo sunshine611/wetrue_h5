@@ -32,7 +32,7 @@
 			</div>
 			<div class="menu">
 				<u-cell-group :border="false">
-					<u-cell-item :title="i18n.my.myWallet" :value="'AE：'+balance">
+					<u-cell-item :title="i18n.my.myWallet" :value="'AE：'+balance" @click="goUrl('tokenList')">
 						<fa-FontAwesome slot="icon" type="fas fa-wallet" size="32" class="mr-10" color="#f04a82">
 						</fa-FontAwesome>
 					</u-cell-item>
@@ -40,7 +40,7 @@
 						<fa-FontAwesome slot="icon" type="fab fa-linode" size="32" class="mr-10" color="#f04a82">
 						</fa-FontAwesome>
 					</u-cell-item>
-					<u-cell-item :title="i18n.my.logout" @click="exit" :border-bottom="false" @tap="logout">
+					<u-cell-item :title="i18n.my.logout" :border-bottom="false" @click="logout">
 						<fa-FontAwesome slot="icon" type="fas fa-sign-out-alt" size="32" class="mr-10" color="#f04a82">
 						</fa-FontAwesome>
 					</u-cell-item>

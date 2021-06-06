@@ -119,7 +119,8 @@
             "https" : false
         },
         "router" : {
-            "base" : "./"
+            "base" : "./",
+            "mode" : "hash"
         },
         "title" : "WeTrue"
     }

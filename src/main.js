@@ -3,7 +3,7 @@ import App from './App';
 import uView from 'uview-ui';
 import i18n from './lang'; // Internationalization
 import http from '@/util/request.js';
-import store from './store';
+import store from 'store';
 import moment from 'moment';
 import './mixins/install'
 Vue.prototype.$http = http;

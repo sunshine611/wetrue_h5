@@ -72,6 +72,7 @@ const mixins = {
 				delta: delta
 			});
 		},
+		//余额格式化
 		balanceFormat(balance) {
 			return (parseInt(balance) / 1000000000000000000).toFixed(4);
 		},
