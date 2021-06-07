@@ -73,6 +73,11 @@
 			margin-right: $rpx;
 		}
 
+		.ml-#{$i} {
+			margin-left: $rpx;
+		}
+
+
 		.mt-#{$i} {
 			margin-top: $rpx;
 		}

@@ -1,29 +1,55 @@
 <template>
   <div class="token-list">
-    <u-cell-group v-if="recodeList.length > 0">
+    <u-cell-group v-if="recodeList.length > 0" class="cell-box">
       <div v-for="item in recodeList" :key="item.txhash">
         <u-cell-item
+          class="cell-out"
           v-if="item.sender_id === token"
-          :title="
-            `接收方地址：${item.recipient_id.slice(0, 6)}...${item.recipient_id.slice(
-              -4
-            )}`
-          "
           :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          :value="balanceFormat(item.amount) + tokenName"
           @click="view(item.txhash)"
-        ></u-cell-item>
+        >
+          <div slot="icon" class="icon">
+            <fa-FontAwesome
+              type="fas fa-arrow-circle-up"
+              size="50"
+              class="mr-20"
+              color="#f34343"
+            >
+            </fa-FontAwesome>
+          </div>
+          <div slot="title">
+            {{
+              item.recipient_id.slice(0, 3) +
+                "..." +
+                item.recipient_id.slice(-4)
+            }}
+          </div>
+          <div slot="right-icon" class="amount">
+            {{ "-" + balanceFormat(item.amount) + " " + tokenName || "AE" }}
+          </div>
+        </u-cell-item>
         <u-cell-item
+          class="cell-in"
           v-else
-          :title="
-            `发送方地址：${item.sender_id.slice(0, 6)}...${item.sender_id.slice(
-              -4
-            )}`
-          "
           :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          :value="balanceFormat(item.amount) + tokenName"
           @click="view(item.txhash)"
-        ></u-cell-item>
+        >
+          <div slot="icon" class="icon">
+            <fa-FontAwesome
+              type="fas fa-arrow-circle-down"
+              size="50"
+              class="mr-20"
+              color="#76bf0c"
+            >
+            </fa-FontAwesome>
+          </div>
+          <div slot="title">
+            {{ item.sender_id.slice(0, 3) + "..." + item.sender_id.slice(-4) }}
+          </div>
+          <div slot="right-icon" class="amount">
+            {{ "+" + balanceFormat(item.amount) + " " + tokenName || "AE" }}
+          </div>
+        </u-cell-item>
       </div>
     </u-cell-group>
     <div class="empty" v-else><u-empty mode="list"></u-empty></div>
@@ -56,11 +82,19 @@ export default {
     this.tokenName = option.tokenName;
     this.contract = option.contract;
     this.isPassword();
-    this.getTokenRecodeList();
+    if (!!this.contract) {
+      this.getTokenRecodeList();
+    } else {
+      this.getAeRecodeList();
+    }
   },
   //上拉刷新
   onPullDownRefresh() {
-    this.getTokenRecodeList();
+    if (!!this.contract) {
+      this.getTokenRecodeList();
+    } else {
+      this.getAeRecodeList();
+    }
     setTimeout(function() {
       uni.stopPullDownRefresh();
     }, 500);
@@ -76,6 +110,14 @@ export default {
           }
         });
     },
+    //获取AE转账记录列表
+    getAeRecodeList() {
+      http.get(`${aeknow}api/spendtx/${this.token}`).then((res) => {
+        if (res.data.length > 0) {
+          this.recodeList = res.data.txs;
+        }
+      });
+    },
     //查看详情
     view(hash) {
       window.open("https://www.aeknow.org/block/transaction/" + hash);
@@ -83,3 +125,19 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.token-list {
+  .cell-box {
+    .cell-in {
+      .amount {
+        color: #76bf0c;
+      }
+    }
+    .cell-out {
+      .amount {
+        color: #f34343;
+      }
+    }
+  }
+}
+</style>

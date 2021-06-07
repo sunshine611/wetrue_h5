@@ -1,7 +1,7 @@
 <template>
   <div class="token-list">
     <u-cell-group>
-      <u-cell-item title="AE" :value="aeBalance"></u-cell-item>
+      <u-cell-item title="AE" :value="aeBalance" @click="goUrl(`tokenTransferRecode`)"></u-cell-item>
       <u-cell-item
         v-for="item in tokenList"
         :key="item.contract"
