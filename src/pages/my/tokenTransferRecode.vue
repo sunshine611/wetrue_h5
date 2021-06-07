@@ -25,7 +25,7 @@
             }}
           </div>
           <div slot="right-icon" class="amount">
-            {{ "-" + balanceFormat(item.amount) + " " + tokenName || "AE" }}
+            {{ "-" + balanceFormat(item.amount) + " " + (tokenName || "AE") }}
           </div>
         </u-cell-item>
         <u-cell-item
@@ -47,7 +47,7 @@
             {{ item.sender_id.slice(0, 3) + "..." + item.sender_id.slice(-4) }}
           </div>
           <div slot="right-icon" class="amount">
-            {{ "+" + balanceFormat(item.amount) + " " + tokenName || "AE" }}
+            {{ "+" + balanceFormat(item.amount) + " " + (tokenName || "AE") }}
           </div>
         </u-cell-item>
       </div>
@@ -113,7 +113,7 @@ export default {
     //获取AE转账记录列表
     getAeRecodeList() {
       http.get(`${aeknow}api/spendtx/${this.token}`).then((res) => {
-        if (res.data.length > 0) {
+        if (res.data.txs.length > 0) {
           this.recodeList = res.data.txs;
         }
       });
