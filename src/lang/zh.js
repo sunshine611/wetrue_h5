@@ -16,6 +16,8 @@ export default {
 		input:'输入',
 		verify:'验证',
 		securePassword:'安全密码',
+		mnemonicFormat:'助记词格式错误',
+		passwordTips:'输入安全密码...',
 	},
 	my:{
 		myWallet:'我的钱包',
@@ -54,6 +56,7 @@ export default {
 		theReply:'条回复',
 		wetrueTips: "WeTrue 记你所想...",
 		allReply: "全部回复",
+		send:'发送',
 	},
 	components:{
 		send:'发送',

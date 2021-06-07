@@ -12,7 +12,7 @@
 				<u-input v-model="form.mnemonic" type="textarea" class="textarea" :clearable="false" height="160"
 					:custom-style="{padding:'15rpx'}" placeholder="one two three..." maxlength="220" />
 				<div class="warnning" v-show="warning.mnemonic">{{i18n.login.mnemonicWarning}}</div>
-				<div class="warnning" v-show="warning.mnemonicFormat">助记词格式错误</div>
+				<div class="warnning" v-show="warning.mnemonicFormat">{{i18n.login.mnemonicFormat}}</div>
 				<u-gap height="30"></u-gap>
 				<div class="form-title">{{i18n.Setpassword}}</div>
 				<u-gap height="14"></u-gap>
