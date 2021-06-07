@@ -2,7 +2,7 @@
 	<div class="editor">
 		<u-navbar back-text="" title="发布主贴" :border-bottom="false">
 			<div slot="right" class="right-btn">
-				<u-button type="primary" size="mini" :disabled="form.text.length===0" @click="release"  :loading="btnLoading">发布</u-button>
+				<u-button type="primary" size="mini" :disabled="form.text.length===0" @click="release"  :loading="btnLoading">{{i18n.index.send}}</u-button>
 			</div>
 		</u-navbar>
 		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="5000"

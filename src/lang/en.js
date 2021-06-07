@@ -8,7 +8,7 @@ export default {
 	},
 	login:{
 		login:'Login',
-		createAccount: "Create New Account",
+		createAccount: 'Create New Account',
 		mnemonicLogin:'Mnemonic login',
 		rebuild:'Rebuild',
 		mnemonicWarning:"Mnemonic can't be empty,Usually 12 words(space interval)",
@@ -16,6 +16,8 @@ export default {
 		input:'Input',
 		verify:'Verify',
 		securePassword:'Secure Password',
+		mnemonicFormat:'Mnemonic Format Error',
+		passwordTips:'Enter Secure Password...',
 	},
 	my:{
 		myWallet:'My wallet',
@@ -54,6 +56,7 @@ export default {
 		theReply:' The Reply',
 		wetrueTips: "Recording your willings with WeTrue...",
 		allReply: "All Reply",
+		send:'Send',
 	},
 	components:{
 		send:'Send',

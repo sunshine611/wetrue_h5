@@ -8,7 +8,7 @@
 			<u-gap height="60"></u-gap>
 			<div class="form">
 				<u-gap height="14"></u-gap>
-				<u-input v-model="form.password" class="password" placeholder="Password..."
+				<u-input v-model="form.password" class="password" :placeholder="i18n.login.passwordTips"
 					:custom-style="{padding:'10rpx 20rpx'}" />
 			</div>
 			<u-gap height="40"></u-gap>
