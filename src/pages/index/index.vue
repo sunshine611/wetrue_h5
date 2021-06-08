@@ -44,7 +44,7 @@
 							</div>
 						</div>
 						<div class="time">
-							<text>ID:{{item.users.userAddress.slice(-4)}}</text>{{$moment(item.utcTime).fromNow()}}
+							<text>ID:{{item.users.userAddress.slice(-4)}}</text><text>{{$moment(item.utcTime).fromNow() +' '+ i18n.index.source + item.source}}</text>
 						</div>
 					</div>
 				</div>

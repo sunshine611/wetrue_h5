@@ -141,6 +141,7 @@ const mixins = {
 			const configInfo = getStore('configInfo');
 			let content = {
 				WeTrue: configInfo.WeTrue,
+				type: "WeTrue",
 				type: "topic",
 				content: payload.content
 			};
