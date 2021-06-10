@@ -24,7 +24,9 @@
             <div class="user">
               <div class="name">
                 {{ postInfo.users.nickname || i18n.users.cryptonym }}
-                <text class="userid">ID:{{postInfo.users.userAddress.slice(-4)}}</text>
+                <text class="userid"
+                  >ID:{{ postInfo.users.userAddress.slice(-4) }}</text
+                >
                 <text v-show="postInfo.isFocus">{{ i18n.users.focus }}</text>
               </div>
               <div class="more">
@@ -58,13 +60,14 @@
               </div>
             </div>
             <div class="time">
-              <text>{{$moment(postInfo.utcTime).fromNow()}}</text>{{i18n.index.source + postInfo.source}}
+              <text>{{ $moment(postInfo.utcTime).fromNow() }}</text
+              >{{ i18n.index.source + postInfo.source }}
             </div>
           </div>
         </div>
         <div class="main-content">
           <div class="text-content">
-            <u-parse :html="postInfo.payload"></u-parse>
+            <rich-text :nodes="postInfo.payload"></rich-text>
           </div>
           <div class="img-list">
             <u-image
@@ -136,8 +139,8 @@
               </view>
             </view>
             <view class="content"
-              ><u-parse :html="item.payload"></u-parse
-            ></view>
+              >
+              <rich-text :nodes="item.payload"></rich-text></view>
             <view class="reply-box" v-show="item.commentList.length > 0">
               <view
                 class="item"
@@ -148,8 +151,7 @@
                   ><text class="name">{{
                     item.users.nickname || item.users.userAddress.slice(-4)
                   }}</text
-                  >：<u-parse class="parse" :html="item.payload"></u-parse
-                ></view>
+                  >：<rich-text :nodes="item.payload"></rich-text></view>
               </view>
               <view
                 class="all-reply"

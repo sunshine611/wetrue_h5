@@ -15,7 +15,10 @@
 <style lang="scss">
 	/*每个页面公共css */
 	@import "uview-ui/index.scss";
-
+	body{
+		max-width: 720px;
+		margin:0 auto;
+	}
 	page {
 		background-color: #efefef;
 	}

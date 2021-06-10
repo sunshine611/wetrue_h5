@@ -51,7 +51,7 @@
 				</div>
 				<div class="main-content" @tap="goUrl('detail?hash='+item.hash)">
 					<div class="text-content">
-						<u-parse :html="item.payload"></u-parse>
+						<rich-text :nodes="item.payload"></rich-text>
 					</div>
 					<div class="img-list">
 						<u-image width="150rpx" height="150rpx" :src="item.imgTx" v-if="item.imgTx"></u-image>

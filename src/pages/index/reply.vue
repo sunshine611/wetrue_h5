@@ -27,7 +27,7 @@
 				</view>
 			</view>
 			<view class="content">
-				<u-parse :html="commentInfo.payload"></u-parse>
+				<rich-text :nodes="commentInfo.payload"></rich-text>
 			</view>
 		</view>
 		<view class="all-reply">
@@ -60,7 +60,7 @@
 								@click="praise('reply',item)"></u-icon>
 						</view>
 					</view>
-					<view class="content"><u-parse :html="item.payload"></u-parse></view>
+					<view class="content"><rich-text :nodes="item.payload"></rich-text></view>
 				</view>
 			</view>
 		</view>
