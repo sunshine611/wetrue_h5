@@ -69,6 +69,11 @@ export default {
       tokenName: "", //token名字
       contract: "", //合约编号
       recodeList: [], //转账记录列表
+      //分页信息
+      pageInfo:{
+        limit:20,
+        offset:0
+      }
     };
   },
   computed: {

@@ -74,7 +74,7 @@ const mixins = {
 		},
 		//余额格式化
 		balanceFormat(balance) {
-			return (parseInt(balance) / 1000000000000000000).toFixed(4);
+			return (parseInt(balance) / Math.pow(10,18)).toFixed(4);
 		},
 		//获取后端信息
 		getConfigInfo() {
