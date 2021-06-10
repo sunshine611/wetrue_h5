@@ -35,6 +35,7 @@
 						<div class="user">
 							<div class="name">
 								{{item.users.nickname || i18n.users.cryptonym}}
+								<text class="userid">ID:{{item.users.userAddress.slice(-4)}}</text>
 								<text v-show="item.isFocus">{{i18n.users.focus}}</text>
 							</div>
 							<div class="more">
@@ -44,7 +45,7 @@
 							</div>
 						</div>
 						<div class="time">
-							<text>ID:{{item.users.userAddress.slice(-4)}}</text>{{$moment(item.utcTime).fromNow()}}
+							<text>{{$moment(item.utcTime).fromNow()}}</text>{{i18n.index.source + item.source}}
 						</div>
 					</div>
 				</div>
@@ -417,6 +418,11 @@
 									font-size: 20rpx;
 									margin-left: 20rpx;
 								}
+							}
+							text.userid {
+								font-size: 24rpx;
+								color: #91908e;
+								width: 100%;
 							}
 						}
 

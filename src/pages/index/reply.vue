@@ -31,7 +31,7 @@
 			</view>
 		</view>
 		<view class="all-reply">
-			<view class="all-reply-top"><text class="mr-6">{{ i18n.index.allReply }}</text>{{ replyList.length }}</view>
+			<view class="all-reply-top"><text class="mr-6">{{ i18n.index.allReply }}</text>{{ pageInfo.totalSize }}</view>
 			<view class="item" v-for="(item, index) in replyList" :key="index">
 				<view class="comment">
 					<view class="top">
@@ -84,7 +84,8 @@
 				pageInfo: {
 					page: 1,
 					pageSize: 10,
-					totalPage: 1
+					totalPage: 1,
+					totalSize: 0
 				}, //页码信息
 				more: 'loadmore', //加载更多
 			};
@@ -136,11 +137,12 @@
 				this.$http.post('/Reply/list', params).then(res => {
 					if (res.code === 200) {
 						this.pageInfo.totalPage = parseInt(res.data.totalPage);
+						this.pageInfo.totalSize = parseInt(res.data.totalSize);
 						this.more = 'loadmore';
 						if (this.pageInfo.page === 1) {
 							this.replyList = res.data.data;
 						} else {
-							if (this.pageInfo.page >= this.pageInfo.totalPage) {
+							if (this.pageInfo.page > this.pageInfo.totalPage) {
 								this.pageInfo.page = this.pageInfo.totalPage;
 								this.more = 'nomore';
 							} else {
