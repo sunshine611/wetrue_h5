@@ -24,6 +24,7 @@
             <div class="user">
               <div class="name">
                 {{ postInfo.users.nickname || i18n.users.cryptonym }}
+                <text class="userid">ID:{{postInfo.users.userAddress.slice(-4)}}</text>
                 <text v-show="postInfo.isFocus">{{ i18n.users.focus }}</text>
               </div>
               <div class="more">
@@ -57,8 +58,7 @@
               </div>
             </div>
             <div class="time">
-              <text>ID:{{ postInfo.users.userAddress.slice(-4) }}</text>
-              {{ $moment(postInfo.utcTime).fromNow() }}
+              <text>{{$moment(postInfo.utcTime).fromNow()}}</text>{{i18n.index.source + postInfo.source}}
             </div>
           </div>
         </div>
@@ -499,6 +499,11 @@ export default {
                 font-size: 20rpx;
                 margin-left: 20rpx;
               }
+            }
+            text.userid {
+              font-size: 24rpx;
+              color: #91908e;
+              width: 100%;
             }
           }
 

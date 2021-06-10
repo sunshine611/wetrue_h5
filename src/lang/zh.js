@@ -57,6 +57,7 @@ export default {
 		wetrueTips: "WeTrue 记你所想...",
 		allReply: "全部回复",
 		send:'发送',
+		source:'来自:',
 	},
 	components:{
 		send:'发送',

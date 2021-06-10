@@ -57,6 +57,7 @@ export default {
 		wetrueTips: "Recording your willings with WeTrue...",
 		allReply: "All Reply",
 		send:'Send',
+		source:'Source:',
 	},
 	components:{
 		send:'Send',
