@@ -704,7 +704,8 @@ export default {
   .bar-opera {
     position: fixed;
     height: 80rpx;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 0;
     width: 100%;
     background-color: #f9f9f9;
@@ -712,6 +713,7 @@ export default {
     justify-content: space-around;
     border-top: 1rpx solid #d9d9d9;
     z-index: 50;
+    max-width: 720px;
 
     .item {
       display: flex;

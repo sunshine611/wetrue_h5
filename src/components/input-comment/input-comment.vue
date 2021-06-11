@@ -71,9 +71,11 @@
 	.comment-other {
 		position: fixed;
 		top: 0;
-		left: 0;
+		left: 50%;
+		transform: translateX(-50%);
 		width: 100%;
 		height: 100%;
+		max-width: 720px;
 		background-color: rgba(0, 0, 0, 0.5);
 		z-index: 100;
 	}
@@ -84,6 +86,7 @@
 		bottom: 0;
 		z-index: 100;
 		width: 100%;
+		max-width: 720px;
 		background-color: white;
 		padding: 20upx;
 		border-top: 1px solid #aaa;

@@ -142,7 +142,13 @@ const mixins = {
     },
     //发布主贴
     async sendTopic(payload) {
-      const client = store.state.user.client;
+      var client;
+      if (JSON.stringify(store.state.user.client) === "{}") {
+        await this.connectAe();
+        client = store.state.user.client;
+      } else {
+        client = store.state.user.client;
+      }
       const configInfo = getStore("configInfo");
       let content = {
         WeTrue: configInfo.WeTrue,
@@ -164,7 +170,13 @@ const mixins = {
     },
     //发送评论
     async sendComment(payload) {
-      const client = store.state.user.client;
+      var client;
+      if (JSON.stringify(store.state.user.client) === "{}") {
+        await this.connectAe();
+        client = store.state.user.client;
+      } else {
+        client = store.state.user.client;
+      }
       const configInfo = getStore("configInfo");
       let content = {
         WeTrue: configInfo.WeTrue,
@@ -186,7 +198,13 @@ const mixins = {
     },
     //发送回复
     async sendReply(payload) {
-      const client = store.state.user.client;
+      var client;
+      if (JSON.stringify(store.state.user.client) === "{}") {
+        await this.connectAe();
+        client = store.state.user.client;
+      } else {
+        client = store.state.user.client;
+      }
       const configInfo = getStore("configInfo");
       let content = {
         WeTrue: configInfo.WeTrue,
