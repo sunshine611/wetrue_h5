@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -53,7 +54,7 @@ export default {
     };
   },
   onLoad(option) {
-    if (!!this.$store.state.user.password) {
+    if (!!this.$store.state.user.password || !this.token) {
       setTimeout(() => {
         uni.reLaunch({
           url: "/pages/index/index",
@@ -65,6 +66,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["token"]),
     i18n() {
       return this.$_i18n.messages[this.$_i18n.locale];
     },
