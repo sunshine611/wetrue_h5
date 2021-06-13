@@ -163,6 +163,9 @@ const mixins = {
           payload: JSON.stringify(content),
         }
       );
+      uni.showLoading({
+        title: "提交中"
+      });
       this.$http.post("/Submit/hash", {
         hash: res.hash,
       });
@@ -191,6 +194,9 @@ const mixins = {
           payload: JSON.stringify(content),
         }
       );
+      uni.showLoading({
+        title: "提交中"
+      });
       this.$http.post("/Submit/hash", {
         hash: res.hash,
       });
@@ -222,6 +228,9 @@ const mixins = {
           payload: JSON.stringify(content),
         }
       );
+      uni.showLoading({
+        title: "提交中"
+      });
       this.$http.post("/Submit/hash", {
         hash: res.hash,
       });
