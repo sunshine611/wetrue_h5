@@ -38,7 +38,7 @@
       "path": "pages/index/detail",
       "style": {
         "app-plus": {
-          "titleNView": true //禁用原生导航栏
+          "titleNView": false //禁用原生导航栏
         },
         "navigationBarTitleText": "帖子详情",
         "enablePullDownRefresh": true
@@ -48,7 +48,7 @@
       "path": "pages/index/reply",
       "style": {
         "app-plus": {
-          "titleNView": true //禁用原生导航栏
+          "titleNView": false //禁用原生导航栏
         },
         "navigationBarTitleText": "回复列表",
         "enablePullDownRefresh": true
@@ -92,6 +92,23 @@
         },
         "navigationBarTitleText": "我的",
         "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/userInfo",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "用户信息",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+      "style": {
+        "navigationBarTitleText": "头像裁剪",
+        "navigationBarBackgroundColor": "#000000"
       }
     },
     {

@@ -1,5 +1,10 @@
 <template>
   <view class="detail">
+    <u-navbar title="帖子详情">
+      <div slot="right">
+        <u-icon name="home" class="mr-30" size="34" color="#f04a82" @click="reLaunchUrl('index')"></u-icon>
+      </div>
+    </u-navbar>
     <div class="forum">
       <div class="forum-item">
         <div class="user-area">
