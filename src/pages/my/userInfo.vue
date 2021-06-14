@@ -38,11 +38,12 @@
                     type="text"
                     :border="true"
                     placeholder="请输入昵称"
+                    maxlength="10"
                 />
                 <u-gap :height="30"></u-gap>
                 <u-button
                     type="primary"
-                    @click="updateNickname"
+                    @click="checkNickname"
                     :loading="btnLoading"
                     >提交</u-button
                 >
@@ -100,6 +101,23 @@ export default {
                 }
                 this.loading = false;
             });
+        },
+        //验证昵称
+        checkNickname(){
+            this.$http
+                .post("/User/isNickname", { nickname: this.nickname })
+                .then((res) => {
+                    if (res.code === 200) {
+                        if (res.isNickname) {
+                            uni.showToast({
+                                title: '该昵称已存在，请重新选择',
+                                icon:'none'
+                            });
+                        }else{
+                            this.updateNickname();
+                        }
+                    }
+                });
         },
         //更新昵称
         async updateNickname() {
