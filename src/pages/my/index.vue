@@ -22,7 +22,7 @@
                                     src="../../static/default_head.png"
                                 ></image>
                                 <u-gap height="1"></u-gap>
-                                {{ userInfo.nickname || i18n.users.cryptonym }}
+                                {{ userInfo.nickname || i18n.my.cryptonym }}
                             </div>
                             <div class="address" @tap="copy" id="copy">
                                 {{ address }}

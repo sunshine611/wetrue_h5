@@ -29,10 +29,13 @@ export default {
 		focus:'关注',
 		fans:'粉丝',
 		version:'Version',
-	},
-	users:{
+		nickname:'昵称',
 		cryptonym:'匿名',
-		focus:'已关注',
+		userInfo:'用户信息',
+		profile:'头像',
+		enterNickname:'请输入昵称',
+		checkNickname:'该昵称已存在，请重新选择',
+		send:'发送',
 	},
 	index:{
 		praise:'赞',
@@ -61,7 +64,7 @@ export default {
 	},
 	components:{
 		send:'发送',
-		comment:'Comment',
+		comment:'评论',
 		enterContent:'请输入内容',
 	},
 };

@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <u-navbar title="用户信息">
+        <u-navbar :title="i18n.my.userInfo">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -12,7 +12,7 @@
             </div>
         </u-navbar>
         <u-cell-group>
-            <u-cell-item title="头像">
+            <u-cell-item :title="i18n.my.profile">
                 <image
                     :src="userInfo.portrait"
                     slot="right-icon"
@@ -20,8 +20,8 @@
                 ></image>
             </u-cell-item>
             <u-cell-item
-                title="昵称"
-                :value="userInfo.nickname || '匿名'"
+                :title="i18n.my.nickname"
+                :value="userInfo.nickname || i18n.my.cryptonym"
                 @click="nameShow = true"
             >
             </u-cell-item>
@@ -37,7 +37,7 @@
                     v-model="nickname"
                     type="text"
                     :border="true"
-                    placeholder="请输入昵称"
+                    :placeholder="i18n.my.enterNickname"
                     maxlength="10"
                 />
                 <u-gap :height="30"></u-gap>
@@ -45,7 +45,7 @@
                     type="primary"
                     @click="checkNickname"
                     :loading="btnLoading"
-                    >提交</u-button
+                    >{{ i18n.my.send }}</u-button
                 >
             </view>
         </u-popup>
@@ -110,7 +110,7 @@ export default {
                     if (res.code === 200) {
                         if (res.isNickname) {
                             uni.showToast({
-                                title: '该昵称已存在，请重新选择',
+                                title: this.i18n.my.checkNickname,
                                 icon:'none'
                             });
                         }else{
