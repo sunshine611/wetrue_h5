@@ -163,6 +163,9 @@ const mixins = {
                     payload: JSON.stringify(content),
                 }
             );
+            uni.showLoading({
+              title: "Radio"
+            });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -191,6 +194,9 @@ const mixins = {
                     payload: JSON.stringify(content),
                 }
             );
+            uni.showLoading({
+              title: "Radio"
+            });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -222,6 +228,9 @@ const mixins = {
                     payload: JSON.stringify(content),
                 }
             );
+            uni.showLoading({
+              title: "Radio"
+            });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -249,6 +258,9 @@ const mixins = {
                     payload: JSON.stringify(content),
                 }
             );
+            uni.showLoading({
+              title: "Radio"
+            });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });

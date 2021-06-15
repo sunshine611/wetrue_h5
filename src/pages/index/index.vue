@@ -34,9 +34,9 @@
 					<div class="user-info">
 						<div class="user">
 							<div class="name">
-								{{item.users.nickname || i18n.users.cryptonym}}
+								{{item.users.nickname || i18n.my.cryptonym}}
 								<text class="userid">ID:{{item.users.userAddress.slice(-4)}}</text>
-								<text v-show="item.isFocus">{{i18n.users.focus}}</text>
+								<text v-show="item.isFocus">{{i18n.my.focus}}</text>
 							</div>
 							<div class="more">
 								<fa-FontAwesome type="fas fa-angle-down" size="36" class="mr-10" color="#cecece"

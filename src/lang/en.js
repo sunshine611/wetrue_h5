@@ -29,10 +29,13 @@ export default {
 		focus:'Focus',
 		fans:'Fans',
 		version:'Version',
-	},
-	users:{
+		nickname:'nickname',
 		cryptonym:'Cryptonym',
-		focus:'Focus',
+		userInfo:'User Info',
+		profile:'Profile',
+		enterNickname:'Please enter nickname',
+		checkNickname:'The nickname already exists. Please reselect it',
+		send:'Send',
 	},
 	index:{
 		praise:'Praise',

@@ -28,11 +28,11 @@
           <div class="user-info">
             <div class="user">
               <div class="name">
-                {{ postInfo.users.nickname || i18n.users.cryptonym }}
+                {{ postInfo.users.nickname || i18n.my.cryptonym }}
                 <text class="userid"
                   >ID:{{ postInfo.users.userAddress.slice(-4) }}</text
                 >
-                <text v-show="postInfo.isFocus">{{ i18n.users.focus }}</text>
+                <text v-show="postInfo.isFocus">{{ i18n.my.focus }}</text>
               </div>
               <div class="more">
                 <text class="mr-24"
@@ -121,7 +121,7 @@
           <view class="right">
             <view class="top">
               <view class="name"
-                >{{ item.users.nickname || i18n.users.cryptonym
+                >{{ item.users.nickname || i18n.my.cryptonym
                 }}<text class="address"
                   >ID:{{ item.users.userAddress.slice(-4) }}</text
                 ></view
