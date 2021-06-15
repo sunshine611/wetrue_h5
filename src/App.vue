@@ -93,7 +93,7 @@
 			padding-bottom: $rpx;
 		}
 
-		.font#{$i} {
+		.font-#{$i} {
 			font-size: $rpx;
 		}
 	}

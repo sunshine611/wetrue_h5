@@ -7,6 +7,8 @@
 		</u-navbar>
 		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="5000"
 			:placeholder="i18n.index.wetrueTips" :clearable="false" />
+		<u-gap height="20"></u-gap>
+		<div class="font-28">该内容将录入到AE区块链中永久保存，上链将会花费矿工费用，请不要上传色情政治等敏感信息，共建健康AE生态。</div>
 	</div>
 </template>
 
