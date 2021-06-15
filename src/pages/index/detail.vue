@@ -1,6 +1,6 @@
 <template>
   <view class="detail">
-    <u-navbar title="帖子详情">
+    <u-navbar :title="i18n.index.contentDetails">
       <div slot="right">
         <u-icon name="home" class="mr-30" size="34" color="#f04a82" @click="reLaunchUrl('index')"></u-icon>
       </div>
