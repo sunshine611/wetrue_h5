@@ -72,7 +72,7 @@
         </div>
         <div class="main-content">
           <div class="text-content">
-            <rich-text :nodes="postInfo.payload"></rich-text>
+            <rich-text :nodes="topicHighlight(postInfo.payload)"></rich-text>
           </div>
           <div class="img-list">
             <u-image
@@ -425,6 +425,16 @@ export default {
         });
       }
     },
+    //话题高亮
+    topicHighlight(value) {
+				var exp
+				exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u
+				value = value.replace(exp, (item) => {
+				let newVal = '<span style="color:blue">' + item + '</span>'
+				return newVal
+				})
+				return value
+			},
     //是否收藏
     star() {
       let params = {
