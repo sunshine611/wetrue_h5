@@ -51,7 +51,8 @@
 				</div>
 				<div class="main-content" @tap="goUrl('detail?hash='+item.hash)">
 					<div class="text-content">
-						<rich-text :nodes="item.payload"></rich-text>
+						<rich-text :nodes="topicHighlight(item.payload)"></rich-text>
+						
 					</div>
 					<div class="img-list">
 						<u-image width="150rpx" height="150rpx" :src="item.imgTx" v-if="item.imgTx"></u-image>
@@ -299,6 +300,16 @@
 						item.star = res.data.star;
 					}
 				})
+			},
+			//话题高亮
+			topicHighlight(value) {
+				var exp
+				exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u
+				value = value.replace(exp, (item) => {
+				let newVal = '<span style="color:blue">' + item + '</span>'
+				return newVal
+				})
+				return value
 			},
 			//切换语言
 			selectLanguage() {

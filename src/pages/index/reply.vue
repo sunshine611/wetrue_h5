@@ -1,6 +1,6 @@
 <template>
     <view class="wrap">
-        <u-navbar title="帖子详情">
+        <u-navbar :title="i18n.index.replyDetails">
             <div slot="right">
                 <u-icon
                     name="home"

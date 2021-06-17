@@ -61,6 +61,10 @@ export default {
 		allReply: "All Reply",
 		send:'Send',
 		source:'Source:',
+		sendContent:'Send Content',
+		contentDetails:'Content Details',
+		replyDetails:'Reply Details',
+		sendHint:'This content will be permanently stored in AE blockchain. Miners fees will be incurred for uploading the chain. Please do not upload sensitive information such as pornographic politics to build a healthy AE ecology.',
 	},
 	components:{
 		send:'Send',
