@@ -3,13 +3,21 @@
         <div class="user-info" v-if="!!token">
             <div class="my-info">
                 <div class="block">
-                    <u-icon
-                        name="setting-fill"
-                        color="#fff"
-                        size="40"
-                        class="set-icon"
-						@click="goUrl('userInfo')"
-                    ></u-icon>
+                    <div class="icon-list">
+                        <u-icon
+                            class="mr-15"
+                            name="bookmark"
+                            color="#fff"
+                            size="40"
+                            @click="whitePaper"
+                        ></u-icon>
+                        <u-icon
+                            name="setting-fill"
+                            color="#fff"
+                            size="40"
+                            @click="goUrl('userInfo')"
+                        ></u-icon>
+                    </div>
                     <div class="user-box">
                         <div class="user-top">
                             <div class="head">
@@ -29,6 +37,12 @@
                             </div>
                         </div>
                         <div class="user-bottom">
+                            <div class="item" @click="goUrl('myTopic')">
+                                <div class="value">
+                                    {{ userInfo.topic || 0 }}
+                                </div>
+                                <div class="label">{{ i18n.my.topic }}</div>
+                            </div>
                             <div class="item">
                                 <div class="value">
                                     {{ userInfo.active || 0 }}
@@ -215,6 +229,10 @@ export default {
             uni.clearStorage();
             this.$store.commit("user/SET_TOKEN", "");
         },
+        //打开白皮书
+        whitePaper() {
+            window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
+        },
     },
 };
 </script>
@@ -235,7 +253,7 @@ page {
                 box-sizing: border-box;
                 color: #101010;
                 position: relative;
-                .set-icon {
+                .icon-list {
                     position: absolute;
                     right: 30rpx;
                     top: 30rpx;

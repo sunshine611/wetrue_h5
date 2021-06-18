@@ -58,12 +58,10 @@
                 </div>
                 <div
                     class="main-content"
-                    @tap="goUrl('detail?hash=' + item.hash)"
+                    @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
                     <div class="text-content">
-                        <rich-text
-                            :nodes="topicHighlight(item.payload)"
-                        ></rich-text>
+                        <u-parse :html="item.payload" :show-with-animation="true"></u-parse>
                     </div>
                     <div class="img-list">
                         <u-image
@@ -75,7 +73,7 @@
                     </div>
                 </div>
                 <div class="operation">
-                    <div class="item" @tap="goUrl('detail?hash=' + item.hash)">
+                    <div class="item" @tap="goUrl('/pages/index/detail?hash=' + item.hash)">
                         <fa-FontAwesome
                             type="far fa-comment-alt"
                             size="28"
@@ -247,16 +245,6 @@ export default {
                     item.star = res.data.star;
                 }
             });
-        },
-        //话题高亮
-        topicHighlight(value) {
-            var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u;
-            value = value.replace(exp, (item) => {
-                let newVal = `<span style="color:#f04a82">${item}</span>`;
-                return newVal;
-            });
-            return value;
         },
     },
     watch: {},

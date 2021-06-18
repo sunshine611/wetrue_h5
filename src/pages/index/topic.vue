@@ -1,5 +1,5 @@
 <template>
-    <view class="index">
+    <view class="topic">
         <u-navbar :is-back="false">
             <view class="slot-wrap nav">
                 <u-dropdown
@@ -155,27 +155,17 @@ export default {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";
                     if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
+                        this.postList = res.data.data.map((item) => {
+                            console.log(item);
+                            item.payload = this.topicHighlight(item.payload);
+                            return item;
                         });
                     } else {
                         if (this.pageInfo.page > this.pageInfo.totalPage) {
                             this.pageInfo.page = this.pageInfo.totalPage;
                             this.more = "nomore";
                         } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    return item;
-                                })
-                            );
+                            this.postList = this.postList.concat(res.data.data);
                         }
                     }
                 } else {
@@ -215,22 +205,13 @@ export default {
             this.cateInfo.value = index;
             this.cateInfo.label = this.categoryList[this.index].label;
         },
-        //话题高亮
-        topicHighlight(value) {
-            var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u;
-            value = value.replace(exp, (item) => {
-                let newVal = `<text style="color:#f04a82" @click="goUrl('@/pages/index/topic')">${item}</text>`;
-                return newVal;
-            });
-            return value;
-        },
+        
     },
 };
 </script>
 
 <style lang="scss" scoped>
-.index {
+.topic {
     .nav {
         width: 100%;
         position: relative;

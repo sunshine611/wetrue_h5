@@ -36,6 +36,8 @@ export default {
 		enterNickname:'请输入昵称',
 		checkNickname:'该昵称已存在，请重新选择',
 		send:'发送',
+		topic:'帖子',
+		MyTopic:'我的发帖'
 	},
 	index:{
 		praise:'赞',

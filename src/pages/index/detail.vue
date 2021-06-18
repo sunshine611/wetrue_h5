@@ -89,7 +89,7 @@
                 <div class="main-content">
                     <div class="text-content">
                         <rich-text
-                            :nodes="topicHighlight(postInfo.payload)"
+                            :nodes="postInfo.payload"
                         ></rich-text>
                     </div>
                     <div class="img-list">
@@ -346,6 +346,7 @@ export default {
             this.$http.post("/Content/tx", params).then((res) => {
                 if (res.code === 200) {
                     this.postInfo = res.data;
+                    this.postInfo.payload=this.topicHighlight(this.postInfo.payload)
                 }
             });
         },

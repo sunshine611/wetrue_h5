@@ -25,6 +25,16 @@
       }
     },
     {
+      "path": "pages/index/topic",
+      "style": {
+        "navigationBarTitleText": "话题",
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "enablePullDownRefresh": true // 是否开启下拉刷新
+      }
+    },
+    {
       "path": "pages/index/editor",
       "style": {
         "app-plus": {
@@ -101,6 +111,16 @@
           "titleNView": false //禁用原生导航栏
         },
         "navigationBarTitleText": "用户信息",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/my/myTopic",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "我的发帖",
         "enablePullDownRefresh": true
       }
     },
