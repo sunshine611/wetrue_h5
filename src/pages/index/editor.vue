@@ -5,10 +5,10 @@
 				<u-button type="primary" size="mini" :disabled="form.text.length===0" @click="release"  :loading="btnLoading">{{i18n.index.send}}</u-button>
 			</div>
 		</u-navbar>
+		<div class="font-24" style="color:#f04a82">{{i18n.index.sendHint}}</div>
+		<u-gap height="40"></u-gap>
 		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="5000"
 			:placeholder="i18n.index.wetrueTips" :clearable="false" />
-		<u-gap height="20"></u-gap>
-		<div class="font-28">{{i18n.index.sendHint}}</div>
 	</div>
 </template>
 
