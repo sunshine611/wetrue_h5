@@ -36,8 +36,10 @@ export default {
 		enterNickname:'Please enter nickname',
 		checkNickname:'The nickname already exists. Please reselect it',
 		send:'Send',
-		topic:'tipic',
-		myTopic:'My tipic',
+		topic:'Topic',
+		myTopic:'My topic',
+		star:'Star',
+		myStar:'My star',
 	},
 	index:{
 		praise:'Praise',

@@ -37,7 +37,9 @@ export default {
 		checkNickname:'该昵称已存在，请重新选择',
 		send:'发送',
 		topic:'帖子',
-		MyTopic:'我的发帖'
+		MyTopic:'我的发帖',
+		star:'收藏',
+		myStar:'我的收藏',
 	},
 	index:{
 		praise:'赞',
