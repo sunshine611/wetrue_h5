@@ -43,6 +43,12 @@
                                 </div>
                                 <div class="label">{{ i18n.my.topic }}</div>
                             </div>
+                            <div class="item" @click="goUrl('myStar')">
+                                <div class="value">
+                                    {{ userInfo.star || 0 }}
+                                </div>
+                                <div class="label">{{ i18n.my.star }}</div>
+                            </div>
                             <div class="item">
                                 <div class="value">
                                     {{ userInfo.active || 0 }}
