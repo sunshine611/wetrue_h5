@@ -68,7 +68,7 @@ export default {
 		sendContent:'发布主贴',
 		contentDetails:'帖子详情',
 		replyDetails:'回复详情',
-		sendHint:'该内容将录入到AE区块链中永久保存，上链将会花费矿工费用，请不要上传色情政治等敏感信息，共建健康AE生态。',
+		sendHint:'该内容上传于AE区块链中永久保存，上链会消耗矿工费用，请不要上传色情政治等敏感信息，共建健康AE生态。',
 	},
 	components:{
 		send:'发送',
