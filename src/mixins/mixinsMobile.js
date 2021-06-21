@@ -108,6 +108,16 @@ const mixins = {
                 return false;
             }
         },
+        //话题高亮
+        topicHighlight(value) {
+            var exp;
+            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u;
+            value = value.replace(exp, (item) => {
+                let newVal = `<text class="topic-text">${item}</text>`;
+                return newVal;
+            });
+            return value;
+        },
         //AE交易
         async connectAe() {
             try {
@@ -164,7 +174,7 @@ const mixins = {
                 }
             );
             uni.showLoading({
-              title: "Radio"
+                title: "Radio",
             });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
@@ -195,7 +205,7 @@ const mixins = {
                 }
             );
             uni.showLoading({
-              title: "Radio"
+                title: "Radio",
             });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
@@ -229,7 +239,7 @@ const mixins = {
                 }
             );
             uni.showLoading({
-              title: "Radio"
+                title: "Radio",
             });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
@@ -259,7 +269,7 @@ const mixins = {
                 }
             );
             uni.showLoading({
-              title: "Radio"
+                title: "Radio",
             });
             this.$http.post("/Submit/hash", {
                 hash: res.hash,

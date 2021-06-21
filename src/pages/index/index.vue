@@ -215,16 +215,6 @@ export default {
             this.cateInfo.value = index;
             this.cateInfo.label = this.categoryList[this.index].label;
         },
-        //话题高亮
-        topicHighlight(value) {
-            var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u;
-            value = value.replace(exp, (item) => {
-                let newVal = `<text style="color:#f04a82" @click="goUrl('@/pages/index/topic')">${item}</text>`;
-                return newVal;
-            });
-            return value;
-        },
     },
 };
 </script>

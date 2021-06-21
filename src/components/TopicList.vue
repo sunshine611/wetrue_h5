@@ -61,7 +61,10 @@
                     @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
                     <div class="text-content">
-                        <u-parse :html="item.payload" :show-with-animation="true"></u-parse>
+                        <u-parse
+                            :html="item.payload"
+                            :show-with-animation="true"
+                        ></u-parse>
                     </div>
                     <div class="img-list">
                         <u-image
@@ -73,7 +76,10 @@
                     </div>
                 </div>
                 <div class="operation">
-                    <div class="item" @tap="goUrl('/pages/index/detail?hash=' + item.hash)">
+                    <div
+                        class="item"
+                        @click="goUrl('/pages/index/detail?hash=' + item.hash)"
+                    >
                         <fa-FontAwesome
                             type="far fa-comment-alt"
                             size="28"
@@ -169,6 +175,33 @@ export default {
             ];
         },
     },
+    watch: {
+        postList: {
+            handler() {
+                this.$nextTick(() => {
+                    var topicArr = document.getElementsByClassName(
+                        "topic-text"
+                    );
+                    if (topicArr.length > 0) {
+                        for (let i = 0; i < topicArr.length; i++) {
+                            topicArr[i].addEventListener(
+                                "click",
+                                (e) => {
+                                    let text = topicArr[i].innerText;
+                                    this.goUrl(
+                                        "/pages/index/topic?keyword=" + text
+                                    );
+                                    e.stopPropagation();
+                                },
+                                true
+                            );
+                        }
+                    }
+                });
+            },
+            deep: true,
+        },
+    },
     methods: {
         //更多操作
         moreOpera(item) {
@@ -247,7 +280,6 @@ export default {
             });
         },
     },
-    watch: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -347,6 +379,9 @@ export default {
                     word-wrap: break-word;
                     word-break: normal;
                     overflow: hidden;
+                    /deep/ .topic-text {
+                        color: #f04a82;
+                    }
                 }
             }
 
