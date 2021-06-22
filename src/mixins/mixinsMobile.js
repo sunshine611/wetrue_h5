@@ -111,7 +111,7 @@ const mixins = {
         //话题高亮
         topicHighlight(value) {
             var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/u;
+            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-]{1,25}#/g;
             value = value.replace(exp, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
