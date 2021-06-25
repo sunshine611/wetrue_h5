@@ -128,7 +128,7 @@ const mixins = {
                     url: store.state.user.nodeUrl,
                 });
                 const client = await Universal({
-                    compilerUrl: "https://compiler.aechina.io",
+                    //compilerUrl: "https://compiler.aechina.io",
                     nodes: [
                         {
                             name: "WeTrue",
