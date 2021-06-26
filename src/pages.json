@@ -160,6 +160,16 @@
         "navigationBarTitleText": "转账记录",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/my/transfer",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "转账",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
