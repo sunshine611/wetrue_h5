@@ -10,8 +10,8 @@
                     class="token-logo"
                 ></u-image>
                 <text class="token-value"
-                    >余额：{{ aeBalance
-                    }}<u-icon
+                    >{{ i18n.my.balance +'：' + aeBalance }}
+                    <u-icon
                         name="arrow-right"
                         class="ml-10"
                         color="#666"
@@ -20,8 +20,8 @@
                 ></text>
             </div>
             <div class="ae-opera">
-                <u-button type="primary" size="medium" :custom-style="{'width':'42%'}" @click="goUrl('transfer')">转账</u-button>
-                <u-button type="success" size="medium" :custom-style="{'width':'42%'}">收款</u-button>
+                <u-button type="primary" size="medium" :custom-style="{'width':'42%'}" @click="goUrl('transfer')">{{i18n.my.send}}</u-button>
+                <u-button type="success" size="medium" :custom-style="{'width':'42%'}">{{i18n.my.receive}}</u-button>
             </div>
         </div>
         <u-gap height="20"></u-gap>

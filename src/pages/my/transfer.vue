@@ -1,6 +1,6 @@
 <template>
     <div class="transfer">
-        <u-navbar title="转账">
+        <u-navbar :title="i18n.my.transfer">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -13,7 +13,7 @@
         </u-navbar>
         <u-gap height="20"></u-gap>
         <div class="form">
-            <div class="form-title">收款地址：</div>
+            <div class="form-title">{{i18n.my.recipient}}：</div>
             <u-gap height="14"></u-gap>
             <u-input
                 v-model="form.address"
@@ -22,16 +22,16 @@
                 :clearable="false"
                 height="80"
                 :custom-style="{ padding: '15rpx' }"
-                placeholder="请输入收款地址"
+                placeholder="ak_ … or name.chain"
                 maxlength="100"
             />
             <div class="warnning" v-show="warning.address">
-                地址格式错误
+                {{i18n.my.addressErr}}
             </div>
         </div>
         <u-gap height="20"></u-gap>
         <div class="form">
-            <div class="form-title">转帐金额：</div>
+            <div class="form-title">{{i18n.my.amount}}：</div>
             <u-gap height="14"></u-gap>
             <u-input
                 v-model="form.money"
@@ -39,21 +39,21 @@
                 class="textarea"
                 :clearable="false"
                 :custom-style="{ padding: '0 15rpx' }"
-                placeholder="请输入数量"
+                placeholder="Amount"
                 maxlength="20"
             />
             <div class="warnning" v-show="warning.money">
-                金额输入错误
+                {{i18n.my.balanceErr}}
             </div>
             <u-gap height="18"></u-gap>
             <div class="clearfix">
-                <div class="pull-right">钱包余额：{{ aeBalance }}</div>
+                <div class="pull-right">{{ i18n.my.addressBalance + ':' + aeBalance }}</div>
             </div>
         </div>
         <u-gap height="60"></u-gap>
         <div class="ok-btn">
             <u-button type="primary" @click="transfer" :loading="btnLoading"
-                >确认</u-button
+                >{{ i18n.my.transfer }}</u-button
             >
         </div>
     </div>
@@ -104,50 +104,50 @@ export default {
     },
     methods: {
         //转账
-        async transfer() {
-            const isAddress = isAddressValid(this.form.address);
-            if (!this.form.address || !isAddress) {
-                this.warning.address = true;
-                return;
-            } else {
-                this.warning.address = false;
-            }
-            if (!this.form.money || this.form.money > this.aeBalance) {
-                this.warning.money = true;
-                return;
-            } else {
-                this.warning.money = false;
-            }
-            uni.showLoading({
-                title: "正在转账...",
-            });
-            this.btnLoading = true;
-            var client;
-            if (JSON.stringify(this.$store.state.user.client) === "{}") {
-                await this.connectAe();
-                client = this.$store.state.user.client;
-            } else {
-                client = this.$store.state.user.client;
-            }
-            try {
-                const res = await client.spend(
-                    this.form.money * Math.pow(10, 18),
-                    this.form.address
-                );
-                if (res.hash) {
-                    uni.hideLoading();
-                    uni.showToast({
-                        icon: "success",
-                        title: "转账成功",
-                    });
-                    this.btnLoading = false;
-                    this.getAccount();
-                }
-            } catch (err) {
-                this.hideLoading = false;
-                this.btnLoading = false;
-            }
-        },
+        async transfer() {
+            const isAddress = isAddressValid(this.form.address);
+            if (!this.form.address || !isAddress) {
+                this.warning.address = true;
+                return;
+            } else {
+                this.warning.address = false;
+            }
+            if (!this.form.money || this.form.money > this.aeBalance) {
+                this.warning.money = true;
+                return;
+            } else {
+                this.warning.money = false;
+            }
+            uni.showLoading({
+                title: this.i18n.my.loading,
+            });
+            this.btnLoading = true;
+            var client;
+            if (JSON.stringify(this.$store.state.user.client) === "{}") {
+                await this.connectAe();
+                client = this.$store.state.user.client;
+            } else {
+                client = this.$store.state.user.client;
+            }
+            try {
+                const res = await client.spend(
+                    this.form.money * Math.pow(10, 18),
+                    this.form.address
+                );
+                if (res.hash) {
+                    uni.hideLoading();
+                    uni.showToast({
+                        icon: "success",
+                        title: this.i18n.my.success,
+                    });
+                    this.btnLoading = false;
+                    this.getAccount();
+                }
+            } catch (err) {
+                this.hideLoading = false;
+                this.btnLoading = false;
+            }
+        },
         //获取账户AE余额
         getAccount() {
             http.get(aeknow + "api/account/" + this.token).then((res) => {
