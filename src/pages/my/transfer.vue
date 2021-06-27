@@ -62,6 +62,7 @@
 <script>
 import Request from "@/js_sdk/luch-request/luch-request/index.js";
 const http = new Request();
+import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
 import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
@@ -104,7 +105,8 @@ export default {
     methods: {
         //转账
         async transfer() {
-            if (!this.form.address) {
+            const isAddress = isAddressValid(this.form.address);
+            if (!this.form.address || !isAddress) {
                 this.warning.address = true;
                 return;
             } else {
