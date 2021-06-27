@@ -149,7 +149,7 @@
 import Request from "@/js_sdk/luch-request/luch-request/index.js";
 const http = new Request();
 import Clipboard from "clipboard";
-import { version, aeknow } from "@/config/config.js";
+import { version, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 export default {
     data() {
@@ -226,7 +226,7 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(aeknow + "api/account/" + this.token).then((res) => {
+            http.get(nodeUrl + "v2/accounts/" + this.token).then((res) => {
                 this.balance = this.balanceFormat(res.data.balance);
             });
         },

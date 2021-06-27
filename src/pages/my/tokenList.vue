@@ -1,5 +1,16 @@
 <template>
     <div class="token-list">
+        <u-navbar :title="i18n.my.myWallet">
+            <div slot="right">
+                <u-icon
+                    name="home"
+                    class="mr-30"
+                    size="34"
+                    color="#f04a82"
+                    @click="reLaunchUrl('index')"
+                ></u-icon>
+            </div>
+        </u-navbar>
         <div class="ae-box">
             <div class="ae-account" @click="goUrl(`tokenTransferRecode`)">
                 <u-image
@@ -10,7 +21,7 @@
                     class="token-logo"
                 ></u-image>
                 <text class="token-value"
-                    >{{ i18n.my.balance +'：' + aeBalance }}
+                    >{{ i18n.my.balance + "：" + aeBalance }}
                     <u-icon
                         name="arrow-right"
                         class="ml-10"
@@ -20,8 +31,33 @@
                 ></text>
             </div>
             <div class="ae-opera">
-                <u-button type="primary" size="medium" :custom-style="{'width':'42%'}" @click="goUrl('transfer')">{{i18n.my.send}}</u-button>
-                <u-button type="success" size="medium" :custom-style="{'width':'42%'}">{{i18n.my.receive}}</u-button>
+                <u-button
+                    type="primary"
+                    size="medium"
+                    :custom-style="{ width: '42%' }"
+                    @click="goUrl('transfer')"
+                    ><fa-FontAwesome
+                        type="fas fa-exchange-alt"
+                        size="24"
+                        class="mr-10"
+                        color="#fff"
+                    >
+                    </fa-FontAwesome
+                    >{{ i18n.my.send }}</u-button
+                >
+                <u-button
+                    type="success"
+                    size="medium"
+                    :custom-style="{ width: '42%' }"
+                    ><fa-FontAwesome
+                        type="fas fa-qrcode"
+                        size="24"
+                        class="mr-10"
+                        color="#fff"
+                    >
+                    </fa-FontAwesome
+                    >{{ i18n.my.receive }}</u-button
+                >
             </div>
         </div>
         <u-gap height="20"></u-gap>
@@ -44,7 +80,7 @@
 <script>
 import Request from "@/js_sdk/luch-request/luch-request/index.js";
 const http = new Request();
-import { aeknow } from "@/config/config.js";
+import { aeknow, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
@@ -88,7 +124,7 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(aeknow + "api/account/" + this.token).then((res) => {
+            http.get(nodeUrl + "v2/accounts/" + this.token).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
@@ -115,7 +151,7 @@ export default {
         }
         .ae-opera {
             margin-top: 40rpx;
-            margin-bottom:20rpx;
+            margin-bottom: 20rpx;
             display: flex;
             align-items: center;
             justify-content: space-between;

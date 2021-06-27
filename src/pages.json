@@ -145,7 +145,7 @@
       "path": "pages/my/tokenList",
       "style": {
         "app-plus": {
-          "titleNView": true //禁用原生导航栏
+          "titleNView": false //禁用原生导航栏
         },
         "navigationBarTitleText": "我的钱包",
         "enablePullDownRefresh": true
