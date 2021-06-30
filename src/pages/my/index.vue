@@ -21,15 +21,8 @@
                     <div class="user-box">
                         <div class="user-top">
                             <div class="head">
-                                <image
-                                    v-if="userInfo.portrait"
-                                    :src="userInfo.portrait"
-                                ></image>
-                                <image
-                                    v-else
-                                    src="../../static/default_head.png"
-                                ></image>
-                                <u-gap height="1"></u-gap>
+                                <HeadImg :src="userInfo.portrait" :userActive="userInfo.userActive" width="120rpx" height="120rpx"></HeadImg>
+                                <u-gap height="10"></u-gap>
                                 {{ userInfo.nickname || i18n.my.cryptonym }}
                             </div>
                             <div class="address" @tap="copy" id="copy">
@@ -37,13 +30,13 @@
                             </div>
                         </div>
                         <div class="user-bottom">
-                            <div class="item" @click="goUrl('myTopic')">
+                            <div class="item" @click="goUrl('topicList?type=myTopic')">
                                 <div class="value">
                                     {{ userInfo.topic || 0 }}
                                 </div>
                                 <div class="label">{{ i18n.my.topic }}</div>
                             </div>
-                            <div class="item" @click="goUrl('myStar')">
+                            <div class="item" @click="goUrl('topicList?type=myStar')">
                                 <div class="value">
                                     {{ userInfo.star || 0 }}
                                 </div>
@@ -55,13 +48,13 @@
                                 </div>
                                 <div class="label">{{ i18n.my.active }}</div>
                             </div>
-                            <div class="item">
+                            <div class="item" @click="goUrl('userList?type=focus')">
                                 <div class="value">
                                     {{ userInfo.focus || 0 }}
                                 </div>
                                 <div class="label">{{ i18n.my.focus }}</div>
                             </div>
-                            <div class="item">
+                            <div class="item" @click="goUrl('userList?type=fans')">
                                 <div class="value">
                                     {{ userInfo.fans || 0 }}
                                 </div>
@@ -151,7 +144,11 @@ const http = new Request();
 import Clipboard from "clipboard";
 import { version, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
+import HeadImg from "@/components/HeadImg.vue";
 export default {
+    components: {
+        HeadImg,
+    },
     data() {
         return {
             userInfo: {}, //用户信息
@@ -285,12 +282,6 @@ page {
                             text-align: center;
                             font-size: 24upx;
                             padding: 20rpx 30rpx;
-
-                            image {
-                                width: 120upx;
-                                height: 120upx;
-                                border-radius: 50%;
-                            }
                         }
 
                         .address {

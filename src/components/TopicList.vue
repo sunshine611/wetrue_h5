@@ -8,27 +8,26 @@
             >
                 <div class="user-area">
                     <div class="head-box">
-                        <image
-                            class="user-head"
-                            mode="aspectFill"
+                        <HeadImg
                             :src="item.users.portrait"
-                            v-if="item.users.portrait"
-                        ></image>
-                        <image
-                            class="user-head"
-                            mode="aspectFill"
-                            src="@/static/default_head.png"
-                            v-else
-                        ></image>
-                        <div class="level">
-                            <text class="text"
-                                >V{{ item.users.userActive }}</text
-                            >
-                        </div>
+                            :userActive="item.users.userActive"
+                            :isLink="true"
+                            :userAddress="item.users.userAddress"
+                            width="70rpx"
+                            height="70rpx"
+                        ></HeadImg>
                     </div>
                     <div class="user-info">
                         <div class="user">
-                            <div class="name">
+                            <div
+                                class="name"
+                                @click="
+                                    goUrl(
+                                        '/pages/my/topicList?type=user&userAddress=' +
+                                            item.users.userAddress
+                                    )
+                                "
+                            >
                                 {{ item.users.nickname || i18n.my.cryptonym }}
                                 <text class="userid"
                                     >ID:{{
@@ -136,7 +135,11 @@
     </div>
 </template>
 <script>
+import HeadImg from "@/components/HeadImg";
 export default {
+    components: {
+        HeadImg,
+    },
     props: {
         postList: {
             type: Array,
@@ -296,35 +299,6 @@ export default {
 
                 .head-box {
                     margin-right: 20rpx;
-                    position: relative;
-
-                    .user-head {
-                        width: 70rpx;
-                        height: 70rpx;
-                        border-radius: 50%;
-                        box-sizing: border-box;
-                    }
-
-                    .level {
-                        position: absolute;
-                        right: -8rpx;
-                        bottom: 2rpx;
-                        width: 34rpx;
-                        height: 34rpx;
-                        background-color: #d62900;
-                        font-size: 24rpx;
-                        border-radius: 50%;
-                        color: #fff;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        border: 4rpx solid #ffd982;
-                        box-sizing: border-box;
-
-                        .text {
-                            transform: scale(0.65);
-                        }
-                    }
                 }
 
                 .user-info {

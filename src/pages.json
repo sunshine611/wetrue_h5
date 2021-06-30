@@ -115,22 +115,22 @@
       }
     },
     {
-      "path": "pages/my/myTopic",
+      "path": "pages/my/topicList",
       "style": {
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "我的发帖",
+        "navigationBarTitleText": "帖子列表",
         "enablePullDownRefresh": true
       }
     },
     {
-      "path": "pages/my/myStar",
+      "path": "pages/my/userList",
       "style": {
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "我的收藏",
+        "navigationBarTitleText": "关注/粉丝",
         "enablePullDownRefresh": true
       }
     },

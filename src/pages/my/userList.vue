@@ -1,6 +1,6 @@
 <template>
-    <view class="myStar">
-        <u-navbar :title="i18n.my.myStar">
+    <view class="user-list">
+        <u-navbar :title="title">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -11,29 +11,31 @@
                 ></u-icon>
             </div>
         </u-navbar>
-        <TopicList :postList="postList"></TopicList>
-        <div class="empty" v-show="postList.length === 0">
+        <User :userList="userList" class="mb-20"></User>
+        <div class="empty" v-show="userList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
             margin-bottom="20"
             :status="more"
-            v-show="postList.length > 0"
+            v-show="userList.length > 0"
         />
     </view>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import TopicList from "../../components/TopicList.vue";
+import User from "@/components/User.vue";
 export default {
     components: {
-        TopicList,
+        User,
     },
     data() {
         return {
-            postList: [], //帖子列表
+            type: "", //用户类型
+            title: "", //导航标题
+            userList: [], //帖子列表
             pageInfo: {
                 page: 1,
                 pageSize: 10,
@@ -45,7 +47,7 @@ export default {
     //上拉刷新
     onPullDownRefresh() {
         this.pageInfo.page = 1;
-        this.getPostList();
+        this.getUserList();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -53,10 +55,17 @@ export default {
     //下拉加载
     onReachBottom() {
         this.pageInfo.page++;
-        this.getPostList();
+        this.getUserList();
     },
-    onLoad() {
-        this.getPostList();
+    onLoad(option) {
+        if (option.type === "focus") {
+            this.type = "focus";
+            this.title = "我的关注";
+        } else if (option.type === "fans") {
+            this.type = "fans";
+            this.title = "我的粉丝";
+        }
+        this.getUserList();
     },
     computed: {
         ...mapGetters(["token"]),
@@ -67,38 +76,30 @@ export default {
     },
     methods: {
         //获取帖子列表
-        getPostList() {
+        getUserList() {
+            var focus;
+            if (this.type === "focus") {
+                focus = "myFocus";
+            } else if (this.type === "fans") {
+                focus = "focusMy";
+            }
             let params = {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
-                userAddress:this.token
+                focus: focus,
             };
-            this.$http.post('/Content/starList', params).then((res) => {
+            this.$http.post("/User/focusList", params).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";
                     if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        });
+                        this.userList = res.data.data;
                     } else {
                         if (this.pageInfo.page > this.pageInfo.totalPage) {
                             this.pageInfo.page = this.pageInfo.totalPage;
                             this.more = "nomore";
                         } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    return item;
-                                })
-                            );
+                            this.userList = this.userList.concat(res.data.data);
                         }
                     }
                 } else {
@@ -111,7 +112,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.myTopic {
-    
+.user-list {
 }
 </style>

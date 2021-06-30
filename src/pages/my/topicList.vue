@@ -1,6 +1,6 @@
 <template>
     <view class="myTopic">
-        <u-navbar :title="i18n.my.MyTopic">
+        <u-navbar :title="title">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -17,7 +17,7 @@
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
-            margin-bottom="20"
+            class="mb-20"
             :status="more"
             v-show="postList.length > 0"
         />
@@ -33,6 +33,9 @@ export default {
     },
     data() {
         return {
+            type: "", //类型
+            title: "", //标题
+            userAddress: "", //用户地址
             postList: [], //帖子列表
             pageInfo: {
                 page: 1,
@@ -55,7 +58,18 @@ export default {
         this.pageInfo.page++;
         this.getPostList();
     },
-    onLoad() {
+    onLoad(option) {
+        if (option.type === "myTopic") {
+            this.type = "myTopic";
+            this.title = "我的帖子";
+        } else if (option.type === "myStar") {
+            this.type = "myStar";
+            this.title = "我的收藏";
+        } else if (option.type === "user") {
+            this.type = "user";
+            this.userAddress = option.userAddress;
+            this.title = "用户帖子";
+        }
         this.getPostList();
     },
     computed: {
@@ -68,12 +82,30 @@ export default {
     methods: {
         //获取帖子列表
         getPostList() {
-            let params = {
-                page: this.pageInfo.page,
-                size: this.pageInfo.pageSize,
-                userAddress:this.token
-            };
-            this.$http.post('/User/contentList', params).then((res) => {
+            var params, url;
+            if (this.type === "myTopic") {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    userAddress: this.token,
+                };
+                url = "/User/contentList";
+            } else if (this.type === "myStar") {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                };
+                url = "/Content/starList";
+            }
+            else if (this.type === "user") {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    userAddress: this.userAddress,
+                };
+                url = "/User/contentList";
+            }
+            this.$http.post(url, params).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";
@@ -112,6 +144,5 @@ export default {
 
 <style lang="scss" scoped>
 .myTopic {
-    
 }
 </style>
