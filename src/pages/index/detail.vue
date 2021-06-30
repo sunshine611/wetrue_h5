@@ -31,29 +31,26 @@
                 >
                     <view class="left">
                         <div class="head-box">
-                            <image
-                                class="user-head"
-                                mode="aspectFill"
+                            <HeadImg
                                 :src="item.users.portrait"
-                                v-if="item.users.portrait"
-                            ></image>
-                            <image
-                                class="user-head"
-                                mode="aspectFill"
-                                src="../../static/default_head.png"
-                                v-else
-                            >
-                            </image>
-                            <div class="level">
-                                <text class="text"
-                                    >V{{ item.users.userActive }}</text
-                                >
-                            </div>
+                                :userActive="item.users.userActive"
+                                :isLink="true"
+                                :userAddress="item.users.userAddress"
+                                width="70rpx"
+                                height="70rpx"
+                            ></HeadImg>
                         </div>
                     </view>
                     <view class="right">
                         <view class="top">
-                            <view class="name"
+                            <view
+                                class="name"
+                                @click="
+                                    goUrl(
+                                        '/pages/my/topicList?type=user&userAddress=' +
+                                            item.users.userAddress
+                                    )
+                                "
                                 >{{ item.users.nickname || i18n.my.cryptonym
                                 }}<text class="address"
                                     >ID:{{
@@ -94,11 +91,20 @@
                                 :key="index"
                             >
                                 <view class="text"
-                                    ><text class="name">{{
-                                        item.users.nickname ||
-                                            item.users.userAddress.slice(-4)
-                                    }}</text
+                                    ><text
+                                        class="name"
+                                        @click="
+                                            goUrl(
+                                                '/pages/my/topicList?type=user&userAddress=' +
+                                                    item.users.userAddress
+                                            )
+                                        "
+                                        >{{
+                                            item.users.nickname ||
+                                                item.users.userAddress.slice(-4)
+                                        }}</text
                                     >：<rich-text
+                                     class="compiler"
                                         :nodes="item.payload"
                                     ></rich-text
                                 ></view>
@@ -195,11 +201,13 @@
 
 <script>
 import inputComment from "@/components/input-comment/input-comment.vue";
-import TopicContent from '@/components/TopicContent'
+import TopicContent from "@/components/TopicContent";
+import HeadImg from "@/components/HeadImg";
 export default {
     components: {
         inputComment,
-        TopicContent
+        TopicContent,
+        HeadImg,
     },
     data() {
         return {
@@ -257,7 +265,9 @@ export default {
             this.$http.post("/Content/tx", params).then((res) => {
                 if (res.code === 200) {
                     this.postInfo = res.data;
-                    this.postInfo.payload=this.topicHighlight(this.postInfo.payload)
+                    this.postInfo.payload = this.topicHighlight(
+                        this.postInfo.payload
+                    );
                 }
             });
         },
@@ -383,7 +393,6 @@ export default {
                 });
             }
         },
-        
     },
 };
 </script>
@@ -417,36 +426,7 @@ export default {
 
                 .left {
                     .head-box {
-                        position: relative;
                         display: inline-block;
-
-                        .user-head {
-                            width: 70rpx;
-                            height: 70rpx;
-                            border-radius: 50%;
-                            box-sizing: border-box;
-                        }
-
-                        .level {
-                            position: absolute;
-                            right: -8rpx;
-                            bottom: 2rpx;
-                            width: 34rpx;
-                            height: 34rpx;
-                            background-color: #d62900;
-                            font-size: 24rpx;
-                            border-radius: 50%;
-                            color: #fff;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            border: 4rpx solid #ffd982;
-                            box-sizing: border-box;
-
-                            .text {
-                                transform: scale(0.65);
-                            }
-                        }
                     }
                 }
 
@@ -508,11 +488,14 @@ export default {
                             border-bottom: solid 2rpx $u-border-color;
                             .text {
                                 width: 100%;
-                                display: flex;
                                 .name {
                                     color: #f04a82;
-                                    justify-content: start;
-                                    max-width: 30%;
+                                }
+                                .compiler{
+                                    display: inline!important;
+                                    /deep/ * {
+                                        display: inline!important;
+                                    }
                                 }
                                 .parse {
                                     display: inline-block;
