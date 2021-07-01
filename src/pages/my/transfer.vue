@@ -1,6 +1,6 @@
 <template>
     <div class="transfer">
-        <u-navbar :title="i18n.my.transfer">
+        <u-navbar :title="title">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -48,7 +48,12 @@
             <u-gap height="18"></u-gap>
             <div class="clearfix">
                 <div class="pull-right">
-                    {{ i18n.my.addressBalance + "：" + aeBalance }}
+                    {{
+                        i18n.my.addressBalance +
+                            "：" +
+                            (tokenInfo.balance || aeBalance) +
+                            (tokenInfo.tokenName || "AE")
+                    }}
                 </div>
             </div>
         </div>
@@ -58,6 +63,15 @@
                 i18n.my.transfer
             }}</u-button>
         </div>
+        <u-modal
+            v-model="hashShow"
+            :show-cancel-button="true"
+            cancel-text="关闭"
+            confirm-text="查看"
+            @confirm="viewHash"
+        >
+            <view class="slot-content"> hash：{{ result.hash }} </view>
+        </u-modal>
     </div>
 </template>
 
@@ -73,6 +87,8 @@ export default {
     components: { UCellItem, UButton },
     data() {
         return {
+            title: "", //标题
+            tokenInfo: {}, //token信息
             aeBalance: 0, //ae余额
             form: {
                 address: "",
@@ -82,7 +98,9 @@ export default {
                 address: false,
                 money: false,
             },
-            btnLoading: false,
+            btnLoading: false, //按钮状态
+            hashShow: false, //合约转账成功弹层
+            result: {}, //合约转正成功信息
         };
     },
     computed: {
@@ -92,9 +110,19 @@ export default {
             return this.$_i18n.messages[this.$_i18n.locale];
         },
     },
-    onLoad() {
+    onLoad(option) {
         this.isPassword();
-        this.getAccount();
+        if (!!option.contractId) {
+            this.tokenInfo = {
+                tokenName: option.tokenName,
+                contractId: option.contractId,
+                balance: this.balanceFormat(option.balance),
+            };
+            this.title = `${this.tokenInfo.tokenName}${this.i18n.my.transfer}`;
+        } else {
+            this.getAccount();
+            this.title = `AE转账`;
+        }
     },
     activated() {},
     //上拉刷新
@@ -120,7 +148,8 @@ export default {
             }
             if (
                 !this.form.money ||
-                parseFloat(this.form.money) > parseFloat(this.aeBalance)
+                parseFloat(this.form.money) >
+                    parseFloat(this.tokenInfo.balance || this.aeBalance)
             ) {
                 this.warning.money = true;
                 return;
@@ -128,40 +157,57 @@ export default {
                 this.warning.money = false;
             }
             if (!this.warning.address && !this.warning.money) {
-                uni.showLoading({
-                    title: this.i18n.my.loading,
-                });
-                this.btnLoading = true;
-                var client;
-                if (JSON.stringify(this.$store.state.user.client) === "{}") {
-                    await this.connectAe();
-                    client = this.$store.state.user.client;
+                if (!!this.tokenInfo.contractId) {
+                    this.compileContact();
                 } else {
-                    client = this.$store.state.user.client;
-                }
-                try {
-                    const res = await client.spend(
-                        this.form.money * Math.pow(10, 18),
-                        this.form.address
-                    );
-                    if (res.hash) {
-                        uni.hideLoading();
-                        uni.showToast({
-                            icon: "success",
-                            title: this.i18n.my.success,
-                        });
-                        this.btnLoading = false;
-                        this.getAccount();
-                        this.form = {
-                            address: "",
-                            money: "",
-                        };
-                    }
-                } catch (err) {
-                    this.hideLoading = false;
-                    this.btnLoading = false;
+                    this.aeTransfer();
                 }
             }
+        },
+        //AE转账
+        async aeTransfer() {
+            uni.showLoading({
+                title: this.i18n.my.loading,
+            });
+            this.btnLoading = true;
+            let client = await this.client();
+            try {
+                const res = await client.spend(
+                    this.form.money * Math.pow(10, 18),
+                    this.form.address
+                );
+                if (res.hash) {
+                    uni.hideLoading();
+                    uni.showToast({
+                        icon: "success",
+                        title: this.i18n.my.success,
+                    });
+                    this.btnLoading = false;
+                    this.getAccount();
+                    this.form = {
+                        address: "",
+                        money: "",
+                    };
+                }
+            } catch (err) {
+                this.hideLoading = false;
+                this.btnLoading = false;
+            }
+        },
+        //合约转账
+        async compileContact() {
+            this.btnLoading = true;
+            this.result = await this.contractTransfer(
+                this.tokenInfo.contractId,
+                this.form.address,
+                this.form.money
+            );
+            this.form = {
+                address: "",
+                money: "",
+            };
+            this.btnLoading = false;
+            this.hashShow = true;
         },
         //解析域名
         async ParsingDomainName(domainName) {
@@ -183,6 +229,13 @@ export default {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
+        //查看何用调用成功后返回的哈希交易
+        viewHash() {
+            this.hashShow = false;
+            window.open(
+                "https://www.aeknow.org/block/transaction/" + this.result.hash
+            );
+        },
     },
 };
 </script>
@@ -203,6 +256,12 @@ export default {
     }
     .ok-btn {
         padding: 30rpx;
+    }
+    .slot-content {
+        padding: 30rpx;
+        word-wrap: break-word;
+        word-break: normal;
+        overflow: hidden;
     }
 }
 </style>

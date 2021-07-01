@@ -6,7 +6,9 @@ import {
     Universal,
     Keystore,
     MemoryAccount,
+    AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
+import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 const mixins = {
     data() {
         return {};
@@ -128,7 +130,7 @@ const mixins = {
                     url: store.state.user.nodeUrl,
                 });
                 const client = await Universal({
-                    //compilerUrl: "https://compiler.aechina.io",
+                    compilerUrl: "https://compiler.aechina.io",
                     nodes: [
                         {
                             name: "WeTrue",
@@ -150,8 +152,7 @@ const mixins = {
                 alert(error);
             }
         },
-        //发布主贴
-        async sendTopic(payload) {
+        async client() {
             var client;
             if (JSON.stringify(store.state.user.client) === "{}") {
                 await this.connectAe();
@@ -159,6 +160,11 @@ const mixins = {
             } else {
                 client = store.state.user.client;
             }
+            return client;
+        },
+        //发布主贴
+        async sendTopic(payload) {
+            let client = await this.client();
             const configInfo = getStore("configInfo");
             let content = {
                 WeTrue: configInfo.WeTrue,
@@ -183,13 +189,7 @@ const mixins = {
         },
         //发送评论
         async sendComment(payload) {
-            var client;
-            if (JSON.stringify(store.state.user.client) === "{}") {
-                await this.connectAe();
-                client = store.state.user.client;
-            } else {
-                client = store.state.user.client;
-            }
+            let client = await this.client();
             const configInfo = getStore("configInfo");
             let content = {
                 WeTrue: configInfo.WeTrue,
@@ -214,13 +214,7 @@ const mixins = {
         },
         //发送回复
         async sendReply(payload) {
-            var client;
-            if (JSON.stringify(store.state.user.client) === "{}") {
-                await this.connectAe();
-                client = store.state.user.client;
-            } else {
-                client = store.state.user.client;
-            }
+            let client = await this.client();
             const configInfo = getStore("configInfo");
             let content = {
                 WeTrue: configInfo.WeTrue,
@@ -248,13 +242,7 @@ const mixins = {
         },
         //发送昵称
         async sendNickname(payload) {
-            var client;
-            if (JSON.stringify(store.state.user.client) === "{}") {
-                await this.connectAe();
-                client = store.state.user.client;
-            } else {
-                client = store.state.user.client;
-            }
+            let client = await this.client();
             const configInfo = getStore("configInfo");
             let content = {
                 WeTrue: configInfo.WeTrue,
@@ -275,6 +263,37 @@ const mixins = {
                 hash: res.hash,
             });
             return res;
+        },
+        //合约转账
+        async contractTransfer(contractId, receiveId, amount) {
+            uni.showLoading({
+                title: "准备发送",
+            });
+            let client = await this.client();
+            uni.showLoading({
+                title: "正在编译合约",
+            });
+            const callDataCall = await client.contractEncodeCall(
+                FungibleTokenFull,
+                "transfer",
+                [receiveId, AmountFormatter.toAettos(amount)]
+            );
+            uni.showLoading({
+                title: "正在执行合约",
+            });
+            const callResult = await client.contractCall(
+                FungibleTokenFull,
+                contractId,
+                "transfer",
+                callDataCall
+            );
+            uni.showLoading({
+                title: "转账成功",
+            });
+            setTimeout(() => {
+                uni.hideLoading();
+            }, 500);
+            return callResult;
         },
     },
 };

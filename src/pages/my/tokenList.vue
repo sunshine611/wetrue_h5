@@ -34,8 +34,9 @@
                 <u-button
                     type="primary"
                     size="medium"
+                    :ripple="true"
                     :custom-style="{ width: '42%' }"
-                    @click="goUrl('transfer')"
+                    @click="goUrl(`transfer`)"
                     ><fa-FontAwesome
                         type="fas fa-exchange-alt"
                         size="24"
@@ -48,6 +49,7 @@
                 <u-button
                     type="success"
                     size="medium"
+                    :ripple="true"
                     :custom-style="{ width: '42%' }"
                     ><fa-FontAwesome
                         type="fas fa-qrcode"
@@ -67,12 +69,36 @@
                 :key="item.contract"
                 :title="item.tokenname"
                 :value="balanceFormat(item.balance)"
+                :arrow="false"
                 @click="
                     goUrl(
                         `tokenTransferRecode?contract=${item.contract}&tokenName=${item.tokenname}`
                     )
                 "
-            ></u-cell-item>
+            >
+                <div slot="right-icon" class="amount">
+                    <u-button
+                        shape="square"
+                        type="primary"
+                        size="mini"
+                        :ripple="true"
+                        class="ml-20"
+                        @click="
+                            goUrl(
+                                `transfer?tokenName=${item.tokenname}&contractId=${item.contract}&balance=${item.balance}`
+                            )
+                        "
+                        ><fa-FontAwesome
+                            type="fas fa-exchange-alt"
+                            size="24"
+                            class="mr-10"
+                            color="#fff"
+                        >
+                        </fa-FontAwesome
+                        >发送</u-button
+                    >
+                </div>
+            </u-cell-item>
         </u-cell-group>
     </div>
 </template>
