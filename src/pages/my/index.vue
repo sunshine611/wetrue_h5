@@ -21,7 +21,12 @@
                     <div class="user-box">
                         <div class="user-top">
                             <div class="head">
-                                <HeadImg :src="userInfo.portrait" :userActive="userInfo.userActive" width="120rpx" height="120rpx"></HeadImg>
+                                <HeadImg
+                                    :src="userInfo.portrait"
+                                    :userActive="userInfo.userActive"
+                                    width="120rpx"
+                                    height="120rpx"
+                                ></HeadImg>
                                 <u-gap height="10"></u-gap>
                                 {{ userInfo.nickname || i18n.my.cryptonym }}
                             </div>
@@ -30,13 +35,19 @@
                             </div>
                         </div>
                         <div class="user-bottom">
-                            <div class="item" @click="goUrl('topicList?type=myTopic')">
+                            <div
+                                class="item"
+                                @click="goUrl('topicList?type=myTopic')"
+                            >
                                 <div class="value">
                                     {{ userInfo.topic || 0 }}
                                 </div>
                                 <div class="label">{{ i18n.my.topic }}</div>
                             </div>
-                            <div class="item" @click="goUrl('topicList?type=myStar')">
+                            <div
+                                class="item"
+                                @click="goUrl('topicList?type=myStar')"
+                            >
                                 <div class="value">
                                     {{ userInfo.star || 0 }}
                                 </div>
@@ -48,13 +59,19 @@
                                 </div>
                                 <div class="label">{{ i18n.my.active }}</div>
                             </div>
-                            <div class="item" @click="goUrl('userList?type=focus')">
+                            <div
+                                class="item"
+                                @click="goUrl('userList?type=focus')"
+                            >
                                 <div class="value">
                                     {{ userInfo.focus || 0 }}
                                 </div>
                                 <div class="label">{{ i18n.my.focus }}</div>
                             </div>
-                            <div class="item" @click="goUrl('userList?type=fans')">
+                            <div
+                                class="item"
+                                @click="goUrl('userList?type=fans')"
+                            >
                                 <div class="value">
                                     {{ userInfo.fans || 0 }}
                                 </div>

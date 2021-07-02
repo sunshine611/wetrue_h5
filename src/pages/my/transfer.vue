@@ -64,13 +64,14 @@
             }}</u-button>
         </div>
         <u-modal
+            title="转账成功"
             v-model="hashShow"
             :show-cancel-button="true"
             cancel-text="关闭"
             confirm-text="查看"
             @confirm="viewHash"
         >
-            <view class="slot-content"> hash：{{ result.hash }} </view>
+            <view class="slot-content"> {{ result.hash }} </view>
         </u-modal>
     </div>
 </template>

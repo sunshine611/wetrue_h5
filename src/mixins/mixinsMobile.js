@@ -268,34 +268,33 @@ const mixins = {
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {
-            uni.showLoading({
-                title: "准备发送",
-            });
-            let client = await this.client();
-            uni.showLoading({
-                title: "正在编译合约",
-            });
-            const callDataCall = await client.contractEncodeCall(
-                FungibleTokenFull,
-                "transfer",
-                [receiveId, AmountFormatter.toAettos(amount)]
-            );
-            uni.showLoading({
-                title: "正在执行合约",
-            });
-            const callResult = await client.contractCall(
-                FungibleTokenFull,
-                contractId,
-                "transfer",
-                callDataCall
-            );
-            uni.showLoading({
-                title: "转账成功",
-            });
-            setTimeout(() => {
+            try {
+                uni.showLoading({
+                    title: "准备发送",
+                });
+                let client = await this.client();
+                uni.showLoading({
+                    title: "正在编译合约",
+                });
+                const callDataCall = await client.contractEncodeCall(
+                    FungibleTokenFull,
+                    "transfer",
+                    [receiveId, AmountFormatter.toAettos(amount)]
+                );
+                uni.showLoading({
+                    title: "正在执行合约",
+                });
+                const callResult = await client.contractCall(
+                    FungibleTokenFull,
+                    contractId,
+                    "transfer",
+                    callDataCall
+                );
                 uni.hideLoading();
-            }, 500);
-            return callResult;
+                return callResult;
+            }catch(err){
+                alert(err)
+            }
         },
     },
 };
