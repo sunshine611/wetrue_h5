@@ -60,10 +60,7 @@
                     @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
                     <div class="text-content">
-                        <u-parse
-                            :html="item.payload"
-                            :show-with-animation="true"
-                        ></u-parse>
+                        <mp-html :content="item.payload" />
                     </div>
                     <div class="img-list">
                         <u-image
@@ -136,9 +133,11 @@
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
+import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
 export default {
     components: {
         HeadImg,
+        mpHtml
     },
     props: {
         postList: {

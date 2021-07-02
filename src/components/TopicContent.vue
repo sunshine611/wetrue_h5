@@ -73,10 +73,7 @@
             </div>
             <div class="main-content">
                 <div class="text-content">
-                    <u-parse
-                        :html="postInfo.payload"
-                        :show-with-animation="true"
-                    ></u-parse>
+                    <mp-html :content="postInfo.payload" />
                 </div>
                 <div class="img-list">
                     <u-image
@@ -92,9 +89,11 @@
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
+import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
 export default {
     components: {
         HeadImg,
+        mpHtml
     },
     props: {
         postInfo: {

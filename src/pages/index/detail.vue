@@ -79,8 +79,7 @@
                             </view>
                         </view>
                         <view class="content">
-                            <rich-text :nodes="item.payload"></rich-text
-                        ></view>
+                            <mp-html :content="item.payload" /></view>
                         <view
                             class="reply-box"
                             v-show="item.commentList.length > 0"
@@ -103,11 +102,7 @@
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
-                                    >：<rich-text
-                                     class="compiler"
-                                        :nodes="item.payload"
-                                    ></rich-text
-                                ></view>
+                                    >：<mp-html class="compiler" :content="item.payload" /></view>
                             </view>
                             <view
                                 class="all-reply"
@@ -203,11 +198,13 @@
 import inputComment from "@/components/input-comment/input-comment.vue";
 import TopicContent from "@/components/TopicContent";
 import HeadImg from "@/components/HeadImg";
+import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
 export default {
     components: {
         inputComment,
         TopicContent,
         HeadImg,
+        mpHtml
     },
     data() {
         return {

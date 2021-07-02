@@ -15,28 +15,26 @@
             <view class="top">
                 <view class="left">
                     <div class="head-box">
-                        <image
-                            class="user-head"
-                            mode="aspectFill"
+                        <HeadImg
                             :src="commentInfo.users.portrait"
-                            v-if="commentInfo.users.portrait"
-                        ></image>
-                        <image
-                            class="user-head"
-                            mode="aspectFill"
-                            src="../../static/default_head.png"
-                            v-else
-                        ></image>
-                        <div class="level">
-                            <text class="text"
-                                >V{{ commentInfo.users.userActive }}</text
-                            >
-                        </div>
+                            :userActive="commentInfo.users.userActive"
+                            :isLink="true"
+                            :userAddress="commentInfo.users.userAddress"
+                            width="70rpx"
+                            height="70rpx"
+                        ></HeadImg>
                     </div>
                     <view class="user-info">
-                        <view class="name">{{
-                            commentInfo.users.nickname
-                        }}</view>
+                        <view
+                            class="name"
+                            @click="
+                                goUrl(
+                                    '/pages/my/topicList?type=user&userAddress=' +
+                                        commentInfo.users.userAddress
+                                )
+                            "
+                            >{{ commentInfo.users.nickname }}</view
+                        >
                         <view class="date"
                             ><text class="address"
                                 >ID:{{
@@ -73,7 +71,7 @@
                 </view>
             </view>
             <view class="content">
-                <rich-text :nodes="commentInfo.payload"></rich-text>
+                <mp-html :content="commentInfo.payload" />
             </view>
         </view>
         <view class="all-reply">
@@ -86,29 +84,26 @@
                     <view class="top">
                         <view class="left">
                             <div class="head-box">
-                                <image
-                                    class="user-head"
-                                    mode="aspectFill"
+                                <HeadImg
                                     :src="item.users.portrait"
-                                    v-if="item.users.portrait"
-                                ></image>
-                                <image
-                                    class="user-head"
-                                    mode="aspectFill"
-                                    src="../../static/default_head.png"
-                                    v-else
-                                >
-                                </image>
-                                <div class="level">
-                                    <text class="text"
-                                        >V{{ item.users.userActive }}</text
-                                    >
-                                </div>
+                                    :userActive="item.users.userActive"
+                                    :isLink="true"
+                                    :userAddress="item.users.userAddress"
+                                    width="70rpx"
+                                    height="70rpx"
+                                ></HeadImg>
                             </div>
                             <view class="user-info">
-                                <view class="name">{{
-                                    item.users.nickname
-                                }}</view>
+                                <view
+                                    class="name"
+                                    @click="
+                                        goUrl(
+                                            '/pages/my/topicList?type=user&userAddress=' +
+                                                item.users.userAddress
+                                        )
+                                    "
+                                    >{{ item.users.nickname }}</view
+                                >
                                 <view class="date"
                                     ><text class="address"
                                         >ID:{{
@@ -144,9 +139,9 @@
                             ></u-icon>
                         </view>
                     </view>
-                    <view class="content"
-                        ><rich-text :nodes="item.payload"></rich-text
-                    ></view>
+                    <view class="content">
+                        <mp-html :content="item.payload"
+                    /></view>
                 </view>
             </view>
         </view>
@@ -162,7 +157,13 @@
 </template>
 
 <script>
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import HeadImg from "@/components/HeadImg";
 export default {
+    components: {
+        mpHtml,
+        HeadImg,
+    },
     data() {
         return {
             replyList: [], //回复评论列表
@@ -309,35 +310,6 @@ page {
 
         .head-box {
             margin-right: 20rpx;
-            position: relative;
-
-            .user-head {
-                width: 70rpx;
-                height: 70rpx;
-                border-radius: 50%;
-                box-sizing: border-box;
-            }
-
-            .level {
-                position: absolute;
-                right: -8rpx;
-                bottom: 2rpx;
-                width: 34rpx;
-                height: 34rpx;
-                background-color: #d62900;
-                font-size: 24rpx;
-                border-radius: 50%;
-                color: #fff;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 4rpx solid #ffd982;
-                box-sizing: border-box;
-
-                .text {
-                    transform: scale(0.65);
-                }
-            }
         }
 
         .user-info {
