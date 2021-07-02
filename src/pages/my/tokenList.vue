@@ -96,7 +96,7 @@
                             color="#fff"
                         >
                         </fa-FontAwesome
-                        >发送</u-button
+                        >{{ i18n.my.send }}</u-button
                     >
                 </div>
             </u-cell-item>
