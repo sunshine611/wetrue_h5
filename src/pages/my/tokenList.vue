@@ -51,6 +51,7 @@
                     size="medium"
                     :ripple="true"
                     :custom-style="{ width: '42%' }"
+                    @click="goUrl('qrcode')"
                     ><fa-FontAwesome
                         type="fas fa-qrcode"
                         size="24"
@@ -130,7 +131,11 @@ export default {
         this.getAccount();
         this.getTokenList();
     },
-    activated() {},
+    activated() {
+        this.isPassword();
+        this.getAccount();
+        this.getTokenList();
+    },
     //上拉刷新
     onPullDownRefresh() {
         this.getAccount();

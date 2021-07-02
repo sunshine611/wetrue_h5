@@ -18,10 +18,9 @@ http.interceptors.request.use((config) => {
   if (!!getStore("keystore")) {
     if (!store.state.user.password) {
       let pageObj = getCurrentPages(); //实例化页面栈
+      let link = pageObj[0].route + queryParams(pageObj[0].options);
       uni.navigateTo({
-        url: `/pages/login/password?link=${encodeURIComponent(
-          pageObj[0].route
-        ) + queryParams(pageObj[0].options)}`,
+        url: `/pages/login/password?link=${encodeURIComponent(link)}`,
       });
     }
   }

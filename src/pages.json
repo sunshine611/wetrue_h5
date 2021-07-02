@@ -170,6 +170,16 @@
         "navigationBarTitleText": "转账",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/my/qrcode",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "收款",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {

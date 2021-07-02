@@ -95,10 +95,11 @@ const mixins = {
         isPassword() {
             if (!store.state.user.password) {
                 let pageObj = getCurrentPages(); //实例化页面栈
+                let link = pageObj[0].route + queryParams(pageObj[0].options);
                 uni.navigateTo({
                     url: `/pages/login/password?link=${encodeURIComponent(
-                        pageObj[0].route
-                    ) + queryParams(pageObj[0].options)}`,
+                        link
+                    )}`,
                 });
             }
         },
@@ -152,6 +153,7 @@ const mixins = {
                 alert(error);
             }
         },
+        //判断是否已连接AE网络
         async client() {
             var client;
             if (JSON.stringify(store.state.user.client) === "{}") {
