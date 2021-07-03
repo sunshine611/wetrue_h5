@@ -1,26 +1,17 @@
 <template>
     <div class="qrcode">
-        <u-navbar title="收款">
-            <div slot="right">
-                <u-icon
-                    name="home"
-                    class="mr-30"
-                    size="34"
-                    color="#f04a82"
-                    @click="reLaunchUrl('index')"
-                ></u-icon>
-            </div>
-        </u-navbar>
         <div class="card">
             <vue-qr
                 logoSrc="../../static/logo.png"
                 :text="token"
                 :size="220"
+                :margin="10"
             ></vue-qr>
             <u-gap :height="20"></u-gap>
             <div class="token" @tap="copy" id="copy">
                 <text>收款地址</text><u-gap :height="20"></u-gap>{{ token }}
             </div>
+            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">返回我的</u-button>
             <u-gap :height="30"></u-gap>
         </div>
     </div>
@@ -31,8 +22,9 @@ import vueQr from "vue-qr";
 import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
+import UButton from '../../uview-ui/components/u-button/u-button.vue';
 export default {
-    components: { vueQr, UGap },
+    components: { vueQr, UGap, UButton },
     data() {
         return {};
     },
@@ -44,10 +36,8 @@ export default {
         },
     },
     onLoad() {
-        this.isPassword();
     },
     activated() {
-        this.isPassword();
     },
     methods: {
         //复制粘贴板
@@ -82,18 +72,26 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+page {
+    background-color: #f04a82;
+}
 .qrcode {
+    padding:60rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+    box-sizing: border-box;
     .card {
         margin: 60rpx auto 0;
         padding: 50rpx 50rpx;
-        width: 85%;
         border-radius: 20rpx;
-        height: 80%;
         background: #fff;
         display: flex;
         justify-content: center;
         flex-direction: column;
         box-sizing: border-box;
+        // box-shadow: 0 0 20rpx #ccc;
         .token {
             background: #f5f5f5;
             padding: 20rpx;

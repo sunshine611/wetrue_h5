@@ -23,7 +23,7 @@
                                 class="name"
                                 @click="
                                     goUrl(
-                                        '/pages/my/topicList?type=user&userAddress=' +
+                                        '/pages/my/userInfo?userAddress=' +
                                             item.users.userAddress
                                     )
                                 "
@@ -133,11 +133,11 @@
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
-import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 export default {
     components: {
         HeadImg,
-        mpHtml
+        mpHtml,
     },
     props: {
         postList: {

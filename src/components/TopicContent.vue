@@ -18,7 +18,7 @@
                             class="name"
                             @click="
                                 goUrl(
-                                    '/pages/my/topicList?type=user&userAddress=' +
+                                    '/pages/my/userInfo?userAddress=' +
                                         postInfo.users.userAddress
                                 )
                             "

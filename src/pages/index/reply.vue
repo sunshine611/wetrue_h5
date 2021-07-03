@@ -29,7 +29,7 @@
                             class="name"
                             @click="
                                 goUrl(
-                                    '/pages/my/topicList?type=user&userAddress=' +
+                                    '/pages/my/userInfo?userAddress=' +
                                         commentInfo.users.userAddress
                                 )
                             "
@@ -98,7 +98,7 @@
                                     class="name"
                                     @click="
                                         goUrl(
-                                            '/pages/my/topicList?type=user&userAddress=' +
+                                            '/pages/my/userInfo?userAddress=' +
                                                 item.users.userAddress
                                         )
                                     "

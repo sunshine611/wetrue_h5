@@ -62,7 +62,7 @@ export default {
         handleView(item) {
             if (this.isLink) {
                 this.goUrl(
-                    "/pages/my/topicList?type=user&userAddress=" +
+                    "/pages/my/userInfo?userAddress=" +
                         this.userAddress
                 );
             }

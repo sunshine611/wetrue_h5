@@ -105,12 +105,12 @@
       }
     },
     {
-      "path": "pages/my/userInfo",
+      "path": "pages/my/infoEdit",
       "style": {
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "用户信息",
+        "navigationBarTitleText": "信息修改",
         "enablePullDownRefresh": true
       }
     },
@@ -131,6 +131,16 @@
           "titleNView": false //禁用原生导航栏
         },
         "navigationBarTitleText": "关注/粉丝",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/my/userInfo",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "用户信息",
         "enablePullDownRefresh": true
       }
     },

@@ -15,7 +15,7 @@
                             name="setting-fill"
                             color="#fff"
                             size="40"
-                            @click="goUrl('userInfo')"
+                            @click="goUrl('infoEdit')"
                         ></u-icon>
                     </div>
                     <div class="user-box">
@@ -97,7 +97,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="i18n.my.nodeSet">
+                    <!-- <u-cell-item :title="i18n.my.nodeSet">
                         <fa-FontAwesome
                             slot="icon"
                             type="fab fa-linode"
@@ -106,7 +106,7 @@
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell-item>
+                    </u-cell-item> -->
                     <u-cell-item
                         :title="i18n.my.logout"
                         :border-bottom="false"
