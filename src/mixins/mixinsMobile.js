@@ -266,6 +266,30 @@ const mixins = {
             });
             return res;
         },
+        //发送性别
+        async sendSex(payload) {
+            let client = await this.client();
+            const configInfo = getStore("configInfo");
+            let content = {
+                WeTrue: configInfo.WeTrue,
+                type: "sex",
+                content: payload.content,
+            };
+            const res = await client.spend(
+                configInfo.sexAmount,
+                configInfo.receivingAccount,
+                {
+                    payload: JSON.stringify(content),
+                }
+            );
+            uni.showLoading({
+                title: "Radio",
+            });
+            this.$http.post("/Submit/hash", {
+                hash: res.hash,
+            });
+            return res;
+        },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {
             try {

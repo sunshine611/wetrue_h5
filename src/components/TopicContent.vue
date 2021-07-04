@@ -4,10 +4,8 @@
             <div class="user-area">
                 <div class="head-box">
                     <HeadImg
-                        :src="postInfo.users.portrait"
-                        :userActive="postInfo.users.userActive"
+                        :userInfo="postInfo.users"
                         :isLink="true"
-                        :userAddress="postInfo.users.userAddress"
                         width="70rpx"
                         height="70rpx"
                     ></HeadImg>

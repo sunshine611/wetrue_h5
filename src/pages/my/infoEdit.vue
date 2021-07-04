@@ -22,8 +22,13 @@
             <u-cell-item
                 :title="i18n.my.nickname"
                 :value="userInfo.nickname || i18n.my.cryptonym"
-                @click="nameShow = true"
+                @click="
+                    nameShow = true;
+                    nickname = userInfo.nickname;
+                "
             >
+            </u-cell-item>
+            <u-cell-item title="性别" :value="sexName" @click="sexShow = true">
             </u-cell-item>
         </u-cell-group>
         <u-popup
@@ -49,6 +54,26 @@
                 >
             </view>
         </u-popup>
+        <u-popup v-model="sexShow" mode="center" width="80%" border-radius="20">
+            <view class="name-box">
+                <u-radio-group v-model="userInfo.sex">
+                    <u-radio
+                        v-for="(item, index) in sexList"
+                        :key="index"
+                        :name="item.name"
+                    >
+                        {{ item.sexName }}
+                    </u-radio>
+                </u-radio-group>
+                <u-gap :height="30"></u-gap>
+                <u-button
+                    type="primary"
+                    @click="updateSex"
+                    :loading="btnLoading"
+                    >{{ i18n.my.send }}</u-button
+                >
+            </view>
+        </u-popup>
     </div>
 </template>
 
@@ -64,10 +89,27 @@ export default {
             userInfo: {
                 userHead: "", //用户头像
                 nickname: "匿名", //用户昵称
+                sex: 2,
             },
             nameShow: false, //名字弹层
+            sexShow: false, //性别弹层
             nickname: "", //昵称
+            sexName: "", //性别
             btnLoading: false,
+            sexList: [
+                {
+                    name: 0,
+                    sexName: "女",
+                },
+                {
+                    name: 1,
+                    sexName: "男",
+                },
+                {
+                    name: 2,
+                    sexName: "未知",
+                },
+            ],
         };
     },
     computed: {
@@ -98,12 +140,19 @@ export default {
             this.$http.post("/User/info", params).then((res) => {
                 if (res.code === 200) {
                     this.userInfo = res.data;
+                    if (this.userInfo.sex === 0) {
+                        this.sexName = "女";
+                    } else if (this.userInfo.sex === 1) {
+                        this.sexName = "男";
+                    } else {
+                        this.sexName = "未知";
+                    }
                 }
                 this.loading = false;
             });
         },
         //验证昵称
-        checkNickname(){
+        checkNickname() {
             this.$http
                 .post("/User/isNickname", { nickname: this.nickname })
                 .then((res) => {
@@ -111,9 +160,9 @@ export default {
                         if (res.isNickname) {
                             uni.showToast({
                                 title: this.i18n.my.checkNickname,
-                                icon:'none'
+                                icon: "none",
                             });
-                        }else{
+                        } else {
                             this.updateNickname();
                         }
                     }
@@ -130,8 +179,28 @@ export default {
             };
             let res = await this.sendNickname(payload);
             if (!!res.hash) {
-                uni.hideLoading();
+                setTimeout(() => {
+                    uni.hideLoading();
+                }, 500);
                 this.nameShow = false;
+                this.btnLoading = false;
+            }
+        },
+        //更新性别
+        async updateSex() {
+            this.btnLoading = true;
+            uni.showLoading({
+                title: this.i18n.index.inChain,
+            });
+            let payload = {
+                content: this.userInfo.sex,
+            };
+            let res = await this.sendSex(payload);
+            if (!!res.hash) {
+                setTimeout(() => {
+                    uni.hideLoading();
+                }, 500);
+                this.sexShow = false;
                 this.btnLoading = false;
             }
         },

@@ -9,10 +9,8 @@
                 <div class="user-area">
                     <div class="head-box">
                         <HeadImg
-                            :src="item.users.portrait"
-                            :userActive="item.users.userActive"
+                            :userInfo="item.users"
                             :isLink="true"
-                            :userAddress="item.users.userAddress"
                             width="70rpx"
                             height="70rpx"
                         ></HeadImg>
