@@ -294,7 +294,7 @@ page {
     }
 
     .content {
-        font-size: 26rpx;
+        font-size: 28rpx;
         padding: 20rpx 0 0 0;
         word-wrap: break-word;
         word-break: break-all;

@@ -467,7 +467,7 @@ export default {
                     }
 
                     .content {
-                        font-size: 26rpx;
+                        font-size: 28rpx;
                         margin-bottom: 16rpx;
                         word-wrap: break-word;
                         word-break: break-all;

@@ -346,6 +346,7 @@ export default {
                 border-bottom: 2rpx solid #e9e9e9;
 
                 .text-content {
+                    font-size: 28rpx;
                     margin-bottom: 20rpx;
                     word-wrap: break-word;
                     word-break: normal;

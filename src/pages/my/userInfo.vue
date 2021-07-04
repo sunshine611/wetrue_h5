@@ -15,8 +15,7 @@
             <div class="user-top">
                 <div class="head">
                     <HeadImg
-                        :src="userInfo.portrait"
-                        :userActive="userInfo.userActive"
+                        :userInfo="userInfo"
                         width="120rpx"
                         height="120rpx"
                     ></HeadImg>
