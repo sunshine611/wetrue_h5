@@ -166,13 +166,19 @@ export default {
                 this.form.amount
             );
             if (result) {
+                this.rewardSubmit(result.hash);
                 this.form = {
                     amount: "",
                 };
-                this.showModal=false;
+                this.showModal = false;
                 this.uShowToast("打赏成功，谢谢大爷打赏！");
             }
             this.btnLoading = false;
+        },
+        //打赏提交
+        rewardSubmit(hash) {
+            let params = { hash: hash, toHash: this.postInfo.hash };
+            this.$http.post("/Submit/reward", params)
         },
     },
 };
