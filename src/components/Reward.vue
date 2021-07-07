@@ -100,8 +100,8 @@ export default {
                     value: 188,
                 },
                 {
-                    text: "588WTT",
-                    value: 588,
+                    text: "680WTT",
+                    value: 680,
                 },
                 {
                     text: "1888WTT",
