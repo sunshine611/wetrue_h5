@@ -33,7 +33,7 @@
                 <u-input
                     v-model="form.amount"
                     size="mini"
-                    type="text"
+                    type="number"
                     class="textarea"
                     :border="true"
                     :clearable="false"
