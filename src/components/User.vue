@@ -13,8 +13,7 @@
                 >
                     <div slot="icon" class="mr-20">
                         <HeadImg
-                            :src="item.portrait"
-                            :userActive="item.userActive"
+                            :userInfo="item"
                             width="100rpx"
                             height="100rpx"
                         ></HeadImg>

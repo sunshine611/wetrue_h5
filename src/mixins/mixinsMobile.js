@@ -317,7 +317,8 @@ const mixins = {
                 uni.hideLoading();
                 return callResult;
             }catch(err){
-                alert(err)
+                this.uShowToast('余额不足');
+                uni.hideLoading();
             }
         },
     },
