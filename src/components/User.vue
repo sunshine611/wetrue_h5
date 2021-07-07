@@ -6,15 +6,14 @@
                     class="cell-out"
                     @click="
                         goUrl(
-                            '/pages/my/topicList?type=user&userAddress=' +
+                            '/pages/my/userInfo?userAddress=' +
                                 item.userAddress
                         )
                     "
                 >
                     <div slot="icon" class="mr-20">
                         <HeadImg
-                            :src="item.portrait"
-                            :userActive="item.userActive"
+                            :userInfo="item"
                             width="100rpx"
                             height="100rpx"
                         ></HeadImg>

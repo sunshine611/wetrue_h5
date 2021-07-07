@@ -77,7 +77,8 @@
                             </view>
                         </view>
                         <view class="content">
-                            <mp-html :content="item.payload" /></view>
+                            <mp-html :content="item.payload"
+                        /></view>
                         <view
                             class="reply-box"
                             v-show="item.commentList.length > 0"
@@ -100,7 +101,10 @@
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
-                                    >：<mp-html class="compiler" :content="item.payload" /></view>
+                                    >：<mp-html
+                                        class="compiler"
+                                        :content="item.payload"
+                                /></view>
                             </view>
                             <view
                                 class="all-reply"
@@ -189,6 +193,7 @@
             @clickOther="isShowComment = false"
             @submitComment="submitComment"
         ></inputComment>
+        <Reward v-model="rewardShow" :postInfo="postInfo"></Reward>
     </view>
 </template>
 
@@ -196,13 +201,15 @@
 import inputComment from "@/components/input-comment/input-comment.vue";
 import TopicContent from "@/components/TopicContent";
 import HeadImg from "@/components/HeadImg";
-import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import Reward from "@/components/Reward";
 export default {
     components: {
         inputComment,
         TopicContent,
         HeadImg,
-        mpHtml
+        mpHtml,
+        Reward,
     },
     data() {
         return {
@@ -224,6 +231,7 @@ export default {
             placeholder: "写评论...", //评论文本框显示文字
             commentType: "", //回复类型
             currentComment: {}, //当前回复信息
+            rewardShow: false, //控制打赏弹层
         };
     },
     //上拉刷新
@@ -361,7 +369,9 @@ export default {
             }
         },
         //打赏
-        reward() {},
+        reward() {
+            this.rewardShow = true;
+        },
         //是否点赞
         praise(type, item) {
             if (type === "topic") {
@@ -486,10 +496,10 @@ export default {
                                 .name {
                                     color: #f04a82;
                                 }
-                                .compiler{
-                                    display: inline!important;
+                                .compiler {
+                                    display: inline !important;
                                     /deep/ * {
-                                        display: inline!important;
+                                        display: inline !important;
                                     }
                                 }
                                 .parse {

@@ -1,5 +1,5 @@
 <template>
-    <div class="head-img" @click="handleView">
+    <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
         <u-image
             shape="circle"
             :width="width"
