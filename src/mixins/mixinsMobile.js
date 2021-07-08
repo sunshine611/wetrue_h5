@@ -166,129 +166,154 @@ const mixins = {
         },
         //发布主贴
         async sendTopic(payload) {
-            let client = await this.client();
-            const configInfo = getStore("configInfo");
-            let content = {
-                WeTrue: configInfo.WeTrue,
-                source: "WeTrue",
-                type: "topic",
-                content: payload.content,
-            };
-            const res = await client.spend(
-                configInfo.topicAmount,
-                configInfo.receivingAccount,
-                {
-                    payload: JSON.stringify(content),
-                }
-            );
-            uni.showLoading({
-                title: "Radio",
-            });
-            this.$http.post("/Submit/hash", {
-                hash: res.hash,
-            });
-            return res;
+            try {
+                let client = await this.client();
+                const configInfo = getStore("configInfo");
+                let content = {
+                    WeTrue: configInfo.WeTrue,
+                    source: "WeTrue",
+                    type: "topic",
+                    content: payload.content,
+                };
+                const res = await client.spend(
+                    configInfo.topicAmount,
+                    configInfo.receivingAccount,
+                    {
+                        payload: JSON.stringify(content),
+                    }
+                );
+                uni.showLoading({
+                    title: "Radio",
+                });
+                this.$http.post("/Submit/hash", {
+                    hash: res.hash,
+                });
+                return res;
+            } catch (err) {
+                this.uShowToast("操作失败！");
+                uni.hideLoading();
+            }
         },
         //发送评论
         async sendComment(payload) {
-            let client = await this.client();
-            const configInfo = getStore("configInfo");
-            let content = {
-                WeTrue: configInfo.WeTrue,
-                type: "comment",
-                toHash: payload.hash,
-                content: payload.content,
-            };
-            const res = await client.spend(
-                configInfo.commentAmount,
-                configInfo.receivingAccount,
-                {
-                    payload: JSON.stringify(content),
-                }
-            );
-            uni.showLoading({
-                title: "Radio",
-            });
-            this.$http.post("/Submit/hash", {
-                hash: res.hash,
-            });
-            return res;
+            try {
+                let client = await this.client();
+                const configInfo = getStore("configInfo");
+                let content = {
+                    WeTrue: configInfo.WeTrue,
+                    type: "comment",
+                    toHash: payload.hash,
+                    content: payload.content,
+                };
+                const res = await client.spend(
+                    configInfo.commentAmount,
+                    configInfo.receivingAccount,
+                    {
+                        payload: JSON.stringify(content),
+                    }
+                );
+                uni.showLoading({
+                    title: "Radio",
+                });
+                this.$http.post("/Submit/hash", {
+                    hash: res.hash,
+                });
+                return res;
+            } catch (err) {
+                this.uShowToast("操作失败！");
+                uni.hideLoading();
+            }
         },
         //发送回复
         async sendReply(payload) {
-            let client = await this.client();
-            const configInfo = getStore("configInfo");
-            let content = {
-                WeTrue: configInfo.WeTrue,
-                type: "reply",
-                reply_type: payload.type,
-                to_hash: payload.hash,
-                to_address: payload.address,
-                reply_hash: payload.replyHash,
-                content: payload.content,
-            };
-            const res = await client.spend(
-                configInfo.replyAmount,
-                configInfo.receivingAccount,
-                {
-                    payload: JSON.stringify(content),
-                }
-            );
-            uni.showLoading({
-                title: "Radio",
-            });
-            this.$http.post("/Submit/hash", {
-                hash: res.hash,
-            });
-            return res;
+            try {
+                let client = await this.client();
+                const configInfo = getStore("configInfo");
+                let content = {
+                    WeTrue: configInfo.WeTrue,
+                    type: "reply",
+                    reply_type: payload.type,
+                    to_hash: payload.hash,
+                    to_address: payload.address,
+                    reply_hash: payload.replyHash,
+                    content: payload.content,
+                };
+                const res = await client.spend(
+                    configInfo.replyAmount,
+                    configInfo.receivingAccount,
+                    {
+                        payload: JSON.stringify(content),
+                    }
+                );
+                uni.showLoading({
+                    title: "Radio",
+                });
+                this.$http.post("/Submit/hash", {
+                    hash: res.hash,
+                });
+                return res;
+            } catch (err) {
+                this.uShowToast("操作失败！");
+                uni.hideLoading();
+            }
         },
         //发送昵称
         async sendNickname(payload) {
-            let client = await this.client();
-            const configInfo = getStore("configInfo");
-            let content = {
-                WeTrue: configInfo.WeTrue,
-                type: "nickname",
-                content: payload.content,
-            };
-            const res = await client.spend(
-                configInfo.nicknameAmount,
-                configInfo.receivingAccount,
-                {
-                    payload: JSON.stringify(content),
-                }
-            );
-            uni.showLoading({
-                title: "Radio",
-            });
-            this.$http.post("/Submit/hash", {
-                hash: res.hash,
-            });
-            return res;
+            try {
+                let client = await this.client();
+                const configInfo = getStore("configInfo");
+                let content = {
+                    WeTrue: configInfo.WeTrue,
+                    type: "nickname",
+                    content: payload.content,
+                };
+                const res = await client.spend(
+                    configInfo.nicknameAmount,
+                    configInfo.receivingAccount,
+                    {
+                        payload: JSON.stringify(content),
+                    }
+                );
+                uni.showLoading({
+                    title: "Radio",
+                });
+                this.$http.post("/Submit/hash", {
+                    hash: res.hash,
+                });
+                return res;
+            } catch (err) {
+                this.uShowToast("操作失败！");
+                uni.hideLoading();
+            }
         },
         //发送性别
         async sendSex(payload) {
-            let client = await this.client();
-            const configInfo = getStore("configInfo");
-            let content = {
-                WeTrue: configInfo.WeTrue,
-                type: "sex",
-                content: payload.content,
-            };
-            const res = await client.spend(
-                configInfo.sexAmount,
-                configInfo.receivingAccount,
-                {
-                    payload: JSON.stringify(content),
-                }
-            );
-            uni.showLoading({
-                title: "Radio",
-            });
-            this.$http.post("/Submit/hash", {
-                hash: res.hash,
-            });
-            return res;
+            try {
+                let client = await this.client();
+                const configInfo = getStore("configInfo");
+                let content = {
+                    WeTrue: configInfo.WeTrue,
+                    type: "sex",
+                    content: payload.content,
+                };
+                const res = await client.spend(
+                    configInfo.sexAmount,
+                    configInfo.receivingAccount,
+                    {
+                        payload: JSON.stringify(content),
+                    }
+                );
+                uni.showLoading({
+                    title: "Radio",
+                });
+                this.$http.post("/Submit/hash", {
+                    hash: res.hash,
+                });
+                return res;
+            } catch (err) {
+                this.uShowToast("操作失败！");
+                uni.hideLoading();
+            }
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {

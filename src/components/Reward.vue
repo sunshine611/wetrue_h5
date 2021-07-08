@@ -45,11 +45,11 @@
                 <div class="warnning" v-show="warning.amount">
                     {{ i18n.my.balanceErr }}
                 </div>
-                <!-- <div class="clearfix">
+                <div class="clearfix">
                     <div class="pull-right">
                         {{ i18n.my.addressBalance + "：" + wttBalance + "WTT" }}
                     </div>
-                </div> -->
+                </div>
                 <u-gap height="50"></u-gap>
                 <u-button type="primary" @click="reward" :loading="btnLoading"
                     >打赏</u-button
@@ -61,6 +61,9 @@
 <script>
 import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
 import { mapGetters } from "vuex";
+import Request from "@/js_sdk/luch-request/luch-request/index.js";
+const http = new Request();
+import { aeknow } from "@/config/config.js";
 export default {
     components: {
         UTag,
@@ -126,6 +129,9 @@ export default {
     watch: {
         value(val) {
             this.showModal = val;
+            if (val) {
+                this.getWttBalance();
+            }
         },
         showModal(val) {
             this.$emit("input", val);
@@ -152,19 +158,19 @@ export default {
         },
         //打赏
         async reward() {
-            if(this.token===this.postInfo.users.userAddress){
+            if (this.token === this.postInfo.users.userAddress) {
                 this.uShowToast("请不要自己打赏给自己！");
                 return;
             }
-            // if (
-            //     !this.form.amount ||
-            //     parseFloat(this.form.amount) > parseFloat(this.wttBalance)
-            // ) {
-            //     this.warning.amount = true;
-            //     return;
-            // } else {
-            //     this.warning.amount = false;
-            // }
+            if (
+                !this.form.amount ||
+                parseFloat(this.form.amount) > parseFloat(this.wttBalance)
+            ) {
+                this.warning.amount = true;
+                return;
+            } else {
+                this.warning.amount = false;
+            }
             this.btnLoading = true;
             let result = await this.contractTransfer(
                 "ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM",
@@ -184,7 +190,15 @@ export default {
         //打赏提交
         rewardSubmit(hash) {
             let params = { hash: hash, toHash: this.postInfo.hash };
-            this.$http.post("/Submit/reward", params)
+            this.$http.post("/Submit/reward", params);
+        },
+        //获取WTT余额
+        getWttBalance() {
+            http.get(
+                `${aeknow}api/mytoken/${this.token}/ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM`
+            ).then((res) => {
+                this.wttBalance = this.balanceFormat(res.data.balance);
+            });
         },
     },
 };
