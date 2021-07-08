@@ -7,7 +7,7 @@
 		</u-navbar>
 		<div class="font-24" style="color:#f04a82">{{i18n.index.sendHint}}</div>
 		<u-gap height="40"></u-gap>
-		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="5000"
+		<u-input v-model="form.text" type="textarea" :border="false" height="300" :auto-height="true" :maxlength="50000"
 			:placeholder="i18n.index.wetrueTips" :clearable="false" />
 	</div>
 </template>

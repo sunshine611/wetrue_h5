@@ -224,6 +224,7 @@ export default {
             if (index === 0) {
                 this.focus();
             } else if (index === 1) {
+                this.complain();
             } else if (index === 2) {
                 window.open(
                     "https://mainnet.aeternal.io/transactions/" +
@@ -276,6 +277,15 @@ export default {
                 if (res.code === 200) {
                     item.isStar = res.data.isStar;
                     item.star = res.data.star;
+                }
+            });
+        },
+        //投诉
+        complain() {
+            let params = { hash: this.currentForum.hash };
+            this.$http.post("/Submit/complain", params).then((res) => {
+                if (res.code === 200) {
+                    this.uShowToast("投诉成功！");
                 }
             });
         },
