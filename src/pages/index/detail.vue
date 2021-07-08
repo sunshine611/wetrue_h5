@@ -479,7 +479,7 @@ export default {
                     }
 
                     .content {
-                        font-size: 28rpx;
+                        font-size: 32rpx;
                         margin-bottom: 16rpx;
                         word-wrap: break-word;
                         word-break: break-all;
