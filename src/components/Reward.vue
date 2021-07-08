@@ -60,6 +60,7 @@
 </template>
 <script>
 import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
+import { mapGetters } from "vuex";
 export default {
     components: {
         UTag,
@@ -116,6 +117,7 @@ export default {
         };
     },
     computed: {
+        ...mapGetters(["token"]),
         //国际化
         i18n() {
             return this.$_i18n.messages[this.$_i18n.locale];
@@ -150,6 +152,10 @@ export default {
         },
         //打赏
         async reward() {
+            if(this.token===this.postInfo.users.userAddress){
+                this.uShowToast("请不要自己打赏给自己！");
+                return;
+            }
             // if (
             //     !this.form.amount ||
             //     parseFloat(this.form.amount) > parseFloat(this.wttBalance)

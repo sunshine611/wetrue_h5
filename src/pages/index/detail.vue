@@ -215,6 +215,7 @@ export default {
         return {
             hash: "", //哈希值
             postInfo: {
+                rewardList: [],
                 users: {
                     portrait: "",
                     userAddress: "",
@@ -232,6 +233,7 @@ export default {
             commentType: "", //回复类型
             currentComment: {}, //当前回复信息
             rewardShow: false, //控制打赏弹层
+            
         };
     },
     //上拉刷新
@@ -477,7 +479,7 @@ export default {
                     }
 
                     .content {
-                        font-size: 28rpx;
+                        font-size: 32rpx;
                         margin-bottom: 16rpx;
                         word-wrap: break-word;
                         word-break: break-all;

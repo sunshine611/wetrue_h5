@@ -107,7 +107,7 @@ export default {
                     }
                 }
             } catch (error) {
-                alert(error);
+                this.uShowToast("密码错误！");
                 this.btnLoading = false;
             }
         },
