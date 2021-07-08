@@ -81,26 +81,50 @@
                         v-if="postInfo.imgTx"
                     ></u-image>
                 </div>
+                <div class="reward" v-if="postInfo.rewardList.length > 0">
+                    <div
+                        class="reward-list"
+                        v-for="(item, index) in postInfo.rewardList.slice(0,6)"
+                        :key="index"
+                    >
+                        <u-icon name="thumb-up-fill" color="#f04a82" class="mr-6"></u-icon
+                        >{{ item.nickname }}[{{
+                            item.sender_id.slice(-4)
+                        }}]打赏了<text class="name">{{
+                            balanceFormat(item.amount, 1)
+                        }}</text
+                        >WTT
+                    </div>
+                    <u-gap height="5" v-if="postInfo.rewardList.length>6"></u-gap>
+                    <div class="more" v-if="postInfo.rewardList.length>6" @click="rewardRecordShow=true">查看更多</div>
+                </div>
             </div>
         </div>
+        <RewardRecord v-model="rewardRecordShow" :record="postInfo.rewardList"></RewardRecord>
     </div>
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
-import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import UGap from '../uview-ui/components/u-gap/u-gap.vue';
+import RewardRecord from "@/components/RewardRecord";
 export default {
     components: {
         HeadImg,
-        mpHtml
+        mpHtml,
+        RewardRecord,
+        UGap,
     },
     props: {
         postInfo: {
             type: Object,
-            default: {},
+            default: ()=>{}
         },
     },
     data() {
-        return {};
+        return {
+            rewardRecordShow: false, //控制打赏记录弹层
+        };
     },
     computed: {
         //国际化
@@ -221,6 +245,22 @@ export default {
                 overflow: hidden;
                 /deep/ .topic-text {
                     color: #f04a82;
+                }
+            }
+            .reward {
+                background: #f1f1f1;
+                padding: 14rpx 30rpx;
+                .reward-list {
+                    margin:10rpx 0;
+                    .name {
+                        color: #f04a82;
+                    }
+                }
+                .more{
+                    padding:10rpx 0 0 0;
+                    border-top:2rpx solid #e5e5e5;
+                    color: #f04a82;
+                    text-align: center;
                 }
             }
         }

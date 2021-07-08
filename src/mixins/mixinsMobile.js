@@ -73,8 +73,8 @@ const mixins = {
             });
         },
         //余额格式化
-        balanceFormat(balance) {
-            return (parseInt(balance) / Math.pow(10, 18)).toFixed(4);
+        balanceFormat(balance, num) {
+            return (parseInt(balance) / Math.pow(10, 18)).toFixed(num || 4);
         },
         //获取后端信息
         getConfigInfo() {
@@ -316,8 +316,8 @@ const mixins = {
                 );
                 uni.hideLoading();
                 return callResult;
-            }catch(err){
-                this.uShowToast('余额不足');
+            } catch (err) {
+                this.uShowToast("余额不足");
                 uni.hideLoading();
             }
         },
