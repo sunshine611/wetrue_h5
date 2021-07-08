@@ -35,7 +35,7 @@
             <u-gap height="14"></u-gap>
             <u-input
                 v-model="form.money"
-                type="text"
+                type="number"
                 class="textarea"
                 :clearable="false"
                 :custom-style="{ padding: '0 15rpx' }"
