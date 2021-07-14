@@ -1,4 +1,4 @@
-import { getStore, setStore } from "@/util/service";
+import { getStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
 import {
@@ -19,6 +19,7 @@ const mixins = {
             uni.showToast({
                 icon: icon == null ? "none" : icon,
                 title: title,
+                duration: 2000,
             });
         },
         uHideToast() {
@@ -74,7 +75,11 @@ const mixins = {
         },
         //余额格式化
         balanceFormat(balance, num) {
-            return (parseInt(balance) / Math.pow(10, 18)).toFixed(num || 4);
+            if (isNaN(balance)) {
+                return 0;
+            } else {
+                return (parseInt(balance) / Math.pow(10, 18)).toFixed(num || 4);
+            }
         },
         //获取后端信息
         getConfigInfo() {
@@ -191,7 +196,6 @@ const mixins = {
                 return res;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
         //发送评论
@@ -221,7 +225,6 @@ const mixins = {
                 return res;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
         //发送回复
@@ -254,7 +257,6 @@ const mixins = {
                 return res;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
         //发送昵称
@@ -283,7 +285,6 @@ const mixins = {
                 return res;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
         //发送性别
@@ -312,7 +313,6 @@ const mixins = {
                 return res;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
         //合约转账
@@ -343,7 +343,6 @@ const mixins = {
                 return callResult;
             } catch (err) {
                 this.uShowToast("操作失败！");
-                uni.hideLoading();
             }
         },
     },

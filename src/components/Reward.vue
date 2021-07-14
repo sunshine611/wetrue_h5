@@ -184,6 +184,7 @@ export default {
                 };
                 this.showModal = false;
                 this.uShowToast("打赏成功，谢谢大爷打赏！");
+                this.getWttBalance();
             }
             this.btnLoading = false;
         },

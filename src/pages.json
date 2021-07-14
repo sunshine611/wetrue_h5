@@ -190,6 +190,16 @@
         "navigationBarTitleText": "收款",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/my/mappingDig",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "映射挖矿",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
