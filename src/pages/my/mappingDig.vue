@@ -67,7 +67,7 @@
                     type="primary"
                     @click="showMapping = true"
                     :loading="btnLoading"
-                    >映射</u-button
+                    >开始映射</u-button
                 >
             </div>
         </div>
@@ -234,7 +234,7 @@ export default {
                 this.$http.post("/Mining/submitState").then((res) => {
                     if (res.code === 200) {
                         if (res.data) {
-                            this.uShowToast("您已经开通过了，请等待区块确认！");
+                            this.uShowToast("开通中，请勿重复提交！");
                         } else {
                             this.startOpen();
                         }
@@ -255,7 +255,7 @@ export default {
             if (result) {
                 this.$http.post("/Mining/openAccount", { hash: result.hash });
                 this.getUserInfo();
-                this.uShowToast("开通成功，请过会刷新页面！");
+                this.uShowToast("执行开通中，请30秒后再来！");
             }
         },
         //获取映射信息
