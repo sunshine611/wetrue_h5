@@ -96,6 +96,19 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
+                    <u-cell-item
+                        title="映射挖矿"
+                        @click="goUrl('mappingDig')"
+                    >
+                        <fa-FontAwesome
+                            slot="icon"
+                            type="fas fa-hammer"
+                            size="32"
+                            class="mr-10"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                    </u-cell-item>
                     <!-- <u-cell-item :title="i18n.my.nodeSet">
                         <fa-FontAwesome
                             slot="icon"
@@ -109,7 +122,7 @@
                     <u-cell-item
                         :title="i18n.my.logout"
                         :border-bottom="false"
-                        @click="logout"
+                        @click="showExit=true"
                     >
                         <fa-FontAwesome
                             slot="icon"
@@ -151,6 +164,7 @@
                 </div>
             </div>
         </div>
+        <u-modal v-model="showExit" content="是否退出登录？" @confirm="logout" :show-cancel-button="true"></u-modal>
     </div>
 </template>
 
@@ -171,6 +185,7 @@ export default {
             version: version, //应用版本号
             address: "", //ae地址
             balance: 0, //余额
+            showExit:false,//退出提示
         };
     },
     computed: {
