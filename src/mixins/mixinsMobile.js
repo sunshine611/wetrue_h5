@@ -78,7 +78,7 @@ const mixins = {
             if (isNaN(balance)) {
                 return 0;
             } else {
-                return (parseInt(balance) / Math.pow(10, 18)).toFixed(num || 4);
+                return (parseFloat(balance) / Math.pow(10, 18)).toFixed(num || 4);
             }
         },
         //获取后端信息
