@@ -15,11 +15,11 @@ const mixins = {
     },
     onLoad() {},
     methods: {
-        uShowToast(title, icon) {
+        uShowToast(title, icon,time) {
             uni.showToast({
                 icon: icon == null ? "none" : icon,
                 title: title,
-                duration: 2000,
+                duration: time || 2000,
             });
         },
         uHideToast() {

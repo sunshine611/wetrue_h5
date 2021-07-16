@@ -18,7 +18,7 @@
                     <div class="earning">
                         <div class="amount">
                             {{
-                                balanceFormat(mappingInfo.earning, 6) ||
+                                balanceFormat(mappingInfo.earning, 7) ||
                                     "≈0.00000000"
                             }}
                         </div>
@@ -195,6 +195,7 @@ export default {
         this.getUserInfo();
         this.getAccount();
         this.getWttBalance();
+        this.getConfigInfo();
     },
     activated() {
         this.getUserInfo();
@@ -204,6 +205,8 @@ export default {
     //上拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
+        this.getAccount();
+        this.getWttBalance();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -255,7 +258,8 @@ export default {
             if (result) {
                 this.$http.post("/Mining/openAccount", { hash: result.hash });
                 this.getUserInfo();
-                this.uShowToast("开通成功，请过会刷新页面！");
+                this.getWttBalance();
+                this.uShowToast("开通成功，请过会刷新页面！",'none',3000);
             }
         },
         //获取映射信息

@@ -96,10 +96,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item
-                        title="映射挖矿"
-                        @click="goUrl('mappingDig')"
-                    >
+                    <u-cell-item title="映射挖矿" @click="goUrl('mappingDig')">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-hammer"
@@ -122,7 +119,7 @@
                     <u-cell-item
                         :title="i18n.my.logout"
                         :border-bottom="false"
-                        @click="showExit=true"
+                        @click="showExit = true"
                     >
                         <fa-FontAwesome
                             slot="icon"
@@ -164,7 +161,12 @@
                 </div>
             </div>
         </div>
-        <u-modal v-model="showExit" content="是否退出登录？" @confirm="logout" :show-cancel-button="true"></u-modal>
+        <u-modal
+            v-model="showExit"
+            content="是否退出登录？"
+            @confirm="logout"
+            :show-cancel-button="true"
+        ></u-modal>
     </div>
 </template>
 
@@ -185,7 +187,7 @@ export default {
             version: version, //应用版本号
             address: "", //ae地址
             balance: 0, //余额
-            showExit:false,//退出提示
+            showExit: false, //退出提示
         };
     },
     computed: {
@@ -213,14 +215,14 @@ export default {
             let params = {
                 userAddress: this.token,
             };
+            this.address = "";
+            for (let i = 0, len = this.token.length; i < len; i++) {
+                this.address += this.token[i];
+                if (i % 3 === 2) this.address += " ";
+            }
             this.$http.post("/User/info", params).then((res) => {
                 if (res.code === 200) {
                     this.userInfo = res.data;
-                    this.address = "";
-                    for (let i = 0, len = this.token.length; i < len; i++) {
-                        this.address += this.token[i];
-                        if (i % 3 === 2) this.address += " ";
-                    }
                 }
             });
         },
