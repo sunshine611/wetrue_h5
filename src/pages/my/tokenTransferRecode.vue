@@ -1,5 +1,16 @@
 <template>
   <div class="token-list">
+    <u-navbar title="转账记录">
+            <div slot="right">
+                <u-icon
+                    name="home"
+                    class="mr-30"
+                    size="34"
+                    color="#f04a82"
+                    @click="reLaunchUrl('../index/index')"
+                ></u-icon>
+            </div>
+        </u-navbar>
     <u-cell-group v-if="recodeList.length > 0" class="cell-box">
       <div v-for="item in recodeList" :key="item.txhash">
         <u-cell-item

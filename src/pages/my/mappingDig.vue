@@ -267,7 +267,7 @@ export default {
         },
         //获取映射信息
         getMappingInfo() {
-            this.$http.post("/Mining/mapInfo").then((res) => {
+            this.$http.post("/Mining/mapInfo",{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {
                     this.mappingInfo = res.data;
                 }
