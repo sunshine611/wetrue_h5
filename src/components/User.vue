@@ -19,8 +19,9 @@
                         ></HeadImg>
                     </div>
                     <div slot="label">
-                        <text class="mr-20">关注:{{ item.focus }}</text
-                        ><text class="mr-20">粉丝:{{ item.fans }}</text>
+                        <text class="mr-16">关注:{{ item.focus }}</text
+                        ><text class="mr-16">粉丝:{{ item.fans }}</text>
+                        <text class="mr-16">发帖量:{{ item.topic }}</text>
                         <text>活跃:{{ item.active }}</text>
                     </div>
                     <div slot="title">
