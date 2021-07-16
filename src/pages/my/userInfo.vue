@@ -122,7 +122,7 @@ export default {
                     name: "关注",
                 },
                 {
-                    name: "活跃",
+                    name: "粉丝",
                 },
             ],
         };
