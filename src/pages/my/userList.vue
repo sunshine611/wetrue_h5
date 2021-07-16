@@ -88,7 +88,7 @@ export default {
                 size: this.pageInfo.pageSize,
                 focus: focus,
             };
-            this.$http.post("/User/focusList", params).then((res) => {
+            this.$http.post("/User/focusList", params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";

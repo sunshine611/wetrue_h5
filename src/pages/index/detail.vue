@@ -233,7 +233,6 @@ export default {
             commentType: "", //回复类型
             currentComment: {}, //当前回复信息
             rewardShow: false, //控制打赏弹层
-            
         };
     },
     //上拉刷新
@@ -284,7 +283,7 @@ export default {
                 size: this.pageInfo.pageSize,
                 replyLimit: 3,
             };
-            this.$http.post("/Comment/list", params).then((res) => {
+            this.$http.post("/Comment/list", params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";
@@ -372,6 +371,18 @@ export default {
         },
         //打赏
         reward() {
+            if (!this.validLogin()) {
+                uni.showToast({
+                    title: this.i18n.index.pleaseLogin,
+                    icon: "none",
+                });
+                setTimeout(() => {
+                    uni.reLaunch({
+                        url: "/pages/my/index",
+                    });
+                }, 1000);
+                return false;
+            }
             this.rewardShow = true;
         },
         //是否点赞

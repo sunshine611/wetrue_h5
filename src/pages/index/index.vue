@@ -150,7 +150,7 @@ export default {
             } else if (this.cateInfo.value === 4) {
                 url = "/Content/focusList";
             }
-            this.$http.post(url, params).then((res) => {
+            this.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";

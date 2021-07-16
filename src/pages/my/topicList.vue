@@ -103,7 +103,7 @@ export default {
                 };
                 url = "/User/contentList";
             }
-            this.$http.post(url, params).then((res) => {
+            this.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {
                     this.pageInfo.totalPage = parseInt(res.data.totalPage);
                     this.more = "loadmore";

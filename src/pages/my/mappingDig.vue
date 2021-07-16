@@ -103,15 +103,18 @@
         <div class="rule">
             <div class="h3">WTT质押挖矿规则</div>
             <u-gap :height="10"></u-gap>
-            挖矿资格: 需支付680WTT开通权限,所消耗WTT划转至[AE中国社区公共账户]供后续发展WTT所用<br />
+            挖矿资格:
+            需支付680WTT开通权限,所消耗WTT划转至[AE中国社区公共账户]供后续发展WTT所用<br />
             <u-gap :height="10"></u-gap>
             挖矿收益: 14.4WTT/1万AE/天,映射总量不设上限<br />
             <u-gap :height="10"></u-gap>
-            收益领取: 2天内需领取1次,超时收益不再增加,收益需大于0.01WTT才可领取<br />
+            收益领取:
+            2天内需领取1次,超时收益不再增加,收益需大于0.01WTT才可领取<br />
             <u-gap :height="10"></u-gap>
             开放时间: 2021年7月15日至9月15日<br />
             <u-gap :height="10"></u-gap>
-            规则说明: 映射期间账户余额不得少于映射数量,否则自动取消收益及挖矿资格,需要重新支付WTT开通<br />
+            规则说明:
+            映射期间账户余额不得少于映射数量,否则自动取消收益及挖矿资格,需要重新支付WTT开通<br />
             <u-gap :height="10"></u-gap>
             补充说明: 可同时叠加其它AE映射挖矿,实现多重收益
         </div>
@@ -218,7 +221,7 @@ export default {
                 userAddress: this.token,
             };
             this.$http
-                .post("/User/info", params)
+                .post("/User/info", params, { custom: { isToast: true } })
                 .then((res) => {
                     if (res.code === 200) {
                         this.userInfo = res.data;
@@ -259,7 +262,7 @@ export default {
                 this.$http.post("/Mining/openAccount", { hash: result.hash });
                 this.getUserInfo();
                 this.getWttBalance();
-                this.uShowToast("执行开通中，请30秒后再来！",'none',3000);
+                this.uShowToast("执行开通中，请30秒后再来！", "none", 3000);
             }
         },
         //获取映射信息
@@ -310,6 +313,10 @@ export default {
         },
         //领取映射奖励
         receive() {
+            if (this.balanceFormat(this.mappingInfo.earning) < 0.1) {
+                this.uShowToast("请收益大于0.1后领取！");
+                return;
+            }
             this.receiveLoading = true;
             this.$http.post("/Mining/earning").then((res) => {
                 if (res.code === 200) {
