@@ -87,6 +87,7 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
                 focus: focus,
+                userAddress: this.token
             };
             this.$http.post("/User/focusList", params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {

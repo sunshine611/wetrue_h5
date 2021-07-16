@@ -12,7 +12,7 @@
                             @click="whitePaper"
                         ></u-icon>
                         <u-icon
-                            name="setting-fill"
+                            name="edit-pen"
                             color="#fff"
                             size="40"
                             @click="goUrl('infoEdit')"

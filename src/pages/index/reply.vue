@@ -222,31 +222,33 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
             };
-            this.$http.post("/Reply/list", params).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.pageInfo.totalSize = parseInt(res.data.totalSize);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.replyList = res.data.data;
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
+            this.$http
+                .post("/Reply/list", params, { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        this.pageInfo.totalSize = parseInt(res.data.totalSize);
+                        this.more = "loadmore";
+                        if (this.pageInfo.page === 1) {
+                            this.replyList = res.data.data;
                         } else {
-                            this.replyList = this.replyList.concat(
-                                res.data.data
-                            );
+                            if (this.pageInfo.page > this.pageInfo.totalPage) {
+                                this.pageInfo.page = this.pageInfo.totalPage;
+                                this.more = "nomore";
+                            } else {
+                                this.replyList = this.replyList.concat(
+                                    res.data.data
+                                );
+                            }
                         }
+                        if (status == "pullDown") {
+                            uni.stopPullDownRefresh();
+                            this.replyList = res.data.data;
+                        }
+                    } else {
+                        this.more = "nomore";
                     }
-                    if (status == "pullDown") {
-                        uni.stopPullDownRefresh();
-                        this.replyList = res.data.data;
-                    }
-                } else {
-                    this.more = "nomore";
-                }
-            });
+                });
         },
         //是否点赞
         praise(type, item) {

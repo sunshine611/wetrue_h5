@@ -59,7 +59,21 @@
                 </div>
             </div>
         </div>
-        <TopicList :postList="postList"></TopicList>
+        <u-tabs
+            :list="tabList"
+            :is-scroll="false"
+            :current="current"
+            @change="tabChange"
+        ></u-tabs>
+        <TopicList
+            :postList="postList"
+            v-if="current === 0 || current === 1"
+        ></TopicList>
+        <User
+            :userList="postList"
+            class="mb-20"
+            v-if="current === 2 || current === 3"
+        ></User>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
@@ -77,10 +91,12 @@ import { mapGetters } from "vuex";
 import TopicList from "../../components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
 import Clipboard from "clipboard";
+import User from "@/components/User.vue";
 export default {
     components: {
         TopicList,
         HeadImg,
+        User,
     },
     data() {
         return {
@@ -94,13 +110,28 @@ export default {
             more: "loadmore", //加载更多
             userInfo: {}, //用户信息
             address: "", //用户格式化地址
+            current: 0, //tab当前选项
+            tabList: [
+                {
+                    name: "帖子",
+                },
+                {
+                    name: "收藏",
+                },
+                {
+                    name: "关注",
+                },
+                {
+                    name: "活跃",
+                },
+            ],
         };
     },
     //上拉刷新
     onPullDownRefresh() {
         this.pageInfo.page = 1;
-        this.getPostList();
         this.getUserInfo();
+        this.getPostList();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -146,43 +177,93 @@ export default {
         },
         //获取帖子列表
         getPostList() {
-            let params = {
-                page: this.pageInfo.page,
-                size: this.pageInfo.pageSize,
-                userAddress: this.userAddress,
-            };
-            this.$http.post("/User/contentList", params).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        });
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
-                        } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
+            let params, url;
+            if (this.current === 0) {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    userAddress: this.userAddress,
+                };
+                url = "/User/contentList";
+            } else if (this.current === 1) {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    userAddress: this.userAddress,
+                };
+                url = "/Content/starList";
+            } else if (this.current === 2) {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    focus: "myFocus",
+                    userAddress: this.userAddress,
+                };
+                url = "/User/focusList";
+            } else if (this.current === 3) {
+                params = {
+                    page: this.pageInfo.page,
+                    size: this.pageInfo.pageSize,
+                    focus: "focusMy",
+                    userAddress: this.userAddress,
+                };
+                url = "/User/focusList";
+            }
+            this.$http
+                .post(url, params, {
+                    custom: { isToast: true },
+                })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        this.more = "loadmore";
+                        if (this.pageInfo.page === 1) {
+                            this.$nextTick(() => {
+                                if (this.current === 0 || this.current === 1) {
+                                    this.postList = res.data.data.map(
+                                        (item) => {
+                                            item.payload = this.topicHighlight(
+                                                item.payload
+                                            );
+                                            return item;
+                                        }
                                     );
-                                    return item;
-                                })
-                            );
+                                } else {
+                                    this.postList = res.data.data;
+                                }
+                            });
+                        } else {
+                            if (this.pageInfo.page > this.pageInfo.totalPage) {
+                                this.pageInfo.page = this.pageInfo.totalPage;
+                                this.more = "nomore";
+                            } else {
+                                if (this.current === 0 || this.current === 1) {
+                                    this.postList = this.postList.concat(
+                                        res.data.data.map((item) => {
+                                            item.payload = this.topicHighlight(
+                                                item.payload
+                                            );
+                                            return item;
+                                        })
+                                    );
+                                } else {
+                                    this.postList = this.postList.concat(
+                                        res.data.data
+                                    );
+                                }
+                            }
                         }
+                    } else {
+                        this.more = "nomore";
                     }
-                } else {
-                    this.more = "nomore";
-                }
-            });
+                });
+        },
+        //切换tab
+        tabChange(index) {
+            this.current = index;
+            this.postList = [];
+            this.pageInfo.page = 1;
+            this.getPostList();
         },
         //复制粘贴板
         copy() {
