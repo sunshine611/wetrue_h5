@@ -67,7 +67,7 @@
                     type="primary"
                     @click="showMapping = true"
                     :loading="btnLoading"
-                    >映射</u-button
+                    >开始映射</u-button
                 >
             </div>
         </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="content">
                 <div class="text">
-                    开通WTT映射挖矿需先支付680WTT，如需同意请勾选下方同意开通选项，然后再点击开通。
+                    开通需支付680WTT，同意请勾选开通选项。
                 </div>
             </div>
             <u-checkbox-group>
@@ -103,17 +103,17 @@
         <div class="rule">
             <div class="h3">WTT质押挖矿规则</div>
             <u-gap :height="10"></u-gap>
-            挖矿资格：需支付680WTT开通映射挖矿功能,所消耗WTT划转至[AE中国社区公共账户]后续发展WTT所用。<br />
+            挖矿资格: 需支付680WTT开通权限,所消耗WTT划转至[AE中国社区公共账户]供后续发展WTT所用<br />
             <u-gap :height="10"></u-gap>
-            挖矿收益：14.4WTT/1万AE/天，映射总量不设上限。<br />
+            挖矿收益: 14.4WTT/1万AE/天,映射总量不设上限<br />
             <u-gap :height="10"></u-gap>
-            收益时间：2天内需领取1次，超时收益不再增加。<br />
+            收益领取: 2天内需领取1次,超时收益不再增加,收益需大于0.01WTT才可领取<br />
             <u-gap :height="10"></u-gap>
-            开放时间：2021年7月15日至9月15日共60天。<br />
+            开放时间: 2021年7月15日至9月15日<br />
             <u-gap :height="10"></u-gap>
-            规则说明：映射期间账户余额不得少于映射数量，否则自动取消挖矿资格，需要重新支付WTT开通挖矿资格。<br />
+            规则说明: 映射期间账户余额不得少于映射数量,否则自动取消收益及挖矿资格,需要重新支付WTT开通<br />
             <u-gap :height="10"></u-gap>
-            补充说明：可同时叠加其它AE映射挖矿，实现多重收益。
+            补充说明: 可同时叠加其它AE映射挖矿,实现多重收益
         </div>
         <u-popup
             v-model="showMapping"
@@ -237,7 +237,7 @@ export default {
                 this.$http.post("/Mining/submitState").then((res) => {
                     if (res.code === 200) {
                         if (res.data) {
-                            this.uShowToast("您已经开通过了，请等待区块确认！");
+                            this.uShowToast("开通中，请勿重复提交！");
                         } else {
                             this.startOpen();
                         }
@@ -259,7 +259,7 @@ export default {
                 this.$http.post("/Mining/openAccount", { hash: result.hash });
                 this.getUserInfo();
                 this.getWttBalance();
-                this.uShowToast("开通成功，请过会刷新页面！",'none',3000);
+                this.uShowToast("执行开通中，请30秒后再来！",'none',3000);
             }
         },
         //获取映射信息
