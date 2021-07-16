@@ -93,15 +93,9 @@ export default {
                 params = {
                     page: this.pageInfo.page,
                     size: this.pageInfo.pageSize,
+                    userAddress: this.token,
                 };
                 url = "/Content/starList";
-            } else if (this.type === "user") {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    userAddress: this.userAddress,
-                };
-                url = "/User/contentList";
             }
             this.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
                 if (res.code === 200) {

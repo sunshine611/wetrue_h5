@@ -64,6 +64,7 @@
             :is-scroll="false"
             :current="current"
             @change="tabChange"
+            style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
         <TopicList
             :postList="postList"

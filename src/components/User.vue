@@ -1,9 +1,8 @@
 <template>
     <div class="user">
-        <u-cell-group class="cell-box">
+        <u-cell-group :border="false">
             <div v-for="item in userList" :key="item.userAddress">
                 <u-cell-item
-                    class="cell-out"
                     @click="
                         goUrl(
                             '/pages/my/userInfo?userAddress=' +
