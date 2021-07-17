@@ -361,6 +361,14 @@ export default {
                     word-wrap: break-word;
                     word-break: normal;
                     overflow: hidden;
+                    /deep/ ._root{
+                        word-break: break-all;
+                        text-overflow: ellipsis;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 10;
+                        overflow: hidden;
+                    }
                     /deep/ .topic-text {
                         color: #f04a82;
                     }
