@@ -165,10 +165,6 @@ export default {
                     subText: this.i18n.index.complainText,
                 },
                 {
-                    text: this.i18n.index.aeternal,
-                    subText: this.i18n.index.aeternalText,
-                },
-                {
                     text: this.i18n.index.aeknow,
                     subText: this.i18n.index.aeknowText,
                 },
@@ -225,12 +221,7 @@ export default {
                 this.focus();
             } else if (index === 1) {
                 this.complain();
-            } else if (index === 2) {
-                window.open(
-                    "https://mainnet.aeternal.io/transactions/" +
-                        this.currentForum.hash
-                );
-            } else if (index === 3) {
+            }else if (index === 2) {
                 window.open(
                     "https://www.aeknow.org/block/transaction/" +
                         this.currentForum.hash

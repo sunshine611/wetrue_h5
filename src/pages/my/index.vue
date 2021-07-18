@@ -183,7 +183,7 @@
 </template>
 
 <script>
-import Request from "@/js_sdk/luch-request/luch-request/index.js";
+import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
 import { version, nodeUrl } from "@/config/config.js";

@@ -15,7 +15,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    更新WeTrue
+                    WeTrue更新
                 </div>
                 <div class="content mb-40">
                     <mp-html :content="versionInfo.content" />
