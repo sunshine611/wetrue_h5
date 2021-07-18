@@ -132,7 +132,18 @@
                     </u-cell-item>
                 </u-cell-group>
             </div>
-            <div class="version">{{ i18n.my.version }}：{{ version }}</div>
+            <div class="version">
+                <div class="version-code" @click="versionCheck">
+                    {{ i18n.my.version }}：{{ version
+                    }}<u-badge
+                        v-if="versionCode < parseInt(versionInfo.newVer)"
+                        type="error"
+                        count="1"
+                        :is-dot="true"
+                        :offset="[0, -12]"
+                    ></u-badge>
+                </div>
+            </div>
         </div>
         <div class="login" v-else>
             <div class="login-box">
@@ -167,6 +178,7 @@
             @confirm="logout"
             :show-cancel-button="true"
         ></u-modal>
+        <VersionTip v-model="versionShow" :versionInfo="versionInfo"></VersionTip>
     </div>
 </template>
 
@@ -174,12 +186,14 @@
 import Request from "@/js_sdk/luch-request/luch-request/index.js";
 const http = new Request();
 import Clipboard from "clipboard";
-import { version, nodeUrl } from "@/config/config.js";
+import { version, versionCode, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
+import VersionTip from "@/components/VersionTip.vue";
 export default {
     components: {
         HeadImg,
+        VersionTip,
     },
     data() {
         return {
@@ -188,6 +202,9 @@ export default {
             address: "", //ae地址
             balance: 0, //余额
             showExit: false, //退出提示
+            versionInfo: {}, //版本信息
+            versionCode: versionCode, //版本号
+            versionShow: false, //版本提示弹层
         };
     },
     computed: {
@@ -201,6 +218,7 @@ export default {
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount();
+            this.getVersionInfo();
         }
     },
     activated() {
@@ -268,6 +286,28 @@ export default {
         //打开白皮书
         whitePaper() {
             window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
+        },
+        //获取服务端版本信息
+        getVersionInfo() {
+            this.$http
+                .post("/Config/version", { version: version },{custom:{isToast:true}})
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.versionInfo = res.data;
+                        if (this.versionInfo.mustUpdate) {
+                            this.versionShow = true;
+                        }
+                    }
+                });
+        },
+        //检查版本
+        async versionCheck() {
+            await this.getVersionInfo();
+            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
+                this.versionShow = true;
+            }else{
+                this.uShowToast("当前已经是最新版本！");
+            }
         },
     },
 };
@@ -362,6 +402,10 @@ page {
             bottom: 30upx;
             width: 100%;
             text-align: center;
+            .version-code {
+                position: relative;
+                display: inline-block;
+            }
         }
     }
 

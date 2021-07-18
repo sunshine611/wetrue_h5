@@ -56,16 +56,23 @@
             :status="more"
             v-show="postList.length > 0"
         />
+        <VersionTip
+            v-model="versionShow"
+            :versionInfo="versionInfo"
+        ></VersionTip>
     </view>
 </template>
 
 <script>
 import { getStore, setStore } from "@/util/service";
+import {version, versionCode } from "@/config/config.js";
 import moment from "moment";
 import TopicList from "../../components/TopicList.vue";
+import VersionTip from "@/components/VersionTip.vue";
 export default {
     components: {
         TopicList,
+        VersionTip,
     },
     data() {
         return {
@@ -83,6 +90,9 @@ export default {
             }, //页码信息
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
+            versionInfo: {}, //版本信息
+            versionCode: versionCode, //版本号
+            versionShow: false, //版本提示弹层
         };
     },
     //上拉刷新
@@ -101,6 +111,7 @@ export default {
     onLoad() {
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
+        this.getVersionInfo();
         if (!getStore("language")) {
             setStore("language", "zh-cn");
             this.language = getStore("language");
@@ -150,38 +161,40 @@ export default {
             } else if (this.cateInfo.value === 4) {
                 url = "/Content/focusList";
             }
-            this.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        });
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
-                        } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
+            this.$http
+                .post(url, params, { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        this.more = "loadmore";
+                        if (this.pageInfo.page === 1) {
+                            this.$nextTick(() => {
+                                this.postList = res.data.data.map((item) => {
                                     item.payload = this.topicHighlight(
                                         item.payload
                                     );
                                     return item;
-                                })
-                            );
+                                });
+                            });
+                        } else {
+                            if (this.pageInfo.page > this.pageInfo.totalPage) {
+                                this.pageInfo.page = this.pageInfo.totalPage;
+                                this.more = "nomore";
+                            } else {
+                                this.postList = this.postList.concat(
+                                    res.data.data.map((item) => {
+                                        item.payload = this.topicHighlight(
+                                            item.payload
+                                        );
+                                        return item;
+                                    })
+                                );
+                            }
                         }
+                    } else {
+                        this.more = "nomore";
                     }
-                } else {
-                    this.more = "nomore";
-                }
-            });
+                });
         },
         //选择类别
         selectCategory(val) {
@@ -214,6 +227,23 @@ export default {
             let index = parseInt(this.index) + 1;
             this.cateInfo.value = index;
             this.cateInfo.label = this.categoryList[this.index].label;
+        },
+        //获取服务端版本信息
+        getVersionInfo() {
+            this.$http
+                .post(
+                    "/Config/version",
+                    { version: version },
+                    { custom: { isToast: true } }
+                )
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.versionInfo = res.data;
+                        if (this.versionInfo.mustUpdate) {
+                            this.versionShow = true;
+                        }
+                    }
+                });
         },
     },
 };
