@@ -64,6 +64,7 @@
             :is-scroll="false"
             :current="current"
             @change="tabChange"
+            active-color="#f04a82"
             style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
         <TopicList

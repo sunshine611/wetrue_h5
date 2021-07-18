@@ -34,7 +34,7 @@
                     >
                     </fa-FontAwesome>
                 </div>
-                <div class="right">
+                <div class="right" v-if="validLogin()">
                     <fa-FontAwesome
                         type="fas fa-plus"
                         size="36"
@@ -65,7 +65,7 @@
 
 <script>
 import { getStore, setStore } from "@/util/service";
-import {version, versionCode } from "@/config/config.js";
+import {version } from "@/config/config.js";
 import moment from "moment";
 import TopicList from "../../components/TopicList.vue";
 import VersionTip from "@/components/VersionTip.vue";
@@ -91,7 +91,7 @@ export default {
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
             versionInfo: {}, //版本信息
-            versionCode: versionCode, //版本号
+            versionCode: parseInt(version.replaceAll('.','')), //版本号
             versionShow: false, //版本提示弹层
         };
     },

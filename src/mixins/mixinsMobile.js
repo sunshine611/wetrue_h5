@@ -1,6 +1,7 @@
 import { getStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
+import {source} from '@/config/config';
 import {
     Node,
     Universal,
@@ -176,7 +177,7 @@ const mixins = {
                 const configInfo = getStore("configInfo");
                 let content = {
                     WeTrue: configInfo.WeTrue,
-                    source: "WeTrue",
+                    source: source,
                     type: "topic",
                     content: payload.content,
                 };

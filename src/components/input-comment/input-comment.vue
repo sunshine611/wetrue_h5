@@ -5,7 +5,7 @@
 			<view class="comment-info">
 				<view class="comment-input">
 					<textarea class="content" v-model="content" :placeholder="placeholder" :focus="isShow"
-						:maxlength="100000" />
+						:maxlength="1000" />
 				</view>
 				<div class="comment-submit">
 					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">{{i18n.components.send}}</u-button>

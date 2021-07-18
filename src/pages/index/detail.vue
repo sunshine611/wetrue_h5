@@ -109,14 +109,9 @@
                             <view
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
-                                v-if="!!item.commentList"
+                                v-if="item.replyNumber>3"
                             >
-                                {{ item.replyNumber + i18n.index.theReply }}
-                                <u-icon
-                                    class="more"
-                                    name="arrow-right"
-                                    :size="26"
-                                ></u-icon>
+                                查看{{ item.replyNumber + i18n.index.theReply }}
                             </view>
                         </view>
                         <view class="bottom">
@@ -529,10 +524,8 @@ export default {
 
                         .all-reply {
                             padding: 20rpx;
-                            display: flex;
                             color: #f04a82;
-                            align-items: center;
-
+                            text-align: center;
                             .more {
                                 margin-left: 6rpx;
                             }

@@ -186,7 +186,7 @@
 import Request from "@/js_sdk/luch-request/luch-request/index.js";
 const http = new Request();
 import Clipboard from "clipboard";
-import { version, versionCode, nodeUrl } from "@/config/config.js";
+import { version, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
@@ -203,7 +203,7 @@ export default {
             balance: 0, //余额
             showExit: false, //退出提示
             versionInfo: {}, //版本信息
-            versionCode: versionCode, //版本号
+            versionCode: parseInt(version.replaceAll('.','')), //版本号
             versionShow: false, //版本提示弹层
         };
     },

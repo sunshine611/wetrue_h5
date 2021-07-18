@@ -20,21 +20,29 @@
                 <div class="content mb-40">
                     <mp-html :content="versionInfo.content" />
                 </div>
-                <u-button type="primary" :ripple="true" shape="circle" @click="updateApp">更新</u-button>
-                <div class="version-info">当前版本：{{version}}，最新版本：{{versionInfo.newCode}}</div>
+                <u-button
+                    type="primary"
+                    :ripple="true"
+                    shape="circle"
+                    @click="updateApp"
+                    >更新APP</u-button
+                >
+                <div class="version-info">
+                    当前版本：{{ version }}，最新版本：{{ versionInfo.newCode }}
+                </div>
             </div>
         </u-popup>
     </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { version} from "@/config/config.js";
-import UButton from '../uview-ui/components/u-button/u-button.vue';
+import { version } from "@/config/config.js";
+import UButton from "../uview-ui/components/u-button/u-button.vue";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 export default {
     components: {
         UButton,
-        mpHtml
+        mpHtml,
     },
     props: {
         value: {
@@ -49,7 +57,7 @@ export default {
     data() {
         return {
             showModal: this.value, //控制隐藏显示
-            version:version,//当前版本
+            version: version, //当前版本
         };
     },
     computed: {
@@ -69,9 +77,9 @@ export default {
     },
     methods: {
         //更新APP
-        updateApp(){
+        updateApp() {
             window.open(this.versionInfo.download);
-        }
+        },
     },
 };
 </script>
@@ -85,11 +93,11 @@ export default {
             justify-content: center;
             align-items: center;
         }
-        .version-info{
-            color:#888;
+        .version-info {
+            color: #888;
             font-size: 24rpx;
             text-align: center;
-            margin-top:20rpx;
+            margin-top: 20rpx;
         }
     }
 }

@@ -366,7 +366,7 @@ export default {
                         text-overflow: ellipsis;
                         display: -webkit-box;
                         -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 10;
+                        -webkit-line-clamp: 8;
                         overflow: hidden;
                     }
                     /deep/ .topic-text {
