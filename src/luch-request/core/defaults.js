@@ -4,27 +4,29 @@
 
 
 export default {
-  baseURL: '',
-  header: {},
-  method: 'GET',
-  dataType: 'json',
-  // #ifndef MP-ALIPAY
-  responseType: 'text',
-  // #endif
-  custom: {},
-  // #ifdef H5 || APP-PLUS || MP-ALIPAY || MP-WEIXIN
-  timeout: 60000,
-  // #endif
-  // #ifdef APP-PLUS
-  sslVerify: true,
-  // #endif
-  // #ifdef H5
-  withCredentials: false,
-  // #endif
-  // #ifdef APP-PLUS
-  firstIpv4: false,
-  // #endif
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300
-  }
+	baseURL: '',
+	header: {
+
+	},
+	method: 'GET',
+	dataType: 'json',
+	// #ifndef MP-ALIPAY || APP-PLUS
+	responseType: 'text',
+	// #endif
+	custom: {},
+	// #ifdef MP-ALIPAY || MP-WEIXIN
+	timeout: 30000,
+	// #endif
+	// #ifdef APP-PLUS
+	sslVerify: true,
+	// #endif
+	// #ifdef H5
+	withCredentials: false,
+	// #endif
+	// #ifdef APP-PLUS
+	firstIpv4: false,
+	// #endif
+	validateStatus: function validateStatus(status) {
+		return status >= 200 && status < 300
+	}
 }
