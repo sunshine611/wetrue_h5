@@ -163,7 +163,7 @@ import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
-import Request from "luch-request";
+import Request from "@/luch-request/index";
 const http = new Request();
 import { aeknow, nodeUrl } from "@/config/config.js";
 export default {

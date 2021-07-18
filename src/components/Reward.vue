@@ -61,7 +61,7 @@
 <script>
 import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
 import { mapGetters } from "vuex";
-import Request from "luch-request";
+import Request from "@/luch-request/index";
 const http = new Request();
 import { aeknow } from "@/config/config.js";
 export default {

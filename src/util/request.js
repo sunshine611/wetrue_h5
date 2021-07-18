@@ -1,4 +1,4 @@
-import Request from "luch-request";
+import Request from "@/luch-request/index";
 import { baseUrl } from "@/config/config.js";
 import store from "../store/index.js";
 import { getStore } from "@/util/service";

@@ -138,6 +138,7 @@ export default {
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
+                this.$store.commit("user/SET_KEYSTOREARR", keystore);
                 this.$store.commit("user/SET_PASSWORD", this.form.pass);
             });
 			this.$store.commit("user/SET_TOKEN", publicKeyInsecretKey.publicKey);

@@ -178,12 +178,15 @@
             @confirm="logout"
             :show-cancel-button="true"
         ></u-modal>
-        <VersionTip v-model="versionShow" :versionInfo="versionInfo"></VersionTip>
+        <VersionTip
+            v-model="versionShow"
+            :versionInfo="versionInfo"
+        ></VersionTip>
     </div>
 </template>
 
 <script>
-import Request from "luch-request";
+import Request from "@/luch-request/index";
 const http = new Request();
 import Clipboard from "clipboard";
 import { version, nodeUrl } from "@/config/config.js";
@@ -203,7 +206,7 @@ export default {
             balance: 0, //余额
             showExit: false, //退出提示
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replaceAll('.','')), //版本号
+            versionCode: parseInt(version.replaceAll(".", "")), //版本号
             versionShow: false, //版本提示弹层
         };
     },
@@ -280,7 +283,10 @@ export default {
         },
         //退出登录
         logout() {
-            uni.clearStorage();
+            // uni.clearStorage();
+            uni.removeStorageSync("keystore");
+            uni.removeStorageSync("configInfo");
+            uni.removeStorageSync("userInfo");
             this.$store.commit("user/SET_TOKEN", "");
         },
         //打开白皮书
@@ -290,7 +296,11 @@ export default {
         //获取服务端版本信息
         getVersionInfo() {
             this.$http
-                .post("/Config/version", { version: version },{custom:{isToast:true}})
+                .post(
+                    "/Config/version",
+                    { version: version },
+                    { custom: { isToast: true } }
+                )
                 .then((res) => {
                     if (res.code === 200) {
                         this.versionInfo = res.data;
@@ -305,7 +315,7 @@ export default {
             await this.getVersionInfo();
             if (this.versionCode < parseInt(this.versionInfo.newVer)) {
                 this.versionShow = true;
-            }else{
+            } else {
                 this.uShowToast("当前已经是最新版本！");
             }
         },
