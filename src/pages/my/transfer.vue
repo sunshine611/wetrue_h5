@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import Request from "@/luch-request/index";
+import Request from "luch-request";
 const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
 import { nodeUrl } from "@/config/config.js";

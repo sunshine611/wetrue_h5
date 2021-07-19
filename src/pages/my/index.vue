@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import Request from "@/luch-request/index";
+import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
 import { version, nodeUrl } from "@/config/config.js";
@@ -206,7 +206,7 @@ export default {
             balance: 0, //余额
             showExit: false, //退出提示
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replaceAll(".", "")), //版本号
+            versionCode: parseInt(version.replace(/./g, "")), //版本号
             versionShow: false, //版本提示弹层
         };
     },

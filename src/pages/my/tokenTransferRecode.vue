@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Request from "@/luch-request/index";
+import Request from "luch-request";
 const http = new Request();
 import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";

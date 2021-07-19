@@ -43,7 +43,7 @@
                     type="text"
                     :border="true"
                     :placeholder="i18n.my.enterNickname"
-                    maxlength="10"
+                    maxlength="20"
                 />
                 <u-gap :height="30"></u-gap>
                 <u-button
