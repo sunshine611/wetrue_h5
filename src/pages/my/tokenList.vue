@@ -155,7 +155,7 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(nodeUrl + "v2/accounts/" + this.token).then((res) => {
+            http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },

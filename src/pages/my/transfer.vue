@@ -213,7 +213,7 @@ export default {
         //解析域名
         async ParsingDomainName(domainName) {
             await http
-                .get(nodeUrl + "v2/names/" + domainName)
+                .get(nodeUrl + "v3/names/" + domainName)
                 .then((res) => {
                     if (res.data.owner) {
                         this.form.address = res.data.owner;
@@ -226,7 +226,7 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(nodeUrl + "v2/accounts/" + this.token).then((res) => {
+            http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
