@@ -108,7 +108,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item
+                    <!-- <u-cell-item
                         title="账户管理"
                         @click="goUrl('accountManage')"
                     >
@@ -120,7 +120,7 @@
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell-item>
+                    </u-cell-item> -->
                     <u-cell-item
                         :title="i18n.my.logout"
                         :border-bottom="false"
