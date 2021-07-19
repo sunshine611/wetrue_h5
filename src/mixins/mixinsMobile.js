@@ -207,6 +207,7 @@ const mixins = {
                 let content = {
                     WeTrue: configInfo.WeTrue,
                     type: "comment",
+                    source: source,
                     toHash: payload.hash,
                     content: payload.content,
                 };
@@ -236,6 +237,7 @@ const mixins = {
                 let content = {
                     WeTrue: configInfo.WeTrue,
                     type: "reply",
+                    source: source,
                     reply_type: payload.type,
                     to_hash: payload.hash,
                     to_address: payload.address,

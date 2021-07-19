@@ -41,21 +41,7 @@
                     </view>
                     <view class="right">
                         <view class="top">
-                            <view
-                                class="name"
-                                @click="
-                                    goUrl(
-                                        '/pages/my/userInfo?userAddress=' +
-                                            item.users.userAddress
-                                    )
-                                "
-                                >{{ item.users.nickname || i18n.my.cryptonym
-                                }}<text class="address"
-                                    >ID:{{
-                                        item.users.userAddress.slice(-4)
-                                    }}</text
-                                ></view
-                            >
+                            <Name :userInfo="item.users"></Name>
                             <view
                                 class="like"
                                 :class="{ highlight: item.isPraise }"
@@ -198,6 +184,7 @@ import TopicContent from "@/components/TopicContent";
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
+import Name from "@/components/Name";
 export default {
     components: {
         inputComment,
@@ -205,6 +192,7 @@ export default {
         HeadImg,
         mpHtml,
         Reward,
+        Name
     },
     data() {
         return {
@@ -454,15 +442,6 @@ export default {
                         align-items: center;
                         margin-bottom: 10rpx;
 
-                        .name {
-                            color: #333;
-                            .address {
-                                color: #999;
-                                font-size: 24rpx;
-                                margin-left: 10rpx;
-                            }
-                        }
-
                         .like {
                             display: flex;
                             align-items: center;
@@ -499,6 +478,9 @@ export default {
                         .item {
                             padding: 15rpx 20rpx;
                             border-bottom: solid 2rpx $u-border-color;
+                            &:last-child{
+                                border:none;
+                            }
                             .text {
                                 width: 100%;
                                 .name {

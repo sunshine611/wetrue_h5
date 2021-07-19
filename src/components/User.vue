@@ -24,10 +24,7 @@
                         <text>活跃:{{ item.active }}</text>
                     </div>
                     <div slot="title">
-                        <text class="mr-20">{{ item.nickname || "匿名" }}</text>
-                        <text class="user-id"
-                            >ID:{{ item.userAddress.slice(-4) }}</text
-                        >
+                        <Name :userInfo="item"></Name>
                     </div>
                     <div slot="right-icon" class="amount"></div>
                 </u-cell-item>
@@ -37,9 +34,11 @@
 </template>
 <script>
 import HeadImg from "@/components/HeadImg.vue";
+import Name from "@/components/Name";
 export default {
     components: {
         HeadImg,
+        Name
     },
     props: {
         userList: {
@@ -60,11 +59,3 @@ export default {
     methods: {},
 };
 </script>
-<style lang="scss" scoped>
-.user {
-    .user-id {
-        font-size: 24rpx;
-        color: #91908e;
-    }
-}
-</style>

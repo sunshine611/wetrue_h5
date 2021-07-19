@@ -6,6 +6,15 @@
                 v-for="(item, index) in postList"
                 :key="index"
             >
+                <div class="focus" v-show="item.isFocus">
+                    <fa-FontAwesome
+                        type="fas fa-heart"
+                        size="24"
+                        class="star"
+                        color="#fff"
+                    >
+                    </fa-FontAwesome>
+                </div>
                 <div class="user-area">
                     <div class="head-box">
                         <HeadImg
@@ -17,25 +26,7 @@
                     </div>
                     <div class="user-info">
                         <div class="user">
-                            <div
-                                class="name"
-                                @click="
-                                    goUrl(
-                                        '/pages/my/userInfo?userAddress=' +
-                                            item.users.userAddress
-                                    )
-                                "
-                            >
-                                {{ item.users.nickname || i18n.my.cryptonym }}
-                                <text class="userid"
-                                    >ID:{{
-                                        item.users.userAddress.slice(-4)
-                                    }}</text
-                                >
-                                <text v-show="item.isFocus">{{
-                                    i18n.my.focus
-                                }}</text>
-                            </div>
+                            <Name :userInfo="item.users"></Name>
                             <div class="more">
                                 <fa-FontAwesome
                                     type="fas fa-angle-down"
@@ -131,11 +122,13 @@
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
+import Name from "@/components/Name";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 export default {
     components: {
         HeadImg,
         mpHtml,
+        Name
     },
     props: {
         postList: {
@@ -221,7 +214,7 @@ export default {
                 this.focus();
             } else if (index === 1) {
                 this.complain();
-            }else if (index === 2) {
+            } else if (index === 2) {
                 window.open(
                     "https://www.aeknow.org/block/transaction/" +
                         this.currentForum.hash
@@ -290,7 +283,22 @@ export default {
             background-color: #fff;
             border-bottom: 2rpx solid #ececec;
             margin-bottom: 20rpx;
-
+            position: relative;
+            .focus {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 0;
+                height: 0;
+                border-top: 40rpx solid #f04a82;
+                border-left: 40rpx solid transparent;
+                .star {
+                    position: absolute;
+                    transform: scale(0.65);
+                    right: 0rpx;
+                    top: -38rpx;
+                }
+            }
             .user-area {
                 padding: 20rpx;
                 display: flex;
@@ -311,20 +319,7 @@ export default {
                         justify-content: space-between;
                         align-items: center;
 
-                        .name {
-                            font-size: 28rpx;
-
-                            text {
-                                color: #f04a82;
-                                font-size: 20rpx;
-                                margin-left: 20rpx;
-                            }
-                        }
-                        text.userid {
-                            font-size: 24rpx;
-                            color: #91908e;
-                            width: 100%;
-                        }
+                        
                     }
 
                     .time {
@@ -352,7 +347,7 @@ export default {
                     word-wrap: break-word;
                     word-break: normal;
                     overflow: hidden;
-                    /deep/ ._root{
+                    /deep/ ._root {
                         word-break: break-all;
                         text-overflow: ellipsis;
                         display: -webkit-box;

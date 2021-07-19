@@ -1,6 +1,15 @@
 <template>
     <div class="forum">
         <div class="forum-item">
+            <div class="focus" v-show="postInfo.isFocus">
+                    <fa-FontAwesome
+                        type="fas fa-heart"
+                        size="24"
+                        class="star"
+                        color="#fff"
+                    >
+                    </fa-FontAwesome>
+                </div>
             <div class="user-area">
                 <div class="head-box">
                     <HeadImg
@@ -12,25 +21,7 @@
                 </div>
                 <div class="user-info">
                     <div class="user">
-                        <div
-                            class="name"
-                            @click="
-                                goUrl(
-                                    '/pages/my/userInfo?userAddress=' +
-                                        postInfo.users.userAddress
-                                )
-                            "
-                        >
-                            {{ postInfo.users.nickname || i18n.my.cryptonym }}
-                            <text class="userid"
-                                >ID:{{
-                                    postInfo.users.userAddress.slice(-4)
-                                }}</text
-                            >
-                            <text v-show="postInfo.isFocus">{{
-                                i18n.my.focus
-                            }}</text>
-                        </div>
+                        <Name :userInfo="postInfo.users"></Name>
                         <div class="more">
                             <text class="mr-24"
                                 >{{ postInfo.read
@@ -108,11 +99,13 @@ import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import UGap from '../uview-ui/components/u-gap/u-gap.vue';
 import RewardRecord from "@/components/RewardRecord";
+import Name from "@/components/Name";
 export default {
     components: {
         HeadImg,
         mpHtml,
         RewardRecord,
+        Name,
         UGap,
     },
     props: {
@@ -181,7 +174,22 @@ export default {
         background-color: #fff;
         margin-bottom: 20rpx;
         border-bottom: 2rpx solid #e9e9e9;
-
+        position: relative;
+        .focus {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 0;
+                height: 0;
+                border-top: 40rpx solid #f04a82;
+                border-left: 40rpx solid transparent;
+                .star {
+                    position: absolute;
+                    transform: scale(0.65);
+                    right: 0rpx;
+                    top: -38rpx;
+                }
+            }
         .user-area {
             padding: 20rpx;
             display: flex;
@@ -202,21 +210,6 @@ export default {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-
-                    .name {
-                        font-size: 28rpx;
-
-                        text {
-                            color: #f04a82;
-                            font-size: 20rpx;
-                            margin-left: 20rpx;
-                        }
-                    }
-                    text.userid {
-                        font-size: 24rpx;
-                        color: #91908e;
-                        width: 100%;
-                    }
                 }
 
                 .time {

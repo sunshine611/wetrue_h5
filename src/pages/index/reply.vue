@@ -23,24 +23,11 @@
                         ></HeadImg>
                     </div>
                     <view class="user-info">
-                        <view
-                            class="name"
-                            @click="
-                                goUrl(
-                                    '/pages/my/userInfo?userAddress=' +
-                                        commentInfo.users.userAddress
-                                )
-                            "
-                            >{{ commentInfo.users.nickname }}</view
-                        >
+                        <Name :userInfo="commentInfo.users"></Name>
                         <view class="date"
-                            ><text class="address"
-                                >ID:{{
-                                    commentInfo.users.userAddress.slice(-4)
-                                }}</text
                             >{{
                                 $moment(commentInfo.utcTime).format(
-                                    "MM-DD HH:mm:ss"
+                                    "yyyy-MM-DD HH:mm:ss"
                                 )
                             }}
                         </view>
@@ -90,24 +77,11 @@
                                 ></HeadImg>
                             </div>
                             <view class="user-info">
-                                <view
-                                    class="name"
-                                    @click="
-                                        goUrl(
-                                            '/pages/my/userInfo?userAddress=' +
-                                                item.users.userAddress
-                                        )
-                                    "
-                                    >{{ item.users.nickname }}</view
-                                >
+                                <Name :userInfo="item.users"></Name>
                                 <view class="date"
-                                    ><text class="address"
-                                        >ID:{{
-                                            item.users.userAddress.slice(-4)
-                                        }}</text
                                     >{{
                                         $moment(item.utcTime).format(
-                                            "MM-DD HH:mm:ss"
+                                            "yyyy-MM-DD HH:mm:ss"
                                         )
                                     }}
                                 </view>
@@ -155,10 +129,12 @@
 <script>
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
+import Name from "@/components/Name";
 export default {
     components: {
         mpHtml,
         HeadImg,
+        Name
     },
     data() {
         return {
@@ -312,21 +288,9 @@ page {
 
         .user-info {
             margin-left: 10rpx;
-
-            .name {
-                color: #333;
-                font-size: 28rpx;
-                margin-bottom: 4rpx;
-            }
-
             .date {
                 font-size: 24rpx;
                 color: $u-light-color;
-
-                .address {
-                    font-size: 24rpx;
-                    margin-right: 20rpx;
-                }
             }
         }
     }
