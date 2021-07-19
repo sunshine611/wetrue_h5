@@ -1,9 +1,11 @@
 <template>
     <div
-        :class="['name', userInfo.isAuth ? 'auth' : '']"
+        class="name-area"
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
-        {{ userInfo.nickname || i18n.my.cryptonym }}
+        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
+            {{ userInfo.nickname || i18n.my.cryptonym }}
+        </div>
         <div class="auth-sign" v-if="userInfo.isAuth">
             <fa-FontAwesome
                 slot="icon"
@@ -38,12 +40,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.name {
+.name-area {
     font-size: 28rpx;
-    &.auth {
-        color: #2979FF;
-        font-weight: bold;
+    .name {
+        display: inline-block;
+        &.auth {
+            color: #2979ff;
+            font-weight: bold;
+        }
     }
+
     .auth-sign {
         margin-left: 6rpx;
         display: inline-block;
