@@ -14,15 +14,15 @@
             v-else
             src="@/static/default_head.png"
         ></u-image>
-        <div class="level" v-if="userInfo.userActive !== 0">
+        <div :class="['level',userInfo.sex === 1?'man':'',userInfo.sex === 0?'woman':'']" v-if="userInfo.userActive !== 0">
             <text class="text">V{{ userInfo.userActive }}</text>
         </div>
-        <div class="sex man" v-if="userInfo.sex === 1">
+        <!-- <div class="sex man" v-if="userInfo.sex === 1">
             <text class="text"><u-icon name="man" color="#fff" size="20"></u-icon></text>
         </div>
         <div class="sex woman" v-if="userInfo.sex === 0">
             <text class="text"><u-icon name="woman" color="#fff" size="20"></u-icon></text>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -77,15 +77,21 @@ export default {
         bottom: -2rpx;
         width: 30rpx;
         height: 30rpx;
-        background-color: #d62900;
+        background-color: #777;
         font-size: 24rpx;
         border-radius: 50%;
         color: #fff;
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 2rpx solid #ffd982;
+        border: 2rpx solid #fff;
         box-sizing: border-box;
+        &.man{
+            background-color: #2979ff;
+        }
+        &.woman{
+            background-color: #f04a82;
+        }
         .text {
             transform: scale(0.6);
         }

@@ -20,7 +20,9 @@
                         height="120rpx"
                     ></HeadImg>
                     <u-gap height="10"></u-gap>
-                    {{ userInfo.nickname || i18n.my.cryptonym }}
+                    <div :class="[userInfo.isAuth ? 'auth' : '']">
+                        {{ userInfo.nickname || i18n.my.cryptonym }}
+                    </div>
                 </div>
                 <div class="address" @tap="copy" id="copy">
                     {{ address }}
@@ -67,6 +69,7 @@
             active-color="#f04a82"
             style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
+
         <TopicList
             :postList="postList"
             v-if="current === 0 || current === 1"
@@ -302,11 +305,11 @@ export default {
 <style lang="scss" scoped>
 .user-info {
     .user-box {
-        background-color: rgba($color: #f04a82, $alpha: 0.9);
+        background-color: rgba($color: #fff, $alpha: 0.9);
         font-size: 26upx;
         box-sizing: border-box;
         margin-bottom: 20rpx;
-        box-shadow: 0px 0px 6px 0px rgba($color: #f04a82, $alpha: 0.9);
+        box-shadow: 0px 2px 6px 0px rgba($color: #999, $alpha: 0.3);
         .user-top {
             padding: 30rpx 30rpx 0 30rpx;
             display: flex;
@@ -315,7 +318,11 @@ export default {
                 text-align: center;
                 font-size: 24upx;
                 padding: 20rpx 30rpx;
-                color: #fff;
+                .auth {
+                    color: #2979ff;
+                    font-weight: bold;
+                    display: inline-block;
+                }
             }
 
             .address {
@@ -323,8 +330,8 @@ export default {
                 flex-wrap: wrap;
                 align-items: center;
                 line-height: 50rpx;
-                color: #fff;
                 font-size: 34rpx;
+                color: #f04a82;
             }
         }
 
@@ -338,12 +345,12 @@ export default {
 
                 .value {
                     font-size: 24rpx;
-                    color: #fff;
+                    color: #000;
                 }
 
                 .label {
                     font-size: 24rpx;
-                    color: #fff;
+                    color: #666;
                 }
             }
         }

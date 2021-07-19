@@ -1,14 +1,6 @@
 <template>
-    <div class="qrcode">
-        <div class="card">
-            <VueQrcode :value="token" :options="{ width: 260,margin:1 }"></VueQrcode>
-            <u-gap :height="30"></u-gap>
-            <div class="token" @tap="copy" id="copy">
-                <text>收款地址</text><u-gap :height="20"></u-gap>{{ token }}
-            </div>
-            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">返回我的</u-button>
-            <u-gap :height="30"></u-gap>
-        </div>
+    <div class="account-manage">
+        
     </div>
 </template>
 
@@ -17,9 +9,8 @@ import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 import UButton from '../../uview-ui/components/u-button/u-button.vue';
-import VueQrcode from '@chenfengyuan/vue-qrcode';
 export default {
-    components: { VueQrcode, UGap, UButton },
+    components: {  UGap, UButton },
     data() {
         return {};
     },
@@ -83,7 +74,7 @@ page {
         border-radius: 20rpx;
         background: #fff;
         display: flex;
-        align-items: center;
+        justify-content: center;
         flex-direction: column;
         box-sizing: border-box;
         // box-shadow: 0 0 20rpx #ccc;

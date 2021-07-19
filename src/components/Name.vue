@@ -3,18 +3,18 @@
         class="name-area"
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
-        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
-            {{ userInfo.nickname || i18n.my.cryptonym }}
-        </div>
-        <div class="auth-sign" v-if="userInfo.isAuth">
+    <div class="auth-sign" v-if="userInfo.isAuth">
             <fa-FontAwesome
-                slot="icon"
-                type="fas fa-award"
+                type="fas fa-user-secret"
                 size="28"
                 color="#2979FF"
             >
             </fa-FontAwesome>
         </div>
+        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
+            {{ userInfo.nickname || i18n.my.cryptonym }}
+        </div>
+        
         <text class="userid">ID:{{ userInfo.userAddress.slice(-4) }}</text>
     </div>
 </template>
@@ -49,9 +49,8 @@ export default {
             font-weight: bold;
         }
     }
-
     .auth-sign {
-        margin-left: 6rpx;
+        margin-right: 4rpx;
         display: inline-block;
     }
     .userid {

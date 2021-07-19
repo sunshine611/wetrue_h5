@@ -27,7 +27,9 @@
                                     height="120rpx"
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
-                                {{ userInfo.nickname || i18n.my.cryptonym }}
+                                <div :class="[userInfo.isAuth ? 'auth' : '']">
+                                    {{ userInfo.nickname || i18n.my.cryptonym }}
+                                </div>
                             </div>
                             <div class="address" @tap="copy" id="copy">
                                 {{ address }}
@@ -106,16 +108,19 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <!-- <u-cell-item :title="i18n.my.nodeSet">
+                    <u-cell-item
+                        title="账户管理"
+                        @click="goUrl('accountManage')"
+                    >
                         <fa-FontAwesome
                             slot="icon"
-                            type="fab fa-linode"
+                            type="fas fa-user-shield"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell-item> -->
+                    </u-cell-item>
                     <u-cell-item
                         :title="i18n.my.logout"
                         :border-bottom="false"
@@ -365,6 +370,11 @@ page {
                             text-align: center;
                             font-size: 24upx;
                             padding: 20rpx 30rpx;
+                            .auth {
+                                color: #2979ff;
+                                font-weight: bold;
+                                display: inline-block;
+                            }
                         }
 
                         .address {

@@ -200,6 +200,16 @@
         "navigationBarTitleText": "映射挖矿",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/my/accountManage",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "账户管理",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {

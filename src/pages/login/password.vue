@@ -14,7 +14,9 @@
             <div class="form">
                 <u-gap height="14"></u-gap>
                 <u-input
+                    @keyup.enter.native="check()"
                     v-model="form.password"
+                    confirm-type="验证"
                     class="password"
                     :placeholder="i18n.login.passwordTips"
                     :custom-style="{ padding: '10rpx 20rpx' }"

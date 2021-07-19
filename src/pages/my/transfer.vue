@@ -215,8 +215,12 @@ export default {
             await http
                 .get(nodeUrl + "v3/names/" + domainName)
                 .then((res) => {
-                    if (res.data.owner) {
-                        this.form.address = res.data.owner;
+                    if (res.data.id) {
+                        if (res.data.pointers.length > 0) {
+                            this.form.address = res.data.pointers[0].id;
+                        } else {
+                            this.form.address = res.data.owner;
+                        }
                         this.warning.address = false;
                     }
                 })

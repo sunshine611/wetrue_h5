@@ -76,16 +76,28 @@
                             >
                                 <view class="text"
                                     ><text
-                                        class="name"
+                                        :class="[
+                                            'name',
+                                            item.users.isAuth ? 'auth' : '',
+                                        ]"
                                         @click="
                                             goUrl(
                                                 '/pages/my/userInfo?userAddress=' +
                                                     item.users.userAddress
                                             )
                                         "
-                                        >{{
+                                        ><fa-FontAwesome
+                                            v-if="item.users.isAuth"
+                                            class="mr-4"
+                                            type="fas fa-user-secret"
+                                            size="24"
+                                            color="#2979FF"
+                                        >
+                                        </fa-FontAwesome>{{
                                             item.users.nickname ||
-                                                item.users.userAddress.slice(-4)
+                                                item.users.userAddress.slice(
+                                                    -4
+                                                )
                                         }}</text
                                     >：<mp-html
                                         class="compiler"
@@ -95,7 +107,7 @@
                             <view
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
-                                v-if="item.replyNumber>3"
+                                v-if="item.replyNumber > 3"
                             >
                                 查看{{ item.replyNumber + i18n.index.theReply }}
                             </view>
@@ -192,7 +204,7 @@ export default {
         HeadImg,
         mpHtml,
         Reward,
-        Name
+        Name,
     },
     data() {
         return {
@@ -266,30 +278,32 @@ export default {
                 size: this.pageInfo.pageSize,
                 replyLimit: 3,
             };
-            this.$http.post("/Comment/list", params,{ custom: { isToast: true } }).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.commentList = res.data.data;
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
+            this.$http
+                .post("/Comment/list", params, { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        this.more = "loadmore";
+                        if (this.pageInfo.page === 1) {
+                            this.commentList = res.data.data;
                         } else {
-                            this.commentList = this.commentList.concat(
-                                res.data.data
-                            );
+                            if (this.pageInfo.page > this.pageInfo.totalPage) {
+                                this.pageInfo.page = this.pageInfo.totalPage;
+                                this.more = "nomore";
+                            } else {
+                                this.commentList = this.commentList.concat(
+                                    res.data.data
+                                );
+                            }
                         }
+                        if (status == "pullDown") {
+                            uni.stopPullDownRefresh();
+                            this.commentList = res.data.data;
+                        }
+                    } else {
+                        this.more = "nomore";
                     }
-                    if (status == "pullDown") {
-                        uni.stopPullDownRefresh();
-                        this.commentList = res.data.data;
-                    }
-                } else {
-                    this.more = "nomore";
-                }
-            });
+                });
         },
         //评论
         comment(item) {
@@ -478,13 +492,17 @@ export default {
                         .item {
                             padding: 15rpx 20rpx;
                             border-bottom: solid 2rpx $u-border-color;
-                            &:last-child{
-                                border:none;
+                            &:last-child {
+                                border: none;
                             }
                             .text {
                                 width: 100%;
                                 .name {
                                     color: #f04a82;
+                                    &.auth {
+                                        color: #2979ff;
+                                        font-weight: bold;
+                                    }
                                 }
                                 .compiler {
                                     display: inline !important;
