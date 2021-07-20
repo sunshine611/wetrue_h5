@@ -1,7 +1,8 @@
 import { getStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import {source} from '@/config/config';
+import { sha256 } from "js-sha256";
+import { source } from "@/config/config";
 import {
     Node,
     Universal,
@@ -16,7 +17,7 @@ const mixins = {
     },
     onLoad() {},
     methods: {
-        uShowToast(title, icon,time) {
+        uShowToast(title, icon, time) {
             uni.showToast({
                 icon: icon == null ? "none" : icon,
                 title: title,
@@ -79,7 +80,9 @@ const mixins = {
             if (isNaN(balance)) {
                 return 0;
             } else {
-                return (parseFloat(balance) / Math.pow(10, 18)).toFixed(num || 4);
+                return (parseFloat(balance) / Math.pow(10, 18)).toFixed(
+                    num || 4
+                );
             }
         },
         //获取后端信息
@@ -89,6 +92,23 @@ const mixins = {
                     store.commit("user/SET_CONFIGINFO", res.data);
                 }
             });
+        },
+        //加密密码
+        cryptoPassword(password) {
+            let first = sha256("WeTrue" + password);
+            let second = "";
+            for (let i = 0; i < first.length; i++) {
+                second += first[i];
+                i++;
+            }
+            let third = sha256(second);
+            let fourth = "";
+            for (let i = 0; i < third.length; i++) {
+                i++;
+                fourth += third[i];
+            }
+            let fifth = new Buffer(fourth).toString("base64");
+            return fifth;
         },
         //keystore通过密码转换成私钥
         keystoreToSecretKey(password) {
@@ -111,10 +131,13 @@ const mixins = {
         },
         //验证是否登录
         validLogin() {
-            if (getStore("keystore")) {
-                return true;
-            } else {
+            if (
+                JSON.stringify(getStore("keystore")) === "{}" ||
+                !getStore("keystore")
+            ) {
                 return false;
+            } else {
+                return true;
             }
         },
         //话题高亮
@@ -156,7 +179,8 @@ const mixins = {
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
-                alert(error);
+                // alert(error);
+                this.uShowToast("AE节点连接失败！");
             }
         },
         //判断是否已连接AE网络

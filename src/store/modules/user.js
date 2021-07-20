@@ -37,7 +37,13 @@ const login = {
             state.keystore = params;
             setStore("keystore", params);
         },
-        SET_KEYSTOREARR: (state, params) => {
+        SET_CLIENT: (state, params) => {
+            state.client = params;
+        },
+    },
+    actions: {
+        //设置多账户
+        setKeystoreArr({ state }, params) {
             if (state.keystoreArr.length > 0) {
                 let addressArr = state.keystoreArr.map((item) => {
                     return item.public_key;
@@ -50,10 +56,22 @@ const login = {
             }
             setStore("keystoreArr", state.keystoreArr);
         },
-        SET_CLIENT: (state, params) => {
-            state.client = params;
+        //删除某个账户
+        deleteKeystoreArr({ commit, state }, params) {
+            for (let i = 0; i < state.keystoreArr.length; i++) {
+                if (state.keystoreArr[i].public_key === params) {
+                    state.keystoreArr.splice(i, 1);
+                    break;
+                }
+            }
+            if (state.keystore.public_key === params) {
+                commit("SET_KEYSTORE", {});
+                commit("SET_TOKEN", "");
+                commit("SET_USERINFO", {});
+                commit("SET_PASSWORD", '');
+            }
+            setStore("keystoreArr", state.keystoreArr);
         },
     },
-    actions: {},
 };
 export default login;

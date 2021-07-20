@@ -12,7 +12,7 @@ export default {
 		mnemonicLogin:'助记词登陆',
 		rebuild:'重新生成',
 		mnemonicWarning:'助记词不能为空，一般为12个单词(空格间隔)',
-		passWarning:'安全密码要求3-20位',
+		passWarning:'安全密码要求6-20位',
 		input:'输入',
 		verify:'验证',
 		securePassword:'安全密码',

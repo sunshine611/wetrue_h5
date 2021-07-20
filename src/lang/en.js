@@ -12,7 +12,7 @@ export default {
 		mnemonicLogin:'Mnemonic login',
 		rebuild:'Rebuild',
 		mnemonicWarning:"Mnemonic can't be empty,Usually 12 words(space interval)",
-		passWarning:"The secure password requires 3-20 characters",
+		passWarning:"The secure password requires 6-20 characters",
 		input:'Input',
 		verify:'Verify',
 		securePassword:'Secure Password',

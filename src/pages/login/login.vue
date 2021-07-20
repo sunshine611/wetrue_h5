@@ -34,7 +34,7 @@
                 <div class="form-title">{{ i18n.Setpassword }}</div>
                 <u-gap height="14"></u-gap>
                 <u-input
-                    v-model="form.pass"
+                    v-model="form.password"
                     type="text"
                     class="textarea"
                     :clearable="false"
@@ -42,7 +42,7 @@
                     placeholder="Password..."
                     maxlength="20"
                 />
-                <div class="warnning" v-show="warning.pass">
+                <div class="warnning" v-show="warning.password">
                     {{ i18n.login.passWarning }}
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 type="primary"
                 shape="circle"
                 ripple
-                @tap="importMnemonic"
+                @tap="login"
                 :loading="loading"
                 :throttle-time="1000"
             >
@@ -87,13 +87,13 @@ export default {
             form: {
                 mnemonic: "",
                 mnemonicFormat: "",
-                pass: "",
+                password: "",
             },
             //表单验证
             warning: {
                 mnemonic: false,
                 mnemonicFormat: false,
-                pass: false,
+                password: false,
             },
             loading: false, //按钮加载状态
         };
@@ -105,10 +105,18 @@ export default {
         },
     },
     methods: {
+        //登录
+        login(){
+            this.loading = true;
+            setTimeout(()=>{
+                this.importMnemonic();
+            },100)
+        },
         //导入助记词
         async importMnemonic() {
             if (!this.form.mnemonic) {
                 this.warning.mnemonic = true;
+                this.loading = false;
                 return;
             } else {
                 this.warning.mnemonic = false;
@@ -117,15 +125,16 @@ export default {
                 await generateSaveHDWallet(this.form.mnemonic, 0);
             } catch (err) {
                 this.warning.mnemonicFormat = true;
+                this.loading = false;
                 return;
             }
-            if (!this.form.pass || this.form.pass.length < 3) {
-                this.warning.pass = true;
+            if (!this.form.password || this.form.password.length < 6) {
+                this.warning.password = true;
+                this.loading = false;
                 return;
             } else {
-                this.warning.pass = false;
+                this.warning.password = false;
             }
-            this.loading = true;
             //助记词转换成钱包地址和秘钥
             let publicKeyInsecretKey = await getHdWalletAccountFromMnemonic(
                 this.form.mnemonic,
@@ -134,21 +143,24 @@ export default {
             //通过密码和私钥生成keystore
             await dump(
                 "WeTrueWallet",
-                this.form.pass,
+                this.cryptoPassword(this.form.password),
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
-                this.$store.commit("user/SET_KEYSTOREARR", keystore);
-                this.$store.commit("user/SET_PASSWORD", this.form.pass);
+                this.$store.commit("user/SET_PASSWORD", this.cryptoPassword(this.form.password));
+                this.$store.dispatch("user/setKeystoreArr", keystore);
             });
-			this.$store.commit("user/SET_TOKEN", publicKeyInsecretKey.publicKey);
-            this.login(publicKeyInsecretKey.publicKey);
+            this.$store.commit(
+                "user/SET_TOKEN",
+                publicKeyInsecretKey.publicKey
+            );
+            this.getUserInfo(publicKeyInsecretKey.publicKey);
             this.getConfigInfo();
             this.connectAe();
             this.reLaunchUrl("../index/index");
         },
         //登陆
-        login(address) {
+        getUserInfo(address) {
             let params = {
                 userAddress: address,
                 type: "login",

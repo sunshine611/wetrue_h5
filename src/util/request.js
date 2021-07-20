@@ -15,7 +15,7 @@ http.interceptors.request.use((config) => {
         "Content-type": "application/x-www-form-urlencoded",
         "ak-token": getStore("token"),
     };
-    if (!!getStore("keystore")) {
+    if (!!getStore("keystore") && JSON.stringify(getStore("keystore")) !== "{}") {
         if (!store.state.user.password) {
             let pageObj = getCurrentPages(); //实例化页面栈
             let link = pageObj[0].route + queryParams(pageObj[0].options);

@@ -28,7 +28,7 @@
                 type="primary"
                 shape="circle"
                 ripple
-                @click="check"
+                @click.native="login"
                 :throttle-time="3000"
                 :loading="btnLoading"
                 >{{ i18n.login.verify }}
@@ -81,16 +81,21 @@ export default {
         },
     },
     methods: {
+        login() {
+            this.btnLoading = true;
+            setTimeout(() => {
+                this.check();
+            }, 100);
+        },
         //检查密码是否和keystore匹配
         async check() {
             try {
-                this.btnLoading = true;
                 const secretKey = await this.keystoreToSecretKey(
-                    this.form.password
+                    this.cryptoPassword(this.form.password)
                 );
                 if (!!secretKey) {
                     this.uShowToast("OK");
-                    this.$store.commit("user/SET_PASSWORD", this.form.password);
+                    this.$store.commit("user/SET_PASSWORD", this.cryptoPassword(this.form.password));
                     this.getConfigInfo();
                     this.connectAe();
                     this.btnLoading = false;

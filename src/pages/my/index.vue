@@ -108,27 +108,13 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <!-- <u-cell-item
+                    <u-cell-item
                         title="账户管理"
                         @click="goUrl('accountManage')"
                     >
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-user-shield"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
-                    </u-cell-item> -->
-                    <u-cell-item
-                        :title="i18n.my.logout"
-                        :border-bottom="false"
-                        @click="showExit = true"
-                    >
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-sign-out-alt"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
@@ -151,6 +137,14 @@
             </div>
         </div>
         <div class="login" v-else>
+            <fa-FontAwesome
+                v-if="keystoreArr.length > 0"
+                class="account"
+                type="fas fa-user-shield"
+                size="32"
+                color="#fff"
+                @click="goUrl('accountManage')"
+            ></fa-FontAwesome>
             <div class="login-box">
                 <div class="item" @tap="goUrl('../login/login')">
                     <fa-FontAwesome
@@ -177,12 +171,6 @@
                 </div>
             </div>
         </div>
-        <u-modal
-            v-model="showExit"
-            content="是否退出登录？"
-            @confirm="logout"
-            :show-cancel-button="true"
-        ></u-modal>
         <VersionTip
             v-model="versionShow"
             :versionInfo="versionInfo"
@@ -198,6 +186,7 @@ import { version, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
+import { getStore } from "@/util/service";
 export default {
     components: {
         HeadImg,
@@ -209,10 +198,10 @@ export default {
             version: version, //应用版本号
             address: "", //ae地址
             balance: 0, //余额
-            showExit: false, //退出提示
             versionInfo: {}, //版本信息
             versionCode: parseInt(version.replace(/./g, "")), //版本号
             versionShow: false, //版本提示弹层
+            keystoreArr: getStore("keystoreArr"),
         };
     },
     computed: {
@@ -285,14 +274,6 @@ export default {
             http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
                 this.balance = this.balanceFormat(res.data.balance);
             });
-        },
-        //退出登录
-        logout() {
-            // uni.clearStorage();
-            uni.removeStorageSync("keystore");
-            uni.removeStorageSync("configInfo");
-            uni.removeStorageSync("userInfo");
-            this.$store.commit("user/SET_TOKEN", "");
         },
         //打开白皮书
         whitePaper() {
@@ -435,7 +416,12 @@ page {
         display: flex;
         justify-content: center;
         align-items: center;
-
+        position: relative;
+        .account {
+            position: absolute;
+            right: 30rpx;
+            top: 30rpx;
+        }
         .login-box {
             margin: 0 10%;
             width: 90%;
