@@ -1,14 +1,14 @@
 <template>
     <view class="login">
-        <fa-FontAwesome
-            v-if="keystoreArr.length > 0"
-            class="account"
-            type="fas fa-user-shield"
-            size="32"
-            color="#fff"
-            @click="goUrl('accountManage')"
-        ></fa-FontAwesome>
         <div class="login-box">
+            <fa-FontAwesome
+                v-if="keystoreArr.length > 0"
+                class="account"
+                type="fas fa-user-shield"
+                size="32"
+                color="#f04a82"
+                @click="goUrl('accountManage')"
+            ></fa-FontAwesome>
             <div class="title">
                 <u-image
                     width="92rpx"
@@ -170,7 +170,7 @@ export default {
             this.getUserInfo(publicKeyInsecretKey.publicKey);
             this.getConfigInfo();
             this.connectAe();
-            this.reLaunchUrl("../index/index");
+            this.reLaunchUrl("../my/index");
         },
         //登陆
         getUserInfo(address) {
@@ -199,12 +199,7 @@ page {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    position: relative;
-    .account {
-        position: absolute;
-        right: 30rpx;
-        top: 30rpx;
-    }
+
     .login-box {
         box-sizing: border-box;
         width: 90%;
@@ -213,7 +208,12 @@ page {
         min-height: 200rpx;
         padding: 60rpx 30rpx;
         box-shadow: 0rpx 5rpx 18rpx rgba($color: #666, $alpha: 0.7);
-
+        position: relative;
+        .account {
+            position: absolute;
+            right: 20rpx;
+            top: 20rpx;
+        }
         .title {
             font-size: 46rpx;
             display: flex;

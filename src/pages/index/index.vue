@@ -65,7 +65,7 @@
 
 <script>
 import { getStore, setStore } from "@/util/service";
-import {version } from "@/config/config.js";
+import { version } from "@/config/config.js";
 import moment from "moment";
 import TopicList from "../../components/TopicList.vue";
 import VersionTip from "@/components/VersionTip.vue";
@@ -93,6 +93,7 @@ export default {
             versionInfo: {}, //版本信息
             versionCode: parseInt(version.replace(/./g, "")), //版本号
             versionShow: false, //版本提示弹层
+            tabClick: false, //点击tab事件
         };
     },
     //上拉刷新
@@ -116,6 +117,17 @@ export default {
             setStore("language", "zh-cn");
             this.language = getStore("language");
         }
+    },
+    onTabItemTap() {
+        if (this.tabClick) {
+            this.postList = [];
+            this.pageInfo.page = 1;
+            this.getPostList();
+        }
+        this.tabClick = true;
+        setTimeout(() => {
+            this.tabClick = false;
+        }, 200);
     },
     computed: {
         //国际化

@@ -1,14 +1,14 @@
 <template>
     <view class="check">
-        <fa-FontAwesome
-            v-if="keystoreArr.length > 0"
-            class="account"
-            type="fas fa-user-shield"
-            size="32"
-            color="#fff"
-            @click="goUrl('accountManage')"
-        ></fa-FontAwesome>
         <div class="check-box">
+            <fa-FontAwesome
+                v-if="keystoreArr.length > 0"
+                class="account"
+                type="fas fa-user-shield"
+                size="32"
+                color="#f04a82"
+                @click="goUrl('accountManage')"
+            ></fa-FontAwesome>
             <div class="title">
                 <u-image
                     width="92rpx"
@@ -52,7 +52,7 @@
                 </div>
                 <div class="pull-right">
                     <div class="mnemonic" @click="logout">
-                        {{ i18n.my.logout }}
+                        退出当前账户
                     </div>
                 </div>
             </div>
@@ -155,12 +155,7 @@ page {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    position: relative;
-    .account {
-        position: absolute;
-        right: 30rpx;
-        top: 30rpx;
-    }
+
     .check-box {
         box-sizing: border-box;
         width: 90%;
@@ -169,7 +164,12 @@ page {
         min-height: 200rpx;
         padding: 60rpx 30rpx;
         box-shadow: 0rpx 5rpx 18rpx rgba($color: #666, $alpha: 0.7);
-
+        position: relative;
+        .account {
+            position: absolute;
+            right: 20rpx;
+            top: 20rpx;
+        }
         .title {
             font-size: 46rpx;
             display: flex;

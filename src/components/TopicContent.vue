@@ -2,14 +2,14 @@
     <div class="forum">
         <div class="forum-item">
             <div class="focus" v-show="postInfo.isFocus">
-                    <fa-FontAwesome
-                        type="fas fa-heart"
-                        size="24"
-                        class="star"
-                        color="#fff"
-                    >
-                    </fa-FontAwesome>
-                </div>
+                <fa-FontAwesome
+                    type="fas fa-heart"
+                    size="24"
+                    class="star"
+                    color="#fff"
+                >
+                </fa-FontAwesome>
+            </div>
             <div class="user-area">
                 <div class="head-box">
                     <HeadImg
@@ -22,35 +22,6 @@
                 <div class="user-info">
                     <div class="user">
                         <Name :userInfo="postInfo.users"></Name>
-                        <div class="more">
-                            <text class="mr-24"
-                                >{{ postInfo.read
-                                }}<fa-FontAwesome
-                                    type="fas fa-eye"
-                                    size="28"
-                                    class="ml-6"
-                                    color="#666"
-                                >
-                                </fa-FontAwesome
-                            ></text>
-                            <fa-FontAwesome
-                                type="fas fa-star"
-                                size="28"
-                                class="mr-10"
-                                color="#ffc107"
-                                v-show="postInfo.isStar"
-                                @tap="star"
-                            >
-                            </fa-FontAwesome>
-                            <fa-FontAwesome
-                                type="far fa-star"
-                                size="28"
-                                class="mr-10"
-                                color="#666"
-                                v-show="!postInfo.isStar"
-                                @tap="star"
-                            ></fa-FontAwesome>
-                        </div>
                     </div>
                     <div class="time">
                         <text class="mr-20">{{
@@ -75,10 +46,14 @@
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
                         class="reward-list"
-                        v-for="(item, index) in postInfo.rewardList.slice(0,6)"
+                        v-for="(item, index) in postInfo.rewardList.slice(0, 6)"
                         :key="index"
                     >
-                        <u-icon name="thumb-up-fill" color="#f04a82" class="mr-6"></u-icon
+                        <u-icon
+                            name="thumb-up-fill"
+                            color="#f04a82"
+                            class="mr-6"
+                        ></u-icon
                         >{{ item.nickname }}[{{
                             item.sender_id.slice(-4)
                         }}]打赏了<text class="name">{{
@@ -86,18 +61,59 @@
                         }}</text
                         >WTT
                     </div>
-                    <u-gap height="5" v-if="postInfo.rewardList.length>6"></u-gap>
-                    <div class="more" v-if="postInfo.rewardList.length>6" @click="rewardRecordShow=true">查看更多</div>
+                    <u-gap
+                        height="5"
+                        v-if="postInfo.rewardList.length > 6"
+                    ></u-gap>
+                    <div
+                        class="more"
+                        v-if="postInfo.rewardList.length > 6"
+                        @click="rewardRecordShow = true"
+                    >
+                        查看更多
+                    </div>
+                </div>
+                <div class="more">
+                    <text class="mr-24"
+                        >{{ postInfo.read
+                        }}<fa-FontAwesome
+                            type="fas fa-eye"
+                            size="28"
+                            class="ml-6"
+                            color="#666"
+                        >
+                        </fa-FontAwesome
+                    ></text>
+                    <fa-FontAwesome
+                        type="fas fa-star"
+                        size="28"
+                        class="mr-10"
+                        color="#ffc107"
+                        v-show="postInfo.isStar"
+                        @tap="star"
+                    >
+                    </fa-FontAwesome>
+                    <fa-FontAwesome
+                        type="far fa-star"
+                        size="28"
+                        class="mr-10"
+                        color="#666"
+                        v-show="!postInfo.isStar"
+                        @tap="star"
+                    ></fa-FontAwesome>
                 </div>
             </div>
         </div>
-        <RewardRecord v-model="rewardRecordShow" :record="postInfo.rewardList"></RewardRecord>
+        <RewardRecord
+            v-model="rewardRecordShow"
+            :record="postInfo.rewardList"
+        ></RewardRecord>
     </div>
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import UGap from '../uview-ui/components/u-gap/u-gap.vue';
+import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 export default {
@@ -111,7 +127,7 @@ export default {
     props: {
         postInfo: {
             type: Object,
-            default: ()=>{}
+            default: () => {},
         },
     },
     data() {
@@ -176,20 +192,20 @@ export default {
         border-bottom: 2rpx solid #e9e9e9;
         position: relative;
         .focus {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-top: 40rpx solid #f04a82;
+            border-left: 40rpx solid transparent;
+            .star {
                 position: absolute;
-                right: 0;
-                top: 0;
-                width: 0;
-                height: 0;
-                border-top: 40rpx solid #f04a82;
-                border-left: 40rpx solid transparent;
-                .star {
-                    position: absolute;
-                    transform: scale(0.65);
-                    right: 0rpx;
-                    top: -38rpx;
-                }
+                transform: scale(0.65);
+                right: 0rpx;
+                top: -38rpx;
             }
+        }
         .user-area {
             padding: 20rpx;
             display: flex;
@@ -244,17 +260,17 @@ export default {
                 background: #f1f1f1;
                 padding: 14rpx 30rpx;
                 .reward-list {
-                    margin:10rpx 0;
+                    margin: 10rpx 0;
                     .name {
                         color: #f04a82;
                     }
                 }
-                .more{
-                    padding:10rpx 0 0 0;
-                    border-top:2rpx solid #e5e5e5;
-                    color: #f04a82;
-                    text-align: center;
-                }
+            }
+            .more {
+                padding: 20rpx 0 0 0;
+                border-top: 2rpx solid #e5e5e5;
+                color: #666;
+                text-align: right;
             }
         }
     }
