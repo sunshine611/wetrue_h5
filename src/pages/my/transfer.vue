@@ -191,6 +191,7 @@ export default {
                     };
                 }
             } catch (err) {
+                this.uShowToast("AE节点连接失败！");
                 this.hideLoading = false;
                 this.btnLoading = false;
             }

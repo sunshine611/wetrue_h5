@@ -1,5 +1,13 @@
 <template>
     <view class="login">
+        <fa-FontAwesome
+            v-if="keystoreArr.length > 0"
+            class="account"
+            type="fas fa-user-shield"
+            size="32"
+            color="#fff"
+            @click="goUrl('accountManage')"
+        ></fa-FontAwesome>
         <div class="login-box">
             <div class="title">
                 <u-image
@@ -80,6 +88,7 @@ import {
     getHdWalletAccountFromMnemonic,
 } from "@aeternity/aepp-sdk/es/utils/hd-wallet";
 import { dump } from "@aeternity/aepp-sdk/es/utils/keystore";
+import { getStore } from "@/util/service";
 export default {
     data() {
         return {
@@ -96,6 +105,7 @@ export default {
                 password: false,
             },
             loading: false, //按钮加载状态
+            keystoreArr: getStore("keystoreArr"),
         };
     },
     onLoad() {},
@@ -106,11 +116,11 @@ export default {
     },
     methods: {
         //登录
-        login(){
+        login() {
             this.loading = true;
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.importMnemonic();
-            },100)
+            }, 100);
         },
         //导入助记词
         async importMnemonic() {
@@ -147,7 +157,10 @@ export default {
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
-                this.$store.commit("user/SET_PASSWORD", this.cryptoPassword(this.form.password));
+                this.$store.commit(
+                    "user/SET_PASSWORD",
+                    this.cryptoPassword(this.form.password)
+                );
                 this.$store.dispatch("user/setKeystoreArr", keystore);
             });
             this.$store.commit(
@@ -186,7 +199,12 @@ page {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-
+    position: relative;
+    .account {
+        position: absolute;
+        right: 30rpx;
+        top: 30rpx;
+    }
     .login-box {
         box-sizing: border-box;
         width: 90%;

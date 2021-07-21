@@ -1,5 +1,13 @@
 <template>
     <view class="check">
+        <fa-FontAwesome
+            v-if="keystoreArr.length > 0"
+            class="account"
+            type="fas fa-user-shield"
+            size="32"
+            color="#fff"
+            @click="goUrl('accountManage')"
+        ></fa-FontAwesome>
         <div class="check-box">
             <div class="title">
                 <u-image
@@ -18,7 +26,9 @@
                     v-model="form.password"
                     confirm-type="验证"
                     class="password"
-                    :placeholder="i18n.login.passwordTips"
+                    :placeholder="
+                        `请输入地址ak_...${token.slice(-4)}的安全密码`
+                    "
                     :custom-style="{ padding: '10rpx 20rpx' }"
                 />
             </div>
@@ -52,6 +62,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { getStore } from "@/util/service";
 export default {
     data() {
         return {
@@ -60,6 +71,7 @@ export default {
             },
             btnLoading: false, //按钮加载状态
             link: "", //跳转来时的路由
+            keystoreArr: getStore("keystoreArr"),
         };
     },
     onLoad(option) {
@@ -95,7 +107,10 @@ export default {
                 );
                 if (!!secretKey) {
                     this.uShowToast("OK");
-                    this.$store.commit("user/SET_PASSWORD", this.cryptoPassword(this.form.password));
+                    this.$store.commit(
+                        "user/SET_PASSWORD",
+                        this.cryptoPassword(this.form.password)
+                    );
                     this.getConfigInfo();
                     this.connectAe();
                     this.btnLoading = false;
@@ -115,13 +130,13 @@ export default {
                 }
             } catch (error) {
                 this.uShowToast("密码错误！");
+                this.form.password = "";
                 this.btnLoading = false;
             }
         },
         //退出登录
         logout() {
-            uni.clearStorage();
-            this.$store.commit("user/SET_TOKEN", "");
+            this.$store.dispatch("user/deleteKeystoreArr", this.token);
             uni.reLaunch({
                 url: "/pages/my/index",
             });
@@ -140,7 +155,12 @@ page {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-
+    position: relative;
+    .account {
+        position: absolute;
+        right: 30rpx;
+        top: 30rpx;
+    }
     .check-box {
         box-sizing: border-box;
         width: 90%;

@@ -95,19 +95,24 @@ const mixins = {
         },
         //加密密码
         cryptoPassword(password) {
-            let first = sha256("WeTrue" + password);
-            let second = "";
+            let first,
+                second,
+                third,
+                fourth,
+                fifth = "";
+            first = sha256("WeTrue" + password);
+            second = "";
             for (let i = 0; i < first.length; i++) {
                 second += first[i];
                 i++;
             }
-            let third = sha256(second);
-            let fourth = "";
+            third = sha256(second);
+            fourth = "";
             for (let i = 0; i < third.length; i++) {
                 i++;
                 fourth += third[i];
             }
-            let fifth = new Buffer(fourth).toString("base64");
+            fifth = new Buffer(fourth).toString("base64");
             return fifth;
         },
         //keystore通过密码转换成私钥
@@ -179,7 +184,6 @@ const mixins = {
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
-                // alert(error);
                 this.uShowToast("AE节点连接失败！");
             }
         },

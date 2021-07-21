@@ -45,10 +45,16 @@ const login = {
         //设置多账户
         setKeystoreArr({ state }, params) {
             if (state.keystoreArr.length > 0) {
-                let addressArr = state.keystoreArr.map((item) => {
-                    return item.public_key;
-                });
-                if (!addressArr.includes(params.public_key)) {
+                let isExist = false; //不存在
+                for (let i = 0; i < state.keystoreArr.length; i++) {
+                    if (state.keystoreArr[i].public_key === params.public_key) {
+                        state.keystoreArr[i] = params;
+                        isExist = true; //存在
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    //不存在就加上
                     state.keystoreArr.push(params);
                 }
             } else {
@@ -56,7 +62,7 @@ const login = {
             }
             setStore("keystoreArr", state.keystoreArr);
         },
-        //删除某个账户
+        //删除或退出某个账户
         deleteKeystoreArr({ commit, state }, params) {
             for (let i = 0; i < state.keystoreArr.length; i++) {
                 if (state.keystoreArr[i].public_key === params) {
@@ -68,9 +74,20 @@ const login = {
                 commit("SET_KEYSTORE", {});
                 commit("SET_TOKEN", "");
                 commit("SET_USERINFO", {});
-                commit("SET_PASSWORD", '');
+                commit("SET_PASSWORD", "");
             }
             setStore("keystoreArr", state.keystoreArr);
+        },
+        //切换账户
+        switchAccount({ commit, state }, params) {
+            for (let i = 0; i < state.keystoreArr.length; i++) {
+                if (state.keystoreArr[i].public_key === params) {
+                    commit("SET_KEYSTORE", state.keystoreArr[i]);
+                    commit("SET_TOKEN", state.keystoreArr[i].public_key);
+                    commit("SET_PASSWORD", "");
+                    break;
+                }
+            }
         },
     },
 };

@@ -110,7 +110,7 @@
                     </u-cell-item>
                     <u-cell-item
                         title="账户管理"
-                        @click="goUrl('accountManage')"
+                        @click="goUrl('../login/accountManage')"
                     >
                         <fa-FontAwesome
                             slot="icon"
@@ -143,7 +143,7 @@
                 type="fas fa-user-shield"
                 size="32"
                 color="#fff"
-                @click="goUrl('accountManage')"
+                @click="goUrl('../login/accountManage')"
             ></fa-FontAwesome>
             <div class="login-box">
                 <div class="item" @tap="goUrl('../login/login')">

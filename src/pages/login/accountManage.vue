@@ -7,7 +7,7 @@
                     class="mr-30"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('index')"
+                    @click="reLaunchUrl('../index/index')"
                 ></u-icon>
             </div>
         </u-navbar>
@@ -52,7 +52,8 @@
                             </fa-FontAwesome
                             >删除
                         </div>
-                        <div class="item">
+                        <div class="item" @click="showQrcode = true;
+                                currentAddress = item.public_key;">
                             <fa-FontAwesome
                                 type="fas fa-qrcode"
                                 size="28"
@@ -62,7 +63,10 @@
                             </fa-FontAwesome
                             >二维码
                         </div>
-                        <div class="item">
+                        <div
+                            class="item"
+                            @click="switchAccount(item.public_key)"
+                        >
                             <fa-FontAwesome
                                 type="fas fa-hand-point-right"
                                 size="28"
@@ -75,6 +79,7 @@
                     </div>
                 </div>
             </div>
+            <u-gap :height="120"></u-gap>
         </div>
         <u-modal
             v-model="showDelete"
@@ -82,6 +87,25 @@
             @confirm="deleteAccount"
             :show-cancel-button="true"
         ></u-modal>
+        <div class="add-area">
+            <u-button
+                class="add-btn"
+                shape="circle"
+                type="primary"
+                :plain="true"
+                @click="goUrl('login')"
+                ><fa-FontAwesome
+                    type="fas fa-user-plus
+"
+                    size="28"
+                    class="mr-10"
+                    color="#f04a82"
+                >
+                </fa-FontAwesome
+                >新增账户</u-button
+            >
+        </div>
+        <Qrcode v-model="showQrcode" :address="currentAddress"></Qrcode>
     </div>
 </template>
 
@@ -91,13 +115,15 @@ import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
+import Qrcode from "@/components/Qrcode"
 export default {
-    components: { UGap, UButton },
+    components: { UGap, UButton,Qrcode },
     data() {
         return {
             keystoreArr: getStore("keystoreArr"),
             showDelete: false, //删除弹层
             currentAddress: "", //当前选择的地址
+            showQrcode:false,//二维码弹层
         };
     },
     computed: {
@@ -112,6 +138,20 @@ export default {
     },
     activated() {},
     methods: {
+        
+        //切换账户
+        switchAccount(address) {
+            this.$store.dispatch("user/switchAccount", address);
+            uni.reLaunch({
+                url: "/pages/my/index",
+            });
+        },
+        //删除某个账户
+        deleteAccount() {
+            this.$store.dispatch("user/deleteKeystoreArr", this.currentAddress);
+            this.keystoreArr = getStore("keystoreArr");
+            this.isLogin();
+        },
         //判断账户是否为0
         isLogin() {
             if (this.keystoreArr.length === 0) {
@@ -119,12 +159,6 @@ export default {
                     url: "/pages/login/login",
                 });
             }
-        },
-        //删除某个账户
-        deleteAccount() {
-            this.$store.dispatch("user/deleteKeystoreArr", this.currentAddress);
-            this.keystoreArr = getStore("keystoreArr");
-            this.isLogin();
         },
         //复制粘贴板
         copy(index) {
@@ -205,7 +239,7 @@ page {
                 }
             }
             .opera {
-                padding: 20rpx;
+                padding: 20rpx 30rpx;
                 .item {
                     display: inline-block;
                     margin-right: 30rpx;
@@ -228,6 +262,21 @@ page {
                     top: -52rpx;
                 }
             }
+        }
+    }
+    .add-area {
+        background: #fff;
+        position: fixed;
+        width: 100%;
+        height: 120rpx;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 0px 10rpx rgba($color: #f04a82, $alpha: 0.5);
+        .add-btn {
+            width: 92%;
         }
     }
 }
