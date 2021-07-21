@@ -69,39 +69,47 @@
             active-color="#f04a82"
             style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
-
         <TopicList
             :postList="postList"
             v-if="current === 0 || current === 1"
         ></TopicList>
-        <User
-            :userList="postList"
-            class="mb-20"
-            v-if="current === 2 || current === 3"
-        ></User>
+        <User :userList="postList" v-if="current === 2 || current === 3"></User>
+        <BalanceList
+            :tokenList="postList"
+            :userAddress="userAddress"
+            v-if="current === 4"
+        ></BalanceList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
-            class="mb-20"
+            class="mb-20 mt-20"
             :status="more"
             v-show="postList.length > 0"
         />
+        <u-gap :height="10"></u-gap>
     </view>
 </template>
 
 <script>
+import Request from "luch-request";
+const http = new Request();
 import { mapGetters } from "vuex";
 import TopicList from "../../components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
 import Clipboard from "clipboard";
 import User from "@/components/User.vue";
+import BalanceList from "@/components/BalanceList.vue";
+import { aeknow, nodeUrl } from "@/config/config.js";
+import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 export default {
     components: {
         TopicList,
         HeadImg,
         User,
+        BalanceList,
+        UGap,
     },
     data() {
         return {
@@ -128,6 +136,9 @@ export default {
                 },
                 {
                     name: "粉丝",
+                },
+                {
+                    name: "账户",
                 },
             ],
         };
@@ -263,12 +274,43 @@ export default {
                     }
                 });
         },
+        //获取账户token列表
+        getTokenList() {
+            uni.showLoading({
+                title: "加载中",
+            });
+            http.get(aeknow + "api/token/" + this.userAddress)
+                .then((res) => {
+                    if (res.data.tokens.length > 0) {
+                        this.postList = res.data.tokens;
+                    }
+                })
+                .then(() => {
+                    http.get(nodeUrl + "v3/accounts/" + this.userAddress).then(
+                        (res) => {
+                            this.postList.unshift({
+                                balance: res.data.balance,
+                                tokenname: "AE",
+                                decimal: 18,
+                                owner_id: "",
+                                contract: "",
+                            });
+                            uni.hideLoading();
+                            this.more = "nomore";
+                        }
+                    );
+                });
+        },
         //切换tab
         tabChange(index) {
             this.current = index;
             this.postList = [];
-            this.pageInfo.page = 1;
-            this.getPostList();
+            if ([0, 1, 2, 3].includes(index)) {
+                this.pageInfo.page = 1;
+                this.getPostList();
+            } else if (index === 4) {
+                this.getTokenList();
+            }
         },
         //复制粘贴板
         copy() {

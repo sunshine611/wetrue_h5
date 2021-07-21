@@ -43,7 +43,7 @@ export default {
     props: {
         userList: {
             type: Array,
-            default: [],
+            default: ()=>[],
         },
     },
     data() {

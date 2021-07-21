@@ -1,70 +1,91 @@
 <template>
-  <div class="token-list">
-    <u-navbar title="转账记录">
+    <div class="transfer-record">
+        <u-navbar title="转账记录">
             <div slot="right">
                 <u-icon
                     name="home"
                     class="mr-30"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('../index/index')"
+                    @click="reLaunchUrl('index')"
                 ></u-icon>
             </div>
         </u-navbar>
-    <u-cell-group v-if="recodeList.length > 0" class="cell-box">
-      <div v-for="item in recodeList" :key="item.txhash">
-        <u-cell-item
-          class="cell-out"
-          v-if="item.sender_id === token"
-          :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          @click="view(item.txhash)"
-        >
-          <div slot="icon" class="icon">
-            <fa-FontAwesome
-              type="fas fa-arrow-circle-up"
-              size="50"
-              class="mr-20"
-              color="#f34343"
-            >
-            </fa-FontAwesome>
-          </div>
-          <div slot="title">
-            {{
-              item.recipient_id.slice(0, 3) +
-                "..." +
-                item.recipient_id.slice(-4)
-            }}
-          </div>
-          <div slot="right-icon" class="amount">
-            {{ "-" + balanceFormat(item.amount) + " " + (tokenName || "AE") }}
-          </div>
-        </u-cell-item>
-        <u-cell-item
-          class="cell-in"
-          v-else
-          :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
-          @click="view(item.txhash)"
-        >
-          <div slot="icon" class="icon">
-            <fa-FontAwesome
-              type="fas fa-arrow-circle-down"
-              size="50"
-              class="mr-20"
-              color="#76bf0c"
-            >
-            </fa-FontAwesome>
-          </div>
-          <div slot="title">
-            {{ item.sender_id.slice(0, 3) + "..." + item.sender_id.slice(-4) }}
-          </div>
-          <div slot="right-icon" class="amount">
-            {{ "+" + balanceFormat(item.amount) + " " + (tokenName || "AE") }}
-          </div>
-        </u-cell-item>
-      </div>
-    </u-cell-group>
-    <div class="empty" v-else><u-empty mode="list"></u-empty></div>
-  </div>
+        <u-cell-group class="cell-box" v-if="recodeList.length > 0">
+            <div v-for="item in recodeList" :key="item.txhash">
+                <u-cell-item
+                    class="cell-out"
+                    v-if="item.sender_id === (userAddress || token)"
+                    :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
+                    @click="view(item.txhash)"
+                >
+                    <div slot="icon" class="icon">
+                        <fa-FontAwesome
+                            type="fas fa-arrow-circle-up"
+                            size="50"
+                            class="mr-20"
+                            color="#f34343"
+                        >
+                        </fa-FontAwesome>
+                    </div>
+                    <div slot="title">
+                        {{
+                            item.recipient_id.slice(0, 3) +
+                                "..." +
+                                item.recipient_id.slice(-4)
+                        }}
+                    </div>
+                    <div slot="right-icon" class="amount">
+                        {{
+                            "-" +
+                                balanceFormat(item.amount) +
+                                " " +
+                                (tokenName || "AE")
+                        }}
+                    </div>
+                </u-cell-item>
+                <u-cell-item
+                    class="cell-in"
+                    v-else
+                    :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
+                    @click="view(item.txhash)"
+                >
+                    <div slot="icon" class="icon">
+                        <fa-FontAwesome
+                            type="fas fa-arrow-circle-down"
+                            size="50"
+                            class="mr-20"
+                            color="#76bf0c"
+                        >
+                        </fa-FontAwesome>
+                    </div>
+                    <div slot="title">
+                        {{
+                            item.sender_id.slice(0, 3) +
+                                "..." +
+                                item.sender_id.slice(-4)
+                        }}
+                    </div>
+                    <div slot="right-icon" class="amount">
+                        {{
+                            "+" +
+                                balanceFormat(item.amount) +
+                                " " +
+                                (tokenName || "AE")
+                        }}
+                    </div>
+                </u-cell-item>
+            </div>
+        </u-cell-group>
+        <div class="empty" v-else><u-empty mode="list"></u-empty></div>
+        <u-loadmore
+            bg-color="rgba(0,0,0,0)"
+            class="mb-20 mt-20"
+            :status="more"
+            v-show="recodeList.length > 0"
+        />
+        <u-gap :height="10"></u-gap>
+    </div>
 </template>
 
 <script>
@@ -73,87 +94,121 @@ const http = new Request();
 import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import uEmpty from "../../uview-ui/components/u-empty/u-empty.vue";
+import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 export default {
-  components: { uEmpty },
-  data() {
-    return {
-      tokenName: "", //token名字
-      contract: "", //合约编号
-      recodeList: [], //转账记录列表
-      //分页信息
-      pageInfo:{
-        limit:20,
-        offset:0
-      }
-    };
-  },
-  computed: {
-    ...mapGetters(["token"]),
-    //国际化
-    i18n() {
-      return this.$_i18n.messages[this.$_i18n.locale];
+    components: { uEmpty, UGap },
+    data() {
+        return {
+            userAddress: "", //用户地址
+            tokenName: "", //token名字
+            contract: "", //合约编号
+            recodeList: [], //转账记录列表
+            //分页信息
+            pageInfo: {
+                limit: 20,
+                offset: 0,
+            },
+            more: "loadmore", //加载更多
+        };
     },
-  },
-  onLoad(option) {
-    this.tokenName = option.tokenName;
-    this.contract = option.contract;
-    this.isPassword();
-    if (!!this.contract) {
-      this.getTokenRecodeList();
-    } else {
-      this.getAeRecodeList();
-    }
-  },
-  //上拉刷新
-  onPullDownRefresh() {
-    if (!!this.contract) {
-      this.getTokenRecodeList();
-    } else {
-      this.getAeRecodeList();
-    }
-    setTimeout(function() {
-      uni.stopPullDownRefresh();
-    }, 500);
-  },
-  methods: {
-    //获取账户token列表
-    getTokenRecodeList() {
-      http
-        .get(`${aeknow}api/tokentxs/${this.token}/${this.contract}`)
-        .then((res) => {
-          if (res.data.length > 0) {
-            this.recodeList = res.data;
-          }
-        });
+    computed: {
+        ...mapGetters(["token"]),
+        //国际化
+        i18n() {
+            return this.$_i18n.messages[this.$_i18n.locale];
+        },
     },
-    //获取AE转账记录列表
-    getAeRecodeList() {
-      http.get(`${aeknow}api/spendtx/${this.token}`).then((res) => {
-        if (res.data.txs.length > 0) {
-          this.recodeList = res.data.txs;
+    onLoad(option) {
+        this.userAddress = option.userAddress;
+        this.tokenName = option.tokenName;
+        this.contract = option.contract;
+        this.isPassword();
+        if (!!this.contract) {
+            this.getTokenRecodeList();
+        } else {
+            this.getAeRecodeList();
         }
-      });
     },
-    //查看详情
-    view(hash) {
-      window.open("https://www.aeknow.org/block/transaction/" + hash);
+    //上拉刷新
+    onPullDownRefresh() {
+        this.pageInfo.offset = 0;
+        if (!!this.contract) {
+            this.getTokenRecodeList();
+        } else {
+            this.getAeRecodeList();
+        }
+        setTimeout(function() {
+            uni.stopPullDownRefresh();
+        }, 500);
     },
-  },
+    //下拉加载
+    onReachBottom() {
+        this.pageInfo.offset += this.pageInfo.limit;
+        if (!!this.contract) {
+            this.getTokenRecodeList();
+        } else {
+            this.getAeRecodeList();
+        }
+    },
+    methods: {
+        //获取账户token列表
+        getTokenRecodeList() {
+            http.get(
+                `${aeknow}api/tokentxs/${this.userAddress || this.token}/${
+                    this.contract
+                }/${this.pageInfo.limit}/${this.pageInfo.offset}`
+            ).then((res) => {
+                if (res.data.length > 0) {
+                    if (this.pageInfo.offset < this.pageInfo.limit) {
+                        this.recodeList = res.data;
+                    } else {
+                        this.recodeList = this.recodeList.concat(res.data);
+                    }
+                    if (res.data.length < this.pageInfo.limit) {
+                        this.more = "nomore";
+                    }
+                }
+            });
+        },
+        //获取AE转账记录列表
+        getAeRecodeList() {
+            http.get(
+                `${aeknow}api/spendtx/${this.userAddress || this.token}/${
+                    this.pageInfo.limit
+                }/${this.pageInfo.offset}`
+            ).then((res) => {
+                if (res.data.txs.length > 0) {
+                    if (this.pageInfo.offset < this.pageInfo.limit) {
+                        this.recodeList = res.data.txs;
+                    } else {
+                        this.recodeList = this.recodeList.concat(res.data.txs);
+                    }
+                    if (res.data.txs.length < this.pageInfo.limit) {
+                        this.more = "nomore";
+                    }
+                }
+            });
+        },
+        //查看详情
+        view(hash) {
+            window.open("https://www.aeknow.org/block/transaction/" + hash);
+        },
+    },
 };
 </script>
 <style lang="scss" scoped>
-.token-list {
-  .cell-box {
-    .cell-in {
-      .amount {
-        color: #76bf0c;
-      }
+.transfer-record {
+    .cell-box {
+        .cell-in {
+            .amount {
+                color: #76bf0c;
+            }
+        }
+        .cell-out {
+            .amount {
+                color: #f34343;
+            }
+        }
     }
-    .cell-out {
-      .amount {
-        color: #f34343;
-      }
-    }
-  }
 }
 </style>

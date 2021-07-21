@@ -68,8 +68,6 @@
             <u-cell-item
                 v-for="item in tokenList"
                 :key="item.contract"
-                :title="item.tokenname"
-                :value="balanceFormat(item.balance)"
                 :arrow="false"
                 @click="
                     goUrl(
@@ -77,7 +75,13 @@
                     )
                 "
             >
+             <div slot="icon">
+                        <div class="token-icon">
+                            {{item.tokenname}}
+                        </div>
+                    </div>
                 <div slot="right-icon" class="amount">
+                    余额：{{balanceFormat(item.balance)}}
                     <u-button
                         shape="square"
                         type="primary"
@@ -187,6 +191,16 @@ export default {
             align-items: center;
             justify-content: space-between;
         }
+    }
+    .token-icon{
+        width:80rpx;
+        height: 80rpx;
+        background: #f04a82;
+        border-radius: 50%;
+        color:#fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
 </style>
