@@ -63,7 +63,7 @@ import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
 import { mapGetters } from "vuex";
 import Request from "luch-request";
 const http = new Request();
-import { aeknow } from "@/config/config.js";
+import { aeknow, wttContract } from "@/config/config.js";
 export default {
     components: {
         UTag,
@@ -173,7 +173,7 @@ export default {
             }
             this.btnLoading = true;
             let result = await this.contractTransfer(
-                "ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM",
+                wttContract,
                 this.postInfo.users.userAddress,
                 this.form.amount
             );
@@ -196,7 +196,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                `${aeknow}api/mytoken/${this.token}/ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM`
+                `${aeknow}api/mytoken/${this.token}/${wttContract}`
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.balance);
             });

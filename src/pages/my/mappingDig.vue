@@ -17,10 +17,16 @@
                     <div class="desc">我的收益(WTT)</div>
                     <div class="earning">
                         <div class="amount">
-                            {{
-                                balanceFormat(mappingInfo.earning, 7) ||
-                                    "≈0.00000000"
-                            }}
+                            <u-count-to
+                                color="##f04a82"
+                                :decimals="7"
+                                :font-size="42"
+                                :bold="true"
+                                :start-val="0"
+                                :end-val="balanceFormat(mappingInfo.earning, 7)"
+                                v-if="mappingInfo.earning"
+                            ></u-count-to>
+                            <div v-else>≈0.00000000</div>
                         </div>
                         <div class="receive">
                             <u-button
@@ -99,6 +105,12 @@
             <div class="clearfix">
                 <div class="pull-right">WTT余额：{{ wttBalance }}WTT</div>
             </div>
+            <u-gap :height="20"></u-gap>
+            <u-alert-tips
+                type="warning"
+                description="请至少保留1AE"
+                :show-icon="true"
+            ></u-alert-tips>
         </div>
         <div class="rule">
             <div class="h3">WTT质押挖矿规则</div>
@@ -135,13 +147,23 @@
                     映射AE
                 </div>
                 <u-gap :height="30"></u-gap>
-                <u-input
-                    v-model="form.amount"
-                    type="text"
-                    :border="true"
-                    placeholder="映射金额"
-                    maxlength="10"
-                />
+                <div class="balance-input">
+                    <u-input
+                        v-model="form.amount"
+                        type="text"
+                        :border="true"
+                        placeholder="映射金额"
+                        maxlength="10"
+                    />
+                    <u-button
+                        size="mini"
+                        type="primary"
+                        shape="circle"
+                        class="total"
+                        @click="totalBalance"
+                        >全部</u-button
+                    >
+                </div>
                 <u-gap :height="10"></u-gap>
                 <div class="warnning" v-show="warning.amount">
                     {{ i18n.my.balanceErr }}
@@ -155,6 +177,7 @@
                 >
             </view>
         </u-popup>
+        <u-modal v-model="blackHouseShow" content="您已违反规则进入小黑屋"></u-modal>
     </div>
 </template>
 
@@ -165,7 +188,7 @@ import UButton from "../../uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
-import { aeknow, nodeUrl } from "@/config/config.js";
+import { aeknow, nodeUrl, wttContract } from "@/config/config.js";
 export default {
     components: { UGap, UButton },
     data() {
@@ -185,6 +208,7 @@ export default {
             warning: {
                 amount: false,
             }, //警报
+            blackHouseShow:false,//黑屋提示弹层
         };
     },
     computed: {
@@ -196,14 +220,13 @@ export default {
     },
     onLoad() {
         this.getUserInfo();
+        this.getMappingInfo();
         this.getAccount();
         this.getWttBalance();
         this.getConfigInfo();
     },
     activated() {
-        this.getUserInfo();
-        this.getAccount();
-        this.getWttBalance();
+        
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -227,11 +250,6 @@ export default {
                         this.userInfo = res.data;
                     }
                 })
-                .then(() => {
-                    if (this.userInfo.is_map) {
-                        this.getMappingInfo();
-                    }
-                });
         },
         //开通映射挖矿
         open() {
@@ -254,7 +272,7 @@ export default {
         //开始开通
         async startOpen() {
             const result = await this.contractTransfer(
-                "ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM",
+                wttContract,
                 this.configInfo.openMapAddress,
                 this.configInfo.openMapAmount / Math.pow(10, 18)
             );
@@ -267,11 +285,17 @@ export default {
         },
         //获取映射信息
         getMappingInfo() {
-            this.$http.post("/Mining/mapInfo",{ custom: { isToast: true } }).then((res) => {
-                if (res.code === 200) {
-                    this.mappingInfo = res.data;
-                }
-            });
+            this.$http
+                .post("/Mining/mapInfo", { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.mappingInfo = res.data;
+                        this.blackHouseShow=this.mappingInfo.black_house;
+                        if(!this.mappingInfo.state){
+                            this.getUserInfo();
+                        }
+                    }
+                });
         },
         //映射
         mapping() {
@@ -283,6 +307,10 @@ export default {
                 return;
             } else {
                 this.warning.amount = false;
+            }
+            if (parseFloat(this.aeBalance) - parseFloat(this.form.amount) < 1) {
+                this.uShowToast("映射金额请至少保留1AE！");
+                return;
             }
             this.btnLoading = true;
             this.$http
@@ -297,6 +325,7 @@ export default {
                         this.uShowToast("映射成功！");
                     } else {
                         this.uShowToast(res.msg);
+                        this.btnLoading = false;
                     }
                 });
         },
@@ -326,6 +355,14 @@ export default {
                 }
             });
         },
+        //全部事件
+        totalBalance() {
+            if (parseInt(this.aeBalance) - 1 > 0) {
+                this.form.amount = parseInt(this.aeBalance) - 1;
+            } else {
+                this.form.amount = 0;
+            }
+        },
         //获取账户AE余额
         getAccount() {
             http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
@@ -334,11 +371,11 @@ export default {
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(
-                `${aeknow}api/mytoken/${this.token}/ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM`
-            ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.balance);
-            });
+            http.get(`${aeknow}api/mytoken/${this.token}/${wttContract}`).then(
+                (res) => {
+                    this.wttBalance = this.balanceFormat(res.data.balance);
+                }
+            );
         },
     },
 };
@@ -396,7 +433,7 @@ page {
                     .amount {
                         color: #f04a82;
                         font-size: 42rpx;
-                        font-weight: 600;
+                        font-weight: bold;
                     }
                 }
             }
@@ -446,14 +483,23 @@ page {
         }
     }
     .form-box {
+        padding: 50rpx;
+        border-radius: 20rpx;
         .title {
             font-size: 36rpx;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        padding: 50rpx;
-        border-radius: 20rpx;
+        .balance-input {
+            position: relative;
+            .total {
+                position: absolute;
+                right: 14rpx;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
         .warnning {
             font-size: 20rpx;
             color: #f00;

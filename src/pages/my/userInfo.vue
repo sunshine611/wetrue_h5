@@ -279,22 +279,22 @@ export default {
             uni.showLoading({
                 title: "加载中",
             });
-            http.get(aeknow + "api/token/" + this.userAddress)
+            http.get(nodeUrl + "v3/accounts/" + this.userAddress)
                 .then((res) => {
-                    if (res.data.tokens.length > 0) {
-                        this.postList = res.data.tokens;
-                    }
+                    this.postList.push({
+                        balance: res.data.balance,
+                        tokenname: "AE",
+                        decimal: 18,
+                        owner_id: "",
+                        contract: "",
+                    });
                 })
                 .then(() => {
-                    http.get(nodeUrl + "v3/accounts/" + this.userAddress).then(
+                    http.get(aeknow + "api/token/" + this.userAddress).then(
                         (res) => {
-                            this.postList.unshift({
-                                balance: res.data.balance,
-                                tokenname: "AE",
-                                decimal: 18,
-                                owner_id: "",
-                                contract: "",
-                            });
+                            if (res.data.tokens.length > 0) {
+                                this.postList = this.postList.concat(res.data.tokens);
+                            }
                             uni.hideLoading();
                             this.more = "nomore";
                         }

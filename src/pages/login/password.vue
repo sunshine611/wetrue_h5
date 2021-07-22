@@ -78,9 +78,9 @@ export default {
         if (!!this.$store.state.user.password || !this.token) {
             setTimeout(() => {
                 uni.reLaunch({
-                    url: "/pages/index/index",
+                    url: "/pages/my/index",
                 });
-            }, 1000);
+            }, 300);
         }
         if (!!option.link) {
             this.link = decodeURIComponent(option.link);

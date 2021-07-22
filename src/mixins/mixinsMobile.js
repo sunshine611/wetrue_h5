@@ -126,12 +126,15 @@ const mixins = {
         isPassword() {
             if (!store.state.user.password) {
                 let pageObj = getCurrentPages(); //实例化页面栈
-                let link = pageObj[0].route + queryParams(pageObj[0].options);
-                uni.navigateTo({
-                    url: `/pages/login/password?link=${encodeURIComponent(
-                        link
-                    )}`,
-                });
+                if (pageObj[0]) {
+                    let link =
+                        pageObj[0].route + queryParams(pageObj[0].options);
+                    uni.navigateTo({
+                        url: `/pages/login/password?link=${encodeURIComponent(
+                            link
+                        )}`,
+                    });
+                }
             }
         },
         //验证是否登录
