@@ -199,7 +199,7 @@ export default {
             address: "", //ae地址
             balance: 0, //余额
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/./g, "")), //版本号
+            versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             keystoreArr: getStore("keystoreArr"),
         };
@@ -215,7 +215,6 @@ export default {
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount();
-            this.getVersionInfo();
         }
     },
     activated() {
@@ -223,6 +222,7 @@ export default {
             this.getUserInfo();
             this.getAccount();
         }
+        this.getVersionInfo();
     },
     methods: {
         //获取用户信息

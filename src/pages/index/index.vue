@@ -91,7 +91,7 @@ export default {
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/./g, "")), //版本号
+            versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
         };
