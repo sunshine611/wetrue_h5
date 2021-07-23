@@ -18,7 +18,7 @@
                     WeTrue更新
                 </div>
                 <div class="content mb-40">
-                    <mp-html :content="versionInfo.content" />
+                    <mp-html :content="versionInfo.content" :selectable="true"/>
                 </div>
                 <u-button
                     type="primary"

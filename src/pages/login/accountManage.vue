@@ -12,73 +12,81 @@
             </div>
         </u-navbar>
         <div class="account">
-            <div
-                class="account-list"
-                v-for="(item, index) in keystoreArr"
-                :key="item.public_key"
-            >
-                <div class="active" v-show="item.public_key === token">
-                    <fa-FontAwesome
-                        type="fas fa-check"
-                        size="24"
-                        class="star"
-                        color="#fff"
-                    >
-                    </fa-FontAwesome>
-                </div>
+            <draggable v-model="keystoreArr" group="keystore" animation="300" :preventOnFilter="true">
                 <div
-                    class="address"
-                    @click="copy(index)"
-                    :ref="'address' + index"
+                    class="account-list"
+                    v-for="(item, index) in keystoreArr"
+                    :key="item.id"
                 >
-                    {{ item.public_key }}
-                </div>
-                <div class="dotted"></div>
-                <div class="opera clearfix">
-                    <div class="pull-right">
-                        <div
-                            class="item"
-                            @click="
-                                showDelete = true;
-                                currentAddress = item.public_key;
-                            "
+                    <div class="active" v-show="item.public_key === token">
+                        <fa-FontAwesome
+                            type="fas fa-check"
+                            size="24"
+                            class="star"
+                            color="#fff"
                         >
-                            <fa-FontAwesome
-                                type="fas fa-trash-alt"
-                                size="28"
-                                class="mr-6"
-                                color="#fff"
+                        </fa-FontAwesome>
+                    </div>
+                    <div
+                        class="address"
+                        @click="copy(index)"
+                        :ref="'address' + index"
+                    >
+                        {{ item.public_key }}
+                    </div>
+                    <div class="dotted"></div>
+                    <div class="opera clearfix">
+                        <div class="pull-right">
+                            <div
+                                class="item"
+                                @tap="
+                                    showDelete = true;
+                                    currentAddress = item.public_key;
+                                "
                             >
-                            </fa-FontAwesome
-                            >删除
-                        </div>
-                        <div class="item" @click="showQrcode = true;
-                                currentAddress = item.public_key;">
-                            <fa-FontAwesome
-                                type="fas fa-qrcode"
-                                size="28"
-                                class="mr-6"
-                                color="#fff"
+                                <fa-FontAwesome
+                                    type="fas fa-trash-alt"
+                                    size="28"
+                                    class="mr-6"
+                                    color="#fff"
+                                >
+                                </fa-FontAwesome
+                                >删除
+                            </div>
+                            <div
+                                class="item"
+                                @tap="
+                                    showQrcode = true;
+                                    currentAddress = item.public_key;
+                                "
                             >
-                            </fa-FontAwesome
-                            >二维码
-                        </div>
-                        <div
-                            class="item"
-                            @click="switchAccount(item.public_key)"
-                        >
-                            <fa-FontAwesome
-                                type="fas fa-hand-point-right"
-                                size="28"
-                                class="mr-6"
-                                color="#fff"
+                                <fa-FontAwesome
+                                    type="fas fa-qrcode"
+                                    size="28"
+                                    class="mr-6"
+                                    color="#fff"
+                                >
+                                </fa-FontAwesome
+                                >二维码
+                            </div>
+                            <div
+                                class="item"
+                                @tap="switchAccount(item.public_key)"
                             >
-                            </fa-FontAwesome
-                            >切换
+                                <fa-FontAwesome
+                                    type="fas fa-hand-point-right"
+                                    size="28"
+                                    class="mr-6"
+                                    color="#fff"
+                                >
+                                </fa-FontAwesome
+                                >切换
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </draggable>
+
             <u-gap :height="120"></u-gap>
         </div>
         <u-modal
@@ -110,21 +118,32 @@
 </template>
 
 <script>
-import { getStore } from "@/util/service";
+import { getStore, setStore } from "@/util/service";
 import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
-import Qrcode from "@/components/Qrcode"
+import Qrcode from "@/components/Qrcode";
+import draggable from "vuedraggable";
 export default {
-    components: { UGap, UButton,Qrcode },
+    components: { UGap, UButton, Qrcode, draggable },
     data() {
         return {
             keystoreArr: getStore("keystoreArr"),
             showDelete: false, //删除弹层
             currentAddress: "", //当前选择的地址
-            showQrcode:false,//二维码弹层
+            showQrcode: false, //二维码弹层
         };
+    },
+    watch: {
+        keystoreArr: {
+            handler() {
+                this.$nextTick(() => {
+                    setStore("keystoreArr", this.keystoreArr);
+                });
+            },
+            deep: true,
+        },
     },
     computed: {
         ...mapGetters(["token"]),
@@ -138,7 +157,6 @@ export default {
     },
     activated() {},
     methods: {
-        
         //切换账户
         switchAccount(address) {
             this.$store.dispatch("user/switchAccount", address);
@@ -239,10 +257,11 @@ page {
                 }
             }
             .opera {
-                padding: 20rpx 30rpx;
+                padding: 0rpx 30rpx;
                 .item {
                     display: inline-block;
                     margin-right: 30rpx;
+                    padding:20rpx 0;
                     &:last-child {
                         margin: 0;
                     }

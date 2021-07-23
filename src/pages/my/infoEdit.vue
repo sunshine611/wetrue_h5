@@ -171,37 +171,39 @@ export default {
         //更新昵称
         async updateNickname() {
             this.btnLoading = true;
-            uni.showLoading({
-                title: this.i18n.index.inChain,
-            });
             let payload = {
                 content: this.nickname,
             };
-            let res = await this.sendNickname(payload);
-            if (!!res.hash) {
+            let res = await this.wetrueSend("nickname", payload);
+            if (JSON.stringify(res) !== "{}" && !!res) {
                 setTimeout(() => {
+                    this.nameShow = false;
+                    this.btnLoading = false;
                     uni.hideLoading();
-                }, 500);
-                this.nameShow = false;
+                    this.getUserInfo();
+                }, 2000);
+            } else {
                 this.btnLoading = false;
+                uni.hideLoading();
             }
         },
         //更新性别
         async updateSex() {
             this.btnLoading = true;
-            uni.showLoading({
-                title: this.i18n.index.inChain,
-            });
             let payload = {
                 content: this.userInfo.sex,
             };
-            let res = await this.sendSex(payload);
-            if (!!res.hash) {
+            let res = await this.wetrueSend('sex',payload);
+            if (JSON.stringify(res) !== "{}" && !!res) {
                 setTimeout(() => {
+                    this.sexShow = false;
+                    this.btnLoading = false;
                     uni.hideLoading();
-                }, 500);
-                this.sexShow = false;
+                    this.getUserInfo();
+                }, 2000);
+            } else {
                 this.btnLoading = false;
+                uni.hideLoading();
             }
         },
     },

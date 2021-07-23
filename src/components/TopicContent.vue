@@ -22,6 +22,10 @@
                 <div class="user-info">
                     <div class="user">
                         <Name :userInfo="postInfo.users"></Name>
+                        <TopicMore
+                            :topicInfo="postInfo"
+                            class="mr-10"
+                        ></TopicMore>
                     </div>
                     <div class="time">
                         <text class="mr-20">{{
@@ -33,7 +37,11 @@
             </div>
             <div class="main-content">
                 <div class="text-content">
-                    <mp-html :content="postInfo.payload" />
+                    <mp-html
+                        :content="postInfo.payload"
+                        :selectable="true"
+                        ref="mpHtml"
+                    />
                 </div>
                 <div class="img-list">
                     <u-image
@@ -87,7 +95,7 @@
                     <fa-FontAwesome
                         type="fas fa-star"
                         size="28"
-                        class="mr-10"
+                        class="mr-24"
                         color="#ffc107"
                         v-show="postInfo.isStar"
                         @tap="star"
@@ -96,10 +104,18 @@
                     <fa-FontAwesome
                         type="far fa-star"
                         size="28"
-                        class="mr-10"
+                        class="mr-24"
                         color="#666"
                         v-show="!postInfo.isStar"
                         @tap="star"
+                    ></fa-FontAwesome>
+                    <fa-FontAwesome
+                        type="far fa-copy"
+                        size="28"
+                        class="mr-10"
+                        color="#666"
+                        id="copy"
+                        @click="copy"
                     ></fa-FontAwesome>
                 </div>
             </div>
@@ -116,12 +132,15 @@ import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
+import Clipboard from "clipboard";
 export default {
     components: {
         HeadImg,
         mpHtml,
         RewardRecord,
         Name,
+        TopicMore,
         UGap,
     },
     props: {
@@ -180,6 +199,33 @@ export default {
                     this.postInfo.star = res.data.star;
                 }
             });
+        },
+        copy() {
+            let text = this.$refs.mpHtml.getText();
+            // #ifdef H5
+            let clipboard = new Clipboard("#copy", {
+                text: (trigger) => {
+                    uni.showToast({
+                        title: "复制成功",
+                        icon: "none",
+                        duration: 600,
+                    });
+                    return text;
+                },
+            });
+            // #endif
+            // #ifndef H5
+            uni.setClipboardData({
+                data: text,
+                success: function() {
+                    uni.showToast({
+                        title: "复制成功",
+                        icon: "none",
+                        duration: 600,
+                    });
+                },
+            });
+            // #endif
         },
     },
 };

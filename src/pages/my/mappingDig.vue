@@ -105,12 +105,6 @@
             <div class="clearfix">
                 <div class="pull-right">WTT余额：{{ wttBalance }}WTT</div>
             </div>
-            <u-gap :height="20"></u-gap>
-            <u-alert-tips
-                type="warning"
-                description="请至少保留1AE"
-                :show-icon="true"
-            ></u-alert-tips>
         </div>
         <div class="rule">
             <div class="h3">WTT质押挖矿规则</div>

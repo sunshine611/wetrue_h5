@@ -25,10 +25,10 @@
                 <u-input
                     v-model="form.mnemonic"
                     type="textarea"
-                    class="textarea"
+                    border
+                    trim
                     :clearable="false"
                     height="160"
-                    :custom-style="{ padding: '15rpx' }"
                     placeholder="one two three..."
                     maxlength="220"
                 />
@@ -43,10 +43,9 @@
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.password"
-                    type="text"
-                    class="textarea"
-                    :clearable="false"
-                    :custom-style="{ padding: '0 15rpx' }"
+                    type="password"
+                    border
+                    clearable
                     placeholder="Password..."
                     maxlength="20"
                 />

@@ -100,6 +100,7 @@ export default {
     onPullDownRefresh() {
         this.pageInfo.page = 1;
         this.getPostList();
+        this.getUnreadMsg();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -108,15 +109,20 @@ export default {
     onReachBottom() {
         this.pageInfo.page++;
         this.getPostList();
+        this.getUnreadMsg();
     },
     onLoad() {
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
+        this.getUnreadMsg();
         if (!getStore("language")) {
             setStore("language", "zh-cn");
             this.language = getStore("language");
         }
+    },
+    activated() {
+        this.getUnreadMsg();
     },
     onTabItemTap() {
         if (this.tabClick) {
@@ -127,7 +133,7 @@ export default {
         this.tabClick = true;
         setTimeout(() => {
             this.tabClick = false;
-        }, 200);
+        }, 500);
     },
     computed: {
         //国际化

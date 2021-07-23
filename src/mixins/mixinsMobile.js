@@ -75,6 +75,23 @@ const mixins = {
                 delta: delta,
             });
         },
+        //获取未读消息数
+        getUnreadMsg() {
+            // this.$http.post("/Message/stateSize").then((res) => {
+            //     if (res.code === 200) {
+            //         if (res.data.stateSize > 0) {
+            //             uni.setTabBarBadge({
+            //                 index: 1,
+            //                 text: `${res.data.stateSize}`,
+            //             });
+            //         } else {
+            //             uni.hideTabBarRedDot({
+            //                 index: 1,
+            //             });
+            //         }
+            //     }
+            // });
+        },
         //余额格式化
         balanceFormat(balance, num) {
             if (isNaN(balance)) {
@@ -201,138 +218,86 @@ const mixins = {
             }
             return client;
         },
-        //发布主贴
-        async sendTopic(payload) {
+        //wetrue上链发送操作
+        async wetrueSend(type, payload) {
             try {
-                let client = await this.client();
                 const configInfo = getStore("configInfo");
-                let content = {
-                    WeTrue: configInfo.WeTrue,
-                    source: source,
-                    type: "topic",
-                    content: payload.content,
-                };
-                const res = await client.spend(
-                    configInfo.topicAmount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
+                let amount, content, client;
+                if (type === "topic") {
+                    //发送主贴
+                    if (this.balanceFormat(configInfo.topicAmount) > 10) {
+                        this.uShowToast("上链超过10AE，已禁止操作");
+                        return;
                     }
-                );
-                uni.showLoading({
-                    title: "Radio",
-                });
-                this.$http.post("/Submit/hash", {
-                    hash: res.hash,
-                });
-                return res;
-            } catch (err) {
-                this.uShowToast("操作失败！");
-            }
-        },
-        //发送评论
-        async sendComment(payload) {
-            try {
-                let client = await this.client();
-                const configInfo = getStore("configInfo");
-                let content = {
-                    WeTrue: configInfo.WeTrue,
-                    type: "comment",
-                    source: source,
-                    toHash: payload.hash,
-                    content: payload.content,
-                };
-                const res = await client.spend(
-                    configInfo.commentAmount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
+                    amount = configInfo.topicAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        source: source,
+                        type: "topic",
+                        content: payload.content,
+                    };
+                } else if (type === "comment") {
+                    //发送评论
+                    if (this.balanceFormat(configInfo.commentAmount) > 10) {
+                        this.uShowToast("上链超过10AE，已禁止操作");
+                        return;
                     }
-                );
-                uni.showLoading({
-                    title: "Radio",
-                });
-                this.$http.post("/Submit/hash", {
-                    hash: res.hash,
-                });
-                return res;
-            } catch (err) {
-                this.uShowToast("操作失败！");
-            }
-        },
-        //发送回复
-        async sendReply(payload) {
-            try {
-                let client = await this.client();
-                const configInfo = getStore("configInfo");
-                let content = {
-                    WeTrue: configInfo.WeTrue,
-                    type: "reply",
-                    source: source,
-                    reply_type: payload.type,
-                    to_hash: payload.hash,
-                    to_address: payload.address,
-                    reply_hash: payload.replyHash,
-                    content: payload.content,
-                };
-                const res = await client.spend(
-                    configInfo.replyAmount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
+                    amount = configInfo.commentAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: "comment",
+                        source: source,
+                        toHash: payload.hash,
+                        content: payload.content,
+                    };
+                } else if (type === "reply") {
+                    //发送回复
+                    if (this.balanceFormat(configInfo.replyAmount) > 0.00001) {
+                        this.uShowToast("上链超过10AE，已禁止操作");
+                        return;
                     }
-                );
-                uni.showLoading({
-                    title: "Radio",
-                });
-                this.$http.post("/Submit/hash", {
-                    hash: res.hash,
-                });
-                return res;
-            } catch (err) {
-                this.uShowToast("操作失败！");
-            }
-        },
-        //发送昵称
-        async sendNickname(payload) {
-            try {
-                let client = await this.client();
-                const configInfo = getStore("configInfo");
-                let content = {
-                    WeTrue: configInfo.WeTrue,
-                    type: "nickname",
-                    content: payload.content,
-                };
-                const res = await client.spend(
-                    configInfo.nicknameAmount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
+                    amount = configInfo.replyAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: "reply",
+                        source: source,
+                        reply_type: payload.type,
+                        to_hash: payload.hash,
+                        to_address: payload.address,
+                        reply_hash: payload.replyHash,
+                        content: payload.content,
+                    };
+                }else if(type==='nickname'){
+                    //修改昵称
+                    if (this.balanceFormat(configInfo.nicknameAmount) > 10) {
+                        this.uShowToast("上链超过10AE，已禁止操作");
+                        return;
                     }
-                );
+                    amount = configInfo.nicknameAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: "nickname",
+                        content: payload.content,
+                    };
+                }else if(type==='sex'){
+                    //修改性别
+                    if (this.balanceFormat(configInfo.sexAmount) > 10) {
+                        this.uShowToast("上链超过10AE，已禁止操作");
+                        return;
+                    }
+                    amount = configInfo.sexAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: "sex",
+                        content: payload.content,
+                    };
+                }
                 uni.showLoading({
-                    title: "Radio",
+                    title: this.i18n.index.inChain,
                 });
-                this.$http.post("/Submit/hash", {
-                    hash: res.hash,
-                });
-                return res;
-            } catch (err) {
-                this.uShowToast("操作失败！");
-            }
-        },
-        //发送性别
-        async sendSex(payload) {
-            try {
-                let client = await this.client();
-                const configInfo = getStore("configInfo");
-                let content = {
-                    WeTrue: configInfo.WeTrue,
-                    type: "sex",
-                    content: payload.content,
-                };
+                client = await this.client();
                 const res = await client.spend(
-                    configInfo.sexAmount,
+                    amount,
                     configInfo.receivingAccount,
                     {
                         payload: JSON.stringify(content),

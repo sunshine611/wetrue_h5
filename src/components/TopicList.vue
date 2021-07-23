@@ -27,16 +27,7 @@
                     <div class="user-info">
                         <div class="user">
                             <Name :userInfo="item.users"></Name>
-                            <div class="more">
-                                <fa-FontAwesome
-                                    type="fas fa-angle-down"
-                                    size="36"
-                                    class="mr-10"
-                                    color="#cecece"
-                                    @tap="moreOpera(item)"
-                                >
-                                </fa-FontAwesome>
-                            </div>
+                            <TopicMore :topicInfo="item" :postList="postList" class="mr-10"></TopicMore>
                         </div>
                         <div class="time">
                             <text>{{ $moment(item.utcTime).fromNow() }}</text
@@ -49,7 +40,7 @@
                     @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
                     <div class="text-content">
-                        <mp-html :content="item.payload" />
+                        <mp-html :content="item.payload" :selectable="true"/>
                     </div>
                     <div class="img-list">
                         <u-image
@@ -113,22 +104,19 @@
                 </div>
             </div>
         </div>
-        <u-action-sheet
-            :list="moreList"
-            v-model="moreShow"
-            @click="handleOpera"
-        ></u-action-sheet>
     </div>
 </template>
 <script>
 import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 export default {
     components: {
         HeadImg,
         mpHtml,
-        Name
+        Name,
+        TopicMore,
     },
     props: {
         postList: {
@@ -137,31 +125,12 @@ export default {
         },
     },
     data() {
-        return {
-            moreShow: false, //下箭头控制显示更多操作
-        };
+        return {};
     },
     computed: {
         //国际化
         i18n() {
             return this.$_i18n.messages[this.$_i18n.locale];
-        },
-        //显示更多操作
-        moreList() {
-            return [
-                {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
-                },
-                {
-                    text: this.i18n.index.complain,
-                    subText: this.i18n.index.complainText,
-                },
-                {
-                    text: this.i18n.index.aeknow,
-                    subText: this.i18n.index.aeknowText,
-                },
-            ];
         },
     },
     watch: {
@@ -192,35 +161,6 @@ export default {
         },
     },
     methods: {
-        //更多操作
-        moreOpera(item) {
-            this.currentForum = item;
-            this.moreShow = true;
-            if (this.currentForum.isFocus) {
-                this.moreList[0] = {
-                    text: this.i18n.index.cancelFocus,
-                    subText: this.i18n.index.cancelFocusText,
-                };
-            } else {
-                this.moreList[0] = {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
-                };
-            }
-        },
-        //更多操作选择事件
-        handleOpera(index) {
-            if (index === 0) {
-                this.focus();
-            } else if (index === 1) {
-                this.complain();
-            } else if (index === 2) {
-                window.open(
-                    "https://www.aeknow.org/block/transaction/" +
-                        this.currentForum.hash
-                );
-            }
-        },
         //是否点赞
         praise(item) {
             let params = {
@@ -234,24 +174,6 @@ export default {
                 }
             });
         },
-        //是否关注
-        focus() {
-            let params = {
-                userAddress: this.currentForum.users.userAddress,
-            };
-            this.$http.post("/Submit/focus", params).then((res) => {
-                if (res.code === 200) {
-                    for (let i = 0; i < this.postList.length; i++) {
-                        if (
-                            this.postList[i].users.userAddress ===
-                            this.currentForum.users.userAddress
-                        ) {
-                            this.postList[i].isFocus = res.data.isFocus;
-                        }
-                    }
-                }
-            });
-        },
         //是否收藏
         star(item) {
             let params = {
@@ -261,15 +183,6 @@ export default {
                 if (res.code === 200) {
                     item.isStar = res.data.isStar;
                     item.star = res.data.star;
-                }
-            });
-        },
-        //投诉
-        complain() {
-            let params = { hash: this.currentForum.hash };
-            this.$http.post("/Submit/complain", params).then((res) => {
-                if (res.code === 200) {
-                    this.uShowToast("投诉成功！");
                 }
             });
         },
@@ -318,8 +231,6 @@ export default {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-
-                        
                     }
 
                     .time {

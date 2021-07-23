@@ -66,9 +66,6 @@ export default {
     watch: {
         value(val) {
             this.showModal = val;
-            if(val){
-                console.log(this.address)
-            }
         },
         showModal(val) {
             this.$emit("input", val);

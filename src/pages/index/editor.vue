@@ -38,18 +38,18 @@
 			//发布
 			async release() {
 				this.btnLoading = true;
-				uni.showLoading({
-					title: this.i18n.index.inChain
-				});
 				let payload = {
 					content: this.form.text
 				}
-				let res = await this.sendTopic(payload);
-				if (!!res.hash) {
+				let res = await this.wetrueSend('topic',payload);
+				if (JSON.stringify(res)!=='{}' && !!res) {
 					uni.hideLoading();
 					this.btnLoading = false;
 					this.getConfigInfo();
 					this.reLaunchUrl('index');
+				}else{
+					uni.hideLoading();
+					this.btnLoading = false;
 				}
 			}
 		}

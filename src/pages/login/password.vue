@@ -22,14 +22,14 @@
             <div class="form">
                 <u-gap height="14"></u-gap>
                 <u-input
-                    @keyup.enter.native="check()"
+                    @keyup.13.native="login"
                     v-model="form.password"
-                    confirm-type="验证"
-                    class="password"
+                    type="password"
+                    :focus="true"
+                    border
                     :placeholder="
                         `请输入地址ak_...${token.slice(-4)}的安全密码`
                     "
-                    :custom-style="{ padding: '10rpx 20rpx' }"
                 />
             </div>
             <u-gap height="40"></u-gap>
@@ -112,6 +112,7 @@ export default {
                         this.cryptoPassword(this.form.password)
                     );
                     this.getConfigInfo();
+                    this.getUnreadMsg();
                     this.connectAe();
                     this.btnLoading = false;
                     if (!!this.link) {

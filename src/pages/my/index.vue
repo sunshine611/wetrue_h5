@@ -215,12 +215,14 @@ export default {
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount();
+            this.getUnreadMsg();
         }
     },
     activated() {
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount();
+            this.getUnreadMsg();
         }
         this.getVersionInfo();
     },

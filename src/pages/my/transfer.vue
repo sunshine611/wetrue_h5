@@ -73,6 +73,30 @@
         >
             <view class="slot-content"> {{ result.hash }} </view>
         </u-modal>
+        <u-popup
+            v-model="passwordShow"
+            mode="center"
+            width="80%"
+            border-radius="20"
+        >
+            <view class="password-box">
+                <u-input
+                    v-model="form.password"
+                    type="password"
+                    :border="true"
+                    :placeholder="
+                        `请输入ak_...${token.slice(-4)}的安全密码`
+                    "
+                />
+                <u-gap :height="30"></u-gap>
+                <u-button
+                    type="primary"
+                    @click="startTransfer"
+                    :loading="btnLoading"
+                    >{{ i18n.my.send }}</u-button
+                >
+            </view>
+        </u-popup>
     </div>
 </template>
 
@@ -94,6 +118,7 @@ export default {
             form: {
                 address: "",
                 money: "",
+                password: "",
             },
             warning: {
                 address: false,
@@ -102,6 +127,7 @@ export default {
             btnLoading: false, //按钮状态
             hashShow: false, //合约转账成功弹层
             result: {}, //合约转正成功信息
+            passwordShow: false, //密码弹层
         };
     },
     computed: {
@@ -134,7 +160,7 @@ export default {
         }, 500);
     },
     methods: {
-        //转账
+        //合约转账
         async transfer() {
             if (this.form.address.slice(-6) === ".chain") {
                 await this.ParsingDomainName(this.form.address);
@@ -161,38 +187,58 @@ export default {
                 if (!!this.tokenInfo.contractId) {
                     this.compileContact();
                 } else {
-                    this.aeTransfer();
+                    this.passwordShow = true;
                 }
             }
         },
+        //开始转账AE
+        startTransfer() {
+            this.btnLoading = true;
+            setTimeout(() => {
+                this.aeTransfer();
+            }, 100);
+        },
         //AE转账
         async aeTransfer() {
-            uni.showLoading({
-                title: this.i18n.my.loading,
-            });
-            this.btnLoading = true;
-            let client = await this.client();
             try {
-                const res = await client.spend(
-                    this.form.money * Math.pow(10, 18),
-                    this.form.address
+                const secretKey = await this.keystoreToSecretKey(
+                    this.cryptoPassword(this.form.password)
                 );
-                if (res.hash) {
-                    uni.hideLoading();
-                    uni.showToast({
-                        icon: "success",
-                        title: this.i18n.my.success,
+                if (!!secretKey) {
+                    uni.showLoading({
+                        title: this.i18n.my.loading,
                     });
-                    this.btnLoading = false;
-                    this.getAccount();
-                    this.form = {
-                        address: "",
-                        money: "",
-                    };
+                    this.btnLoading = true;
+                    let client = await this.client();
+                    try {
+                        const res = await client.spend(
+                            this.form.money * Math.pow(10, 18),
+                            this.form.address
+                        );
+                        if (JSON.stringify(res) !== "{}" && !!res) {
+                            uni.hideLoading();
+                            uni.showToast({
+                                icon: "success",
+                                title: this.i18n.my.success,
+                            });
+                            this.passwordShow = false;
+                            this.btnLoading = false;
+                            this.getAccount();
+                            this.form = {
+                                address: "",
+                                money: "",
+                                password: "",
+                            };
+                        }
+                    } catch (err) {
+                        this.uShowToast("AE节点连接失败！");
+                        this.hideLoading = false;
+                        this.btnLoading = false;
+                    }
                 }
             } catch (err) {
-                this.uShowToast("AE节点连接失败！");
-                this.hideLoading = false;
+                this.uShowToast("密码错误！");
+                this.form.password = "";
                 this.btnLoading = false;
             }
         },
@@ -268,6 +314,10 @@ export default {
         word-wrap: break-word;
         word-break: normal;
         overflow: hidden;
+    }
+    .password-box {
+        padding: 50rpx;
+        border-radius: 20rpx;
     }
 }
 </style>

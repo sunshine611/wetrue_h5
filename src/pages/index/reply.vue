@@ -56,7 +56,7 @@
                 </view>
             </view>
             <view class="content">
-                <mp-html :content="commentInfo.payload" />
+                <mp-html :content="commentInfo.payload" :selectable="true" />
             </view>
         </view>
         <view class="all-reply">
@@ -110,7 +110,7 @@
                         </view>
                     </view>
                     <view class="content">
-                        <mp-html :content="item.payload"
+                        <mp-html :content="item.payload" :selectable="true"
                     /></view>
                 </view>
             </view>

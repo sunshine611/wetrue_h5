@@ -154,9 +154,11 @@ export default {
     },
     //下拉加载
     onReachBottom() {
-        this.pageInfo.page++;
-        this.getPostList();
-        this.getUserInfo();
+        console.log(this.current)
+        if ([0, 1, 2, 3].includes(this.current)) {
+            this.pageInfo.page++;
+            this.getPostList();
+        }
     },
     onLoad(option) {
         this.userAddress = option.userAddress;
@@ -293,7 +295,9 @@ export default {
                     http.get(aeknow + "api/token/" + this.userAddress).then(
                         (res) => {
                             if (res.data.tokens.length > 0) {
-                                this.postList = this.postList.concat(res.data.tokens);
+                                this.postList = this.postList.concat(
+                                    res.data.tokens
+                                );
                             }
                             uni.hideLoading();
                             this.more = "nomore";

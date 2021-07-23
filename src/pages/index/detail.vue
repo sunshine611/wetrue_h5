@@ -63,7 +63,7 @@
                             </view>
                         </view>
                         <view class="content">
-                            <mp-html :content="item.payload"
+                            <mp-html :content="item.payload" :selectable="true"
                         /></view>
                         <view
                             class="reply-box"
@@ -93,15 +93,15 @@
                                             size="24"
                                             color="#2979FF"
                                         >
-                                        </fa-FontAwesome>{{
+                                        </fa-FontAwesome
+                                        >{{
                                             item.users.nickname ||
-                                                item.users.userAddress.slice(
-                                                    -4
-                                                )
+                                                item.users.userAddress.slice(-4)
                                         }}</text
                                     >：<mp-html
                                         class="compiler"
                                         :content="item.payload"
+                                        :selectable="true"
                                 /></view>
                             </view>
                             <view
@@ -249,6 +249,33 @@ export default {
         this.getPostInfo();
         this.getCommentList();
     },
+    watch: {
+        commentList: {
+            handler() {
+                this.$nextTick(() => {
+                    var topicArr = document.getElementsByClassName(
+                        "topic-text"
+                    );
+                    if (topicArr.length > 0) {
+                        for (let i = 0; i < topicArr.length; i++) {
+                            topicArr[i].addEventListener(
+                                "click",
+                                (e) => {
+                                    let text = topicArr[i].innerText;
+                                    this.goUrl(
+                                        "/pages/index/topic?keyword=" + text
+                                    );
+                                    e.stopPropagation();
+                                },
+                                true
+                            );
+                        }
+                    }
+                });
+            },
+            deep: true,
+        },
+    },
     computed: {
         //国际化
         i18n() {
@@ -285,20 +312,26 @@ export default {
                         this.pageInfo.totalPage = parseInt(res.data.totalPage);
                         this.more = "loadmore";
                         if (this.pageInfo.page === 1) {
-                            this.commentList = res.data.data;
+                            this.commentList = res.data.data.map((item) => {
+                                item.payload = this.topicHighlight(
+                                    item.payload
+                                );
+                                return item;
+                            });
                         } else {
                             if (this.pageInfo.page > this.pageInfo.totalPage) {
                                 this.pageInfo.page = this.pageInfo.totalPage;
                                 this.more = "nomore";
                             } else {
                                 this.commentList = this.commentList.concat(
-                                    res.data.data
+                                    res.data.data.map((item) => {
+                                        item.payload = this.topicHighlight(
+                                            item.payload
+                                        );
+                                        return item;
+                                    })
                                 );
                             }
-                        }
-                        if (status == "pullDown") {
-                            uni.stopPullDownRefresh();
-                            this.commentList = res.data.data;
                         }
                     } else {
                         this.more = "nomore";
@@ -335,15 +368,12 @@ export default {
         //发表评论
         async submitComment(content) {
             let res;
-            uni.showLoading({
-                title: this.i18n.index.inChain,
-            });
             if (this.commentType === "comment") {
                 let payload = {
                     hash: this.hash,
                     content: content,
                 };
-                res = await this.sendComment(payload);
+                res = await this.wetrueSend("comment", payload);
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
@@ -351,9 +381,9 @@ export default {
                     toHash: this.currentComment.toHash,
                     content: content,
                 };
-                res = await this.sendReply(payload);
+                res = await this.wetrueSend("reply", payload);
             }
-            if (!!res.hash) {
+            if (JSON.stringify(res) !== "{}" && !!res) {
                 setTimeout(() => {
                     this.isShowComment = false;
                     this.getPostInfo();
@@ -364,6 +394,9 @@ export default {
                     this.$refs.inputComment.content = "";
                     this.$refs.inputComment.btnLoading = false;
                 }, 2000);
+            } else {
+                uni.hideLoading();
+                this.$refs.inputComment.btnLoading = false;
             }
         },
         //打赏
@@ -483,6 +516,9 @@ export default {
                         word-wrap: break-word;
                         word-break: break-all;
                         overflow: hidden;
+                        /deep/ .topic-text {
+                            color: #f04a82;
+                        }
                     }
 
                     .reply-box {
@@ -508,6 +544,9 @@ export default {
                                     display: inline !important;
                                     /deep/ * {
                                         display: inline !important;
+                                        word-wrap: break-word;
+                                        word-break: break-all;
+                                        overflow: hidden;
                                     }
                                 }
                                 .parse {
