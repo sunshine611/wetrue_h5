@@ -252,7 +252,7 @@ const mixins = {
                     };
                 } else if (type === "reply") {
                     //发送回复
-                    if (this.balanceFormat(configInfo.replyAmount) > 0.00001) {
+                    if (this.balanceFormat(configInfo.replyAmount) > 10) {
                         this.uShowToast("上链超过10AE，已禁止操作");
                         return;
                     }
