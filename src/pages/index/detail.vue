@@ -249,6 +249,12 @@ export default {
         this.getPostInfo();
         this.getCommentList();
     },
+    onBackPress(option){
+        console.log(option)
+    },
+    onBackPress(option){
+        console.log(option)
+    },
     watch: {
         commentList: {
             handler() {

@@ -40,7 +40,7 @@
                     @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
                     <div class="text-content">
-                        <mp-html :content="item.payload" :selectable="true"/>
+                        <mp-html :content="item.payload"/>
                     </div>
                     <div class="img-list">
                         <u-image

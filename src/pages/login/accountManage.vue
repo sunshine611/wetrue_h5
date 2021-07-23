@@ -12,7 +12,7 @@
             </div>
         </u-navbar>
         <div class="account">
-            <draggable v-model="keystoreArr" group="keystore" animation="300" :preventOnFilter="true">
+            <draggable v-model="keystoreArr" group="keystore" animation="300" :preventOnFilter="false">
                 <div
                     class="account-list"
                     v-for="(item, index) in keystoreArr"
@@ -39,7 +39,7 @@
                         <div class="pull-right">
                             <div
                                 class="item"
-                                @tap="
+                                @click="
                                     showDelete = true;
                                     currentAddress = item.public_key;
                                 "
@@ -55,7 +55,7 @@
                             </div>
                             <div
                                 class="item"
-                                @tap="
+                                @click="
                                     showQrcode = true;
                                     currentAddress = item.public_key;
                                 "
@@ -71,7 +71,7 @@
                             </div>
                             <div
                                 class="item"
-                                @tap="switchAccount(item.public_key)"
+                                @click="switchAccount(item.public_key)"
                             >
                                 <fa-FontAwesome
                                     type="fas fa-hand-point-right"
