@@ -22,7 +22,7 @@
             <div class="form">
                 <u-gap height="14"></u-gap>
                 <u-input
-                    @keyup.13.native="login"
+                    @confirm="login"
                     v-model="form.password"
                     type="text"
                     :focus="true"
