@@ -12,79 +12,87 @@
             </div>
         </u-navbar>
         <div class="account">
-            <draggable v-model="keystoreArr" group="keystore" animation="300" :preventOnFilter="false">
-                <div
-                    class="account-list"
-                    v-for="(item, index) in keystoreArr"
-                    :key="item.id"
-                >
-                    <div class="active" v-show="item.public_key === token">
-                        <fa-FontAwesome
-                            type="fas fa-check"
-                            size="24"
-                            class="star"
-                            color="#fff"
-                        >
-                        </fa-FontAwesome>
-                    </div>
+            <draggable
+                v-model="keystoreArr"
+                group="keystore"
+                animation="300"
+                :preventOnFilter="false"
+                delay="500"
+            >
+                <transition-group>
                     <div
-                        class="address"
-                        @click="copy(index)"
-                        :ref="'address' + index"
+                        class="account-list"
+                        v-for="(item, index) in keystoreArr"
+                        :key="item.id"
                     >
-                        {{ item.public_key }}
-                    </div>
-                    <div class="dotted"></div>
-                    <div class="opera clearfix">
-                        <div class="pull-right">
-                            <div
-                                class="item"
-                                @click="
-                                    showDelete = true;
-                                    currentAddress = item.public_key;
-                                "
+                        <div class="active" v-show="item.public_key === token">
+                            <fa-FontAwesome
+                                type="fas fa-check"
+                                size="24"
+                                class="star"
+                                color="#fff"
                             >
-                                <fa-FontAwesome
-                                    type="fas fa-trash-alt"
-                                    size="28"
-                                    class="mr-6"
-                                    color="#fff"
+                            </fa-FontAwesome>
+                        </div>
+                        <div
+                            class="address"
+                            @click="copy(index)"
+                            :ref="'address' + index"
+                        >
+                            {{ item.public_key }}
+                        </div>
+                        <div class="dotted"></div>
+                        <div class="opera clearfix">
+                            <div class="pull-right">
+                                <div
+                                    class="item"
+                                    @click="
+                                        showDelete = true;
+                                        currentAddress = item.public_key;
+                                    "
                                 >
-                                </fa-FontAwesome
-                                >删除
-                            </div>
-                            <div
-                                class="item"
-                                @click="
-                                    showQrcode = true;
-                                    currentAddress = item.public_key;
-                                "
-                            >
-                                <fa-FontAwesome
-                                    type="fas fa-qrcode"
-                                    size="28"
-                                    class="mr-6"
-                                    color="#fff"
+                                    <fa-FontAwesome
+                                        type="fas fa-trash-alt"
+                                        size="28"
+                                        class="mr-6"
+                                        color="#fff"
+                                    >
+                                    </fa-FontAwesome
+                                    >删除
+                                </div>
+                                <div
+                                    class="item"
+                                    @click="
+                                        showQrcode = true;
+                                        currentAddress = item.public_key;
+                                    "
                                 >
-                                </fa-FontAwesome
-                                >二维码
-                            </div>
-                            <div
-                                class="item"
-                                @click="switchAccount(item.public_key)"
-                            >
-                                <fa-FontAwesome
-                                    type="fas fa-hand-point-right"
-                                    size="28"
-                                    class="mr-6"
-                                    color="#fff"
+                                    <fa-FontAwesome
+                                        type="fas fa-qrcode"
+                                        size="28"
+                                        class="mr-6"
+                                        color="#fff"
+                                    >
+                                    </fa-FontAwesome
+                                    >二维码
+                                </div>
+                                <div
+                                    class="item"
+                                    @click="switchAccount(item.public_key)"
                                 >
-                                </fa-FontAwesome
-                                >切换
+                                    <fa-FontAwesome
+                                        type="fas fa-hand-point-right"
+                                        size="28"
+                                        class="mr-6"
+                                        color="#fff"
+                                    >
+                                    </fa-FontAwesome
+                                    >切换
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition-group>
             </draggable>
 
             <u-gap :height="120"></u-gap>
@@ -261,7 +269,7 @@ page {
                 .item {
                     display: inline-block;
                     margin-right: 30rpx;
-                    padding:20rpx 0;
+                    padding: 20rpx 0;
                     &:last-child {
                         margin: 0;
                     }
