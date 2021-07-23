@@ -43,7 +43,7 @@
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.password"
-                    type="password"
+                    type="text"
                     border
                     clearable
                     placeholder="Password..."

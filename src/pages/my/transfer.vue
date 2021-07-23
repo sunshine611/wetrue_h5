@@ -82,7 +82,7 @@
             <view class="password-box">
                 <u-input
                     v-model="form.password"
-                    type="password"
+                    type="text"
                     :border="true"
                     :placeholder="
                         `请输入ak_...${token.slice(-4)}的安全密码`

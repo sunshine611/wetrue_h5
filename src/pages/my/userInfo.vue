@@ -154,7 +154,6 @@ export default {
     },
     //下拉加载
     onReachBottom() {
-        console.log(this.current)
         if ([0, 1, 2, 3].includes(this.current)) {
             this.pageInfo.page++;
             this.getPostList();

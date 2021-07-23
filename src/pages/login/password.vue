@@ -24,7 +24,7 @@
                 <u-input
                     @keyup.13.native="login"
                     v-model="form.password"
-                    type="password"
+                    type="text"
                     :focus="true"
                     border
                     :placeholder="
