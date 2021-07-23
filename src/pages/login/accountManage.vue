@@ -17,7 +17,7 @@
                 group="keystore"
                 animation="300"
                 :preventOnFilter="false"
-                delay="500"
+                delay="100"
             >
                 <transition-group>
                     <div
