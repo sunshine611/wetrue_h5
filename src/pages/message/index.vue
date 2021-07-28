@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <u-gap :height="20"></u-gap>
+        <u-gap :height="10"></u-gap>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
             :status="more"
@@ -208,15 +208,13 @@ export default {
                         this.pageInfo.totalPage = parseInt(res.data.totalPage);
                         this.more = "loadmore";
                         if (this.pageInfo.page === 1) {
-                            this.$nextTick(() => {
-                                this.msgList = res.data.data;
-                            });
+                            this.msgList = res.data.data;
                         } else {
                             if (this.pageInfo.page > this.pageInfo.totalPage) {
                                 this.pageInfo.page = this.pageInfo.totalPage;
                                 this.more = "nomore";
                             } else {
-                                this.msgList = this.msgList;
+                                this.msgList = this.msgList.concat(res.data.data);
                             }
                         }
                     } else {
