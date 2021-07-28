@@ -210,6 +210,16 @@
         "navigationBarTitleText": "账户管理",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/message/index",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "消息",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
@@ -231,9 +241,15 @@
         "text": "首页"
       },
       {
+        "pagePath": "pages/message/index",
+        "iconPath": "static/message.png",
+        "selectedIconPath": "static/message_on.png",
+        "text": "消息"
+      },
+      {
         "pagePath": "pages/my/index",
         "iconPath": "static/my.png",
-        "selectedIconPath": "static/my-on.png",
+        "selectedIconPath": "static/my_on.png",
         "text": "我的"
       }
     ]

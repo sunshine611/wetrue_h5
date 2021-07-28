@@ -106,13 +106,14 @@ export default {
                     this.cryptoPassword(this.form.password)
                 );
                 if (!!secretKey) {
-                    this.uShowToast("OK");
+                    this.uShowToast("登录成功");
                     this.$store.commit(
                         "user/SET_PASSWORD",
                         this.cryptoPassword(this.form.password)
                     );
                     this.getConfigInfo();
                     this.getUnreadMsg();
+                    this.getUserInfo();
                     this.connectAe();
                     this.btnLoading = false;
                     if (!!this.link) {
@@ -134,6 +135,18 @@ export default {
                 this.form.password = "";
                 this.btnLoading = false;
             }
+        },
+        //获取用户信息
+        getUserInfo() {
+            let params = {
+                userAddress: this.token,
+                type: "login",
+            };
+            this.$http.post("/User/info", params).then((res) => {
+                if (res.code === 200) {
+                    this.$store.commit("user/SET_USERINFO", res.data || {});
+                }
+            });
         },
         //退出登录
         logout() {

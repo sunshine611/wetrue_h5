@@ -71,6 +71,7 @@ export default {
 <style lang="scss" scoped>
 .head-img {
     position: relative;
+    display: inline-block;
     .level {
         position: absolute;
         right: -10rpx;

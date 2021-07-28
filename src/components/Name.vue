@@ -14,7 +14,6 @@
         <div :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || i18n.my.cryptonym }}
         </div>
-        
         <text class="userid">ID:{{ userInfo.userAddress.slice(-4) }}</text>
     </div>
 </template>
@@ -42,6 +41,7 @@ export default {
 <style lang="scss" scoped>
 .name-area {
     font-size: 28rpx;
+    display: inline-block;
     .name {
         display: inline-block;
         &.auth {

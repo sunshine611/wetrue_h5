@@ -75,6 +75,7 @@ const login = {
                 commit("SET_TOKEN", "");
                 commit("SET_USERINFO", {});
                 commit("SET_PASSWORD", "");
+                commit("SET_CLIENT", {});
             }
             setStore("keystoreArr", state.keystoreArr);
         },
@@ -85,6 +86,8 @@ const login = {
                     commit("SET_KEYSTORE", state.keystoreArr[i]);
                     commit("SET_TOKEN", state.keystoreArr[i].public_key);
                     commit("SET_PASSWORD", "");
+                    commit("SET_USERINFO", {});
+                    commit("SET_CLIENT", {});
                     break;
                 }
             }

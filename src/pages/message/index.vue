@@ -5,16 +5,119 @@
             :is-scroll="false"
             :current="current"
             @change="tabChange"
+            active-color="#f04a82"
+            style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
         <div class="empty" v-show="msgList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
+        <div class="dynamic">
+            <div
+                class="dynamic-box"
+                v-for="(item, index) in msgList"
+                :key="index"
+            >
+                <div class="comment" v-if="item.type === 'comment'">
+                    <div class="user-area">
+                        <div class="head-box">
+                            <HeadImg
+                                :userInfo="item.comment.users"
+                                :isLink="true"
+                                width="70rpx"
+                                height="70rpx"
+                            ></HeadImg>
+                        </div>
+                        <div class="user-info">
+                            <div class="user">
+                                <Name :userInfo="item.comment.users"></Name>
+                            </div>
+                            <div class="time">
+                                <text>{{
+                                    $moment(parseInt(item.utctime)).format(
+                                        "yyyy-MM-DD HH:mm"
+                                    )
+                                }}</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        <mp-html :content="item.comment.payload" />
+                    </div>
+                    <div
+                        class="topic"
+                        @click="
+                            goUrl('/pages/index/detail?hash=' + item.topic.hash)
+                        "
+                    >
+                        <Name :userInfo="item.topic.users"></Name>
+                        <div class="content">
+                            <mp-html :content="item.topic.payload" />
+                        </div>
+                    </div>
+                </div>
+                <div class="reply" v-if="item.type === 'reply'">
+                    <div class="user-area">
+                        <div class="head-box">
+                            <HeadImg
+                                :userInfo="item.reply.users"
+                                :isLink="true"
+                                width="70rpx"
+                                height="70rpx"
+                            ></HeadImg>
+                        </div>
+                        <div class="user-info">
+                            <div class="user">
+                                <Name :userInfo="item.reply.users"></Name>
+                            </div>
+                            <div class="time">
+                                <text>{{
+                                    $moment(item.utctime).format(
+                                        "yyyy-MM-DD HH:mm"
+                                    )
+                                }}</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reply-content">
+                        回复<Name :userInfo="item.comment.users"></Name
+                        >：<mp-html
+                            :content="item.reply.payload"
+                            class="compiler"
+                        />
+                    </div>
+                    <div class="comment">
+                        <div class="comment-content">
+                            <Name :userInfo="item.comment.users"></Name>：
+                            <mp-html
+                                :content="item.comment.payload"
+                                class="compiler"
+                            />
+                        </div>
+                        <div
+                            class="topic"
+                            @click="
+                                goUrl(
+                                    '/pages/index/detail?hash=' +
+                                        item.topic.hash
+                                )
+                            "
+                        >
+                            <Name :userInfo="item.topic.users"></Name>
+                            <div class="content">
+                                <mp-html :content="item.topic.payload" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <u-gap :height="20"></u-gap>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
-            margin-bottom="20"
             :status="more"
             v-show="msgList.length > 0"
         />
+        <u-gap :height="20"></u-gap>
         <VersionTip
             v-model="versionShow"
             :versionInfo="versionInfo"
@@ -23,13 +126,20 @@
 </template>
 
 <script>
-import { getStore } from "@/util/service";
 import { version } from "@/config/config.js";
 import moment from "moment";
 import VersionTip from "@/components/VersionTip.vue";
+import Name from "@/components/Name.vue";
+import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import HeadImg from "@/components/HeadImg";
 export default {
     components: {
         VersionTip,
+        Name,
+        mpHtml,
+        HeadImg,
+        UGap,
     },
     data() {
         return {
@@ -46,10 +156,7 @@ export default {
             versionShow: false, //版本提示弹层
             tabList: [
                 {
-                    name: "评论",
-                },
-                {
-                    name: "WeTrue发布",
+                    name: "动态",
                 },
             ],
         };
@@ -70,6 +177,12 @@ export default {
     onLoad() {
         this.getMsgList();
         this.getVersionInfo();
+        this.getUnreadMsg();
+    },
+    activated() {
+        this.getMsgList();
+        this.getVersionInfo();
+        this.getUnreadMsg();
     },
     computed: {
         //国际化
@@ -87,8 +200,6 @@ export default {
             };
             if (this.current === 0) {
                 url = "/Message/list";
-            } else if (this.current === 1) {
-                url = "/Content/hotRec";
             }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
@@ -140,5 +251,136 @@ export default {
 
 <style lang="scss" scoped>
 .index {
+    .dynamic {
+        .dynamic-box {
+            background: #fff;
+            margin-bottom: 20rpx;
+            .comment {
+                padding: 20rpx;
+                .user-area {
+                    display: flex;
+                    margin-bottom: 10rpx;
+                    .head-box {
+                        display: inline-block;
+                        margin-right: 20rpx;
+                    }
+
+                    .user-info {
+                        display: inline-flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        width: 100%;
+
+                        .user {
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+
+                        .time {
+                            font-size: 24rpx;
+                            color: #91908e;
+                            width: 100%;
+
+                            text {
+                                color: #999;
+                                margin-right: 20rpx;
+                            }
+                        }
+                    }
+                }
+                .comment-content {
+                    margin-bottom: 20rpx;
+                }
+                .topic {
+                    background: #f7f7f7;
+                    padding: 20rpx;
+
+                    .content {
+                        margin-top: 10rpx;
+                        font-size: 24rpx;
+                        /deep/ ._root {
+                            word-break: break-all;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 2;
+                            overflow: hidden;
+                        }
+                    }
+                }
+            }
+            .reply {
+                .user-area {
+                    display: flex;
+                    padding: 20rpx;
+                    .head-box {
+                        display: inline-block;
+                        margin-right: 20rpx;
+                    }
+
+                    .user-info {
+                        display: inline-flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        width: 100%;
+
+                        .user {
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+
+                        .time {
+                            font-size: 24rpx;
+                            color: #91908e;
+                            width: 100%;
+
+                            text {
+                                color: #999;
+                                margin-right: 20rpx;
+                            }
+                        }
+                    }
+                }
+                .reply-content {
+                    padding: 0 20rpx;
+                    margin-bottom: 20rpx;
+                }
+                .comment {
+                    background: #f7f7f7;
+                    padding: 20rpx;
+                    .topic {
+                        background: #fff;
+                        padding: 20rpx;
+
+                        .content {
+                            margin-top: 10rpx;
+                            font-size: 24rpx;
+                            /deep/ ._root {
+                                word-break: break-all;
+                                text-overflow: ellipsis;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 2;
+                                overflow: hidden;
+                            }
+                        }
+                    }
+                }
+            }
+            .compiler {
+                display: inline !important;
+                /deep/ * {
+                    display: inline !important;
+                    word-wrap: break-word;
+                    word-break: break-all;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
 }
 </style>

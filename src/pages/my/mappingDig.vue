@@ -11,7 +11,7 @@
             ></u-icon>
         </div>
         <div class="title">映射AE参与挖矿<br />领取WTT</div>
-        <div class="start-mapping" v-if="userInfo.is_map">
+        <div class="start-mapping" v-if="userInfo.isMapping">
             <div class="mapping">
                 <div class="top">
                     <div class="desc">我的收益(WTT)</div>
@@ -144,7 +144,7 @@
                 <div class="balance-input">
                     <u-input
                         v-model="form.amount"
-                        type="text"
+                        type="number"
                         :border="true"
                         placeholder="映射金额"
                         maxlength="10"

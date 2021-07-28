@@ -77,20 +77,20 @@ const mixins = {
         },
         //获取未读消息数
         getUnreadMsg() {
-            // this.$http.post("/Message/stateSize").then((res) => {
-            //     if (res.code === 200) {
-            //         if (res.data.stateSize > 0) {
-            //             uni.setTabBarBadge({
-            //                 index: 1,
-            //                 text: `${res.data.stateSize}`,
-            //             });
-            //         } else {
-            //             uni.hideTabBarRedDot({
-            //                 index: 1,
-            //             });
-            //         }
-            //     }
-            // });
+            this.$http.post("/Message/stateSize").then((res) => {
+                if (res.code === 200) {
+                    if (res.data.stateSize > 0) {
+                        uni.setTabBarBadge({
+                            index: 1,
+                            text: `${res.data.stateSize}`,
+                        });
+                    } else {
+                        uni.hideTabBarRedDot({
+                            index: 1,
+                        });
+                    }
+                }
+            });
         },
         //余额格式化
         balanceFormat(balance, num) {
@@ -175,7 +175,7 @@ const mixins = {
             });
             return value;
         },
-        //AE交易
+        //连接AE网络
         async connectAe() {
             try {
                 const secretKey = await this.keystoreToSecretKey(
@@ -225,10 +225,6 @@ const mixins = {
                 let amount, content, client;
                 if (type === "topic") {
                     //发送主贴
-                    if (this.balanceFormat(configInfo.topicAmount) > 10) {
-                        this.uShowToast("上链超过10AE，已禁止操作");
-                        return;
-                    }
                     amount = configInfo.topicAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
@@ -238,10 +234,6 @@ const mixins = {
                     };
                 } else if (type === "comment") {
                     //发送评论
-                    if (this.balanceFormat(configInfo.commentAmount) > 10) {
-                        this.uShowToast("上链超过10AE，已禁止操作");
-                        return;
-                    }
                     amount = configInfo.commentAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
@@ -252,10 +244,6 @@ const mixins = {
                     };
                 } else if (type === "reply") {
                     //发送回复
-                    if (this.balanceFormat(configInfo.replyAmount) > 10) {
-                        this.uShowToast("上链超过10AE，已禁止操作");
-                        return;
-                    }
                     amount = configInfo.replyAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
@@ -269,10 +257,6 @@ const mixins = {
                     };
                 }else if(type==='nickname'){
                     //修改昵称
-                    if (this.balanceFormat(configInfo.nicknameAmount) > 10) {
-                        this.uShowToast("上链超过10AE，已禁止操作");
-                        return;
-                    }
                     amount = configInfo.nicknameAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
@@ -281,10 +265,6 @@ const mixins = {
                     };
                 }else if(type==='sex'){
                     //修改性别
-                    if (this.balanceFormat(configInfo.sexAmount) > 10) {
-                        this.uShowToast("上链超过10AE，已禁止操作");
-                        return;
-                    }
                     amount = configInfo.sexAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
@@ -292,9 +272,11 @@ const mixins = {
                         content: payload.content,
                     };
                 }
-                uni.showLoading({
-                    title: this.i18n.index.inChain,
-                });
+                if (this.balanceFormat(amount) > 10) {
+                    this.uShowToast("上链超过10AE，已禁止操作");
+                    return;
+                }
+                this.uShowLoading(this.i18n.index.inChain);
                 client = await this.client();
                 const res = await client.spend(
                     amount,
@@ -303,9 +285,7 @@ const mixins = {
                         payload: JSON.stringify(content),
                     }
                 );
-                uni.showLoading({
-                    title: "Radio",
-                });
+                this.uShowLoading("Radio");
                 this.$http.post("/Submit/hash", {
                     hash: res.hash,
                 });
