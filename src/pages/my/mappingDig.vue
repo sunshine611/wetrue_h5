@@ -12,6 +12,14 @@
         </div>
         <div class="title">映射AE参与挖矿<br />领取WTT</div>
         <div class="start-mapping" v-if="userInfo.isMapping">
+            <fa-FontAwesome
+                type="fas fa-trophy"
+                size="30"
+                class="trophy"
+                color="#f04a82"
+                @click="topShow=true"
+            >
+            </fa-FontAwesome>
             <div class="mapping">
                 <div class="top">
                     <div class="desc">我的收益(WTT)</div>
@@ -78,6 +86,14 @@
             </div>
         </div>
         <div class="open-mapping" v-else>
+            <fa-FontAwesome
+                type="fas fa-trophy"
+                size="30"
+                class="trophy"
+                color="#f04a82"
+                @click="topShow=true"
+            >
+            </fa-FontAwesome>
             <div class="title">
                 <u-image
                     width="92rpx"
@@ -171,7 +187,40 @@
                 >
             </view>
         </u-popup>
-        <u-modal v-model="blackHouseShow" content="您已违反规则进入小黑屋"></u-modal>
+        <u-popup
+            v-model="topShow"
+            mode="center"
+            width="85%"
+            :border-radius="10"
+        >
+            <div class="top-content">
+                <div class="title mb-40">
+                    <u-image
+                        width="92rpx"
+                        height="46rpx"
+                        src="@/static/logo.png"
+                        class="inline mr-5"
+                    ></u-image>
+                    映射挖矿排行榜
+                </div>
+                <u-table>
+                    <u-tr>
+                        <u-th width="100rpx">排名</u-th>
+                        <u-th>地址</u-th>
+                        <u-th>映射AE数量</u-th>
+                    </u-tr>
+                    <u-tr v-for="(item,index) in topList" :key="index">
+                        <u-td width="100rpx">{{index+1}}</u-td>
+                        <u-td>ak_...{{item.userAddress.slice(-4)}}</u-td>
+                        <u-td>{{balanceFormat(item.amount, 2)}} AE</u-td>
+                    </u-tr>
+                </u-table>
+            </div>
+        </u-popup>
+        <u-modal
+            v-model="blackHouseShow"
+            content="您已违反规则进入小黑屋"
+        ></u-modal>
     </div>
 </template>
 
@@ -202,7 +251,9 @@ export default {
             warning: {
                 amount: false,
             }, //警报
-            blackHouseShow:false,//黑屋提示弹层
+            blackHouseShow: false, //黑屋提示弹层
+            topList:[],//排行榜
+            topShow:false,//排行榜弹层
         };
     },
     computed: {
@@ -218,10 +269,9 @@ export default {
         this.getAccount();
         this.getWttBalance();
         this.getConfigInfo();
+        this.getTop();
     },
-    activated() {
-        
-    },
+    activated() {},
     //上拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
@@ -243,7 +293,7 @@ export default {
                     if (res.code === 200) {
                         this.userInfo = res.data;
                     }
-                })
+                });
         },
         //开通映射挖矿
         open() {
@@ -284,8 +334,8 @@ export default {
                 .then((res) => {
                     if (res.code === 200) {
                         this.mappingInfo = res.data;
-                        this.blackHouseShow=this.mappingInfo.black_house;
-                        if(!this.mappingInfo.state){
+                        this.blackHouseShow = this.mappingInfo.black_house;
+                        if (!this.mappingInfo.state) {
                             this.getUserInfo();
                         }
                     }
@@ -371,6 +421,14 @@ export default {
                 }
             );
         },
+        //获取映射榜单
+        getTop(){
+            this.$http.post("/Mining/top").then((res) => {
+                if (res.code === 200) {
+                    this.topList=res.data;
+                }
+            });
+        }
     },
 };
 </script>
@@ -407,6 +465,12 @@ page {
         border-radius: 30rpx;
         padding: 40rpx;
         box-sizing: border-box;
+        position:relative;
+        .trophy {
+            position: absolute;
+            right: 30rpx;
+            top: 30rpx;
+        }
         .title {
             font-size: 36rpx;
             display: flex;
@@ -452,6 +516,12 @@ page {
         border-radius: 30rpx;
         padding: 40rpx;
         box-sizing: border-box;
+        position: relative;
+        .trophy {
+            position: absolute;
+            right: 30rpx;
+            top: 30rpx;
+        }
         .title {
             font-size: 36rpx;
             display: flex;
@@ -498,6 +568,15 @@ page {
             font-size: 20rpx;
             color: #f00;
             margin-top: 10rpx;
+        }
+    }
+    .top-content {
+        padding: 50rpx 40rpx;
+        .title {
+            font-size: 36rpx;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 }

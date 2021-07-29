@@ -74,13 +74,13 @@
                                 v-for="(item, index) in item.commentList"
                                 :key="index"
                             >
-                                <view class="text"
+                                <view class="text" @click="reply(item)"
                                     ><text
                                         :class="[
                                             'name',
                                             item.users.isAuth ? 'auth' : '',
                                         ]"
-                                        @click="
+                                        @click.stop="
                                             goUrl(
                                                 '/pages/my/userInfo?userAddress=' +
                                                     item.users.userAddress
@@ -98,6 +98,24 @@
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
+                                    ><text v-if="item.replyHash">回复</text
+                                    ><text
+                                        :class="[
+                                            'name',
+                                            item.receiverIsAuth ? 'auth' : '',
+                                        ]"
+                                        @click.stop="
+                                            goUrl(
+                                                '/pages/my/userInfo?userAddress=' +
+                                                    item.toAddress
+                                            )
+                                        "
+                                        v-if="item.replyHash"
+                                        >{{
+                                            "@" +
+                                                (item.receiverName ||
+                                                    item.toAddress.slice(-4))
+                                        }}</text
                                     >：<mp-html
                                         class="compiler"
                                         :content="item.payload"
@@ -105,9 +123,9 @@
                                 /></view>
                             </view>
                             <view
+                                v-if="item.commentList.length > 3"
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
-                                v-if="item.replyNumber > 3"
                             >
                                 查看{{ item.replyNumber + i18n.index.theReply }}
                             </view>
@@ -365,6 +383,28 @@ export default {
                 this.commentType = "comment";
             }
         },
+        //回复
+        reply(item) {
+            if (!this.validLogin()) {
+                uni.showToast({
+                    title: this.i18n.index.pleaseLogin,
+                    icon: "none",
+                });
+                setTimeout(() => {
+                    uni.reLaunch({
+                        url: "/pages/my/index",
+                    });
+                }, 1000);
+                return false;
+            }
+            this.isShowComment = true;
+            let name = !!item.users.nickname
+                ? item.users.nickname
+                : item.users.userAddress.slice(-4);
+            this.placeholder = this.i18n.index.reply + " @" + name;
+            this.commentType = "replyPerson";
+            this.currentComment = item;
+        },
         //发表评论
         async submitComment(content) {
             let res;
@@ -379,6 +419,15 @@ export default {
                     type: "comment",
                     hash: this.currentComment.hash,
                     toHash: this.currentComment.toHash,
+                    content: content,
+                };
+                res = await this.wetrueSend("reply", payload);
+            } else if (this.commentType === "replyPerson") {
+                let payload = {
+                    type: "reply",
+                    hash: this.currentComment.toHash,
+                    replyHash: this.currentComment.hash,
+                    address: this.currentComment.users.userAddress,
                     content: content,
                 };
                 res = await this.wetrueSend("reply", payload);
@@ -533,6 +582,9 @@ export default {
                             }
                             .text {
                                 width: 100%;
+                                &:active {
+                                    background: #f1f1f1;
+                                }
                                 .name {
                                     color: #f04a82;
                                     &.auth {

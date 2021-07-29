@@ -110,7 +110,25 @@
                         </view>
                     </view>
                     <view class="content">
-                        <mp-html :content="item.payload" :selectable="true"
+                        <text v-if="item.replyHash"
+                            >回复<text
+                                :class="['name', item.receiverIsAuth ? 'auth' : '']"
+                                @click.stop="
+                                    goUrl(
+                                        '/pages/my/userInfo?userAddress=' +
+                                            item.toAddress
+                                    )
+                                "
+                                >{{
+                                    "@" +
+                                        (item.receiverName ||
+                                            item.toAddress.slice(-4))
+                                }}</text
+                            >：</text
+                        ><mp-html
+                            :content="item.payload"
+                            :selectable="true"
+                            class="compiler"
                     /></view>
                 </view>
             </view>
@@ -134,7 +152,7 @@ export default {
     components: {
         mpHtml,
         HeadImg,
-        Name
+        Name,
     },
     data() {
         return {
@@ -277,6 +295,22 @@ page {
         word-wrap: break-word;
         word-break: break-all;
         overflow: hidden;
+        .name {
+            color: #f04a82;
+            &.auth {
+                color: #2979ff;
+                font-weight: bold;
+            }
+        }
+        .compiler {
+            display: inline !important;
+            /deep/ * {
+                display: inline !important;
+                word-wrap: break-word;
+                word-break: break-all;
+                overflow: hidden;
+            }
+        }
     }
 
     .left {

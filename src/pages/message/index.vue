@@ -177,7 +177,6 @@ export default {
     onLoad() {
         this.getMsgList();
         this.getVersionInfo();
-        this.getUnreadMsg();
     },
     activated() {
         this.getMsgList();
@@ -220,7 +219,9 @@ export default {
                     } else {
                         this.more = "nomore";
                     }
-                });
+                }).then(()=>{
+                    this.getUnreadMsg();
+                })
         },
         //切换顶部tab事件
         tabChange(index) {
