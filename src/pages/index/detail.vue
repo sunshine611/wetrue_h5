@@ -123,7 +123,6 @@
                                 /></view>
                             </view>
                             <view
-                                v-if="item.commentList.length > 3"
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
