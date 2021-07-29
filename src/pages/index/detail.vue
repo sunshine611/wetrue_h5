@@ -41,7 +41,21 @@
                     </view>
                     <view class="right">
                         <view class="top">
-                            <Name :userInfo="item.users"></Name>
+                            <view
+                                class="name"
+                                @click="
+                                    goUrl(
+                                        '/pages/my/userInfo?userAddress=' +
+                                            item.users.userAddress
+                                    )
+                                "
+                                >{{ item.users.nickname || i18n.my.cryptonym
+                                }}<text class="address"
+                                    >ID:{{
+                                        item.users.userAddress.slice(-4)
+                                    }}</text
+                                ></view
+                            >
                             <view
                                 class="like"
                                 :class="{ highlight: item.isPraise }"
@@ -63,7 +77,7 @@
                             </view>
                         </view>
                         <view class="content">
-                            <mp-html :content="item.payload" :selectable="true"
+                            <mp-html :content="item.payload"
                         /></view>
                         <view
                             class="reply-box"
@@ -74,57 +88,28 @@
                                 v-for="(item, index) in item.commentList"
                                 :key="index"
                             >
-                                <view class="text" @click="reply(item)"
+                                <view class="text"
                                     ><text
-                                        :class="[
-                                            'name',
-                                            item.users.isAuth ? 'auth' : '',
-                                        ]"
-                                        @click.stop="
+                                        class="name"
+                                        @click="
                                             goUrl(
                                                 '/pages/my/userInfo?userAddress=' +
                                                     item.users.userAddress
                                             )
                                         "
-                                        ><fa-FontAwesome
-                                            v-if="item.users.isAuth"
-                                            class="mr-4"
-                                            type="fas fa-user-secret"
-                                            size="24"
-                                            color="#2979FF"
-                                        >
-                                        </fa-FontAwesome
                                         >{{
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
-                                    ><text v-if="item.replyHash">回复</text
-                                    ><text
-                                        :class="[
-                                            'name',
-                                            item.receiverIsAuth ? 'auth' : '',
-                                        ]"
-                                        @click.stop="
-                                            goUrl(
-                                                '/pages/my/userInfo?userAddress=' +
-                                                    item.toAddress
-                                            )
-                                        "
-                                        v-if="item.replyHash"
-                                        >{{
-                                            "@" +
-                                                (item.receiverName ||
-                                                    item.toAddress.slice(-4))
-                                        }}</text
                                     >：<mp-html
                                         class="compiler"
                                         :content="item.payload"
-                                        :selectable="true"
                                 /></view>
                             </view>
                             <view
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
+                                v-if="item.replyNumber>3"
                             >
                                 查看{{ item.replyNumber + i18n.index.theReply }}
                             </view>
@@ -213,7 +198,6 @@ import TopicContent from "@/components/TopicContent";
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
-import Name from "@/components/Name";
 export default {
     components: {
         inputComment,
@@ -221,7 +205,6 @@ export default {
         HeadImg,
         mpHtml,
         Reward,
-        Name,
     },
     data() {
         return {
@@ -266,33 +249,6 @@ export default {
         this.getPostInfo();
         this.getCommentList();
     },
-    watch: {
-        commentList: {
-            handler() {
-                this.$nextTick(() => {
-                    var topicArr = document.getElementsByClassName(
-                        "topic-text"
-                    );
-                    if (topicArr.length > 0) {
-                        for (let i = 0; i < topicArr.length; i++) {
-                            topicArr[i].addEventListener(
-                                "click",
-                                (e) => {
-                                    let text = topicArr[i].innerText;
-                                    this.goUrl(
-                                        "/pages/index/topic?keyword=" + text
-                                    );
-                                    e.stopPropagation();
-                                },
-                                true
-                            );
-                        }
-                    }
-                });
-            },
-            deep: true,
-        },
-    },
     computed: {
         //国际化
         i18n() {
@@ -322,38 +278,30 @@ export default {
                 size: this.pageInfo.pageSize,
                 replyLimit: 3,
             };
-            this.$http
-                .post("/Comment/list", params, { custom: { isToast: true } })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                        this.more = "loadmore";
-                        if (this.pageInfo.page === 1) {
-                            this.commentList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        } else {
-                            if (this.pageInfo.page > this.pageInfo.totalPage) {
-                                this.pageInfo.page = this.pageInfo.totalPage;
-                                this.more = "nomore";
-                            } else {
-                                this.commentList = this.commentList.concat(
-                                    res.data.data.map((item) => {
-                                        item.payload = this.topicHighlight(
-                                            item.payload
-                                        );
-                                        return item;
-                                    })
-                                );
-                            }
-                        }
+            this.$http.post("/Comment/list", params,{ custom: { isToast: true } }).then((res) => {
+                if (res.code === 200) {
+                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                    this.more = "loadmore";
+                    if (this.pageInfo.page === 1) {
+                        this.commentList = res.data.data;
                     } else {
-                        this.more = "nomore";
+                        if (this.pageInfo.page > this.pageInfo.totalPage) {
+                            this.pageInfo.page = this.pageInfo.totalPage;
+                            this.more = "nomore";
+                        } else {
+                            this.commentList = this.commentList.concat(
+                                res.data.data
+                            );
+                        }
                     }
-                });
+                    if (status == "pullDown") {
+                        uni.stopPullDownRefresh();
+                        this.commentList = res.data.data;
+                    }
+                } else {
+                    this.more = "nomore";
+                }
+            });
         },
         //评论
         comment(item) {
@@ -382,37 +330,18 @@ export default {
                 this.commentType = "comment";
             }
         },
-        //回复
-        reply(item) {
-            if (!this.validLogin()) {
-                uni.showToast({
-                    title: this.i18n.index.pleaseLogin,
-                    icon: "none",
-                });
-                setTimeout(() => {
-                    uni.reLaunch({
-                        url: "/pages/my/index",
-                    });
-                }, 1000);
-                return false;
-            }
-            this.isShowComment = true;
-            let name = !!item.users.nickname
-                ? item.users.nickname
-                : item.users.userAddress.slice(-4);
-            this.placeholder = this.i18n.index.reply + " @" + name;
-            this.commentType = "replyPerson";
-            this.currentComment = item;
-        },
         //发表评论
         async submitComment(content) {
             let res;
+            uni.showLoading({
+                title: this.i18n.index.inChain,
+            });
             if (this.commentType === "comment") {
                 let payload = {
                     hash: this.hash,
                     content: content,
                 };
-                res = await this.wetrueSend("comment", payload);
+                res = await this.sendComment(payload);
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
@@ -420,18 +349,9 @@ export default {
                     toHash: this.currentComment.toHash,
                     content: content,
                 };
-                res = await this.wetrueSend("reply", payload);
-            } else if (this.commentType === "replyPerson") {
-                let payload = {
-                    type: "reply",
-                    hash: this.currentComment.toHash,
-                    replyHash: this.currentComment.hash,
-                    address: this.currentComment.users.userAddress,
-                    content: content,
-                };
-                res = await this.wetrueSend("reply", payload);
+                res = await this.sendReply(payload);
             }
-            if (JSON.stringify(res) !== "{}" && !!res) {
+            if (!!res.hash) {
                 setTimeout(() => {
                     this.isShowComment = false;
                     this.getPostInfo();
@@ -442,9 +362,6 @@ export default {
                     this.$refs.inputComment.content = "";
                     this.$refs.inputComment.btnLoading = false;
                 }, 2000);
-            } else {
-                uni.hideLoading();
-                this.$refs.inputComment.btnLoading = false;
             }
         },
         //打赏
@@ -537,6 +454,15 @@ export default {
                         align-items: center;
                         margin-bottom: 10rpx;
 
+                        .name {
+                            color: #333;
+                            .address {
+                                color: #999;
+                                font-size: 24rpx;
+                                margin-left: 10rpx;
+                            }
+                        }
+
                         .like {
                             display: flex;
                             align-items: center;
@@ -564,9 +490,6 @@ export default {
                         word-wrap: break-word;
                         word-break: break-all;
                         overflow: hidden;
-                        /deep/ .topic-text {
-                            color: #f04a82;
-                        }
                     }
 
                     .reply-box {
@@ -576,28 +499,15 @@ export default {
                         .item {
                             padding: 15rpx 20rpx;
                             border-bottom: solid 2rpx $u-border-color;
-                            &:last-child {
-                                border: none;
-                            }
                             .text {
                                 width: 100%;
-                                &:active {
-                                    background: #f1f1f1;
-                                }
                                 .name {
                                     color: #f04a82;
-                                    &.auth {
-                                        color: #2979ff;
-                                        font-weight: bold;
-                                    }
                                 }
                                 .compiler {
                                     display: inline !important;
                                     /deep/ * {
                                         display: inline !important;
-                                        word-wrap: break-word;
-                                        word-break: break-all;
-                                        overflow: hidden;
                                     }
                                 }
                                 .parse {

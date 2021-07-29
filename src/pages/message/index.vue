@@ -79,8 +79,19 @@
                         </div>
                     </div>
                     <div class="reply-content">
-                        回复<Name :userInfo="item.comment.users"></Name
-                        >：<mp-html
+                        回复<text
+                :class="['name', item.reply.receiverIsAuth ? 'auth' : '']"
+                @click.stop="
+                    goUrl(
+                        '/pages/my/userInfo?userAddress=' +
+                            item.reply.toAddress
+                    )
+                "
+                >{{
+                    "@" +
+                        (item.reply.receiverName ||
+                            item.reply.toAddress.slice(-4))
+                }}</text>：<mp-html
                             :content="item.reply.payload"
                             class="compiler"
                         />
