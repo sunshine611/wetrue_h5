@@ -5,10 +5,12 @@ import i18n from './lang'; // Internationalization
 import http from '@/util/request.js';
 import store from 'store';
 import moment from 'moment';
+import IPFS from 'ipfs'
 import './mixins/install'
 Vue.prototype.$http = http;
 Vue.prototype.$store = store;
 Vue.prototype.$moment = moment;
+Vue.prototype.$ipfs = IPFS.create();
 Vue.use(uView);
 Vue.config.productionTip = false;
 Vue.prototype.$_i18n = i18n;
