@@ -11,6 +11,9 @@ import {
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
 import { FungibleTokenFull } from "@/util/FungibleTokenFull";
+import Request from "luch-request";
+const http = new Request();
+import { nodeUrl } from "@/config/config.js";
 const mixins = {
     data() {
         return {};
@@ -90,6 +93,14 @@ const mixins = {
                         });
                     }
                 }
+            });
+        },
+        //获取账户AE余额
+        async getAccount() {
+            return new Promise((resolve) => {
+                http.get(nodeUrl + "v3/accounts/" + getStore("token")).then((res) => {
+                    resolve(this.balanceFormat(res.data.balance));
+                });
             });
         },
         //余额格式化
@@ -221,6 +232,14 @@ const mixins = {
         //wetrue上链发送操作
         async wetrueSend(type, payload) {
             try {
+                let account = 0;
+                await this.getAccount().then((res) => {
+                    account = res;
+                });
+                if (account < 1) {
+                    this.uShowToast("账户余额小于1AE，已禁止操作");
+                    return;
+                }
                 const configInfo = getStore("configInfo");
                 let amount, content, client;
                 if (type === "topic") {
@@ -255,7 +274,7 @@ const mixins = {
                         reply_hash: payload.replyHash,
                         content: payload.content,
                     };
-                }else if(type==='nickname'){
+                } else if (type === "nickname") {
                     //修改昵称
                     amount = configInfo.nicknameAmount;
                     content = {
@@ -263,7 +282,7 @@ const mixins = {
                         type: "nickname",
                         content: payload.content,
                     };
-                }else if(type==='sex'){
+                } else if (type === "sex") {
                     //修改性别
                     amount = configInfo.sexAmount;
                     content = {

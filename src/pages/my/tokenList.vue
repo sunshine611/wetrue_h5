@@ -132,17 +132,23 @@ export default {
     },
     onLoad() {
         this.isPassword();
-        this.getAccount();
+        this.getAccount().then(res=>{
+                this.aeBalance = res;
+            })
         this.getTokenList();
     },
     activated() {
         this.isPassword();
-        this.getAccount();
+        this.getAccount().then(res=>{
+                this.aeBalance = res;
+            })
         this.getTokenList();
     },
     //上拉刷新
     onPullDownRefresh() {
-        this.getAccount();
+        this.getAccount().then(res=>{
+                this.aeBalance = res;
+            })
         this.getTokenList();
         setTimeout(function() {
             uni.stopPullDownRefresh();
@@ -156,13 +162,7 @@ export default {
                     this.tokenList = res.data.tokens;
                 }
             });
-        },
-        //获取账户AE余额
-        getAccount() {
-            http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
-                this.aeBalance = this.balanceFormat(res.data.balance);
-            });
-        },
+        }
     },
 };
 </script>

@@ -214,14 +214,18 @@ export default {
     onLoad() {
         if (!!this.token) {
             this.getUserInfo();
-            this.getAccount();
+            this.getAccount().then(res=>{
+                this.balance = res;
+            })
             this.getUnreadMsg();
         }
     },
     activated() {
         if (!!this.token) {
             this.getUserInfo();
-            this.getAccount();
+            this.getAccount().then(res=>{
+                this.balance = res;
+            })
             this.getUnreadMsg();
         }
         this.getVersionInfo();
@@ -270,12 +274,6 @@ export default {
                 },
             });
             // #endif
-        },
-        //获取账户AE余额
-        getAccount() {
-            http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
-                this.balance = this.balanceFormat(res.data.balance);
-            });
         },
         //打开白皮书
         whitePaper() {

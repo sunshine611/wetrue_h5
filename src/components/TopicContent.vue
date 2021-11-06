@@ -112,10 +112,18 @@
                     <fa-FontAwesome
                         type="far fa-copy"
                         size="28"
-                        class="mr-10"
+                        class="mr-24"
                         color="#666"
                         id="copy"
                         @click="copy"
+                    ></fa-FontAwesome>
+                    <fa-FontAwesome
+                        type="fas fa-share-alt"
+                        size="28"
+                        class="mr-10"
+                        color="#666"
+                        id="share"
+                        @click="share"
                     ></fa-FontAwesome>
                 </div>
             </div>
@@ -217,6 +225,49 @@ export default {
             // #ifndef H5
             uni.setClipboardData({
                 data: text,
+                success: function() {
+                    uni.showToast({
+                        title: "复制成功",
+                        icon: "none",
+                        duration: 600,
+                    });
+                },
+            });
+            // #endif
+        },
+        //分享
+        share() {
+            let text = this.$refs.mpHtml.getText(),
+                shareText;
+            if (text.length > 100) {
+                shareText =
+                    "WeTrue:\n" +
+                    window.location.href +
+                    "\n" +
+                    text.slice(0, 100) +
+                    "...";
+            } else {
+                shareText =
+                    "WeTrue:\n" +
+                    window.location.href +
+                    "\n" +
+                    text.slice(0, 100);
+            }
+            // #ifdef H5
+            let clipboard = new Clipboard("#share", {
+                text: (trigger) => {
+                    uni.showToast({
+                        title: "复制成功",
+                        icon: "none",
+                        duration: 600,
+                    });
+                    return shareText;
+                },
+            });
+            // #endif
+            // #ifndef H5
+            uni.setClipboardData({
+                data: shareText,
                 success: function() {
                     uni.showToast({
                         title: "复制成功",
