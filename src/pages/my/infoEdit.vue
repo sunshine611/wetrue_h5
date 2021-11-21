@@ -157,7 +157,7 @@ export default {
                 .post("/User/isNickname", { nickname: this.nickname })
                 .then((res) => {
                     if (res.code === 200) {
-                        if (res.isNickname) {
+                        if (res.data.isNickname) {
                             uni.showToast({
                                 title: this.i18n.my.checkNickname,
                                 icon: "none",
