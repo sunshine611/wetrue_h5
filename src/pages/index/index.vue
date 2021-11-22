@@ -120,6 +120,9 @@ export default {
             setStore("language", "zh-cn");
             this.language = getStore("language");
         }
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.index
+        });
     },
     activated() {
         this.getUnreadMsg();

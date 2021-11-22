@@ -16,7 +16,7 @@
                     src="../../static/logo.png"
                     class="inline mr-5"
                 ></u-image>
-                {{ i18n.login.login }}
+                {{ i18n.login.mnemonicLogin }}
             </div>
             <u-gap height="60"></u-gap>
             <div class="form">
@@ -107,7 +107,11 @@ export default {
             keystoreArr: getStore("keystoreArr"),
         };
     },
-    onLoad() {},
+    onLoad() {
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.loginWeTrue
+        });
+    },
     computed: {
         i18n() {
             return this.$_i18n.messages[this.$_i18n.locale];

@@ -1,6 +1,6 @@
 <template>
     <view class="user-info">
-        <u-navbar title="用户信息">
+        <u-navbar :title="i18n.my.userInfo">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -112,6 +112,7 @@ export default {
         UGap,
     },
     data() {
+        const { my } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             userAddress: "", //用户地址
             postList: [], //帖子列表
@@ -126,19 +127,19 @@ export default {
             current: 0, //tab当前选项
             tabList: [
                 {
-                    name: "帖子",
+                    name: my.topic,
                 },
                 {
-                    name: "收藏",
+                    name: my.star,
                 },
                 {
-                    name: "关注",
+                    name: my.focus,
                 },
                 {
-                    name: "粉丝",
+                    name: my.fans,
                 },
                 {
-                    name: "账户",
+                    name: my.assets,
                 },
             ],
         };
@@ -163,6 +164,9 @@ export default {
         this.userAddress = option.userAddress;
         this.getUserInfo();
         this.getPostList();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.userInfo
+        });
     },
     computed: {
         ...mapGetters(["token"]),
@@ -278,7 +282,7 @@ export default {
         //获取账户token列表
         getTokenList() {
             uni.showLoading({
-                title: "加载中",
+                title: this.i18n.my.loading,
             });
             http.get(nodeUrl + "v3/accounts/" + this.userAddress)
                 .then((res) => {
@@ -321,7 +325,7 @@ export default {
             let clipboard = new Clipboard("#copy", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -335,7 +339,7 @@ export default {
                 data: that.userInfo.userAddress,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });

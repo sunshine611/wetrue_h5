@@ -1,6 +1,6 @@
 <template>
     <div class="account-manage">
-        <u-navbar title="账户管理">
+        <u-navbar :title="i18n.login.accountManage">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -57,8 +57,8 @@
                                         class="mr-6"
                                         color="#fff"
                                     >
-                                    </fa-FontAwesome
-                                    >删除
+                                    </fa-FontAwesome>
+                                    {{i18n.login.delete}}
                                 </div>
                                 <div
                                     class="item"
@@ -73,8 +73,8 @@
                                         class="mr-6"
                                         color="#fff"
                                     >
-                                    </fa-FontAwesome
-                                    >二维码
+                                    </fa-FontAwesome>
+                                    {{i18n.login.qrcode}}
                                 </div>
                                 <div
                                     class="item"
@@ -86,8 +86,8 @@
                                         class="mr-6"
                                         color="#fff"
                                     >
-                                    </fa-FontAwesome
-                                    >切换
+                                    </fa-FontAwesome>
+                                    {{i18n.login.replace}}
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
         </div>
         <u-modal
             v-model="showDelete"
-            content="是否删除该账户？"
+            :content="i18n.login.deleteAccount"
             @confirm="deleteAccount"
             :show-cancel-button="true"
         ></u-modal>
@@ -117,9 +117,9 @@
                     class="mr-10"
                     color="#f04a82"
                 >
-                </fa-FontAwesome
-                >新增账户</u-button
-            >
+                </fa-FontAwesome>
+                {{i18n.login.addAccount}}
+            </u-button>
         </div>
         <Qrcode v-model="showQrcode" :address="currentAddress"></Qrcode>
     </div>
@@ -162,6 +162,9 @@ export default {
     },
     onLoad() {
         this.isLogin();
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.accountManage
+        });
     },
     activated() {},
     methods: {
@@ -192,7 +195,7 @@ export default {
             let clipboard = new Clipboard(this.$refs["address" + index][0], {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.login.copySuccess,
                         icon: "none",
                         duration: 600,
                     });

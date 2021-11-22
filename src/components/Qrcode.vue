@@ -14,7 +14,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    二维码
+                    {{i18n.components.qrcode}}
                 </div>
                 <u-gap :height="30"></u-gap>
                 <div class="qrcode">
@@ -25,7 +25,9 @@
                 </div>
                 <u-gap height="30"></u-gap>
                 <div class="token" @click="copy" ref="address">
-                    <text>收款地址</text><u-gap :height="20"></u-gap>{{ address }}
+                    <text>
+                        {{i18n.components.receivingAddress}}
+                    </text><u-gap :height="20"></u-gap>{{ address }}
                 </div>
             </div>
         </u-popup>
@@ -78,7 +80,7 @@ export default {
             new Clipboard(this.$refs.address, {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -92,7 +94,7 @@ export default {
                 data: that.address,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });

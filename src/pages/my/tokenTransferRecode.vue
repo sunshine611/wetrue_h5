@@ -1,6 +1,6 @@
 <template>
     <div class="transfer-record">
-        <u-navbar title="转账记录">
+        <u-navbar :title="i18n.my.transactions">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -128,6 +128,9 @@ export default {
         } else {
             this.getAeRecodeList();
         }
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.transactions
+        });
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -191,7 +194,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open("https://www.aeknow.org/block/transaction/" + hash);
+            window.open("https://www.aeknow.org/miner/viewaccount/" + hash);
         },
     },
 };

@@ -27,9 +27,7 @@
                     type="text"
                     :focus="true"
                     border
-                    :placeholder="
-                        `请输入地址ak_...${token.slice(-4)}的安全密码`
-                    "
+                    :placeholder="`ak_...${token.slice(-4)} ` + i18n.login.securePassword"
                 />
             </div>
             <u-gap height="40"></u-gap>
@@ -52,7 +50,7 @@
                 </div>
                 <div class="pull-right">
                     <div class="mnemonic" @click="logout">
-                        退出当前账户
+                        {{ i18n.login.logoutCurrent }}
                     </div>
                 </div>
             </div>
@@ -81,10 +79,13 @@ export default {
                     url: "/pages/my/index",
                 });
             }, 300);
-        }
+        };
         if (!!option.link) {
             this.link = decodeURIComponent(option.link);
-        }
+        };
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.verifyPassword
+        });
     },
     computed: {
         ...mapGetters(["token"]),
@@ -106,7 +107,7 @@ export default {
                     this.cryptoPassword(this.form.password)
                 );
                 if (!!secretKey) {
-                    this.uShowToast("登录成功");
+                    this.uShowToast(this.i18n.login.loginSuccess);
                     this.$store.commit(
                         "user/SET_PASSWORD",
                         this.cryptoPassword(this.form.password)
@@ -131,7 +132,7 @@ export default {
                     }
                 }
             } catch (error) {
-                this.uShowToast("密码错误！");
+                this.uShowToast(this.i18n.login.passwordErr);
                 this.form.password = "";
                 this.btnLoading = false;
             }

@@ -81,7 +81,7 @@
                         </div>
                     </div>
                 <div slot="right-icon" class="amount">
-                    余额：{{balanceFormat(item.balance)}}
+                    {{i18n.my.balance + ": " + balanceFormat(item.balance)}}
                     <u-button
                         shape="square"
                         type="primary"
@@ -136,6 +136,9 @@ export default {
                 this.aeBalance = res;
             })
         this.getTokenList();
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.myWallet
+        });
     },
     activated() {
         this.isPassword();

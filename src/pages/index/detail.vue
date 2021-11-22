@@ -98,7 +98,7 @@
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
-                                    ><text v-if="item.replyHash">回复</text
+                                    ><text v-if="item.replyHash">{{ i18n.index.reply }}</text
                                     ><text
                                         :class="[
                                             'name',
@@ -127,7 +127,7 @@
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
-                                查看{{ item.replyNumber + i18n.index.theReply }}
+                                {{i18n.index.more + item.replyNumber + i18n.index.theReply }}
                             </view>
                         </view>
                         <view class="bottom">
@@ -266,6 +266,9 @@ export default {
         this.hash = option.hash;
         this.getPostInfo();
         this.getCommentList();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.contentDetails
+        });
     },
     watch: {
         commentList: {

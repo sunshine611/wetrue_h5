@@ -1,6 +1,6 @@
 <template>
     <view class="myTopic">
-        <u-navbar title="话题">
+        <u-navbar :title="i18n.index.topic">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -59,6 +59,9 @@ export default {
     onLoad(option) {
         this.keyword = option.keyword;
         this.getPostList();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.topic
+        });
     },
     computed: {
         ...mapGetters(["token"]),

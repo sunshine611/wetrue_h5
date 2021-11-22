@@ -50,8 +50,9 @@
                 <div class="pull-right">
                     {{
                         i18n.my.addressBalance +
-                            "：" +
+                            ": " +
                             (tokenInfo.balance || aeBalance) +
+                            " " +
                             (tokenInfo.tokenName || "AE")
                     }}
                 </div>
@@ -64,11 +65,11 @@
             }}</u-button>
         </div>
         <u-modal
-            title="转账成功"
+            :title="i18n.my.success"
             v-model="hashShow"
             :show-cancel-button="true"
-            cancel-text="关闭"
-            confirm-text="查看"
+            :cancel-text="i18n.my.close"
+            :confirm-text="i18n.my.check"
             @confirm="viewHash"
         >
             <view class="slot-content"> {{ result.hash }} </view>
@@ -84,9 +85,7 @@
                     v-model="form.password"
                     type="text"
                     :border="true"
-                    :placeholder="
-                        `请输入ak_...${token.slice(-4)}的安全密码`
-                    "
+                    :placeholder="`ak_...${token.slice(-4)} ` + i18n.login.securePassword"
                 />
                 <u-gap :height="30"></u-gap>
                 <u-button
@@ -145,11 +144,14 @@ export default {
                 contractId: option.contractId,
                 balance: this.balanceFormat(option.balance),
             };
-            this.title = `${this.tokenInfo.tokenName}${this.i18n.my.transfer}`;
+            this.title = `${this.tokenInfo.tokenName} ${this.i18n.my.transfer}`;
         } else {
             this.getAccount();
-            this.title = `AE转账`;
+            this.title = `AE ${this.i18n.my.transfer}`;
         }
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.transfer
+        });
     },
     activated() {},
     //上拉刷新
@@ -231,13 +233,13 @@ export default {
                             };
                         }
                     } catch (err) {
-                        this.uShowToast("AE节点连接失败！");
+                        this.uShowToast(this.i18n.my.connectionFail);
                         this.hideLoading = false;
                         this.btnLoading = false;
                     }
                 }
             } catch (err) {
-                this.uShowToast("密码错误！");
+                this.uShowToast(this.i18n.my.passwordErr);
                 this.form.password = "";
                 this.btnLoading = false;
             }
@@ -281,11 +283,11 @@ export default {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
-        //查看何用调用成功后返回的哈希交易
+        //查看合约调用成功后返回的交易哈希
         viewHash() {
             this.hashShow = false;
             window.open(
-                "https://www.aeknow.org/block/transaction/" + this.result.hash
+                "https://www.aeknow.org/miner/viewaccount/" + this.result.hash
             );
         },
     },

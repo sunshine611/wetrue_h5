@@ -19,6 +19,21 @@ const mixins = {
         return {};
     },
     onLoad() {},
+    onShow() {
+        const { tabBar } = this.$_i18n.messages[this.$_i18n.locale];
+        uni.setTabBarItem({
+            index:0,
+            text:tabBar.index
+        })
+        uni.setTabBarItem({
+            index:1,
+            text:tabBar.message
+        })
+        uni.setTabBarItem({
+            index:2,
+            text:tabBar.my
+        })
+    },
     methods: {
         uShowToast(title, icon, time) {
             uni.showToast({

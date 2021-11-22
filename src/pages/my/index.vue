@@ -98,7 +98,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item title="映射挖矿" @click="goUrl('mappingDig')">
+                    <u-cell-item :title="i18n.my.defi" @click="goUrl('mappingDig')">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-hammer"
@@ -109,7 +109,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        title="账户管理"
+                        :title="i18n.my.accountManage"
                         @click="goUrl('../login/accountManage')"
                     >
                         <fa-FontAwesome
@@ -155,7 +155,7 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.login.login }}
+                    >{{ i18n.login.mnemonicLogin }}
                 </div>
                 <u-gap height="80"></u-gap>
                 <div class="item" @tap="goUrl('../login/mnemonic')">
@@ -218,6 +218,9 @@ export default {
                 this.balance = res;
             })
             this.getUnreadMsg();
+            uni.setNavigationBarTitle({
+        　　    title:this.i18n.titleBar.my
+            });
         }
     },
     activated() {
@@ -253,7 +256,7 @@ export default {
             let clipboard = new Clipboard("#copy", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -267,7 +270,7 @@ export default {
                 data: that.userInfo.userAddress,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -302,7 +305,7 @@ export default {
             if (this.versionCode < parseInt(this.versionInfo.newVer)) {
                 this.versionShow = true;
             } else {
-                this.uShowToast("当前已经是最新版本！");
+                this.uShowToast(this.i18n.my.versionTips);
             }
         },
     },

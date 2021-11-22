@@ -117,7 +117,7 @@ export default {
             let params = { hash: this.topicInfo.hash };
             this.$http.post("/Submit/complain", params).then((res) => {
                 if (res.code === 200) {
-                    this.uShowToast("投诉成功！");
+                    this.uShowToast(this.i18n.components.complainSuccess);
                 }
             });
         },

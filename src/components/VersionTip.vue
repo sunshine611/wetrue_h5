@@ -15,7 +15,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    WeTrue更新
+                    {{ i18n.components.wetrueUpdate }}
                 </div>
                 <div class="content mb-40">
                     <mp-html :content="versionInfo.content" :selectable="true"/>
@@ -25,10 +25,11 @@
                     :ripple="true"
                     shape="circle"
                     @click="updateApp"
-                    >更新APP</u-button
                 >
+                {{ i18n.components.appUpdate }}
+                </u-button>
                 <div class="version-info">
-                    当前版本：{{ version }}，最新版本：{{ versionInfo.newCode }}
+                    {{ i18n.components.currentVersion + ":" + version }}，最新版本：{{ i18n.components.newVersion + ":" + versionInfo.newCode }}
                 </div>
             </div>
         </u-popup>

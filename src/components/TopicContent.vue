@@ -62,12 +62,12 @@
                             color="#f04a82"
                             class="mr-6"
                         ></u-icon
-                        >{{ item.nickname }}[{{
-                            item.sender_id.slice(-4)
-                        }}]打赏了<text class="name">{{
-                            balanceFormat(item.amount, 1)
-                        }}</text
-                        >WTT
+                        >{{ item.nickname }}
+                        [ {{ item.sender_id.slice(-4) }} ]
+                        {{ i18n.components.reward }}
+                        <text class="name">
+                            {{ balanceFormat(item.amount, 1) }}
+                        </text> WTT
                     </div>
                     <u-gap
                         height="5"
@@ -78,7 +78,7 @@
                         v-if="postInfo.rewardList.length > 6"
                         @click="rewardRecordShow = true"
                     >
-                        查看更多
+                        {{ i18n.components.viewMore }}
                     </div>
                 </div>
                 <div class="more">
@@ -214,7 +214,7 @@ export default {
             let clipboard = new Clipboard("#copy", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -227,7 +227,7 @@ export default {
                 data: text,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -257,7 +257,7 @@ export default {
             let clipboard = new Clipboard("#share", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -270,7 +270,7 @@ export default {
                 data: shareText,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.components.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
