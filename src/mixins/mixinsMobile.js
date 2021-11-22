@@ -230,7 +230,7 @@ const mixins = {
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
-                this.uShowToast("AE节点连接失败！");
+                this.uShowToast(this.i18n.mixins.connectionFail);
             }
         },
         //判断是否已连接AE网络
@@ -252,7 +252,7 @@ const mixins = {
                     account = res;
                 });
                 if (account < 1) {
-                    this.uShowToast("账户余额小于1AE，已禁止操作");
+                    this.uShowToast(this.i18n.mixins.lowBalance);
                     return;
                 }
                 const configInfo = getStore("configInfo");
@@ -307,7 +307,7 @@ const mixins = {
                     };
                 }
                 if (this.balanceFormat(amount) > 10) {
-                    this.uShowToast("上链超过10AE，已禁止操作");
+                    this.uShowToast(this.i18n.mixins.amountsAbnormal);
                     return;
                 }
                 this.uShowLoading(this.i18n.index.inChain);
@@ -325,18 +325,18 @@ const mixins = {
                 });
                 return res;
             } catch (err) {
-                this.uShowToast("操作失败！");
+                this.uShowToast(this.i18n.mixins.fail);
             }
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {
             try {
                 uni.showLoading({
-                    title: "准备发送",
+                    title: this.i18n.mixins.readySend,
                 });
                 let client = await this.client();
                 uni.showLoading({
-                    title: "正在编译合约",
+                    title: this.i18n.mixins.compileContract,
                 });
                 const callDataCall = await client.contractEncodeCall(
                     FungibleTokenFull,
@@ -344,7 +344,7 @@ const mixins = {
                     [receiveId, AmountFormatter.toAettos(amount)]
                 );
                 uni.showLoading({
-                    title: "正在执行合约",
+                    title: this.i18n.mixins.executeContract,
                 });
                 const callResult = await client.contractCall(
                     FungibleTokenFull,
@@ -355,7 +355,7 @@ const mixins = {
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
-                this.uShowToast("操作失败！");
+                this.uShowToast(this.i18n.mixins.fail);
             }
         },
     },

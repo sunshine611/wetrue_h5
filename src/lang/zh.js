@@ -154,4 +154,13 @@ export default {
 		newVersion:'最新版本',
 		
 	},
+	mixins:{
+		readySend:'准备发送',
+		compileContract:'编译合约',
+		executeContract:'执行合约',
+		fail:'操作失败',
+		amountsAbnormal:'上链超过10AE，已禁止操作',
+		lowBalance:'账户余额小于1AE，已禁止操作',
+		connectionFail:'AE节点连接失败',
+	},
 };

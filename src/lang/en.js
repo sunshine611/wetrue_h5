@@ -153,4 +153,13 @@ export default {
 		currentVersion:'Current Version',
 		newVersion:'New Version',
 	},
+	mixins:{
+		readySend:'Ready Send',
+		compileContract:'Compile',
+		executeContract:'Execute',
+		fail:'fail',
+		amountsAbnormal:'Amount Abnormal, Stop Execution',
+		lowBalance:'Account Balance 1AE Low, Stop Execution',
+		connectionFail:'AE Node Connection Fail',
+	},
 }
