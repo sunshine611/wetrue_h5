@@ -415,7 +415,7 @@ export default {
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(`${aeknow}api/mytoken/${this.token}/${wttContract}`).then(
+            http.get(`${aeknow}/api/mytoken/${this.token}/${wttContract}`).then(
                 (res) => {
                     this.wttBalance = this.balanceFormat(res.data.balance);
                 }

@@ -29,7 +29,7 @@
                 {{ i18n.components.appUpdate }}
                 </u-button>
                 <div class="version-info">
-                    {{ i18n.components.currentVersion + ":" + version }}，最新版本：{{ i18n.components.newVersion + ":" + versionInfo.newCode }}
+                    {{ i18n.components.currentVersion + ": " + version + "," + i18n.components.newVersion + ": " + versionInfo.newCode }}
                 </div>
             </div>
         </u-popup>

@@ -96,6 +96,11 @@ export default {
     methods: {
         login() {
             this.btnLoading = true;
+            if (!this.form.password || this.form.password.length < 6) {
+                    this.uShowToast(this.i18n.login.passWarning);
+                    this.btnLoading = false;
+                    return;
+                }
             setTimeout(() => {
                 this.check();
             }, 100);

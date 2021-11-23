@@ -35,6 +35,9 @@ const mixins = {
         })
     },
     methods: {
+        i18n() {
+            return this.$_i18n.messages[this.$_i18n.locale];
+        },
         uShowToast(title, icon, time) {
             uni.showToast({
                 icon: icon == null ? "none" : icon,
@@ -310,7 +313,7 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.amountsAbnormal);
                     return;
                 }
-                this.uShowLoading(this.i18n.index.inChain);
+                this.uShowLoading(this.i18n.mixins.inChain);
                 client = await this.client();
                 const res = await client.spend(
                     amount,
@@ -319,7 +322,7 @@ const mixins = {
                         payload: JSON.stringify(content),
                     }
                 );
-                this.uShowLoading("Radio");
+                this.uShowLoading(this.i18n.mixins.radio);
                 this.$http.post("/Submit/hash", {
                     hash: res.hash,
                 });

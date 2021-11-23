@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <div slot="right-icon" class="amount">
-                        {{i18n.my.balance + ':' + balanceFormat(item.balance) }}
+                        {{i18n.my.balance + ': ' + balanceFormat(item.balance) }}
                     </div>
                 </u-cell-item>
             </div>

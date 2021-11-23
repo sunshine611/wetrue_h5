@@ -125,8 +125,8 @@
             </div>
             <div class="version">
                 <div class="version-code" @click="versionCheck">
-                    {{ i18n.my.version }}：{{ version
-                    }}<u-badge
+                    {{ i18n.my.version }}：{{ version}}
+                    <u-badge
                         v-if="versionCode < parseInt(versionInfo.newVer)"
                         type="error"
                         count="1"

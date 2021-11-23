@@ -157,7 +157,7 @@ export default {
         //获取账户token列表
         getTokenRecodeList() {
             http.get(
-                `${aeknow}api/tokentxs/${this.userAddress || this.token}/${
+                `${aeknow}/api/tokentxs/${this.userAddress || this.token}/${
                     this.contract
                 }/${this.pageInfo.limit}/${this.pageInfo.offset}`
             ).then((res) => {
@@ -176,7 +176,7 @@ export default {
         //获取AE转账记录列表
         getAeRecodeList() {
             http.get(
-                `${aeknow}api/spendtx/${this.userAddress || this.token}/${
+                `${aeknow}/api/spendtx/${this.userAddress || this.token}/${
                     this.pageInfo.limit
                 }/${this.pageInfo.offset}`
             ).then((res) => {
@@ -194,7 +194,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open("https://www.aeknow.org/miner/viewaccount/" + hash);
+            window.open(aeknow + "/miner/viewaccount/" + hash);
         },
     },
 };

@@ -103,7 +103,7 @@
 import Request from "luch-request";
 const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
-import { nodeUrl } from "@/config/config.js";
+import { aeknow, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
@@ -286,9 +286,7 @@ export default {
         //查看合约调用成功后返回的交易哈希
         viewHash() {
             this.hashShow = false;
-            window.open(
-                "https://www.aeknow.org/miner/viewaccount/" + this.result.hash
-            );
+            window.open(aeknow + "/miner/viewaccount/" + this.result.hash);
         },
     },
 };

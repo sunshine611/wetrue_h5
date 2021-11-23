@@ -17,6 +17,7 @@
 <script>
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
+import { aeknow } from "@/config/config.js";
 export default {
     components: {
         HeadImg,
@@ -85,8 +86,8 @@ export default {
                 this.complain();
             } else if (index === 2) {
                 window.open(
-                    "https://www.aeknow.org/block/transaction/" +
-                        this.topicInfo.hash
+                    aeknow + "/miner/viewaccount/"
+                    + this.topicInfo.hash
                 );
             }
         },

@@ -295,7 +295,7 @@ export default {
                     });
                 })
                 .then(() => {
-                    http.get(aeknow + "api/token/" + this.userAddress).then(
+                    http.get(aeknow + "/api/token/" + this.userAddress).then(
                         (res) => {
                             if (res.data.tokens.length > 0) {
                                 this.postList = this.postList.concat(

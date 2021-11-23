@@ -115,7 +115,6 @@ export default {
 		noData:'暂无数据',
 		loading:'加载中',
 		pleaseLogin:'请先登陆',
-		inChain:'上链中',
 		theReply:'条回复',
 		wetrueTips: "WeTrue 记你所想...",
 		allReply: "全部回复",
@@ -155,6 +154,8 @@ export default {
 		
 	},
 	mixins:{
+		inChain:'上链中',
+		radio:'广播中',
 		readySend:'准备发送',
 		compileContract:'编译合约',
 		executeContract:'执行合约',

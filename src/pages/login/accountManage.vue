@@ -209,7 +209,7 @@ export default {
                 data: that.keystoreArr[index].public_key,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.login.copySuccess,
                         icon: "none",
                         duration: 600,
                     });

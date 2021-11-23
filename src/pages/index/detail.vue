@@ -127,7 +127,7 @@
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
-                                {{i18n.index.more + item.replyNumber + i18n.index.theReply }}
+                                {{i18n.index.more + " " + item.replyNumber + " " + i18n.index.theReply }}
                             </view>
                         </view>
                         <view class="bottom">
