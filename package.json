@@ -64,6 +64,7 @@
     "core-js": "^3.6.5",
     "fast-json-patch": "^3.0.0-1",
     "flyio": "^0.6.2",
+    "ipfs": "^0.55.4",
     "js-sha256": "^0.9.0",
     "luch-request": "^3.0.6",
     "moment": "^2.29.1",
