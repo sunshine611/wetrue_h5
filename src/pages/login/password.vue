@@ -89,8 +89,10 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     methods: {

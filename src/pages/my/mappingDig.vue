@@ -259,8 +259,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad() {
@@ -409,7 +411,7 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(nodeUrl + "v3/accounts/" + this.token).then((res) => {
+            http.get(nodeUrl + "/v3/accounts/" + this.token).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },

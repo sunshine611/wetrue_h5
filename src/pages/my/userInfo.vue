@@ -171,8 +171,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     methods: {
@@ -284,7 +286,7 @@ export default {
             uni.showLoading({
                 title: this.i18n.my.loading,
             });
-            http.get(nodeUrl + "v3/accounts/" + this.userAddress)
+            http.get(nodeUrl + "/v3/accounts/" + this.userAddress)
                 .then((res) => {
                     this.postList.push({
                         balance: res.data.balance,

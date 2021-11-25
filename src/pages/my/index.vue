@@ -182,7 +182,7 @@
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
-import { version, nodeUrl } from "@/config/config.js";
+import { version } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
@@ -207,8 +207,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad() {

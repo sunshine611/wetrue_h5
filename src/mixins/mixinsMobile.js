@@ -35,9 +35,6 @@ const mixins = {
         })
     },
     methods: {
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
-        },
         uShowToast(title, icon, time) {
             uni.showToast({
                 icon: icon == null ? "none" : icon,
@@ -116,7 +113,7 @@ const mixins = {
         //获取账户AE余额
         async getAccount() {
             return new Promise((resolve) => {
-                http.get(nodeUrl + "v3/accounts/" + getStore("token")).then((res) => {
+                http.get(nodeUrl + "/v3/accounts/" + getStore("token")).then((res) => {
                     resolve(this.balanceFormat(res.data.balance));
                 });
             });
