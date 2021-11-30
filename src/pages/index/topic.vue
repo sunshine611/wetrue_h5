@@ -1,6 +1,6 @@
 <template>
     <view class="myTopic">
-        <u-navbar :title="i18n.index.topic">
+        <u-navbar :title="keyword">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -11,6 +11,17 @@
                 ></u-icon>
             </div>
         </u-navbar>
+    <div class="myTopicBar">
+        <br>
+        <div class="topic-info">
+            这里原本有Topic信息，前端跑路了，等他来做：<br>
+            Views:{{this.load_read_sum}}  
+            Discuss:{{this.load_total}}  
+            nickname:{{this.load_nickname}}
+            </div>
+        </div>
+        <br>
+    </div>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -60,7 +71,7 @@ export default {
         this.keyword = option.keyword;
         this.getPostList();
         uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.topic
+        　　title:`${this.i18n.titleBar.topic}-${this.keyword}`
         });
     },
     computed: {
@@ -75,6 +86,16 @@ export default {
     methods: {
         //获取话题帖子列表
         getPostList() {
+            let loadKeyword = {
+                keyword: this.keyword,
+            };
+             this.$http.post("/Topic/info", loadKeyword).then((res) => {
+                if (res.code === 200) {
+                    this.load_total = res.data.total;
+                    this.load_read_sum = res.data.read_sum;
+                    this.load_nickname = res.data.nickname;
+                }
+            });
             let params = {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
@@ -119,5 +140,13 @@ export default {
 
 <style lang="scss" scoped>
 .myTopic {
+};
+.myTopicBar {
+    .topic-info {
+        background: #f04a82;
+        width: 100%;
+        height: 100upx;
+        position: relative;
+    }
 }
 </style>
