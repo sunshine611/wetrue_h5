@@ -164,6 +164,10 @@ export default {
                     label: this.i18n.home.myFocus,
                     value: 4,
                 },
+                {
+                    label: 'SuperHero',
+                    value: 5,
+                },
             ];
         },
     },
@@ -184,6 +188,9 @@ export default {
             } else if (this.cateInfo.value === 4) {
                 url = "/Content/focusList";
             }
+             else if (this.cateInfo.value === 5) {
+                url = "/Content/shTipidList";
+            }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
                 .then((res) => {
@@ -196,7 +203,12 @@ export default {
                                     item.payload = this.topicHighlight(
                                         item.payload
                                     );
-                                    return item;
+                                    if (!!item.hash) {
+                                        item.hash = item.hash;
+                                    } else {
+                                        item.hash = item.shTipid;
+                                    }
+                                return item; 
                                 });
                             });
                         } else {

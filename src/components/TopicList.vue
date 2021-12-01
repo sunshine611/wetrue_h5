@@ -165,10 +165,18 @@ export default {
     methods: {
         //是否点赞
         praise(item) {
-            let params = {
-                hash: item.hash,
-                type: "topic",
-            };
+            let params = {};
+            if (item.hash.slice(0,2) === "th") {
+                params = {
+                    hash: item.hash,
+                    type: "topic",
+                };
+            } else {
+                params = {
+                    hash: item.shTipid,
+                    type: "shTipid",
+                };
+            }
             this.$http.post("/Submit/praise", params).then((res) => {
                 if (res.code === 200) {
                     item.isPraise = res.data.isPraise;

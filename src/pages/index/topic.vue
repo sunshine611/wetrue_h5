@@ -14,7 +14,7 @@
     <div class="myTopicBar">
         <br>
         <div class="topic-info">
-            这里原本有Topic信息，前端跑路了，等他来做：<br>
+            这里原本有美美的Topic信息，ui设计师跑路，以后再做：<br>
             Views:{{this.load_read_sum}}  
             Discuss:{{this.load_total}}  
             nickname:{{this.load_nickname}}
@@ -69,6 +69,7 @@ export default {
     },
     onLoad(option) {
         this.keyword = option.keyword;
+        this.getTopicInfo();
         this.getPostList();
         uni.setNavigationBarTitle({
         　　title:`${this.i18n.titleBar.topic}-${this.keyword}`
@@ -86,16 +87,6 @@ export default {
     methods: {
         //获取话题帖子列表
         getPostList() {
-            let loadKeyword = {
-                keyword: this.keyword,
-            };
-             this.$http.post("/Topic/info", loadKeyword).then((res) => {
-                if (res.code === 200) {
-                    this.load_total = res.data.total;
-                    this.load_read_sum = res.data.read_sum;
-                    this.load_nickname = res.data.nickname;
-                }
-            });
             let params = {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
@@ -131,6 +122,18 @@ export default {
                     }
                 } else {
                     this.more = "nomore";
+                }
+            });
+        },
+         getTopicInfo() {
+            let loadKeyword = {
+                keyword: this.keyword,
+            };
+             this.$http.post("/Topic/info", loadKeyword).then((res) => {
+                if (res.code === 200) {
+                    this.load_total = res.data.total;
+                    this.load_read_sum = res.data.read_sum;
+                    this.load_nickname = res.data.nickname;
                 }
             });
         },

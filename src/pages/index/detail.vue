@@ -177,7 +177,7 @@
             <div
                 class="item"
                 :class="{ highlight: postInfo.isPraise }"
-                @tap="praise('topic')"
+                @tap="praise(praiseType)"
             >
                 <u-icon
                     v-show="!postInfo.isPraise"
@@ -263,7 +263,7 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.hash = option.hash;
+        this.hash = option.hash??option.shTipid;
         this.getPostInfo();
         this.getCommentList();
         uni.setNavigationBarTitle({
@@ -308,15 +308,30 @@ export default {
     methods: {
         //获取主贴详情
         getPostInfo() {
-            let params = {
-                hash: this.hash,
-            };
-            this.$http.post("/Content/tx", params).then((res) => {
+            let url = "";
+            let params = {};
+            if (this.hash.slice(0,2) === "th") {
+                url = "/Content/tx";
+                params = {
+                    hash: this.hash,
+                };
+                this.praiseType = 'topic';
+            } else {
+                url = "/Content/shTipid";
+                params = {
+                    shTipid: this.hash,
+                };
+                this.praiseType = 'shTipid';
+            }
+            this.$http.post(url, params).then((res) => {
                 if (res.code === 200) {
                     this.postInfo = res.data;
                     this.postInfo.payload = this.topicHighlight(
                         this.postInfo.payload
                     );
+                    if (this.praiseType === 'shTipid') {
+                        this.postInfo.hash = res.data.shTipid;
+                    };
                 }
             });
         },
@@ -491,6 +506,17 @@ export default {
                     if (res.code === 200) {
                         item.isPraise = res.data.isPraise;
                         item.praise = res.data.praise;
+                    }
+                });
+            } else if (type === "shTipid") {
+                let params = {
+                    hash: this.hash,
+                    type: type,
+                };
+                this.$http.post("/Submit/praise", params).then((res) => {
+                    if (res.code === 200) {
+                        this.postInfo.isPraise = res.data.isPraise;
+                        this.postInfo.praise = res.data.praise;
                     }
                 });
             }
