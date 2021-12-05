@@ -19,6 +19,21 @@ const mixins = {
         return {};
     },
     onLoad() {},
+    onShow() {
+        const { tabBar } = this.$_i18n.messages[this.$_i18n.locale];
+        uni.setTabBarItem({
+            index:0,
+            text:tabBar.index
+        })
+        uni.setTabBarItem({
+            index:1,
+            text:tabBar.message
+        })
+        uni.setTabBarItem({
+            index:2,
+            text:tabBar.my
+        })
+    },
     methods: {
         uShowToast(title, icon, time) {
             uni.showToast({
@@ -98,7 +113,7 @@ const mixins = {
         //获取账户AE余额
         async getAccount() {
             return new Promise((resolve) => {
-                http.get(nodeUrl + "v3/accounts/" + getStore("token")).then((res) => {
+                http.get(nodeUrl + "/v3/accounts/" + getStore("token")).then((res) => {
                     resolve(this.balanceFormat(res.data.balance));
                 });
             });
@@ -215,7 +230,7 @@ const mixins = {
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
-                this.uShowToast("AE节点连接失败！");
+                this.uShowToast(this.i18n.mixins.connectionFail);
             }
         },
         //判断是否已连接AE网络
@@ -237,7 +252,7 @@ const mixins = {
                     account = res;
                 });
                 if (account < 1) {
-                    this.uShowToast("账户余额小于1AE，已禁止操作");
+                    this.uShowToast(this.i18n.mixins.lowBalance);
                     return;
                 }
                 const configInfo = getStore("configInfo");
@@ -292,10 +307,10 @@ const mixins = {
                     };
                 }
                 if (this.balanceFormat(amount) > 10) {
-                    this.uShowToast("上链超过10AE，已禁止操作");
+                    this.uShowToast(this.i18n.mixins.amountsAbnormal);
                     return;
                 }
-                this.uShowLoading(this.i18n.index.inChain);
+                this.uShowLoading(this.i18n.mixins.inChain);
                 client = await this.client();
                 const res = await client.spend(
                     amount,
@@ -304,24 +319,24 @@ const mixins = {
                         payload: JSON.stringify(content),
                     }
                 );
-                this.uShowLoading("Radio");
+                this.uShowLoading(this.i18n.mixins.radio);
                 this.$http.post("/Submit/hash", {
                     hash: res.hash,
                 });
                 return res;
             } catch (err) {
-                this.uShowToast("操作失败！");
+                this.uShowToast(this.i18n.mixins.fail);
             }
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {
             try {
                 uni.showLoading({
-                    title: "准备发送",
+                    title: this.i18n.mixins.readySend,
                 });
                 let client = await this.client();
                 uni.showLoading({
-                    title: "正在编译合约",
+                    title: this.i18n.mixins.compileContract,
                 });
                 const callDataCall = await client.contractEncodeCall(
                     FungibleTokenFull,
@@ -329,7 +344,7 @@ const mixins = {
                     [receiveId, AmountFormatter.toAettos(amount)]
                 );
                 uni.showLoading({
-                    title: "正在执行合约",
+                    title: this.i18n.mixins.executeContract,
                 });
                 const callResult = await client.contractCall(
                     FungibleTokenFull,
@@ -340,7 +355,7 @@ const mixins = {
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
-                this.uShowToast("操作失败！");
+                this.uShowToast(this.i18n.mixins.fail);
             }
         },
     },

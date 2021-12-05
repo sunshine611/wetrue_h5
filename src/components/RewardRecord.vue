@@ -15,12 +15,12 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    打赏记录
+                    {{i18n.components.recordList}}
                 </div>
                 <u-table>
                     <u-tr>
-                        <u-th>打赏人</u-th>
-                        <u-th>金额</u-th>
+                        <u-th>{{i18n.components.recordMan}}</u-th>
+                        <u-th>{{i18n.components.balance}}</u-th>
                     </u-tr>
                     <u-tr v-for="(item,index) in record" :key="index">
                         <u-td>{{item.nickname}}[{{item.sender_id.slice(-4)}}]</u-td>
@@ -54,8 +54,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     watch: {

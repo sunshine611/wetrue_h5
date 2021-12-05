@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <u-navbar title="信息修改">
+        <u-navbar :title="i18n.my.infoEdit">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -28,7 +28,7 @@
                 "
             >
             </u-cell-item>
-            <u-cell-item title="性别" :value="sexName" @click="sexShow = true">
+            <u-cell-item :title="i18n.my.sex" :value="sexName" @click="sexShow = true">
             </u-cell-item>
         </u-cell-group>
         <u-popup
@@ -85,10 +85,11 @@ import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
 export default {
     components: { UCellItem, UButton, UGap },
     data() {
+        const { my } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             userInfo: {
                 userHead: "", //用户头像
-                nickname: "匿名", //用户昵称
+                nickname: my.cryptonym, //用户昵称
                 sex: 2,
             },
             nameShow: false, //名字弹层
@@ -99,15 +100,15 @@ export default {
             sexList: [
                 {
                     name: 0,
-                    sexName: "女",
+                    sexName: my.girl,
                 },
                 {
                     name: 1,
-                    sexName: "男",
+                    sexName: my.boy,
                 },
                 {
                     name: 2,
-                    sexName: "未知",
+                    sexName: my.unknown,
                 },
             ],
         };
@@ -115,12 +116,17 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad() {
         this.getUserInfo();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.infoEdit
+        });
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -141,11 +147,11 @@ export default {
                 if (res.code === 200) {
                     this.userInfo = res.data;
                     if (this.userInfo.sex === 0) {
-                        this.sexName = "女";
+                        this.sexName = this.i18n.my.girl;
                     } else if (this.userInfo.sex === 1) {
-                        this.sexName = "男";
+                        this.sexName = this.i18n.my.boy;
                     } else {
-                        this.sexName = "未知";
+                        this.sexName = this.i18n.my.unknown;
                     }
                 }
                 this.loading = false;
@@ -157,7 +163,7 @@ export default {
                 .post("/User/isNickname", { nickname: this.nickname })
                 .then((res) => {
                     if (res.code === 200) {
-                        if (res.isNickname) {
+                        if (res.data.isNickname) {
                             uni.showToast({
                                 title: this.i18n.my.checkNickname,
                                 icon: "none",

@@ -98,7 +98,7 @@
                                             item.users.nickname ||
                                                 item.users.userAddress.slice(-4)
                                         }}</text
-                                    ><text v-if="item.replyHash">回复</text
+                                    ><text v-if="item.replyHash">{{ i18n.index.reply }}</text
                                     ><text
                                         :class="[
                                             'name',
@@ -127,7 +127,7 @@
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
-                                查看{{ item.replyNumber + i18n.index.theReply }}
+                                {{i18n.index.more + " " + item.replyNumber + " " + i18n.index.theReply }}
                             </view>
                         </view>
                         <view class="bottom">
@@ -177,7 +177,7 @@
             <div
                 class="item"
                 :class="{ highlight: postInfo.isPraise }"
-                @tap="praise('topic')"
+                @tap="praise(praiseType)"
             >
                 <u-icon
                     v-show="!postInfo.isPraise"
@@ -263,9 +263,12 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.hash = option.hash;
+        this.hash = option.hash??option.shTipid;
         this.getPostInfo();
         this.getCommentList();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.contentDetails
+        });
     },
     watch: {
         commentList: {
@@ -296,22 +299,39 @@ export default {
     },
     computed: {
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     methods: {
         //获取主贴详情
         getPostInfo() {
-            let params = {
-                hash: this.hash,
-            };
-            this.$http.post("/Content/tx", params).then((res) => {
+            let url = "";
+            let params = {};
+            if (this.hash.slice(0,2) === "th") {
+                url = "/Content/tx";
+                params = {
+                    hash: this.hash,
+                };
+                this.praiseType = 'topic';
+            } else {
+                url = "/Content/shTipid";
+                params = {
+                    shTipid: this.hash,
+                };
+                this.praiseType = 'shTipid';
+            }
+            this.$http.post(url, params).then((res) => {
                 if (res.code === 200) {
                     this.postInfo = res.data;
                     this.postInfo.payload = this.topicHighlight(
                         this.postInfo.payload
                     );
+                    if (this.praiseType === 'shTipid') {
+                        this.postInfo.hash = res.data.shTipid;
+                    };
                 }
             });
         },
@@ -486,6 +506,17 @@ export default {
                     if (res.code === 200) {
                         item.isPraise = res.data.isPraise;
                         item.praise = res.data.praise;
+                    }
+                });
+            } else if (type === "shTipid") {
+                let params = {
+                    hash: this.hash,
+                    type: type,
+                };
+                this.$http.post("/Submit/praise", params).then((res) => {
+                    if (res.code === 200) {
+                        this.postInfo.isPraise = res.data.isPraise;
+                        this.postInfo.praise = res.data.praise;
                     }
                 });
             }

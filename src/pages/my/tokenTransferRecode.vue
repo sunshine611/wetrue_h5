@@ -1,6 +1,6 @@
 <template>
     <div class="transfer-record">
-        <u-navbar title="转账记录">
+        <u-navbar :title="i18n.my.transactions">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -114,8 +114,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad(option) {
@@ -128,6 +130,9 @@ export default {
         } else {
             this.getAeRecodeList();
         }
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.transactions
+        });
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -154,7 +159,7 @@ export default {
         //获取账户token列表
         getTokenRecodeList() {
             http.get(
-                `${aeknow}api/tokentxs/${this.userAddress || this.token}/${
+                `${aeknow}/api/tokentxs/${this.userAddress || this.token}/${
                     this.contract
                 }/${this.pageInfo.limit}/${this.pageInfo.offset}`
             ).then((res) => {
@@ -173,7 +178,7 @@ export default {
         //获取AE转账记录列表
         getAeRecodeList() {
             http.get(
-                `${aeknow}api/spendtx/${this.userAddress || this.token}/${
+                `${aeknow}/api/spendtx/${this.userAddress || this.token}/${
                     this.pageInfo.limit
                 }/${this.pageInfo.offset}`
             ).then((res) => {
@@ -191,7 +196,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open("https://www.aeknow.org/block/transaction/" + hash);
+            window.open(aeknow + "/miner/viewaccount/" + hash);
         },
     },
 };

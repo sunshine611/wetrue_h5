@@ -1,6 +1,6 @@
 <template>
     <view class="myTopic">
-        <u-navbar title="话题">
+        <u-navbar :title="keyword">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -11,6 +11,17 @@
                 ></u-icon>
             </div>
         </u-navbar>
+    <div class="myTopicBar">
+        <br>
+        <div class="topic-info">
+            这里原本有美美的Topic信息，ui设计师跑路，以后再做：<br>
+            Views:{{this.load_read_sum}}  
+            Discuss:{{this.load_total}}  
+            nickname:{{this.load_nickname}}
+            </div>
+        </div>
+        <br>
+    </div>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -58,13 +69,19 @@ export default {
     },
     onLoad(option) {
         this.keyword = option.keyword;
+        this.getTopicInfo();
         this.getPostList();
+        uni.setNavigationBarTitle({
+        　　title:`${this.i18n.titleBar.topic}-${this.keyword}`
+        });
     },
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     methods: {
@@ -108,11 +125,34 @@ export default {
                 }
             });
         },
+         getTopicInfo() {
+            let loadKeyword = {
+                keyword: this.keyword,
+            };
+            let load_total = "";
+            let load_read_sum = "";
+            let load_nickname = "";
+            this.$http.post("/Topic/info", loadKeyword).then((res) => {
+                if (res.code === 200) {
+                    this.load_total = res.data.total;
+                    this.load_read_sum = res.data.read_sum;
+                    this.load_nickname = res.data.nickname;
+                }
+            });
+        },
     },
 };
 </script>
 
 <style lang="scss" scoped>
 .myTopic {
+};
+.myTopicBar {
+    .topic-info {
+        background: #f04a82;
+        width: 100%;
+        height: 100upx;
+        position: relative;
+    }
 }
 </style>

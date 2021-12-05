@@ -81,7 +81,7 @@
                         </div>
                     </div>
                 <div slot="right-icon" class="amount">
-                    余额：{{balanceFormat(item.balance)}}
+                    {{i18n.my.balance + ": " + balanceFormat(item.balance)}}
                     <u-button
                         shape="square"
                         type="primary"
@@ -111,7 +111,7 @@
 <script>
 import Request from "luch-request";
 const http = new Request();
-import { aeknow, nodeUrl } from "@/config/config.js";
+import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
@@ -126,8 +126,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad() {
@@ -136,6 +138,9 @@ export default {
                 this.aeBalance = res;
             })
         this.getTokenList();
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.myWallet
+        });
     },
     activated() {
         this.isPassword();
@@ -157,7 +162,7 @@ export default {
     methods: {
         //获取账户token列表
         getTokenList() {
-            http.get(aeknow + "api/token/" + this.token).then((res) => {
+            http.get(aeknow + "/api/token/" + this.token).then((res) => {
                 if (res.data.tokens.length > 0) {
                     this.tokenList = res.data.tokens;
                 }

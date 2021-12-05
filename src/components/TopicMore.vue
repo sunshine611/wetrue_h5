@@ -17,6 +17,7 @@
 <script>
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
+import { aeknow } from "@/config/config.js";
 export default {
     components: {
         HeadImg,
@@ -39,8 +40,10 @@ export default {
     },
     computed: {
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
         //显示更多操作
         moreList() {
@@ -85,8 +88,8 @@ export default {
                 this.complain();
             } else if (index === 2) {
                 window.open(
-                    "https://www.aeknow.org/block/transaction/" +
-                        this.topicInfo.hash
+                    aeknow + "/miner/viewaccount/"
+                    + this.topicInfo.hash
                 );
             }
         },
@@ -117,7 +120,7 @@ export default {
             let params = { hash: this.topicInfo.hash };
             this.$http.post("/Submit/complain", params).then((res) => {
                 if (res.code === 200) {
-                    this.uShowToast("投诉成功！");
+                    this.uShowToast(this.i18n.components.complainSuccess);
                 }
             });
         },

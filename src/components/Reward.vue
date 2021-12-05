@@ -14,7 +14,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    打赏
+                    {{i18n.components.reward}}
                 </div>
                 <div class="tags">
                     <div
@@ -52,7 +52,7 @@
                 </div>
                 <u-gap height="50"></u-gap>
                 <u-button type="primary" @click="reward" :loading="btnLoading"
-                    >打赏</u-button
+                    >{{i18n.components.reward}}</u-button
                 >
             </div>
         </u-popup>
@@ -122,8 +122,10 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     watch: {
@@ -159,7 +161,7 @@ export default {
         //打赏
         async reward() {
             if (this.token === this.postInfo.users.userAddress) {
-                this.uShowToast("请不要自己打赏给自己！");
+                this.uShowToast(this.i18n.components.rewardTips);
                 return;
             }
             if (
@@ -183,7 +185,7 @@ export default {
                     amount: "",
                 };
                 this.showModal = false;
-                this.uShowToast("打赏成功，谢谢大爷打赏！");
+                this.uShowToast(this.i18n.components.rewardSuccess);
                 this.getWttBalance();
             }
             this.btnLoading = false;
@@ -196,7 +198,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                `${aeknow}api/mytoken/${this.token}/${wttContract}`
+                `${aeknow}/api/mytoken/${this.token}/${wttContract}`
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.balance);
             });

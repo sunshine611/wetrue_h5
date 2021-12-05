@@ -18,10 +18,10 @@
                         ></HeadImg>
                     </div>
                     <div slot="label">
-                        <text class="mr-16">关注:{{ item.focus }}</text
-                        ><text class="mr-16">粉丝:{{ item.fans }}</text>
-                        <text class="mr-16">发帖量:{{ item.topic }}</text>
-                        <text>活跃:{{ item.active }}</text>
+                        <text class="mr-16">{{ i18n.components.focus + ": " + item.focus }}</text
+                        ><text class="mr-16">{{ i18n.components.fans + ": " + item.fans }}</text>
+                        <text class="mr-16">{{ i18n.components.topic + ": " + item.topic }}</text>
+                        <text>{{ i18n.components.active + ": " + item.active }}</text>
                     </div>
                     <div slot="title">
                         <Name :userInfo="item"></Name>
@@ -51,8 +51,10 @@ export default {
     },
     computed: {
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     watch: {},

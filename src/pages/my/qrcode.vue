@@ -4,9 +4,9 @@
             <VueQrcode :value="token" :options="{ width: 260,margin:1 }"></VueQrcode>
             <u-gap :height="30"></u-gap>
             <div class="token" @tap="copy" id="copy">
-                <text>收款地址</text><u-gap :height="20"></u-gap>{{ token }}
+                <text>{{ i18n.my.recipient }}</text><u-gap :height="20"></u-gap>{{ token }}
             </div>
-            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">返回我的</u-button>
+            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">{{ i18n.my.backMy }}</u-button>
             <u-gap :height="30"></u-gap>
         </div>
     </div>
@@ -26,11 +26,16 @@ export default {
     computed: {
         ...mapGetters(["token"]),
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     onLoad() {
+        uni.setNavigationBarTitle({
+            title:this.i18n.titleBar.myWallet
+        });
     },
     activated() {
     },
@@ -41,7 +46,7 @@ export default {
             let clipboard = new Clipboard("#copy", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });
@@ -55,7 +60,7 @@ export default {
                 data: that.token,
                 success: function() {
                     uni.showToast({
-                        title: "复制成功",
+                        title: this.i18n.my.copySuccess,
                         icon: "none",
                         duration: 600,
                     });

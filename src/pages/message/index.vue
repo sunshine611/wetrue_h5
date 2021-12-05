@@ -153,6 +153,7 @@ export default {
         UGap,
     },
     data() {
+        const { message } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             current: 0, //当前tab索引
             msgList: [], //帖子列表
@@ -165,11 +166,7 @@ export default {
             versionInfo: {}, //版本信息
             versionCode: parseInt(version.replace(/./g, "")), //版本号
             versionShow: false, //版本提示弹层
-            tabList: [
-                {
-                    name: "动态",
-                },
-            ],
+            tabList: [{name: message.dynamic}],
         };
     },
     //上拉刷新
@@ -188,6 +185,9 @@ export default {
     onLoad() {
         this.getMsgList();
         this.getVersionInfo();
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.message
+        });
     },
     activated() {
         this.getMsgList();
@@ -196,8 +196,10 @@ export default {
     },
     computed: {
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
     },
     methods: {

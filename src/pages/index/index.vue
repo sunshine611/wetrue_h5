@@ -120,6 +120,9 @@ export default {
             setStore("language", "zh-cn");
             this.language = getStore("language");
         }
+        uni.setNavigationBarTitle({
+        　　title:this.i18n.titleBar.index
+        });
     },
     activated() {
         this.getUnreadMsg();
@@ -137,8 +140,10 @@ export default {
     },
     computed: {
         //国际化
-        i18n() {
-            return this.$_i18n.messages[this.$_i18n.locale];
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
         },
         //类别列表
         categoryList() {
@@ -158,6 +163,10 @@ export default {
                 {
                     label: this.i18n.home.myFocus,
                     value: 4,
+                },
+                {
+                    label: 'SuperHero',
+                    value: 5,
                 },
             ];
         },
@@ -179,6 +188,9 @@ export default {
             } else if (this.cateInfo.value === 4) {
                 url = "/Content/focusList";
             }
+             else if (this.cateInfo.value === 5) {
+                url = "/Content/shTipidList";
+            }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
                 .then((res) => {
@@ -191,7 +203,12 @@ export default {
                                     item.payload = this.topicHighlight(
                                         item.payload
                                     );
-                                    return item;
+                                    if (!!item.hash) {
+                                        item.hash = item.hash;
+                                    } else {
+                                        item.hash = item.shTipid;
+                                    }
+                                return item; 
                                 });
                             });
                         } else {
