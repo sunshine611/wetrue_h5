@@ -102,7 +102,7 @@
 
 	.comment-input {
 		width: 80%;
-		height: 150rpx;
+		height: 230rpx;
 
 		.content {
 			width: 100%;
@@ -110,7 +110,7 @@
 			background-color: rgba(232, 232, 232, 0.57);
 			font-size: 28rpx;
 			padding: 20upx;
-			max-height: 150rpx;
+			max-height: 230rpx;
 			border-radius: 20rpx;
 		}
 	}

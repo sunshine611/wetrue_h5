@@ -129,7 +129,10 @@ export default {
             let loadKeyword = {
                 keyword: this.keyword,
             };
-             this.$http.post("/Topic/info", loadKeyword).then((res) => {
+            let load_total = "";
+            let load_read_sum = "";
+            let load_nickname = "";
+            this.$http.post("/Topic/info", loadKeyword).then((res) => {
                 if (res.code === 200) {
                     this.load_total = res.data.total;
                     this.load_read_sum = res.data.read_sum;
