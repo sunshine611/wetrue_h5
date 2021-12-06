@@ -142,6 +142,7 @@ import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import Clipboard from "clipboard";
+import { mapGetters } from "vuex";
 export default {
     components: {
         HeadImg,
@@ -163,6 +164,7 @@ export default {
         };
     },
     computed: {
+        ...mapGetters(["configInfo"]),
         //国际化
         i18n: {
             get() {
@@ -239,21 +241,14 @@ export default {
         },
         //分享
         share() {
-            let text = this.$refs.mpHtml.getText(),
-                shareText;
+            let url = this.configInfo.frontEndUrl + "" + this.__page__.fullPath;
+            let text = this.$refs.mpHtml.getText();
+            let shareText = "";
             if (text.length > 100) {
                 shareText =
-                    "WeTrue:\n" +
-                    window.location.href +
-                    "\n" +
-                    text.slice(0, 100) +
-                    "...";
+                    "WeTrue:\n" + url + "\n" + text.slice(0, 100) + "...";
             } else {
-                shareText =
-                    "WeTrue:\n" +
-                    window.location.href +
-                    "\n" +
-                    text.slice(0, 100);
+                shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100);
             }
             // #ifdef H5
             let clipboard = new Clipboard("#share", {
