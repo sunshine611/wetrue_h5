@@ -44,11 +44,26 @@
                     </div>
                     <div class="img-list">
                         <u-image
-                            width="150rpx"
-                            height="150rpx"
+                            width="200rpx"
+                            height="200rpx"
                             :src="item.imgTx"
                             v-if="item.imgTx"
                         ></u-image>
+                        <u-image
+                            width="200rpx"
+                            height="200rpx"
+                            :src="item.image"
+                            v-if="item.image"
+                        ></u-image>
+                        <a
+                            class="topic-url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            :href="item.url"
+                            v-if="item.url"
+                        ><span>{{ 
+                            item.simpleUrl 
+                        }}</span></a>
                     </div>
                 </div>
                 <div class="operation">
@@ -139,9 +154,7 @@ export default {
         postList: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr = uni.createSelectorQuery().select(
-                        "#topic-text"
-                    );
+                    const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -166,7 +179,7 @@ export default {
         //是否点赞
         praise(item) {
             let params = {};
-            if (item.hash.slice(0,2) === "th") {
+            if (item.hash.slice(0,3) === "th_") {
                 params = {
                     hash: item.hash,
                     type: "topic",
@@ -279,6 +292,9 @@ export default {
                     /deep/ .topic-text {
                         color: #f04a82;
                     }
+                }
+                .topic-url {
+                    color: #f04a82;
                 }
             }
 
