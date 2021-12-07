@@ -139,8 +139,8 @@ export default {
         postList: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr = document.getElementsByClassName(
-                        "topic-text"
+                    var topicArr = uni.createSelectorQuery().select(
+                        "#topic-text"
                     );
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {

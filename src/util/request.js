@@ -33,7 +33,7 @@ http.interceptors.request.use((config) => {
     }
     if (config.custom.isToast) {
         uni.showLoading({
-            title: "加载中",
+            title: "Loading",
         });
     }
     return config;

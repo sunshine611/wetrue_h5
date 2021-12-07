@@ -176,7 +176,7 @@ export default {
         postInfo: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr = document.getElementsByClassName(
+                    var topicArr = uni.createSelectorQuery().select(
                         "topic-text"
                     );
                     if (topicArr.length > 0) {
