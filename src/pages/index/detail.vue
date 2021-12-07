@@ -96,9 +96,11 @@
                                         </fa-FontAwesome
                                         >{{
                                             item.users.nickname ||
-                                                item.users.userAddress.slice(-4)
+                                            item.users.userAddress.slice(-4)
                                         }}</text
-                                    ><text v-if="item.replyHash">{{ i18n.index.reply }}</text
+                                    ><text v-if="item.replyHash">{{
+                                        i18n.index.reply
+                                    }}</text
                                     ><text
                                         :class="[
                                             'name',
@@ -113,8 +115,8 @@
                                         v-if="item.replyHash"
                                         >{{
                                             "@" +
-                                                (item.receiverName ||
-                                                    item.toAddress.slice(-4))
+                                            (item.receiverName ||
+                                                item.toAddress.slice(-4))
                                         }}</text
                                     >：<mp-html
                                         class="compiler"
@@ -127,7 +129,13 @@
                                 class="all-reply"
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
-                                {{i18n.index.more + " " + item.replyNumber + " " + i18n.index.theReply }}
+                                {{
+                                    i18n.index.more +
+                                    " " +
+                                    item.replyNumber +
+                                    " " +
+                                    i18n.index.theReply
+                                }}
                             </view>
                         </view>
                         <view class="bottom">
@@ -154,7 +162,7 @@
             v-show="commentList.length > 0"
         />
         <u-gap height="80"></u-gap>
-        <div class="bar-opera" v-show="!isShowComment">
+        <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
                     type="fas fa-coins"
@@ -198,6 +206,7 @@
             </div>
         </div>
         <inputComment
+            class="safe-area-inset-bottom"
             ref="inputComment"
             :isShow="isShowComment"
             :placeholder="placeholder"
@@ -253,7 +262,7 @@ export default {
         this.getPostInfo();
         this.pageInfo.page = 1;
         this.getCommentList();
-        setTimeout(function() {
+        setTimeout(function () {
             uni.stopPullDownRefresh();
         }, 500);
     },
@@ -263,20 +272,19 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.hash = option.hash??option.shTipid;
+        this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();
         this.getCommentList();
         uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.contentDetails
+            title: this.i18n.titleBar.contentDetails,
         });
     },
     watch: {
         commentList: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr = document.getElementsByClassName(
-                        "topic-text"
-                    );
+                    var topicArr =
+                        document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -310,18 +318,18 @@ export default {
         getPostInfo() {
             let url = "";
             let params = {};
-            if (this.hash.slice(0,2) === "th") {
+            if (this.hash.slice(0, 2) === "th") {
                 url = "/Content/tx";
                 params = {
                     hash: this.hash,
                 };
-                this.praiseType = 'topic';
+                this.praiseType = "topic";
             } else {
                 url = "/Content/shTipid";
                 params = {
                     shTipid: this.hash,
                 };
-                this.praiseType = 'shTipid';
+                this.praiseType = "shTipid";
             }
             this.$http.post(url, params).then((res) => {
                 if (res.code === 200) {
@@ -329,9 +337,9 @@ export default {
                     this.postInfo.payload = this.topicHighlight(
                         this.postInfo.payload
                     );
-                    if (this.praiseType === 'shTipid') {
+                    if (this.praiseType === "shTipid") {
                         this.postInfo.hash = res.data.shTipid;
-                    };
+                    }
                 }
             });
         },
