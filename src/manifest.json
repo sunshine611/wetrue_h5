@@ -16,10 +16,11 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "safearea": {  
-            "bottom": {  
-                "offset": "auto"  
-            }  
+        "safearea" : {
+            "background" : "#CCCCCC",
+            "bottom" : {
+                "offset" : "auto"
+            }
         },
         /* 模块配置 */
         "modules" : {},

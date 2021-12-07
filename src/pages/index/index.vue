@@ -203,12 +203,14 @@ export default {
                                     item.payload = this.topicHighlight(
                                         item.payload
                                     );
-                                    if (!!item.hash) {
-                                        item.hash = item.hash;
-                                    } else {
+                                    if (this.cateInfo.value === 5) {
                                         item.hash = item.shTipid;
+                                        item.simpleUrl = item.url;
+                                        if (item.url.length > 30) {
+                                            item.simpleUrl = item.url.slice(0, 30)+"...";
+                                        }
                                     }
-                                return item; 
+                                return item;
                                 });
                             });
                         } else {
@@ -221,7 +223,14 @@ export default {
                                         item.payload = this.topicHighlight(
                                             item.payload
                                         );
-                                        return item;
+                                        if (this.cateInfo.value === 5) {
+                                            item.hash = item.shTipid;
+                                            item.simpleUrl = item.url;
+                                            if (item.url.length > 36) {
+                                                item.simpleUrl = item.url.slice(0, 36)+"...";
+                                            }
+                                        }
+                                    return item;
                                     })
                                 );
                             }

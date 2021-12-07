@@ -68,6 +68,9 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
+        this.load_total = "";
+        this.load_read_sum = "";
+        this.load_nickname = "";
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
@@ -129,9 +132,6 @@ export default {
             let loadKeyword = {
                 keyword: this.keyword,
             };
-            let load_total = "";
-            let load_read_sum = "";
-            let load_nickname = "";
             this.$http.post("/Topic/info", loadKeyword).then((res) => {
                 if (res.code === 200) {
                     this.load_total = res.data.total;

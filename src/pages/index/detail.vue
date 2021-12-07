@@ -283,8 +283,7 @@ export default {
         commentList: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr =
-                        document.getElementsByClassName("topic-text");
+                    const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -339,6 +338,10 @@ export default {
                     );
                     if (this.praiseType === "shTipid") {
                         this.postInfo.hash = res.data.shTipid;
+                        this.postInfo.simpleUrl = res.data.url;
+                        if (this.postInfo.url.length > 36) {
+                            this.postInfo.simpleUrl = this.postInfo.url.slice(0, 36)+"...";
+                        }
                     }
                 }
             });

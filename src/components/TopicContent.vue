@@ -50,6 +50,21 @@
                         :src="postInfo.imgTx"
                         v-if="postInfo.imgTx"
                     ></u-image>
+                    <u-image
+                        width="200rpx"
+                        height="200rpx"
+                        :src="postInfo.image"
+                        v-if="postInfo.image"
+                    ></u-image>
+                    <a
+                        class="topic-url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        :href="postInfo.url"
+                        v-if="postInfo.url"
+                    ><span>{{ 
+                        postInfo.simpleUrl 
+                    }}</span></a>
                 </div>
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
@@ -176,9 +191,7 @@ export default {
         postInfo: {
             handler() {
                 this.$nextTick(() => {
-                    var topicArr = document.getElementsByClassName(
-                        "topic-text"
-                    );
+                    const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -243,13 +256,11 @@ export default {
         share() {
             let url = this.configInfo.frontEndUrl + "" + this.__page__.fullPath;
             let text = this.$refs.mpHtml.getText();
-            let shareText = "";
+            let shareTextLength = "";
             if (text.length > 100) {
-                shareText =
-                    "WeTrue:\n" + url + "\n" + text.slice(0, 100) + "...";
-            } else {
-                shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100);
+                shareTextLength = "...";
             }
+            let shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100) + shareTextLength;
             // #ifdef H5
             let clipboard = new Clipboard("#share", {
                 text: (trigger) => {
@@ -349,6 +360,9 @@ export default {
                 /deep/ .topic-text {
                     color: #f04a82;
                 }
+            }
+            .topic-url {
+                color: #f04a82;
             }
             .reward {
                 background: #f1f1f1;
