@@ -243,13 +243,11 @@ export default {
         share() {
             let url = this.configInfo.frontEndUrl + "" + this.__page__.fullPath;
             let text = this.$refs.mpHtml.getText();
-            let shareText = "";
+            let shareTextLength = "";
             if (text.length > 100) {
-                shareText =
-                    "WeTrue:\n" + url + "\n" + text.slice(0, 100) + "...";
-            } else {
-                shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100);
+                shareTextLength = "...";
             }
+            let shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100) + shareTextLength;
             // #ifdef H5
             let clipboard = new Clipboard("#share", {
                 text: (trigger) => {
