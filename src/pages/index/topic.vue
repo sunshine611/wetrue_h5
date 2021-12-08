@@ -1,5 +1,5 @@
 <template>
-    <view class="myTopic">
+    <view class="topic">
         <u-navbar :title="keyword">
             <div slot="right">
                 <u-icon
@@ -11,17 +11,23 @@
                 ></u-icon>
             </div>
         </u-navbar>
-    <div class="myTopicBar">
-        <br>
-        <div class="topic-info">
-            这里原本有美美的Topic信息，ui设计师跑路，以后再做：<br>
-            Views:{{this.load_read_sum}}  
-            Discuss:{{this.load_total}}  
-            nickname:{{this.load_nickname}}
+        <div class="tipic-info">
+            <div class="topic-box">
+                <u-image v-if="postInfo.imgIcon" class="topic-img" width="100rpx" height="100rpx" :src="postInfo.imgIcon" border-radius="10" bg-color="#f04a82"></u-image>
+                <u-image v-else class="topic-img" width="100rpx" height="100rpx" src="../../static/logo_1.png" border-radius="10" bg-color="#f04a82"></u-image>
+                <div class="topic-title">
+                    <u-gap height="10"></u-gap>
+                    <b>{{postInfo.keyword}}</b>
+                    <u-gap height="10"></u-gap>
+                    <div class="font-26">{{postInfo.describe}}</div>
+                </div>
+            </div>
+            <div class="topic-data">
+                <div>创建人：{{postInfo.nickname}}</div>
+                <div>阅读量：{{postInfo.read_sum}}</div>
+                <div>话题数：{{postInfo.total}}</div>
             </div>
         </div>
-        <br>
-    </div>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -46,6 +52,7 @@ export default {
         return {
             keyword: "", //话题关键字
             postList: [], //帖子列表
+            postInfo: [], //帖子信息
             pageInfo: {
                 page: 1,
                 pageSize: 10,
@@ -58,7 +65,8 @@ export default {
     onPullDownRefresh() {
         this.pageInfo.page = 1;
         this.getPostList();
-        setTimeout(function() {
+        this.getTopicInfo();
+        setTimeout(function () {
             uni.stopPullDownRefresh();
         }, 500);
     },
@@ -68,14 +76,11 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.load_total = "";
-        this.load_read_sum = "";
-        this.load_nickname = "";
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
         uni.setNavigationBarTitle({
-        　　title:`${this.i18n.titleBar.topic}-${this.keyword}`
+            title: `${this.i18n.titleBar.topic}-${this.keyword}`,
         });
     },
     computed: {
@@ -128,15 +133,14 @@ export default {
                 }
             });
         },
-         getTopicInfo() {
-            let loadKeyword = {
+        //获取帖子信息
+        getTopicInfo() {
+            let params = {
                 keyword: this.keyword,
             };
-            this.$http.post("/Topic/info", loadKeyword).then((res) => {
+            this.$http.post("/Topic/info", params).then((res) => {
                 if (res.code === 200) {
-                    this.load_total = res.data.total;
-                    this.load_read_sum = res.data.read_sum;
-                    this.load_nickname = res.data.nickname;
+                    this.postInfo = res.data;
                 }
             });
         },
@@ -145,14 +149,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.myTopic {
-};
-.myTopicBar {
-    .topic-info {
-        background: #f04a82;
-        width: 100%;
-        height: 100upx;
+.topic {
+    .tipic-info {
+        background: #fff;
+        min-height: 100upx;
         position: relative;
+        margin-bottom:20rpx;
+        padding:40rpx 40rpx 30rpx 40rpx;
+        box-shadow: 0px 2px 6px 0px rgba(153,153,153,0.3);
+        .topic-box{
+            overflow: hidden;
+            margin-bottom:40rpx;
+            .topic-img{
+                float: left;
+                margin-right:24rpx;
+            }
+        }
+        .topic-data{
+            display: flex;
+            justify-content: space-between;
+            font-size: 24rpx;
+            color:#666;
+            border-top:1px solid #eee;
+            padding-top:20rpx;
+        }
     }
 }
 </style>
