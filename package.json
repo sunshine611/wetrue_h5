@@ -42,7 +42,7 @@
     "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i"
   },
   "dependencies": {
-    "@aeternity/aepp-sdk": "^9.0.1",
+    "@aeternity/aepp-sdk": "^8.2.1",
     "@chenfengyuan/vue-qrcode": "^1.0.2",
     "@dcloudio/uni-app-plus": "^2.0.0-31920210514002",
     "@dcloudio/uni-h5": "^2.0.0-31920210514002",
