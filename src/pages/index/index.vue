@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <u-navbar :is-back="false">
+        <!-- <u-navbar :is-back="false">
             <view class="slot-wrap nav">
                 <u-dropdown
                     ref="uDropdown"
@@ -45,7 +45,19 @@
                     </fa-FontAwesome>
                 </div>
             </view>
-        </u-navbar>
+        </u-navbar> -->
+        <div class="nav">
+            <u-tabs
+                :list="categoryList"
+                :is-scroll="true"
+                @change="selectCategory"
+                :current="current"
+                active-color="#f04a82"
+                bg-color="#fafafa"
+                class="nav-tab"
+            ></u-tabs>
+        </div>
+        <u-gap height="90"></u-gap>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -60,6 +72,15 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
+        <div class="post" v-if="validLogin()">
+            <fa-FontAwesome
+                type="fas fa-plus"
+                size="36"
+                color="#fff"
+                @tap="goUrl('editor')"
+            >
+            </fa-FontAwesome>
+        </div>
     </view>
 </template>
 
@@ -77,7 +98,7 @@ export default {
     data() {
         return {
             language: getStore("language"),
-            index: 0, //类别ID
+            current: 0, //tab当前选项
             cateInfo: {
                 value: 1,
                 label: "",
@@ -101,7 +122,7 @@ export default {
         this.pageInfo.page = 1;
         this.getPostList();
         this.getUnreadMsg();
-        setTimeout(function() {
+        setTimeout(function () {
             uni.stopPullDownRefresh();
         }, 500);
     },
@@ -121,7 +142,7 @@ export default {
             this.language = getStore("language");
         }
         uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.index
+            title: this.i18n.titleBar.index,
         });
     },
     activated() {
@@ -149,24 +170,19 @@ export default {
         categoryList() {
             return [
                 {
-                    label: this.i18n.home.newRelease,
-                    value: 1,
+                    name: this.i18n.home.newRelease,
                 },
                 {
-                    label: this.i18n.home.hotRecommend,
-                    value: 2,
+                    name: this.i18n.home.hotRecommend,
                 },
                 {
-                    label: this.i18n.home.newPic,
-                    value: 3,
+                    name: this.i18n.home.newPic,
                 },
                 {
-                    label: this.i18n.home.myFocus,
-                    value: 4,
+                    name: this.i18n.home.myFocus,
                 },
                 {
-                    label: 'SuperHero',
-                    value: 5,
+                    name: "SuperHero",
                 },
             ];
         },
@@ -179,16 +195,15 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
             };
-            if (this.cateInfo.value === 1) {
+            if (this.current === 0) {
                 url = "/Content/list";
-            } else if (this.cateInfo.value === 2) {
+            } else if (this.current === 1) {
                 url = "/Content/hotRec";
-            } else if (this.cateInfo.value === 3) {
+            } else if (this.current === 2) {
                 url = "/Image/list";
-            } else if (this.cateInfo.value === 4) {
+            } else if (this.current === 3) {
                 url = "/Content/focusList";
-            }
-             else if (this.cateInfo.value === 5) {
+            } else if (this.current === 4) {
                 url = "/Content/shTipidList";
             }
             this.$http
@@ -207,10 +222,11 @@ export default {
                                         item.hash = item.shTipid;
                                         item.simpleUrl = item.url;
                                         if (item.url.length > 30) {
-                                            item.simpleUrl = item.url.slice(0, 30)+"...";
+                                            item.simpleUrl =
+                                                item.url.slice(0, 30) + "...";
                                         }
                                     }
-                                return item;
+                                    return item;
                                 });
                             });
                         } else {
@@ -227,10 +243,12 @@ export default {
                                             item.hash = item.shTipid;
                                             item.simpleUrl = item.url;
                                             if (item.url.length > 36) {
-                                                item.simpleUrl = item.url.slice(0, 36)+"...";
+                                                item.simpleUrl =
+                                                    item.url.slice(0, 36) +
+                                                    "...";
                                             }
                                         }
-                                    return item;
+                                        return item;
                                     })
                                 );
                             }
@@ -241,15 +259,8 @@ export default {
                 });
         },
         //选择类别
-        selectCategory(val) {
-            for (let i in this.categoryList) {
-                if (this.categoryList[i].value === val) {
-                    this.index = i;
-                    this.cateInfo.value = val;
-                    this.cateInfo.label = this.categoryList[i].label;
-                    break;
-                }
-            }
+        selectCategory(index) {
+            this.current = index;
             this.postList = [];
             this.pageInfo = {
                 page: 1,
@@ -296,36 +307,60 @@ export default {
 <style lang="scss" scoped>
 .index {
     .nav {
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
         width: 100%;
-        position: relative;
-
-        .u-dropdown {
-            background-color: #fafafa;
-            border-bottom: 1rpx solid #ddd;
-            height: 44px;
-        }
-
-        .left {
-            position: absolute;
-            height: 44px;
-            left: 25rpx;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .right {
-            position: absolute;
-            height: 44px;
-            right: 20rpx;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+        height: 88rpx;
+        .nav-tab {
+            border-bottom: 1px solid #ddd;
         }
     }
+    .post{
+        position: fixed;
+        right:60rpx;
+        bottom: 150rpx;
+        background:rgba(#f04a82,0.75) ;
+        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82,0.3);
+        width:80rpx;
+        height:80rpx;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    // .nav {
+
+    //     position: relative;
+
+    //     .u-dropdown {
+    //         background-color: #fafafa;
+    //         border-bottom: 1rpx solid #ddd;
+    //         height: 44px;
+    //     }
+
+    //     .left {
+    //         position: absolute;
+    //         height: 44px;
+    //         left: 25rpx;
+    //         top: 0;
+    //         display: flex;
+    //         align-items: center;
+    //         justify-content: center;
+    //         z-index: 100;
+    //     }
+
+    //     .right {
+    //         position: absolute;
+    //         height: 44px;
+    //         right: 20rpx;
+    //         top: 0;
+    //         display: flex;
+    //         align-items: center;
+    //         justify-content: center;
+    //         z-index: 100;
+    //     }
+    // }
 }
 </style>
