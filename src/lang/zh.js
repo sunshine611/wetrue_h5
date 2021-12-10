@@ -20,10 +20,10 @@ export default {
 		my :'我的',
 	},
 	home: {
-		newRelease: '最新发布',
-		hotRecommend: '热点推荐',
-		newPic :'最新图片',
-		myFocus: '我的关注',
+		newRelease: '最新',
+		hotRecommend: '推荐',
+		newPic :'图片',
+		myFocus: '关注',
 		index:'首页',
 	},
 	login:{

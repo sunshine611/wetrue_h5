@@ -20,10 +20,10 @@ export default {
 		my :'My',
 	},
 	home: {
-		newRelease: 'Latest Tips',
+		newRelease: 'Latest',
 		hotRecommend: 'For You',
-		newPic: 'Pictures Tips',
-		myFocus: 'My Following',
+		newPic: 'Pictures',
+		myFocus: 'Following',
 		index:'Index',
 	},
 	login:{
