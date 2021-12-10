@@ -23,9 +23,9 @@
                 </div>
             </div>
             <div class="topic-data">
-                <div>创建人：{{postInfo.nickname}}</div>
-                <div>阅读量：{{postInfo.read_sum}}</div>
-                <div>话题数：{{postInfo.total}}</div>
+                <div>{{i18n.index.views + '：' + postInfo.read_sum}}</div>
+                <div>{{i18n.index.discuss + '：' + postInfo.total}}</div>
+                <div>{{i18n.index.founder + '：' + postInfo.nickname}}</div>
             </div>
         </div>
         <TopicList :postList="postList"></TopicList>
