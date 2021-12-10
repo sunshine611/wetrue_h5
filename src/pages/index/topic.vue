@@ -23,9 +23,11 @@
                 </div>
             </div>
             <div class="topic-data">
-                <div>{{i18n.index.views + '：' + postInfo.read_sum}}</div>
-                <div>{{i18n.index.discuss + '：' + postInfo.total}}</div>
-                <div>{{i18n.index.founder + '：' + postInfo.nickname}}</div>
+                <div>{{ i18n.index.views + '：' + postInfo.read_sum }}</div>
+                <div>{{ i18n.index.discuss + '：' + postInfo.total }}</div>
+                <div 
+                    @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.sender_id)"
+                >{{ i18n.index.founder + '：' + postInfo.nickname }}</div>
             </div>
         </div>
         <TopicList :postList="postList"></TopicList>
