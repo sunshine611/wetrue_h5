@@ -319,6 +319,7 @@ export default {
     }
     .post{
         position: fixed;
+        z-index:1000;
         right:60rpx;
         bottom: 150rpx;
         background:rgba(#f04a82,0.75) ;
