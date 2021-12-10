@@ -61,9 +61,10 @@
                             rel="noopener noreferrer"
                             :href="item.url"
                             v-if="item.url"
-                        ><span>{{ 
-                            item.simpleUrl 
-                        }}</span></a>
+                        ><span>
+                                {{ item.simpleUrl }}
+                            </span>
+                        </a>
                     </div>
                 </div>
                 <div class="operation">
