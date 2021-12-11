@@ -35,9 +35,6 @@
                 <div class="warnning" v-show="warning.mnemonic">
                     {{ i18n.login.mnemonicWarning }}
                 </div>
-                <div class="warnning" v-show="warning.mnemonicFormat">
-                    {{ i18n.login.mnemonicFormat }}
-                </div>
                 <u-gap height="30"></u-gap>
                 <div class="form-title">{{ i18n.Setpassword }}</div>
                 <u-gap height="14"></u-gap>
@@ -82,10 +79,8 @@
 </template>
 
 <script>
-import {
-    generateSaveHDWallet,
-    getHdWalletAccountFromMnemonic,
-} from "@aeternity/aepp-sdk/es/utils/hd-wallet";
+import { getHdWalletAccountFromMnemonic } from "@aeternity/aepp-sdk/es/utils/hd-wallet";
+import { validateMnemonic } from '@aeternity/bip39';
 import { dump } from "@aeternity/aepp-sdk/es/utils/keystore";
 import { getStore } from "@/util/service";
 export default {
@@ -94,13 +89,11 @@ export default {
             //表单
             form: {
                 mnemonic: "",
-                mnemonicFormat: "",
                 password: "",
             },
             //表单验证
             warning: {
                 mnemonic: false,
-                mnemonicFormat: false,
                 password: false,
             },
             loading: false, //按钮加载状态
@@ -129,19 +122,17 @@ export default {
         },
         //导入助记词
         async importMnemonic() {
-            if (!this.form.mnemonic) {
+            const newMnemonic = this.form.mnemonic
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .replace(/[^a-z ]/g, '')
+                .trim();
+            if (!newMnemonic || !validateMnemonic(newMnemonic)) {
                 this.warning.mnemonic = true;
                 this.loading = false;
                 return;
             } else {
                 this.warning.mnemonic = false;
-            }
-            try {
-                await generateSaveHDWallet(this.form.mnemonic, 0);
-            } catch (err) {
-                this.warning.mnemonicFormat = true;
-                this.loading = false;
-                return;
             }
             if (!this.form.password || this.form.password.length < 6) {
                 this.warning.password = true;
@@ -152,19 +143,20 @@ export default {
             }
             //助记词转换成钱包地址和秘钥
             let publicKeyInsecretKey = await getHdWalletAccountFromMnemonic(
-                this.form.mnemonic,
+                newMnemonic,
                 0
             );
             //通过密码和私钥生成keystore
+            let newPassword = this.cryptoPassword(this.form.password);
             await dump(
                 "WeTrueWallet",
-                this.cryptoPassword(this.form.password),
+                newPassword,
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
                 this.$store.commit(
                     "user/SET_PASSWORD",
-                    this.cryptoPassword(this.form.password)
+                    newPassword
                 );
                 this.$store.dispatch("user/setKeystoreArr", keystore);
             });

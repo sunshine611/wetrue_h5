@@ -109,15 +109,16 @@ export default {
         },
         //检查密码是否和keystore匹配
         async check() {
+            const newPassword = this.cryptoPassword(this.form.password);
             try {
                 const secretKey = await this.keystoreToSecretKey(
-                    this.cryptoPassword(this.form.password)
+                    newPassword
                 );
                 if (!!secretKey) {
                     this.uShowToast(this.i18n.login.loginSuccess);
                     this.$store.commit(
                         "user/SET_PASSWORD",
-                        this.cryptoPassword(this.form.password)
+                        newPassword
                     );
                     this.getConfigInfo();
                     this.getUnreadMsg();

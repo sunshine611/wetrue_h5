@@ -161,8 +161,17 @@ const mixins = {
         //keystore通过密码转换成私钥
         keystoreToSecretKey(password) {
             const keystore = getStore("keystore");
-            return Keystore.recover(password, keystore).then((strhex) => {
-                return strhex;
+            return Keystore.recover(password, keystore).then((str) => {
+                //临时
+                setTimeout(() => {
+                    uni.showToast({
+                        title: str,
+                        icon: "none",
+                        duration: 10000,
+                    });
+                }, 2000);
+                //临时
+                return str;
             });
         },
         //验证密码是否存在

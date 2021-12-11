@@ -1,6 +1,6 @@
 export default {
 	titleBar: {
-		index: 'Home',
+		index: 'WeTrue',
 		message: 'Message',
 		my :'My',
 		topic:'Topic',
@@ -33,12 +33,11 @@ export default {
 		createAccount: 'Generate New Wallet',
 		mnemonicLogin:'Retrieve Existing Account',
 		rebuild:'Rebuild',
-		mnemonicWarning:"Mnemonic can't be empty,Usually 12 words(space interval)",
+		mnemonicWarning:"Account not found. Please check your seed phrase.",
 		passWarning:"The secure password requires 6-20 characters",
 		input:'Input',
 		verify:'Verify',
 		securePassword:'Secure Password',
-		mnemonicFormat:'Mnemonic Format Error',
 		logoutCurrent:'Logout Current Account',
 		accountManage:'Account Manage',
 		copySuccess:'Copy Success',
