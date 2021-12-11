@@ -218,13 +218,8 @@ export default {
                                     item.payload = this.topicHighlight(
                                         item.payload
                                     );
-                                    if (this.cateInfo.value === 5) {
+                                    if (this.current === 4) {
                                         item.hash = item.shTipid;
-                                        item.simpleUrl = item.url;
-                                        if (item.url.length > 30) {
-                                            item.simpleUrl =
-                                                item.url.slice(0, 30) + "...";
-                                        }
                                     }
                                     return item;
                                 });
@@ -239,14 +234,8 @@ export default {
                                         item.payload = this.topicHighlight(
                                             item.payload
                                         );
-                                        if (this.cateInfo.value === 5) {
+                                        if (this.current === 4) {
                                             item.hash = item.shTipid;
-                                            item.simpleUrl = item.url;
-                                            if (item.url.length > 36) {
-                                                item.simpleUrl =
-                                                    item.url.slice(0, 36) +
-                                                    "...";
-                                            }
                                         }
                                         return item;
                                     })

@@ -338,10 +338,6 @@ export default {
                     );
                     if (this.praiseType === "shTipid") {
                         this.postInfo.hash = res.data.shTipid;
-                        this.postInfo.simpleUrl = res.data.url;
-                        if (this.postInfo.url.length > 36) {
-                            this.postInfo.simpleUrl = this.postInfo.url.slice(0, 36)+"...";
-                        }
                     }
                 }
             });

@@ -88,28 +88,28 @@ export default {
             //标签列表
             tagList: [
                 {
-                    text: "10WTT",
-                    value: 10,
+                    text: "1WTT",
+                    value: 1,
                 },
                 {
-                    text: "50WTT",
-                    value: 50,
+                    text: "6WTT",
+                    value: 6,
                 },
                 {
-                    text: "100WTT",
-                    value: 100,
+                    text: "18WTT",
+                    value: 18,
                 },
                 {
-                    text: "188WTT",
-                    value: 188,
+                    text: "66WTT",
+                    value: 66,
+                },
+                {
+                    text: "520WTT",
+                    value: 520,
                 },
                 {
                     text: "680WTT",
                     value: 680,
-                },
-                {
-                    text: "1888WTT",
-                    value: 1888,
                 },
             ],
             warning: {

@@ -62,9 +62,10 @@
                         rel="noopener noreferrer"
                         :href="postInfo.url"
                         v-if="postInfo.url"
-                    ><span>{{ 
-                        postInfo.simpleUrl 
-                    }}</span></a>
+                    ><span>
+                            {{ postInfo.simpleUrl }}
+                        </span>
+                    </a>
                 </div>
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
