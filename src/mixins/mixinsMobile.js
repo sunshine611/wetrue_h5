@@ -162,15 +162,6 @@ const mixins = {
         keystoreToSecretKey(password) {
             const keystore = getStore("keystore");
             return Keystore.recover(password, keystore).then((str) => {
-                //临时
-                setTimeout(() => {
-                    uni.showToast({
-                        title: str,
-                        icon: "none",
-                        duration: 10000,
-                    });
-                }, 2000);
-                //临时
                 return str;
             });
         },
