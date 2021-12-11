@@ -46,7 +46,7 @@
                 </div>
             </view>
         </u-navbar> -->
-        <div class="nav">
+        <u-navbar :is-back="false" class="nav">
             <u-tabs
                 :list="categoryList"
                 :is-scroll="true"
@@ -56,8 +56,7 @@
                 bg-color="#fafafa"
                 class="nav-tab"
             ></u-tabs>
-        </div>
-        <u-gap height="90"></u-gap>
+        </u-navbar>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -72,7 +71,7 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <div class="post" v-if="validLogin()">
+        <div class="post safe-area-inset-bottom" v-if="validLogin()">
             <fa-FontAwesome
                 type="fas fa-plus"
                 size="36"
@@ -183,7 +182,7 @@ export default {
                 },
                 {
                     name: "SuperHero",
-                },
+                }
             ];
         },
     },
@@ -296,61 +295,27 @@ export default {
 <style lang="scss" scoped>
 .index {
     .nav {
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 88rpx;
+        /deep/ .u-navbar-inner {
+            display: inline!important;
+        }
         .nav-tab {
-            border-bottom: 1px solid #ddd;
+            width: 100%;
         }
     }
-    .post{
+
+    .post {
         position: fixed;
-        z-index:1000;
-        right:60rpx;
+        z-index: 1000;
+        right: 60rpx;
         bottom: 150rpx;
-        background:rgba(#f04a82,0.75) ;
-        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82,0.3);
-        width:80rpx;
-        height:80rpx;
+        background: rgba(#f04a82, 0.75);
+        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82, 0.3);
+        width: 80rpx;
+        height: 80rpx;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    // .nav {
-
-    //     position: relative;
-
-    //     .u-dropdown {
-    //         background-color: #fafafa;
-    //         border-bottom: 1rpx solid #ddd;
-    //         height: 44px;
-    //     }
-
-    //     .left {
-    //         position: absolute;
-    //         height: 44px;
-    //         left: 25rpx;
-    //         top: 0;
-    //         display: flex;
-    //         align-items: center;
-    //         justify-content: center;
-    //         z-index: 100;
-    //     }
-
-    //     .right {
-    //         position: absolute;
-    //         height: 44px;
-    //         right: 20rpx;
-    //         top: 0;
-    //         display: flex;
-    //         align-items: center;
-    //         justify-content: center;
-    //         z-index: 100;
-    //     }
-    // }
 }
 </style>
