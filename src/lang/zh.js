@@ -1,6 +1,6 @@
 export default {
 	titleBar: {
-		index: '首页',
+		index: 'WeTrue',
 		message: '消息',
 		my :'我的',
 		topic:'话题',
@@ -33,12 +33,11 @@ export default {
 		createAccount: "创建新账户",
 		mnemonicLogin:'助记词登陆',
 		rebuild:'重新生成',
-		mnemonicWarning:'助记词不能为空，一般为12个单词(空格间隔)',
+		mnemonicWarning:'帐户不存在，请检查你的助记词。',
 		passWarning:'安全密码要求6-20位',
 		input:'输入',
 		verify:'验证',
 		securePassword:'安全密码',
-		mnemonicFormat:'助记词格式错误',
 		logoutCurrent:'退出当前账户',
 		accountManage:'账户管理',
 		copySuccess:'复制成功',
