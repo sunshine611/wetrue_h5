@@ -138,7 +138,7 @@ export default {
 		receivingAddress:'Receiving Address',
 		copySuccess:'Copy Success',
 		reward:'Reward',
-		rewardTips:"Please don't reward yourself!",
+		rewardTips:"Please don't reward yourself",
 		rewardSuccess:'Reward Success',
 		recordList:'Record List',
 		recordMan:'Record Man',

@@ -255,7 +255,7 @@ export default {
         },
         //分享
         share() {
-            let url = this.configInfo.frontEndUrl + "" + this.__page__.fullPath;
+            let url = this.configInfo.frontEndUrl + this.__page__.fullPath;
             let text = this.$refs.mpHtml.getText();
             let shareTextLength = "";
             if (text.length > 100) {
