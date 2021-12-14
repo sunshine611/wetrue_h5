@@ -75,7 +75,7 @@
             <fa-FontAwesome
                 type="fas fa-plus"
                 size="36"
-                color="#fff"
+                color="rgba(255,255,255,0.9)"
                 @tap="goUrl('editor')"
             >
             </fa-FontAwesome>
@@ -312,7 +312,7 @@ export default {
         box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82, 0.3);
         width: 80rpx;
         height: 80rpx;
-        border-radius: 50%;
+        border-radius: 40rpx;
         display: flex;
         justify-content: center;
         align-items: center;
