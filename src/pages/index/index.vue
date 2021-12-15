@@ -71,7 +71,10 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <PostTopicButton :postTopicInfo="postTopicInfo" v-show="postTopicButtonShow"></PostTopicButton>
+        <PostTopicButton
+            :postTopicInfo="postTopicInfo"
+            v-show="postTopicButtonShow"
+        ></PostTopicButton>
     </view>
 </template>
 
