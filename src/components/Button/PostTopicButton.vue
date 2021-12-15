@@ -36,7 +36,6 @@ export default {
     methods: {
         //发帖
         post() {
-            console.log(this.postTopicInfo);
             if (this.postTopicInfo.type === 'topic') {
                 this.goUrl(
                     "editor?topic=" + this.postTopicInfo.keyword
