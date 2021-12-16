@@ -2,9 +2,9 @@ import { thirdPartyComm } from "@/util/thirdPartySource/comm";
 
 /**
  * Box aepp 发布模块
- * boxPostTopic 发布主贴
- * boxPostComment 发布评论
- * boxPostReply 发布回复
+ * topic 发布主贴
+ * comment 发布评论
+ * reply 发布回复
  */
 
 export const boxPost = function(payload) {
