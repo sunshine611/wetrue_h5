@@ -31,7 +31,7 @@ export const boxPost = function(payload) {
     } else {
         content = {
             type: "tips",
-            message: "打赏不能用，请访问完整版",
+            message: "该功能无法使用，请访问 WeTrue.io",
         };
     }
 
