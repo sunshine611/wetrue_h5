@@ -149,6 +149,8 @@ export default {
                 }
             });
             this.language = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
         }
         uni.setNavigationBarTitle({
             title: this.i18n.titleBar.index,
@@ -278,8 +280,8 @@ export default {
             }
             //控制语言显示
             this.language = getStore("language");
-            moment.locale(getStore("language"));
-            this.$_i18n.locale = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
             let index = parseInt(this.index) + 1;
             this.cateInfo.value = index;
             this.cateInfo.label = this.categoryList[this.index].label;
