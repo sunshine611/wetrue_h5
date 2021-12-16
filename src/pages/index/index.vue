@@ -71,15 +71,10 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <div class="post safe-area-inset-bottom" v-if="validLogin()">
-            <fa-FontAwesome
-                type="fas fa-plus"
-                size="36"
-                color="rgba(255,255,255,0.9)"
-                @tap="goUrl('editor')"
-            >
-            </fa-FontAwesome>
-        </div>
+        <PostTopicButton
+            :postTopicInfo="postTopicInfo"
+            v-show="postTopicButtonShow"
+        ></PostTopicButton>
     </view>
 </template>
 
@@ -88,11 +83,13 @@ import { getStore, setStore } from "@/util/service";
 import { version } from "@/config/config.js";
 import moment from "moment";
 import TopicList from "../../components/TopicList.vue";
+import PostTopicButton from "../../components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
 export default {
     components: {
         TopicList,
         VersionTip,
+        PostTopicButton,
     },
     data() {
         return {
@@ -114,6 +111,7 @@ export default {
             versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
+            postTopicInfo: {}, //发帖组件
         };
     },
     //上拉刷新
@@ -194,6 +192,7 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
             };
+            this.postTopicButtonShow = true;
             if (this.current === 0) {
                 url = "/Content/list";
             } else if (this.current === 1) {
@@ -204,6 +203,7 @@ export default {
                 url = "/Content/focusList";
             } else if (this.current === 4) {
                 url = "/Content/shTipidList";
+                this.postTopicButtonShow = false;
             }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
@@ -301,21 +301,6 @@ export default {
         .nav-tab {
             width: 100%;
         }
-    }
-
-    .post {
-        position: fixed;
-        z-index: 1000;
-        right: 60rpx;
-        bottom: 150rpx;
-        background: rgba(#f04a82, 0.75);
-        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82, 0.3);
-        width: 80rpx;
-        height: 80rpx;
-        border-radius: 40rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 }
 </style>

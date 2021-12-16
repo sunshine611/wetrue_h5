@@ -40,15 +40,18 @@
             :status="more"
             v-show="postList.length > 0"
         />
+        <PostTopicButton :postTopicInfo="postTopicInfo"></PostTopicButton>
     </view>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import TopicList from "../../components/TopicList.vue";
+import PostTopicButton from "../../components/Button/PostTopicButton.vue";
 export default {
     components: {
         TopicList,
+        PostTopicButton,
     },
     data() {
         return {
@@ -84,6 +87,10 @@ export default {
         uni.setNavigationBarTitle({
             title: `${this.i18n.titleBar.topic}-${this.keyword}`,
         });
+        this.postTopicInfo = {
+            type: "topic",
+            keyword: option.keyword
+        };
     },
     computed: {
         ...mapGetters(["token"]),

@@ -46,9 +46,13 @@ export default {
 			fileList:[],//文件列表
         };
     },
-    onLoad() {
+    onLoad(option) {
         this.isPassword();
-		
+        if (!!option.topic) {
+            this.form= {
+                text: option.topic + " ",
+            };
+        }
     },
     activated() {
         this.isPassword();
