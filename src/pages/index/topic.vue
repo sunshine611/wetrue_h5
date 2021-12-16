@@ -64,6 +64,7 @@ export default {
                 totalPage: 1,
             }, //页码信息
             more: "loadmore", //加载更多
+            postTopicInfo:{},//话题信息
         };
     },
     //上拉刷新

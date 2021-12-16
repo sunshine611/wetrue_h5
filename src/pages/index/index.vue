@@ -72,7 +72,6 @@
             :versionInfo="versionInfo"
         ></VersionTip>
         <PostTopicButton
-            :postTopicInfo="postTopicInfo"
             v-show="postTopicButtonShow"
         ></PostTopicButton>
     </view>
@@ -111,7 +110,7 @@ export default {
             versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
-            postTopicInfo: {}, //发帖组件
+            postTopicButtonShow:true,//控制发帖按钮显隐
         };
     },
     //上拉刷新

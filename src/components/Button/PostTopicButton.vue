@@ -16,7 +16,9 @@ export default {
     props: {
         postTopicInfo: {
             type: Object,
-            default: () => {},
+            default: () => {
+                return {}
+            },
         },
     },
     data() {
