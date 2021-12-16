@@ -130,12 +130,24 @@ export default {
         this.getUnreadMsg();
     },
     onLoad(option) {
+        console.log(uni.getSystemInfo());
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
         if (!getStore("language")) {
-            setStore("language", "zh-cn");
+            uni.getSystemInfo({
+				success: function(res){
+					if (res.language === "zh-CN") {
+                        setStore("language", "zh-cn");
+                    } else {
+                        setStore("language", "en");
+                    }
+				},
+                fail: function(){
+                    setStore("language", "en");
+                }
+            });
             this.language = getStore("language");
         }
         uni.setNavigationBarTitle({
