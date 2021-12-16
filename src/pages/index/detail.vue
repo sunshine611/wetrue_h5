@@ -224,6 +224,9 @@ import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
 import Name from "@/components/Name";
+import { getThirdPartySource } from "@/util/thirdPartySource/source";
+import { boxPost } from "@/util/thirdPartySource/boxPost";
+
 export default {
     components: {
         inputComment,
@@ -386,6 +389,25 @@ export default {
         //评论
         comment(item) {
             if (!this.validLogin()) {
+                //第三方来源box发布主贴
+                if (getThirdPartySource() === "box") {
+                    let boxPostPayload;
+                    if (item) {
+                        boxPostPayload = {
+                            boxPostType: "reply",
+                            replyType: "comment",
+                            toHash: item.hash
+                        };
+                    } else {
+                        boxPostPayload = {
+                            boxPostType: "comment",
+                            toHash: this.hash,
+                        };
+                    }
+                    boxPost(boxPostPayload);
+                    return false;
+                }
+
                 uni.showToast({
                     title: this.i18n.index.pleaseLogin,
                     icon: "none",
@@ -413,6 +435,19 @@ export default {
         //回复
         reply(item) {
             if (!this.validLogin()) {
+                //第三方来源box发布主贴
+                if (getThirdPartySource() === "box") {
+                    let boxPostPayload = {
+                        boxPostType: "reply",
+                        replyType: "reply",
+                        toHash: item.toHash,
+                        toAddress: item.users.userAddress,
+                        replyHash: item.hash,
+                    };
+                    boxPost(boxPostPayload);
+                    return false;
+                }
+
                 uni.showToast({
                     title: this.i18n.index.pleaseLogin,
                     icon: "none",
@@ -444,15 +479,14 @@ export default {
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
-                    hash: this.currentComment.hash,
-                    toHash: this.currentComment.toHash,
+                    toHash: this.currentComment.hash,
                     content: content,
                 };
                 res = await this.wetrueSend("reply", payload);
             } else if (this.commentType === "replyPerson") {
                 let payload = {
                     type: "reply",
-                    hash: this.currentComment.toHash,
+                    toHash: this.currentComment.toHash,
                     replyHash: this.currentComment.hash,
                     address: this.currentComment.users.userAddress,
                     content: content,
@@ -478,6 +512,13 @@ export default {
         //打赏
         reward() {
             if (!this.validLogin()) {
+                //第三方来源box发布主贴
+                if (getThirdPartySource() === "box") {
+                    let boxPostPayload = { boxPostType: "reward" };
+                    boxPost(boxPostPayload);
+                    return false;
+                }
+
                 uni.showToast({
                     title: this.i18n.index.pleaseLogin,
                     icon: "none",

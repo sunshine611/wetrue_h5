@@ -79,6 +79,7 @@
 
 <script>
 import { getStore, setStore } from "@/util/service";
+import { setThirdPartySource } from "@/util/thirdPartySource/source";
 import { version } from "@/config/config.js";
 import moment from "moment";
 import TopicList from "../../components/TopicList.vue";
@@ -128,7 +129,7 @@ export default {
         this.getPostList();
         this.getUnreadMsg();
     },
-    onLoad() {
+    onLoad(option) {
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
@@ -140,6 +141,7 @@ export default {
         uni.setNavigationBarTitle({
             title: this.i18n.titleBar.index,
         });
+        setThirdPartySource(option);
     },
     activated() {
         this.getUnreadMsg();

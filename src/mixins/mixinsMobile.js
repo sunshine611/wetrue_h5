@@ -180,11 +180,22 @@ const mixins = {
                 }
             }
         },
-        //验证是否登录
+        //验证是否keystore登录
         validLogin() {
             if (
                 JSON.stringify(getStore("keystore")) === "{}" ||
                 !getStore("keystore")
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        //验证是否token存在
+        validToken() {
+            if (
+                JSON.stringify(getStore("token")) === "" ||
+                !getStore("token")
             ) {
                 return false;
             } else {
@@ -284,7 +295,7 @@ const mixins = {
                         type: "reply",
                         source: source,
                         reply_type: payload.type,
-                        to_hash: payload.hash,
+                        to_hash: payload.toHash,
                         to_address: payload.address,
                         reply_hash: payload.replyHash,
                         content: payload.content,
