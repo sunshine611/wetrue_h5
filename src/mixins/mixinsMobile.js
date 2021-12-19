@@ -2,7 +2,7 @@ import { getStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
 import { sha256 } from "js-sha256";
-import { source } from "@/config/config";
+import { source as WeTrueSource } from "@/config/config";
 import {
     Node,
     Universal,
@@ -13,7 +13,10 @@ import {
 import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
+import Clipboard from "clipboard";
 import { nodeUrl } from "@/config/config.js";
+import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
+
 const mixins = {
     data() {
         return {};
@@ -180,7 +183,7 @@ const mixins = {
                 }
             }
         },
-        //验证是否登录
+        //验证是否keystore登录
         validLogin() {
             if (
                 JSON.stringify(getStore("keystore")) === "{}" ||
@@ -191,15 +194,57 @@ const mixins = {
                 return true;
             }
         },
+        //验证是否token存在
+        validToken() {
+            if (
+                JSON.stringify(getStore("token")) === "" ||
+                !getStore("token")
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        },
         //话题高亮
         topicHighlight(value) {
             var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!<br>)]{1,25}#/g;
+            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
             value = value.replace(exp, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
             });
             return value;
+        },
+        //复制粘贴板
+        copyContent(content) {
+            let clipboard = new Clipboard("#copy", {
+                text: (trigger) => {
+                    uni.showToast({
+                        title: this.i18n.my.copySuccess,
+                        icon: "none",
+                        duration: 600,
+                    });
+                    return content;
+                },
+            });
+            uni.setClipboardData({
+                data: content,
+                success: function() {
+                    uni.showToast({
+                        title: this.i18n.my.copySuccess,
+                        icon: "none",
+                        duration: 600,
+                    });
+                },
+            });
+        },
+        //提交hash到WeTrue
+        postHashToWeTrue(res) {
+            this.uShowLoading(this.i18n.mixins.radio);
+            this.$http.post("/Submit/hash", {
+                hash: res.hash,
+            });
+            return res;
         },
         //连接AE网络
         async connectAe() {
@@ -244,7 +289,7 @@ const mixins = {
             }
             return client;
         },
-        //wetrue上链发送操作
+        //WeTrue上链发送操作
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
@@ -255,8 +300,13 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.lowBalance);
                     return;
                 }
+                let amount, content, client, source;
+
+                const thirdPartySource = getStore("thirdPartySource");
                 const configInfo = getStore("configInfo");
-                let amount, content, client;
+                source = WeTrueSource;
+                if (thirdPartySource === "box") source = "Box æpp";
+
                 if (type === "topic") {
                     //发送主贴
                     amount = configInfo.topicAmount;
@@ -284,7 +334,7 @@ const mixins = {
                         type: "reply",
                         source: source,
                         reply_type: payload.type,
-                        to_hash: payload.hash,
+                        to_hash: payload.toHash,
                         to_address: payload.address,
                         reply_hash: payload.replyHash,
                         content: payload.content,
@@ -311,19 +361,28 @@ const mixins = {
                     return;
                 }
                 this.uShowLoading(this.i18n.mixins.inChain);
-                client = await this.client();
-                const res = await client.spend(
-                    amount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
-                    }
-                );
-                this.uShowLoading(this.i18n.mixins.radio);
-                this.$http.post("/Submit/hash", {
-                    hash: res.hash,
-                });
-                return res;
+                if (thirdPartySource === "box") {
+                    //第三方来源box上链
+                    let postPayload = {
+                            type: "send_AE",
+                            amount: amount,
+                            receivingAccount: configInfo.receivingAccount,
+                            payload: content,
+                    };
+                    thirdPartyPost(postPayload);
+                    //后续等暴露方法要求
+                } else {
+                    //WeTrue上链
+                    client = await this.client();
+                    const res = await client.spend(
+                            amount,
+                            configInfo.receivingAccount,
+                            {
+                                payload: JSON.stringify(content),
+                            }
+                        );
+                    return await this.postHashToWeTrue(res);
+                }
             } catch (err) {
                 this.uShowToast(this.i18n.mixins.fail);
             }

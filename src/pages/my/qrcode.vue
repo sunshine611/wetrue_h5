@@ -14,7 +14,6 @@
 
 <script>
 import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
-import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 import UButton from '../../uview-ui/components/u-button/u-button.vue';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
@@ -42,31 +41,7 @@ export default {
     methods: {
         //复制粘贴板
         copy() {
-            // #ifdef H5
-            let clipboard = new Clipboard("#copy", {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.my.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return this.token;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            let that = this;
-            uni.setClipboardData({
-                data: that.token,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.my.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+           this.copyContent(this.token);
         },
     },
 };

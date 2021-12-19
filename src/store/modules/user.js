@@ -11,6 +11,7 @@ const login = {
         keystore: getStore("keystore") || {}, //用户keyStore
         keystoreArr: getStore("keystoreArr") || [], //用户多账户keyStore数组
         client: {}, //主网对象
+        thirdPartySource: "", //第三方来源
     },
     getters: {},
     mutations: {
@@ -39,6 +40,10 @@ const login = {
         },
         SET_CLIENT: (state, params) => {
             state.client = params;
+        },
+        SET_TPSOURCE: (state, params) => {
+            state.thirdPartySource = params;
+            setStore ("thirdPartySource", params);
         },
     },
     actions: {
@@ -74,6 +79,7 @@ const login = {
                 commit("SET_KEYSTORE", {});
                 commit("SET_TOKEN", "");
                 commit("SET_USERINFO", {});
+                commit("SET_CONFIGINFO", {});
                 commit("SET_PASSWORD", "");
                 commit("SET_CLIENT", {});
             }
@@ -87,6 +93,7 @@ const login = {
                     commit("SET_TOKEN", state.keystoreArr[i].public_key);
                     commit("SET_PASSWORD", "");
                     commit("SET_USERINFO", {});
+                    commit("SET_CONFIGINFO", {});
                     commit("SET_CLIENT", {});
                     break;
                 }

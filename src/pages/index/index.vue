@@ -81,9 +81,11 @@
 import { getStore, setStore } from "@/util/service";
 import { version } from "@/config/config.js";
 import moment from "moment";
-import TopicList from "../../components/TopicList.vue";
-import PostTopicButton from "../../components/Button/PostTopicButton.vue";
+import TopicList from "@/components/TopicList.vue";
+import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
+import { setThirdPartySource } from "@/util/thirdPartySource/source";
+
 export default {
     components: {
         TopicList,
@@ -128,18 +130,32 @@ export default {
         this.getPostList();
         this.getUnreadMsg();
     },
-    onLoad() {
+    onLoad(option) {
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
         if (!getStore("language")) {
-            setStore("language", "zh-cn");
+            uni.getSystemInfo({
+				success: function(res){
+					if (res.language === "zh-CN") {
+                        setStore("language", "zh-cn");
+                    } else {
+                        setStore("language", "en");
+                    }
+				},
+                fail: function(){
+                    setStore("language", "en");
+                }
+            });
             this.language = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
         }
         uni.setNavigationBarTitle({
             title: this.i18n.titleBar.index,
         });
+        setThirdPartySource(option);
     },
     activated() {
         this.getUnreadMsg();
@@ -264,8 +280,8 @@ export default {
             }
             //控制语言显示
             this.language = getStore("language");
-            moment.locale(getStore("language"));
-            this.$_i18n.locale = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
             let index = parseInt(this.index) + 1;
             this.cateInfo.value = index;
             this.cateInfo.label = this.categoryList[this.index].label;

@@ -157,7 +157,6 @@ import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
-import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 export default {
     components: {
@@ -228,30 +227,7 @@ export default {
         },
         copy() {
             let text = this.$refs.mpHtml.getText();
-            // #ifdef H5
-            let clipboard = new Clipboard("#copy", {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return text;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            uni.setClipboardData({
-                data: text,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+            this.copyContent(text);
         },
         //分享
         share() {
@@ -262,30 +238,7 @@ export default {
                 shareTextLength = "...";
             }
             let shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100) + shareTextLength;
-            // #ifdef H5
-            let clipboard = new Clipboard("#share", {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return shareText;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            uni.setClipboardData({
-                data: shareText,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+            this.copyContent(shareText);
         },
     },
 };

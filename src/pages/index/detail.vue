@@ -224,6 +224,7 @@ import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
 import Name from "@/components/Name";
+
 export default {
     components: {
         inputComment,
@@ -385,7 +386,7 @@ export default {
         },
         //评论
         comment(item) {
-            if (!this.validLogin()) {
+            if (!this.validToken()) {
                 uni.showToast({
                     title: this.i18n.index.pleaseLogin,
                     icon: "none",
@@ -412,7 +413,7 @@ export default {
         },
         //回复
         reply(item) {
-            if (!this.validLogin()) {
+            if (!this.validToken()) {
                 uni.showToast({
                     title: this.i18n.index.pleaseLogin,
                     icon: "none",
@@ -444,15 +445,14 @@ export default {
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
-                    hash: this.currentComment.hash,
-                    toHash: this.currentComment.toHash,
+                    toHash: this.currentComment.hash,
                     content: content,
                 };
                 res = await this.wetrueSend("reply", payload);
             } else if (this.commentType === "replyPerson") {
                 let payload = {
                     type: "reply",
-                    hash: this.currentComment.toHash,
+                    toHash: this.currentComment.toHash,
                     replyHash: this.currentComment.hash,
                     address: this.currentComment.users.userAddress,
                     content: content,
