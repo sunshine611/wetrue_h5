@@ -47,7 +47,6 @@ export default {
         };
     },
     onLoad(option) {
-        this.isPassword();
         if (!!option.topic) {
             this.form= {
                 text: option.topic + " ",
@@ -55,7 +54,6 @@ export default {
         }
     },
     activated() {
-        this.isPassword();
     },
     computed: {
         //国际化

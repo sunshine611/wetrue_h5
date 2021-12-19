@@ -187,6 +187,7 @@ import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { getStore } from "@/util/service";
+
 export default {
     components: {
         HeadImg,
@@ -221,7 +222,7 @@ export default {
             })
             this.getUnreadMsg();
             uni.setNavigationBarTitle({
-        　　    title:this.i18n.titleBar.my
+                title:this.i18n.titleBar.my
             });
         }
     },

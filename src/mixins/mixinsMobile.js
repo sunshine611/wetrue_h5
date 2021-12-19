@@ -2,7 +2,7 @@ import { getStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
 import { sha256 } from "js-sha256";
-import { source } from "@/config/config";
+import { source as WeTrueSource } from "@/config/config";
 import {
     Node,
     Universal,
@@ -14,6 +14,8 @@ import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
 import { nodeUrl } from "@/config/config.js";
+import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
+
 const mixins = {
     data() {
         return {};
@@ -266,8 +268,15 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.lowBalance);
                     return;
                 }
+                let amount, content, client, source, chainRes;
+
+                const thirdPartySource = getStore("thirdPartySource");
                 const configInfo = getStore("configInfo");
-                let amount, content, client;
+                source = WeTrueSource;
+                if (thirdPartySource === "box") {
+                    source = "box";
+                }
+
                 if (type === "topic") {
                     //发送主贴
                     amount = configInfo.topicAmount;
@@ -322,19 +331,33 @@ const mixins = {
                     return;
                 }
                 this.uShowLoading(this.i18n.mixins.inChain);
-                client = await this.client();
-                const res = await client.spend(
-                    amount,
-                    configInfo.receivingAccount,
-                    {
-                        payload: JSON.stringify(content),
-                    }
-                );
+                if (thirdPartySource === "box") {
+                //第三方来源box上链
+                    let postPayload = {
+                            amount: amount,
+                            receivingAccount: configInfo.receivingAccount,
+                            payload: content,
+                    };
+                    thirdPartyPost(postPayload);
+                    chainRes = {
+                        hash: "haha"
+                    };
+                } else {
+                //WeTrue上链
+                    client = await this.client();
+                    chainRes = await client.spend(
+                            amount,
+                            configInfo.receivingAccount,
+                            {
+                                payload: JSON.stringify(content),
+                            }
+                        );
+                }
                 this.uShowLoading(this.i18n.mixins.radio);
                 this.$http.post("/Submit/hash", {
-                    hash: res.hash,
+                    hash: chainRes.hash,
                 });
-                return res;
+                return chainRes;
             } catch (err) {
                 this.uShowToast(this.i18n.mixins.fail);
             }

@@ -1,27 +1,16 @@
-import { getStore, setStore } from "@/util/service";
-
-export const getThirdPartySource = function(){
-    let value = getStore("thirdPartySource");
-    if (value === "box") {
-		return value;
-	} else {
-		return "";
-	}
-}
+import store from "@/store";
+import { setConfigInfo } from "@/util/thirdPartySource/backend";
 
 export const setThirdPartySource = function(option){
+    //设置第三方来源
 	if (option.source === "box" && !!option.userAddress) {
         //隐藏底部bar
         uni.hideTabBar();
-        //设置token请求头
-        setStore (
-            "token",
-            option.userAddress
-        );
+        //设置token
+        store.commit("user/SET_TOKEN", option.userAddress);
         //标记第三方来源
-        setStore (
-            "thirdPartySource",
-            option.source
-        );
+        store.commit("user/SET_TPSOURCE", option.source);
+        //设置 configInfo
+        setConfigInfo(option.userAddress);
     }
 }

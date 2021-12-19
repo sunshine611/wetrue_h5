@@ -11,9 +11,6 @@
 </template>
 <script>
 
-import { getThirdPartySource } from "@/util/thirdPartySource/source";
-import { boxPost } from "@/util/thirdPartySource/boxPost";
-
 export default {
     components: {
     },
@@ -42,12 +39,6 @@ export default {
     methods: {
         //发帖
         post() {
-            //第三方来源box发布主贴
-            if (getThirdPartySource() === "box") {
-                let boxPostPayload = {boxPostType: "topic"};
-                boxPost(boxPostPayload);
-                return false;
-            }
             //WeTrue登陆发帖
             if (this.postTopicInfo.type === 'topic') {
                 this.goUrl(

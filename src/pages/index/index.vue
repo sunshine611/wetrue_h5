@@ -79,12 +79,13 @@
 
 <script>
 import { getStore, setStore } from "@/util/service";
-import { setThirdPartySource } from "@/util/thirdPartySource/source";
 import { version } from "@/config/config.js";
 import moment from "moment";
-import TopicList from "../../components/TopicList.vue";
-import PostTopicButton from "../../components/Button/PostTopicButton.vue";
+import TopicList from "@/components/TopicList.vue";
+import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
+import { setThirdPartySource } from "@/util/thirdPartySource/source";
+
 export default {
     components: {
         TopicList,
@@ -130,7 +131,6 @@ export default {
         this.getUnreadMsg();
     },
     onLoad(option) {
-        console.log(uni.getSystemInfo());
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
