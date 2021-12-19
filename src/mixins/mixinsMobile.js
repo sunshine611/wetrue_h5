@@ -13,6 +13,7 @@ import {
 import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
+import Clipboard from "clipboard";
 import { nodeUrl } from "@/config/config.js";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
 
@@ -213,6 +214,29 @@ const mixins = {
                 return newVal;
             });
             return value;
+        },
+        //复制粘贴板
+        copyContent(content) {
+            let clipboard = new Clipboard("#copy", {
+                text: (trigger) => {
+                    uni.showToast({
+                        title: this.i18n.my.copySuccess,
+                        icon: "none",
+                        duration: 600,
+                    });
+                    return content;
+                },
+            });
+            uni.setClipboardData({
+                data: content,
+                success: function() {
+                    uni.showToast({
+                        title: this.i18n.my.copySuccess,
+                        icon: "none",
+                        duration: 600,
+                    });
+                },
+            });
         },
         //提交hash到WeTrue
         postHashToWeTrue(res) {

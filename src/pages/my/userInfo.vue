@@ -98,7 +98,6 @@ const http = new Request();
 import { mapGetters } from "vuex";
 import TopicList from "../../components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
-import Clipboard from "clipboard";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import { aeknow, nodeUrl } from "@/config/config.js";
@@ -165,7 +164,7 @@ export default {
         this.getUserInfo();
         this.getPostList();
         uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.userInfo
+            title:this.i18n.titleBar.userInfo
         });
     },
     computed: {
@@ -323,31 +322,7 @@ export default {
         },
         //复制粘贴板
         copy() {
-            // #ifdef H5
-            let clipboard = new Clipboard("#copy", {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.my.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return this.userInfo.userAddress;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            let that = this;
-            uni.setClipboardData({
-                data: that.userInfo.userAddress,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.my.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+            this.copyContent(this.userInfo.userAddress);
         },
     },
 };

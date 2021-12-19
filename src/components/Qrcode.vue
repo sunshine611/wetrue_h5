@@ -37,7 +37,6 @@
 import { mapGetters } from "vuex";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import UGap from "../uview-ui/components/u-gap/u-gap.vue";
-import Clipboard from "clipboard";
 export default {
     components: {
         VueQrcode,
@@ -78,31 +77,7 @@ export default {
     methods: {
         //复制粘贴板
         copy() {
-            // #ifdef H5
-            new Clipboard(this.$refs.address, {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return this.address;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            let that = this;
-            uni.setClipboardData({
-                data: that.address,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.components.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+            this.copyContent(this.address);            
         },
     },
 };

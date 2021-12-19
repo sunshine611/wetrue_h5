@@ -128,7 +128,6 @@
 <script>
 import { getStore, setStore } from "@/util/service";
 import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
-import Clipboard from "clipboard";
 import { mapGetters } from "vuex";
 import UButton from "../../uview-ui/components/u-button/u-button.vue";
 import Qrcode from "@/components/Qrcode";
@@ -193,31 +192,7 @@ export default {
         },
         //复制粘贴板
         copy(index) {
-            // #ifdef H5
-            let clipboard = new Clipboard(this.$refs["address" + index][0], {
-                text: (trigger) => {
-                    uni.showToast({
-                        title: this.i18n.login.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                    return this.keystoreArr[index].public_key;
-                },
-            });
-            // #endif
-            // #ifndef H5
-            let that = this;
-            uni.setClipboardData({
-                data: that.keystoreArr[index].public_key,
-                success: function() {
-                    uni.showToast({
-                        title: this.i18n.login.copySuccess,
-                        icon: "none",
-                        duration: 600,
-                    });
-                },
-            });
-            // #endif
+           this.copyContent(this.keystoreArr[index].public_key);
         },
     },
 };
