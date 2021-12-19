@@ -214,6 +214,14 @@ const mixins = {
             });
             return value;
         },
+        //提交hash到WeTrue
+        postHashToWeTrue(res) {
+            this.uShowLoading(this.i18n.mixins.radio);
+            this.$http.post("/Submit/hash", {
+                hash: res.hash,
+            });
+            return res;
+        },
         //连接AE网络
         async connectAe() {
             try {
@@ -257,7 +265,7 @@ const mixins = {
             }
             return client;
         },
-        //wetrue上链发送操作
+        //WeTrue上链发送操作
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
@@ -268,14 +276,12 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.lowBalance);
                     return;
                 }
-                let amount, content, client, source, chainRes;
+                let amount, content, client, source;
 
                 const thirdPartySource = getStore("thirdPartySource");
                 const configInfo = getStore("configInfo");
                 source = WeTrueSource;
-                if (thirdPartySource === "box") {
-                    source = "box";
-                }
+                if (thirdPartySource === "box") source = "Box æpp";
 
                 if (type === "topic") {
                     //发送主贴
@@ -332,32 +338,27 @@ const mixins = {
                 }
                 this.uShowLoading(this.i18n.mixins.inChain);
                 if (thirdPartySource === "box") {
-                //第三方来源box上链
+                    //第三方来源box上链
                     let postPayload = {
+                            type: "send_AE",
                             amount: amount,
                             receivingAccount: configInfo.receivingAccount,
                             payload: content,
                     };
                     thirdPartyPost(postPayload);
-                    chainRes = {
-                        hash: "haha"
-                    };
+                    //后续等暴露方法要求
                 } else {
-                //WeTrue上链
+                    //WeTrue上链
                     client = await this.client();
-                    chainRes = await client.spend(
+                    const res = await client.spend(
                             amount,
                             configInfo.receivingAccount,
                             {
                                 payload: JSON.stringify(content),
                             }
                         );
+                    return await this.postHashToWeTrue(res);
                 }
-                this.uShowLoading(this.i18n.mixins.radio);
-                this.$http.post("/Submit/hash", {
-                    hash: chainRes.hash,
-                });
-                return chainRes;
             } catch (err) {
                 this.uShowToast(this.i18n.mixins.fail);
             }

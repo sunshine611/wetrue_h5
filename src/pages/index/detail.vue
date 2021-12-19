@@ -462,7 +462,6 @@ export default {
             if (JSON.stringify(res) !== "{}" && !!res) {
                 setTimeout(() => {
                     this.isShowComment = false;
-                    this.getPostInfo();
                     this.commentList = [];
                     this.pageInfo.page = 1;
                     this.getCommentList();
