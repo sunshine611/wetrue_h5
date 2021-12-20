@@ -113,10 +113,11 @@
 <script>
 import Request from "luch-request";
 const http = new Request();
-import { aeknow } from "@/config/config.js";
+import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
 import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
 import UButton from "@/uview-ui/components/u-button/u-button.vue";
+
 export default {
     components: { UCellItem, UButton },
     data() {
@@ -162,7 +163,7 @@ export default {
     methods: {
         //获取账户token列表
         getTokenList() {
-            http.get(aeknow + "/api/token/" + this.token).then((res) => {
+            http.get(Backend.aeknowApiTokenList(this.token)).then((res) => {
                 if (res.data.tokens.length > 0) {
                     this.tokenList = res.data.tokens;
                 }

@@ -232,6 +232,7 @@ import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import { aeknow, nodeUrl, wttContract } from "@/config/config.js";
+
 export default {
     components: { UGap, UButton },
     data() {

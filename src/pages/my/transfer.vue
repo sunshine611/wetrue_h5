@@ -103,10 +103,11 @@
 import Request from "luch-request";
 const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
-import { aeknow, nodeUrl } from "@/config/config.js";
+import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
 import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
 import UButton from "@/uview-ui/components/u-button/u-button.vue";
+
 export default {
     components: { UCellItem, UButton },
     data() {
@@ -125,7 +126,7 @@ export default {
             },
             btnLoading: false, //按钮状态
             hashShow: false, //合约转账成功弹层
-            result: {}, //合约转正成功信息
+            result: {}, //合约转账成功信息
             passwordShow: false, //密码弹层
         };
     },
@@ -266,7 +267,7 @@ export default {
         //解析域名
         async ParsingDomainName(domainName) {
             await http
-                .get(nodeUrl + "/v3/names/" + domainName)
+                .get(Backend.nodeApiNames(domainName))
                 .then((res) => {
                     if (res.data.id) {
                         if (res.data.pointers.length > 0) {
@@ -283,14 +284,14 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(nodeUrl + "/v3/accounts/" + this.token).then((res) => {
+            http.get(Backend.nodeApiAccounts(this.token)).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
         //查看合约调用成功后返回的交易哈希
         viewHash() {
             this.hashShow = false;
-            window.open(aeknow + "/miner/viewaccount/" + this.result.hash);
+            window.open(Backend.aeknowSearchUrl(this.result.hash));
         },
     },
 };

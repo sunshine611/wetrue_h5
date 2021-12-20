@@ -101,7 +101,9 @@ import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import { aeknow, nodeUrl } from "@/config/config.js";
+import Backend from "@/util/backend";
 import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
+
 export default {
     components: {
         TopicList,
@@ -283,8 +285,9 @@ export default {
             uni.showLoading({
                 title: this.i18n.my.loading,
             });
-            http.get(nodeUrl + "/v3/accounts/" + this.userAddress)
-                .then((res) => {
+            http.get(
+                    Backend.nodeApiAccounts(this.userAddress)
+                ).then((res) => {
                     this.postList.push({
                         balance: res.data.balance,
                         tokenname: "AE",

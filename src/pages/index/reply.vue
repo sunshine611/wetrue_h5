@@ -148,6 +148,7 @@
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";
+
 export default {
     components: {
         mpHtml,

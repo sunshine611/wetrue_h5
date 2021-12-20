@@ -14,7 +14,7 @@ import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
-import { nodeUrl } from "@/config/config.js";
+import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
 
 const mixins = {
@@ -121,8 +121,10 @@ const mixins = {
         //获取账户AE余额
         async getAccount() {
             return new Promise((resolve) => {
-                http.get(nodeUrl + "/v3/accounts/" + getStore("token")).then((res) => {
-                    resolve(this.balanceFormat(res.data.balance));
+                http.get(
+                        Backend.nodeApiAccounts(getStore("token"))
+                    ).then((res) => {
+                        resolve(this.balanceFormat(res.data.balance));
                 });
             });
         },

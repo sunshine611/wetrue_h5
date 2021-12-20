@@ -48,6 +48,7 @@
 import { mapGetters } from "vuex";
 import TopicList from "@/components/TopicList.vue";
 import PostTopicButton from "@/components/Button/PostTopicButton.vue";
+
 export default {
     components: {
         TopicList,

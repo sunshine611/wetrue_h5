@@ -29,38 +29,39 @@
 </template>
 
 <script>
-	import {
-		generateMnemonic,
-		getHdWalletAccountFromMnemonic
-	} from '@aeternity/aepp-sdk/es/utils/hd-wallet'
-	export default {
-		data() {
-			return {
-				form: {
-					address: '',
-					mnemonic: '',
-				}
-			}
-		},
-		onLoad() {
-			this.createAccount();
-		},
-		computed: {
-			i18n: {
-				get() {
-					return this.$_i18n.messages[this.$_i18n.locale];
-				},
-        	},
-		},
-		methods: {
-			createAccount() {
-				const mnemonic = generateMnemonic();
-				const key = getHdWalletAccountFromMnemonic(mnemonic,0);
-				this.form.address=key.publicKey;
-				this.form.mnemonic = mnemonic;
+import {
+	generateMnemonic,
+	getHdWalletAccountFromMnemonic
+} from '@aeternity/aepp-sdk/es/utils/hd-wallet'
+
+export default {
+	data() {
+		return {
+			form: {
+				address: '',
+				mnemonic: '',
 			}
 		}
+	},
+	onLoad() {
+		this.createAccount();
+	},
+	computed: {
+		i18n: {
+			get() {
+				return this.$_i18n.messages[this.$_i18n.locale];
+			},
+		},
+	},
+	methods: {
+		createAccount() {
+			const mnemonic = generateMnemonic();
+			const key = getHdWalletAccountFromMnemonic(mnemonic,0);
+			this.form.address=key.publicKey;
+			this.form.mnemonic = mnemonic;
+		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>

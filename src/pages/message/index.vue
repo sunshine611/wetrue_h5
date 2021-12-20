@@ -138,12 +138,12 @@
 
 <script>
 import { version } from "@/config/config.js";
-import moment from "moment";
 import VersionTip from "@/components/VersionTip.vue";
 import Name from "@/components/Name.vue";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
+
 export default {
     components: {
         VersionTip,

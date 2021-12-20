@@ -61,6 +61,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { getStore } from "@/util/service";
+
 export default {
     data() {
         return {

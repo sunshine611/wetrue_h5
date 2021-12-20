@@ -17,6 +17,7 @@ import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
 import UButton from '@/uview-ui/components/u-button/u-button.vue';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
+
 export default {
     components: { VueQrcode, UGap, UButton },
     data() {
