@@ -1,7 +1,7 @@
 <!--质押挖矿-->
 <template>
     <div class="mapping-dig">
-        <div class="icon-list">
+        <div class="icon-list" v-if="!validThirdPartySource()">
             <u-icon
                 name="home"
                 class="mr-30"
@@ -225,9 +225,9 @@
 </template>
 
 <script>
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();

@@ -1,6 +1,6 @@
 <template>
-    <view class="myTopic">
-        <u-navbar :title="title">
+    <view class="myTopic" :title="title">
+        <u-navbar :title="title" v-if="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -26,9 +26,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import TopicList from "../../components/TopicList.vue";
+import TopicList from "@/components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
-import Clipboard from "clipboard";
+
 export default {
     components: {
         TopicList,
@@ -64,11 +64,14 @@ export default {
     onLoad(option) {
         if (option.type === "myTopic") {
             this.type = "myTopic";
-            this.title = "我的帖子";
+            this.title = this.i18n.my.myTopic;
         } else if (option.type === "myStar") {
             this.type = "myStar";
-            this.title = "我的收藏";
+            this.title = this.i18n.my.myStar;
         }
+        uni.setNavigationBarTitle({
+            title: this.title,
+        });
         this.getPostList();
     },
     computed: {

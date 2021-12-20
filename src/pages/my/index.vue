@@ -111,6 +111,7 @@
                     <u-cell-item
                         :title="i18n.my.accountManage"
                         @click="goUrl('../login/accountManage')"
+                        v-if="!this.validThirdPartySource()"
                     >
                         <fa-FontAwesome
                             slot="icon"

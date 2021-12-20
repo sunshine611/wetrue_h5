@@ -1,6 +1,6 @@
 <template>
     <view class="wrap">
-        <u-navbar :title="i18n.index.replyDetails">
+        <u-navbar :title="i18n.index.replyDetails" v-if="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -190,6 +190,9 @@ export default {
         this.hash = option.hash;
         this.getCommentInfo();
         this.getReply();
+        uni.setNavigationBarTitle({
+            title: this.i18n.titleBar.replyDetails,
+        });
     },
     computed: {
         //国际化

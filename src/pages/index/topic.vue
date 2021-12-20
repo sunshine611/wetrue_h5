@@ -1,6 +1,6 @@
 <template>
     <view class="topic">
-        <u-navbar :title="keyword">
+        <u-navbar :title="keyword" v-if="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -46,8 +46,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-import TopicList from "../../components/TopicList.vue";
-import PostTopicButton from "../../components/Button/PostTopicButton.vue";
+import TopicList from "@/components/TopicList.vue";
+import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 export default {
     components: {
         TopicList,
@@ -85,13 +85,13 @@ export default {
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
-        uni.setNavigationBarTitle({
-            title: `${this.i18n.titleBar.topic}-${this.keyword}`,
-        });
         this.postTopicInfo = {
             type: "topic",
-            keyword: option.keyword
+            keyword: this.keyword
         };
+        uni.setNavigationBarTitle({
+            title: `${this.keyword + " " + this.i18n.titleBar.topic}`,
+        });
     },
     computed: {
         ...mapGetters(["token"]),

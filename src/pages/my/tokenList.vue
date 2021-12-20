@@ -1,6 +1,6 @@
 <template>
     <div class="token-list">
-        <u-navbar :title="i18n.my.myWallet">
+        <u-navbar :title="i18n.my.myWallet" v-if="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -37,6 +37,7 @@
                     :ripple="true"
                     :custom-style="{ width: '42%' }"
                     @click="goUrl(`transfer`)"
+                    v-show="!validThirdPartySource()"
                     ><fa-FontAwesome
                         type="fas fa-exchange-alt"
                         size="24"
@@ -93,6 +94,7 @@
                                 `transfer?tokenName=${item.tokenname}&contractId=${item.contract}&balance=${item.balance}`
                             )
                         "
+                        v-show="!validThirdPartySource()"
                         ><fa-FontAwesome
                             type="fas fa-exchange-alt"
                             size="24"
@@ -113,8 +115,8 @@ import Request from "luch-request";
 const http = new Request();
 import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";
-import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 export default {
     components: { UCellItem, UButton },
     data() {

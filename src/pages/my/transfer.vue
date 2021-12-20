@@ -105,8 +105,8 @@ const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
 import { aeknow, nodeUrl } from "@/config/config.js";
 import { mapGetters } from "vuex";
-import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 export default {
     components: { UCellItem, UButton },
     data() {
@@ -146,16 +146,18 @@ export default {
                 contractId: option.contractId,
                 balance: this.balanceFormat(option.balance),
             };
-            this.title = `${this.tokenInfo.tokenName} ${this.i18n.my.transfer}`;
+            this.title = `${this.tokenInfo.tokenName + " " +this.i18n.my.transfer}`;
         } else {
             this.getAccount();
             this.title = `AE ${this.i18n.my.transfer}`;
         }
         uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.transfer
+            title: this.title
         });
     },
-    activated() {},
+    activated() {
+
+    },
     //上拉刷新
     onPullDownRefresh() {
         this.getAccount();
@@ -213,11 +215,13 @@ export default {
                         title: this.i18n.my.loading,
                     });
                     this.btnLoading = true;
-                    let client = await this.client();
+                    
                     try {
+                        let client = await this.client();
                         const res = await client.spend(
                             this.form.money * Math.pow(10, 18),
-                            this.form.address
+                            this.form.address,
+                            {payload: "For WeTrue Wallet"}
                         );
                         if (JSON.stringify(res) !== "{}" && !!res) {
                             uni.hideLoading();

@@ -96,12 +96,12 @@
 import Request from "luch-request";
 const http = new Request();
 import { mapGetters } from "vuex";
-import TopicList from "../../components/TopicList.vue";
+import TopicList from "@/components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import { aeknow, nodeUrl } from "@/config/config.js";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 export default {
     components: {
         TopicList,

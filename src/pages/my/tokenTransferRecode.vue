@@ -1,6 +1,6 @@
 <template>
     <div class="transfer-record">
-        <u-navbar :title="i18n.my.transactions">
+        <u-navbar :title="i18n.my.transactions" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -93,8 +93,8 @@ import Request from "luch-request";
 const http = new Request();
 import { aeknow } from "@/config/config.js";
 import { mapGetters } from "vuex";
-import uEmpty from "../../uview-ui/components/u-empty/u-empty.vue";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import uEmpty from "@/uview-ui/components/u-empty/u-empty.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 export default {
     components: { uEmpty, UGap },
     data() {
@@ -131,7 +131,7 @@ export default {
             this.getAeRecodeList();
         }
         uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.transactions
+            title: this.i18n.titleBar.transactions
         });
     },
     //上拉刷新

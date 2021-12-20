@@ -246,6 +246,15 @@ const mixins = {
             });
             return res;
         },
+        //验证第三方来源
+        validThirdPartySource() {
+            const thirdPartySource = getStore("thirdPartySource");
+            if (thirdPartySource === "box") {
+                return true;
+            } else {
+                return false;
+            }
+        },
         //连接AE网络
         async connectAe() {
             try {
@@ -302,10 +311,10 @@ const mixins = {
                 }
                 let amount, content, client, source;
 
-                const thirdPartySource = getStore("thirdPartySource");
+                const thirdPartySource = this.validThirdPartySource();
                 const configInfo = getStore("configInfo");
                 source = WeTrueSource;
-                if (thirdPartySource === "box") source = "Box æpp";
+                if (thirdPartySource) source = "Box æpp";
 
                 if (type === "topic") {
                     //发送主贴
@@ -361,8 +370,8 @@ const mixins = {
                     return;
                 }
                 this.uShowLoading(this.i18n.mixins.inChain);
-                if (thirdPartySource === "box") {
-                    //第三方来源box上链
+                if (thirdPartySource) {
+                    //第三方来源上链
                     let postPayload = {
                             type: "send_AE",
                             amount: amount,

@@ -79,9 +79,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
-import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 export default {
     components: { UCellItem, UButton, UGap },
     data() {
