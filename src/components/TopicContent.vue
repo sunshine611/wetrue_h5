@@ -158,6 +158,7 @@ import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import { mapGetters } from "vuex";
+
 export default {
     components: {
         HeadImg,

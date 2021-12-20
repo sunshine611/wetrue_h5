@@ -19,15 +19,26 @@ export default class Backend {
 		return `${aeknow}/api/token/${token}`;
 	};
 
+	
+	static aeknowApiMyToken= (
+		address,
+		contract,
+		) => {
+		let query = `${aeknow}/api/mytoken`;
+			query += `/${address}`;
+			query += `/${contract}`;
+		return query;
+	};
+
 	static aeknowApiSpendTx = (
 			address,
 			limit,
 			offset,
 		) => {
-			let query = `${aeknow}/api/spendtx`;
-				query += `/${address}`;
-				query += `/${limit}`;
-				query += `/${offset}`;
+		let query = `${aeknow}/api/spendtx`;
+			query += `/${address}`;
+			query += `/${limit}`;
+			query += `/${offset}`;
 		return query;
 	};
 
@@ -37,11 +48,11 @@ export default class Backend {
 			limit,
 			offset,
 		) => {
-			let query = `${aeknow}/api/tokentxs`;
-				query += `/${address}`;
-				query += `/${contract}`;
-				query += `/${limit}`;
-				query += `/${offset}`;
+		let query = `${aeknow}/api/tokentxs`;
+			query += `/${address}`;
+			query += `/${contract}`;
+			query += `/${limit}`;
+			query += `/${offset}`;
 		return query;
 	};
 

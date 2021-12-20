@@ -231,7 +231,8 @@ import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
-import { aeknow, nodeUrl, wttContract } from "@/config/config.js";
+import Backend from "@/util/backend";
+import { wttContract } from "@/config/config.js";
 
 export default {
     components: { UGap, UButton },
@@ -356,7 +357,7 @@ export default {
                 this.warning.amount = false;
             }
             if (parseFloat(this.aeBalance) - parseFloat(this.form.amount) < 1) {
-                this.uShowToast("映射金额请至少保留1AE！");
+                this.uShowToast("映射金额请至少保留1AE");
                 return;
             }
             this.btnLoading = true;
@@ -369,7 +370,7 @@ export default {
                         this.getMappingInfo();
                         this.showMapping = false;
                         this.btnLoading = false;
-                        this.uShowToast("映射成功！");
+                        this.uShowToast("映射成功");
                     } else {
                         this.uShowToast(res.msg);
                         this.btnLoading = false;
@@ -383,21 +384,21 @@ export default {
                 if (res.code === 200) {
                     this.getMappingInfo();
                     this.btnLoading = false;
-                    this.uShowToast("取消映射成功！");
+                    this.uShowToast("取消映射成功");
                 }
             });
         },
         //领取映射奖励
         receive() {
             if (this.balanceFormat(this.mappingInfo.earning) < 0.1) {
-                this.uShowToast("请收益大于0.1后领取！");
+                this.uShowToast("请收益大于0.1后领取");
                 return;
             }
             this.receiveLoading = true;
             this.$http.post("/Mining/earning").then((res) => {
                 if (res.code === 200) {
                     this.receiveLoading = false;
-                    this.uShowToast("领取成功！");
+                    this.uShowToast("领取成功");
                     this.getMappingInfo();
                 }
             });
@@ -412,13 +413,17 @@ export default {
         },
         //获取账户AE余额
         getAccount() {
-            http.get(nodeUrl + "/v3/accounts/" + this.token).then((res) => {
+            http.get(
+                Backend.nodeApiAccounts(this.token)
+            ).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(`${aeknow}/api/mytoken/${this.token}/${wttContract}`).then(
+            http.get(
+                Backend.aeknowApiMyToken(this.token, wttContract)
+            ).then(
                 (res) => {
                     this.wttBalance = this.balanceFormat(res.data.balance);
                 }
