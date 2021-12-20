@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <u-navbar :title="i18n.my.infoEdit" v-if="!validThirdPartySource()">
+        <u-navbar :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"

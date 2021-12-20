@@ -1,6 +1,6 @@
 <template>
     <view class="detail">
-        <u-navbar :title="i18n.index.contentDetails" v-if="!validThirdPartySource()">
+        <u-navbar :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
