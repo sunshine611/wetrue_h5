@@ -122,6 +122,18 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
+                    <u-cell-item
+                        title="Language"
+                    >
+                        <fa-FontAwesome
+                            slot="icon"
+                            type="fas fa-language"
+                            size="32"
+                            class="mr-10"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                    </u-cell-item>
                 </u-cell-group>
             </div>
             <div class="version">
