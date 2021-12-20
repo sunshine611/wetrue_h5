@@ -5,6 +5,7 @@ export default {
 		my :'我的',
 		topic:'话题',
 		transfer:'转账',
+		sendContent:'发布主贴',
 		contentDetails:'帖子详情',
 		userInfo:'用户信息',
 		verifyPassword:'验证密码',
@@ -20,11 +21,11 @@ export default {
 		my :'我的',
 	},
 	home: {
+		index:'首页',
 		newRelease: '最新',
 		hotRecommend: '推荐',
 		newPic :'图片',
 		myFocus: '关注',
-		index:'首页',
 	},
 	login:{
 		login:'登录',

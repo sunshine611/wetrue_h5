@@ -5,6 +5,7 @@ export default {
 		my :'My',
 		topic:'Topic',
 		transfer:'Transfer',
+		sendContent:'Post Content',
 		contentDetails:'Content Details',
 		userInfo:'User Info',
 		verifyPassword:'Verify Password',
@@ -20,11 +21,11 @@ export default {
 		my :'My',
 	},
 	home: {
+		index:'Home',
 		newRelease: 'Latest',
 		hotRecommend: 'For You',
 		newPic: 'Pictures',
 		myFocus: 'Following',
-		index:'Index',
 	},
 	login:{
 		login:'Login',

@@ -53,6 +53,9 @@ export default {
                 text: option.topic + " ",
             };
         }
+        uni.setNavigationBarTitle({
+            title: this.i18n.titleBar.sendContent,
+        });
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"

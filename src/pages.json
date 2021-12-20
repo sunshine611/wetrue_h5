@@ -27,7 +27,7 @@
     {
       "path": "pages/index/topic",
       "style": {
-        "navigationBarTitleText": "话题",
+        "navigationBarTitleText": "Topic",
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
