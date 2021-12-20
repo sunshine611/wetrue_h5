@@ -376,6 +376,7 @@ const mixins = {
                             type: "send_AE",
                             amount: amount,
                             receivingAccount: configInfo.receivingAccount,
+                            contractAddress: "",
                             payload: content,
                     };
                     thirdPartyPost(postPayload);
