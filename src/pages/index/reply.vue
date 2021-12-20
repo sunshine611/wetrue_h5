@@ -187,12 +187,10 @@ export default {
         this.getReply();
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.replyDetails);
         this.hash = option.hash;
         this.getCommentInfo();
         this.getReply();
-        uni.setNavigationBarTitle({
-            title: this.i18n.titleBar.replyDetails,
-        });
     },
     computed: {
         //国际化

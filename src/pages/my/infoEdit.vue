@@ -123,10 +123,8 @@ export default {
         },
     },
     onLoad() {
+        this.uSetBarTitle(this.i18n.titleBar.infoEdit);
         this.getUserInfo();
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.infoEdit
-        });
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"

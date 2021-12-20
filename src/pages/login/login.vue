@@ -101,9 +101,7 @@ export default {
         };
     },
     onLoad() {
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.loginWeTrue
-        });
+        this.uSetBarTitle(this.i18n.titleBar.loginWeTrue);
     },
     computed: {
         i18n: {

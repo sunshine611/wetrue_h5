@@ -82,16 +82,18 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
+        this.uSetBarTitle(
+            `${option.keyword 
+            + " "
+            + this.i18n.titleBar.topic}`
+        );
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
         this.postTopicInfo = {
             type: "topic",
-            keyword: this.keyword
+            keyword: option.keyword
         };
-        uni.setNavigationBarTitle({
-            title: `${this.keyword + " " + this.i18n.titleBar.topic}`,
-        });
     },
     computed: {
         ...mapGetters(["token"]),

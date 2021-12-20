@@ -215,15 +215,13 @@ export default {
         },
     },
     onLoad() {
+        this.uSetBarTitle(this.i18n.titleBar.my);
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount().then(res=>{
                 this.balance = res;
             })
             this.getUnreadMsg();
-            uni.setNavigationBarTitle({
-                title:this.i18n.titleBar.my
-            });
         }
     },
     activated() {

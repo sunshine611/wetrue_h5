@@ -8,5 +8,10 @@ export const setThirdPartySource = function(option){
         store.commit("user/SET_TPSOURCE", option.source); //标记第三方来源
         store.commit("user/SET_PASSWORD", option.source); //伪装存在密码
         setConfigInfo(option.userAddress); //设置 configInfo
+        if (option.language === "en") { //设置语言
+            setStore("language", "en");
+        } else {
+            setStore("language", "zh-cn");
+        }
     }
 }

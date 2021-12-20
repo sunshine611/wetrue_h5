@@ -121,6 +121,7 @@ export default {
         },
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.transactions);
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;
         this.contract = option.contract;
@@ -130,9 +131,6 @@ export default {
         } else {
             this.getAeRecodeList();
         }
-        uni.setNavigationBarTitle({
-            title: this.i18n.titleBar.transactions
-        });
     },
     //上拉刷新
     onPullDownRefresh() {

@@ -69,9 +69,7 @@ export default {
             this.type = "myStar";
             this.title = this.i18n.my.myStar;
         }
-        uni.setNavigationBarTitle({
-            title: this.title,
-        });
+        this.uSetBarTitle(this.title);
         this.getPostList();
     },
     computed: {

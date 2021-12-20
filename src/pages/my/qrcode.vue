@@ -32,9 +32,7 @@ export default {
         },
     },
     onLoad() {
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.myWallet
-        });
+        this.uSetBarTitle(this.i18n.titleBar.myWallet);
     },
     activated() {
     },

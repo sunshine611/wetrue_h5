@@ -160,12 +160,10 @@ export default {
         }
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.userInfo);
         this.userAddress = option.userAddress;
         this.getUserInfo();
         this.getPostList();
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.userInfo
-        });
     },
     computed: {
         ...mapGetters(["token"]),

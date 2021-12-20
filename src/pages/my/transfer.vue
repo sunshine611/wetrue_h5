@@ -151,9 +151,7 @@ export default {
             this.getAccount();
             this.title = `AE ${this.i18n.my.transfer}`;
         }
-        uni.setNavigationBarTitle({
-            title: this.title
-        });
+        this.uSetBarTitle(this.title);
     },
     activated() {
 

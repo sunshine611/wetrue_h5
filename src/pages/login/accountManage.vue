@@ -163,9 +163,7 @@ export default {
     },
     onLoad() {
         this.isLogin();
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.accountManage
-        });
+        this.uSetBarTitle(this.i18n.titleBar.accountManage);
     },
     activated() {},
     methods: {

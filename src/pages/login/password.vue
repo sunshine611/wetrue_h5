@@ -73,6 +73,7 @@ export default {
         };
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.verifyPassword);
         if (!!this.$store.state.user.password || !this.token) {
             setTimeout(() => {
                 uni.reLaunch({
@@ -83,9 +84,6 @@ export default {
         if (!!option.link) {
             this.link = decodeURIComponent(option.link);
         };
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.verifyPassword
-        });
     },
     computed: {
         ...mapGetters(["token"]),

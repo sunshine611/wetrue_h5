@@ -135,14 +135,12 @@ export default {
         },
     },
     onLoad() {
+        this.uSetBarTitle(this.i18n.titleBar.myWallet);
         this.isPassword();
         this.getAccount().then(res=>{
                 this.aeBalance = res;
             })
         this.getTokenList();
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.myWallet
-        });
     },
     activated() {
         this.isPassword();

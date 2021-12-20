@@ -65,9 +65,7 @@ export default {
             this.type = "fans";
             this.title = this.i18n.my.myFans;
         }
-        uni.setNavigationBarTitle({
-            title: this.title,
-        });
+        this.uSetBarTitle(this.title);
         this.getUserList();
     },
     computed: {

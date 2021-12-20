@@ -70,6 +70,11 @@ const mixins = {
                 },
             });
         },
+        uSetBarTitle(title) {
+            uni.setNavigationBarTitle({
+                title: title,
+            });
+        },
         goUrl(url) {
             uni.navigateTo({
                 url: url,

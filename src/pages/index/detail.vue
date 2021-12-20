@@ -273,12 +273,10 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.contentDetails);
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();
         this.getCommentList();
-        uni.setNavigationBarTitle({
-            title: this.i18n.titleBar.contentDetails,
-        });
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"

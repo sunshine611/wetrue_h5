@@ -183,11 +183,9 @@ export default {
         this.getMsgList();
     },
     onLoad() {
+        this.uSetBarTitle(this.i18n.titleBar.message);
         this.getMsgList();
         this.getVersionInfo();
-        uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.message
-        });
     },
     activated() {
         this.getMsgList();
