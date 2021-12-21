@@ -83,6 +83,7 @@ import { getHdWalletAccountFromMnemonic } from "@aeternity/aepp-sdk/es/utils/hd-
 import { validateMnemonic } from '@aeternity/bip39';
 import { dump } from "@aeternity/aepp-sdk/es/utils/keystore";
 import { getStore } from "@/util/service";
+
 export default {
     data() {
         return {
@@ -101,9 +102,7 @@ export default {
         };
     },
     onLoad() {
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.loginWeTrue
-        });
+        this.uSetBarTitle(this.i18n.titleBar.loginWeTrue);
     },
     computed: {
         i18n: {

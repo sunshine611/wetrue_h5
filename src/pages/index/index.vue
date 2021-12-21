@@ -131,6 +131,8 @@ export default {
         this.getUnreadMsg();
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.index);
+        setThirdPartySource(option);
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
@@ -152,10 +154,6 @@ export default {
             moment.locale(this.language);
             this.$_i18n.locale = this.language;
         }
-        uni.setNavigationBarTitle({
-            title: this.i18n.titleBar.index,
-        });
-        setThirdPartySource(option);
     },
     activated() {
         this.getUnreadMsg();

@@ -63,7 +63,9 @@ import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
 import { mapGetters } from "vuex";
 import Request from "luch-request";
 const http = new Request();
-import { aeknow, wttContract } from "@/config/config.js";
+import Backend from "@/util/backend";
+import { wttContract } from "@/config/config.js";
+
 export default {
     components: {
         UTag,
@@ -198,7 +200,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                `${aeknow}/api/mytoken/${this.token}/${wttContract}`
+                Backend.aeknowApiMyToken(this.token, wttContract)
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.balance);
             });

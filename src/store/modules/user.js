@@ -12,6 +12,7 @@ const login = {
         keystoreArr: getStore("keystoreArr") || [], //用户多账户keyStore数组
         client: {}, //主网对象
         thirdPartySource: "", //第三方来源
+        language: "", //语言
     },
     getters: {},
     mutations: {
@@ -45,6 +46,11 @@ const login = {
             state.thirdPartySource = params;
             setStore ("thirdPartySource", params);
         },
+        SET_LANGUAGE: (state, params) => {
+            state.language = params;
+            setStore ("language", params);
+        },
+        
     },
     actions: {
         //设置多账户

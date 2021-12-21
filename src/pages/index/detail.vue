@@ -1,6 +1,6 @@
 <template>
     <view class="detail">
-        <u-navbar :title="i18n.index.contentDetails">
+        <u-navbar :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -273,12 +273,21 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.contentDetails);
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();
         this.getCommentList();
-        uni.setNavigationBarTitle({
-            title: this.i18n.titleBar.contentDetails,
-        });
+    },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res);
+            } else {
+                res = null;
+            }
+            this.releaseCallback(res);
+        };
     },
     watch: {
         commentList: {
@@ -459,6 +468,10 @@ export default {
                 };
                 res = await this.wetrueSend("reply", payload);
             }
+            this.releaseCallback(res);
+        },
+        //发表评论回调
+        releaseCallback(res) {
             if (JSON.stringify(res) !== "{}" && !!res) {
                 setTimeout(() => {
                     this.isShowComment = false;
@@ -478,10 +491,15 @@ export default {
         //打赏
         reward() {
             if (!this.validLogin()) {
-                uni.showToast({
-                    title: this.i18n.index.pleaseLogin,
-                    icon: "none",
-                });
+                if (this.validThirdPartySource()) {
+                    this.uShowToast(
+                        this.i18n.index.thirdPartyNotOpen,
+                    );
+                    return false;
+                };
+                this.uShowToast(
+                    this.i18n.index.pleaseLogin,
+                );
                 setTimeout(() => {
                     uni.reLaunch({
                         url: "/pages/my/index",

@@ -1,6 +1,6 @@
 <template>
     <view class="wrap">
-        <u-navbar :title="i18n.index.replyDetails">
+        <u-navbar :title="i18n.index.replyDetails" v-if="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -148,6 +148,7 @@
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";
+
 export default {
     components: {
         mpHtml,
@@ -187,6 +188,7 @@ export default {
         this.getReply();
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.replyDetails);
         this.hash = option.hash;
         this.getCommentInfo();
         this.getReply();

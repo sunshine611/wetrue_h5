@@ -27,6 +27,7 @@
 <script>
 import { mapGetters } from "vuex";
 import User from "@/components/User.vue";
+
 export default {
     components: {
         User,
@@ -60,11 +61,12 @@ export default {
     onLoad(option) {
         if (option.type === "focus") {
             this.type = "focus";
-            this.title = "我的关注";
+            this.title = this.i18n.my.myFocus;
         } else if (option.type === "fans") {
             this.type = "fans";
-            this.title = "我的粉丝";
+            this.title = this.i18n.my.myFans;
         }
+        this.uSetBarTitle(this.title);
         this.getUserList();
     },
     computed: {

@@ -1,6 +1,6 @@
 <template>
     <div class="transfer-record">
-        <u-navbar :title="i18n.my.transactions">
+        <u-navbar :title="i18n.my.transactions" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -91,10 +91,11 @@
 <script>
 import Request from "luch-request";
 const http = new Request();
-import { aeknow } from "@/config/config.js";
+import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import uEmpty from "../../uview-ui/components/u-empty/u-empty.vue";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import uEmpty from "@/uview-ui/components/u-empty/u-empty.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
+
 export default {
     components: { uEmpty, UGap },
     data() {
@@ -121,6 +122,7 @@ export default {
         },
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.transactions);
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;
         this.contract = option.contract;
@@ -130,9 +132,6 @@ export default {
         } else {
             this.getAeRecodeList();
         }
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.transactions
-        });
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -159,28 +158,33 @@ export default {
         //获取账户token列表
         getTokenRecodeList() {
             http.get(
-                `${aeknow}/api/tokentxs/${this.userAddress || this.token}/${
-                    this.contract
-                }/${this.pageInfo.limit}/${this.pageInfo.offset}`
-            ).then((res) => {
-                if (res.data.length > 0) {
-                    if (this.pageInfo.offset < this.pageInfo.limit) {
-                        this.recodeList = res.data;
-                    } else {
-                        this.recodeList = this.recodeList.concat(res.data);
+                Backend.aeknowApiTokenTxs(
+                    this.userAddress || this.token,
+                    this.contract,
+                    this.pageInfo.limit,
+                    this.pageInfo.offset
+                )
+                ).then((res) => {
+                    if (res.data.length > 0) {
+                        if (this.pageInfo.offset < this.pageInfo.limit) {
+                            this.recodeList = res.data;
+                        } else {
+                            this.recodeList = this.recodeList.concat(res.data);
+                        }
+                        if (res.data.length < this.pageInfo.limit) {
+                            this.more = "nomore";
+                        }
                     }
-                    if (res.data.length < this.pageInfo.limit) {
-                        this.more = "nomore";
-                    }
-                }
             });
         },
         //获取AE转账记录列表
         getAeRecodeList() {
             http.get(
-                `${aeknow}/api/spendtx/${this.userAddress || this.token}/${
-                    this.pageInfo.limit
-                }/${this.pageInfo.offset}`
+                Backend.aeknowApiSpendTx(
+                    this.userAddress || this.token,
+                    this.pageInfo.limit,
+                    this.pageInfo.offset
+                )
             ).then((res) => {
                 if (res.data.txs.length > 0) {
                     if (this.pageInfo.offset < this.pageInfo.limit) {
@@ -196,7 +200,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open(aeknow + "/miner/viewaccount/" + hash);
+            window.open(Backend.aeknowSearchUrl(hash));
         },
     },
 };

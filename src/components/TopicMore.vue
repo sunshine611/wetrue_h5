@@ -17,7 +17,8 @@
 <script>
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
-import { aeknow } from "@/config/config.js";
+import Backend from "@/util/backend";
+
 export default {
     components: {
         HeadImg,
@@ -88,8 +89,7 @@ export default {
                 this.complain();
             } else if (index === 2) {
                 window.open(
-                    aeknow + "/miner/viewaccount/"
-                    + this.topicInfo.hash
+                    Backend.aeknowSearchUrl(this.topicInfo.hash)
                 );
             }
         },

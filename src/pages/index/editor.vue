@@ -36,6 +36,7 @@
 </template>
 
 <script>
+
 export default {
     data() {
         return {
@@ -47,12 +48,24 @@ export default {
         };
     },
     onLoad(option) {
+        this.uSetBarTitle(this.i18n.titleBar.sendContent);
         this.isPassword();
         if (!!option.topic) {
             this.form= {
                 text: option.topic + " ",
             };
         }
+    },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res);
+            } else {
+                res = null;
+            }
+            this.releaseCallback(res);
+        };
     },
     activated() {
         this.isPassword();
@@ -73,7 +86,10 @@ export default {
                 content: this.form.text,
             };
             let res = await this.wetrueSend("topic", payload);
-            if (JSON.stringify(res) !== "{}" && !!res) {
+            this.releaseCallback(res);
+        },
+        releaseCallback(callback) {
+            if (JSON.stringify(callback) !== "{}" && !!callback) {
                 uni.hideLoading();
                 this.btnLoading = false;
                 this.getConfigInfo();

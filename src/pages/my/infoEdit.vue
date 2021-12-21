@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <u-navbar :title="i18n.my.infoEdit">
+        <u-navbar :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -79,9 +79,10 @@
 
 <script>
 import { mapGetters } from "vuex";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
-import UCellItem from "../../uview-ui/components/u-cell-item/u-cell-item.vue";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
+
 export default {
     components: { UCellItem, UButton, UGap },
     data() {
@@ -123,10 +124,19 @@ export default {
         },
     },
     onLoad() {
+        this.uSetBarTitle(this.i18n.titleBar.infoEdit);
         this.getUserInfo();
-        uni.setNavigationBarTitle({
-        　　title:this.i18n.titleBar.infoEdit
-        });
+    },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res);
+            } else {
+                res = null;
+            }
+            this.releaseCallback(res);
+        };
     },
     //上拉刷新
     onPullDownRefresh() {
@@ -181,17 +191,7 @@ export default {
                 content: this.nickname,
             };
             let res = await this.wetrueSend("nickname", payload);
-            if (JSON.stringify(res) !== "{}" && !!res) {
-                setTimeout(() => {
-                    this.nameShow = false;
-                    this.btnLoading = false;
-                    uni.hideLoading();
-                    this.getUserInfo();
-                }, 2000);
-            } else {
-                this.btnLoading = false;
-                uni.hideLoading();
-            }
+            this.releaseCallback(res);
         },
         //更新性别
         async updateSex() {
@@ -200,13 +200,24 @@ export default {
                 content: this.userInfo.sex,
             };
             let res = await this.wetrueSend('sex',payload);
+            this.releaseCallback(res);
+        },
+        //上链回调
+        releaseCallback(res) {
             if (JSON.stringify(res) !== "{}" && !!res) {
+                setTimeout(() => {
+                    this.nameShow = false;
+                    this.btnLoading = false;
+                    uni.hideLoading();
+                    this.getUserInfo();
+                }, 2000);
                 setTimeout(() => {
                     this.sexShow = false;
                     this.btnLoading = false;
                     uni.hideLoading();
                     this.getUserInfo();
                 }, 2000);
+
             } else {
                 this.btnLoading = false;
                 uni.hideLoading();

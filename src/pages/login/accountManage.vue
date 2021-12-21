@@ -127,11 +127,12 @@
 
 <script>
 import { getStore, setStore } from "@/util/service";
-import UGap from "../../uview-ui/components/u-gap/u-gap.vue";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
-import UButton from "../../uview-ui/components/u-button/u-button.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import Qrcode from "@/components/Qrcode";
 import draggable from "vuedraggable";
+
 export default {
     components: { UGap, UButton, Qrcode, draggable },
     data() {
@@ -163,9 +164,7 @@ export default {
     },
     onLoad() {
         this.isLogin();
-        uni.setNavigationBarTitle({
-            title:this.i18n.titleBar.accountManage
-        });
+        this.uSetBarTitle(this.i18n.titleBar.accountManage);
     },
     activated() {},
     methods: {

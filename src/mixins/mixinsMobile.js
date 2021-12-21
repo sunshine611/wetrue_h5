@@ -14,7 +14,7 @@ import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
-import { nodeUrl } from "@/config/config.js";
+import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
 
 const mixins = {
@@ -70,6 +70,11 @@ const mixins = {
                 },
             });
         },
+        uSetBarTitle(title) {
+            uni.setNavigationBarTitle({
+                title: title,
+            });
+        },
         goUrl(url) {
             uni.navigateTo({
                 url: url,
@@ -116,8 +121,10 @@ const mixins = {
         //获取账户AE余额
         async getAccount() {
             return new Promise((resolve) => {
-                http.get(nodeUrl + "/v3/accounts/" + getStore("token")).then((res) => {
-                    resolve(this.balanceFormat(res.data.balance));
+                http.get(
+                        Backend.nodeApiAccounts(getStore("token"))
+                    ).then((res) => {
+                        resolve(this.balanceFormat(res.data.balance));
                 });
             });
         },
@@ -246,6 +253,15 @@ const mixins = {
             });
             return res;
         },
+        //验证第三方来源
+        validThirdPartySource() {
+            const thirdPartySource = getStore("thirdPartySource");
+            if (thirdPartySource === "box") {
+                return true;
+            } else {
+                return false;
+            }
+        },
         //连接AE网络
         async connectAe() {
             try {
@@ -302,10 +318,10 @@ const mixins = {
                 }
                 let amount, content, client, source;
 
-                const thirdPartySource = getStore("thirdPartySource");
+                const thirdPartySource = this.validThirdPartySource();
                 const configInfo = getStore("configInfo");
                 source = WeTrueSource;
-                if (thirdPartySource === "box") source = "Box æpp";
+                if (thirdPartySource) source = "Box æpp";
 
                 if (type === "topic") {
                     //发送主贴
@@ -361,12 +377,13 @@ const mixins = {
                     return;
                 }
                 this.uShowLoading(this.i18n.mixins.inChain);
-                if (thirdPartySource === "box") {
-                    //第三方来源box上链
+                if (thirdPartySource) {
+                    //第三方来源上链
                     let postPayload = {
                             type: "send_AE",
                             amount: amount,
                             receivingAccount: configInfo.receivingAccount,
+                            contractAddress: "",
                             payload: content,
                     };
                     thirdPartyPost(postPayload);

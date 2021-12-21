@@ -35,6 +35,7 @@
 <script>
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
+
 export default {
     components: {
         HeadImg,

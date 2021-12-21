@@ -40,6 +40,7 @@ import { mapGetters } from "vuex";
 import { version } from "@/config/config.js";
 import UButton from "../uview-ui/components/u-button/u-button.vue";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+
 export default {
     components: {
         UButton,

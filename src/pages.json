@@ -11,7 +11,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "首页",
+        "navigationBarTitleText": "WeTrue",
         "navigationStyle": "custom", // 隐藏系统导航栏
         // "navigationBarTextStyle": "white", // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
         "app-plus": {
@@ -27,7 +27,7 @@
     {
       "path": "pages/index/topic",
       "style": {
-        "navigationBarTitleText": "话题",
+        "navigationBarTitleText": "Topic",
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
@@ -40,7 +40,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "发布主贴",
+        "navigationBarTitleText": "Send Content",
         "enablePullDownRefresh": false
       }
     },
@@ -50,7 +50,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "帖子详情",
+        "navigationBarTitleText": "Content Details",
         "enablePullDownRefresh": true
       }
     },
@@ -60,7 +60,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "回复列表",
+        "navigationBarTitleText": "Reply",
         "enablePullDownRefresh": true
       }
     },
@@ -70,7 +70,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "微触登陆",
+        "navigationBarTitleText": "Login",
         "enablePullDownRefresh": false
       }
     },
@@ -80,7 +80,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "生成账户",
+        "navigationBarTitleText": "Create Account",
         "enablePullDownRefresh": false
       }
     },
@@ -90,7 +90,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "验证密码",
+        "navigationBarTitleText": "Verify Password",
         "enablePullDownRefresh": false
       }
     },
@@ -100,7 +100,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "我的",
+        "navigationBarTitleText": "My",
         "enablePullDownRefresh": false
       }
     },
@@ -110,7 +110,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "信息修改",
+        "navigationBarTitleText": "Info Edit",
         "enablePullDownRefresh": true
       }
     },
@@ -120,7 +120,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "帖子列表",
+        "navigationBarTitleText": "Topic List",
         "enablePullDownRefresh": true
       }
     },
@@ -130,7 +130,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "关注/粉丝",
+        "navigationBarTitleText": "Focus/Fans",
         "enablePullDownRefresh": true
       }
     },
@@ -140,7 +140,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "用户信息",
+        "navigationBarTitleText": "User Info",
         "enablePullDownRefresh": true
       }
     },
@@ -157,7 +157,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "我的钱包",
+        "navigationBarTitleText": "My Wallet",
         "enablePullDownRefresh": true
       }
     },
@@ -167,7 +167,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "转账记录",
+        "navigationBarTitleText": "Transactions",
         "enablePullDownRefresh": true
       }
     },
@@ -177,7 +177,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "转账",
+        "navigationBarTitleText": "Transfer",
         "enablePullDownRefresh": true
       }
     },
@@ -187,7 +187,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "收款",
+        "navigationBarTitleText": "Receive",
         "enablePullDownRefresh": false
       }
     },
@@ -197,7 +197,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "映射挖矿",
+        "navigationBarTitleText": "Mapping Dig",
         "enablePullDownRefresh": true
       }
     },
@@ -207,7 +207,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "账户管理",
+        "navigationBarTitleText": "Account Manage",
         "enablePullDownRefresh": false
       }
     },
@@ -217,7 +217,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "消息",
+        "navigationBarTitleText": "Message",
         "enablePullDownRefresh": true
       }
     }
