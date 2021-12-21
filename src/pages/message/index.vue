@@ -17,7 +17,7 @@
                 v-for="(item, index) in msgList"
                 :key="index"
             >
-                <div class="comment" v-if="item.type === 'comment'">
+                <div class="comment" v-if="item.type === 'comment' || 'mentions'">
                     <div class="user-area">
                         <div class="head-box">
                             <HeadImg
