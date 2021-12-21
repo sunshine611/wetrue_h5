@@ -294,6 +294,9 @@ export default {
                     /deep/ .topic-text {
                         color: #f04a82;
                     }
+                    /deep/ .mentions-text {
+                        color: #f04a82;
+                    }
                 }
                 .topic-url {
                     color: #f04a82;

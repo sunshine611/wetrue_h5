@@ -158,6 +158,7 @@ import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import { mapGetters } from "vuex";
+import Backend from "@/util/backend";
 
 export default {
     components: {
@@ -193,6 +194,7 @@ export default {
             handler() {
                 this.$nextTick(() => {
                     const topicArr = document.getElementsByClassName("topic-text");
+                    
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -202,6 +204,24 @@ export default {
                                     this.goUrl(
                                         "/pages/index/topic?keyword=" + text
                                     );
+                                    e.stopPropagation();
+                                },
+                                true
+                            );
+                        }
+                    }
+                    const mentionsArr = document.getElementsByClassName("mentions-text");
+                    if (mentionsArr.length > 0) {
+                        for (let i = 0; i < mentionsArr.length; i++) {
+                            mentionsArr[i].addEventListener(
+                                "click",
+                                (e) => {
+                                    let text = mentionsArr[i].innerText;
+                                    Backend.nodeApiGetAddressByNames(text.split("@").join("")).then((res) => {
+                                        this.goUrl(
+                                            "/pages/my/userInfo?userAddress=" + res
+                                        );
+                                    });
                                     e.stopPropagation();
                                 },
                                 true
@@ -313,6 +333,9 @@ export default {
                 word-break: normal;
                 overflow: hidden;
                 /deep/ .topic-text {
+                    color: #f04a82;
+                }
+                /deep/ .mentions-text {
                     color: #f04a82;
                 }
             }

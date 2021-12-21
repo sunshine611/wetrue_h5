@@ -212,12 +212,17 @@ const mixins = {
                 return true;
             }
         },
-        //话题高亮
+        //话题及@高亮
         topicHighlight(value) {
-            var exp;
-            exp = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
-            value = value.replace(exp, (item) => {
+            let expt, expm;
+            expt = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
+            expm = /@[\p{L}\d]+.chain/gu;
+            value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
+                return newVal;
+            });
+            value = value.replace(expm, (item) => {
+                let newVal = `<text class="mentions-text">${item}</text>`;
                 return newVal;
             });
             return value;
