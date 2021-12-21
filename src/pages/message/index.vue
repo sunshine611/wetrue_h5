@@ -34,7 +34,7 @@
                             <div class="time">
                                 <text>{{
                                     $moment(parseInt(item.utctime)).format(
-                                        "yyyy-MM-DD HH:mm"
+                                        "yyyy-MM-DD HH:mm"
                                     )
                                 }}</text>
                             </div>

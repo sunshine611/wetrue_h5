@@ -96,6 +96,7 @@ export default {
 		backMy:'返回我的',
 		passwordErr:'密码错误',
 		connectionFail:'AE节点连接失败',
+		languageSwitch:'Language Switch',
 	},
 	index:{
 		praise:'赞',

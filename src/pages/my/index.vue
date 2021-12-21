@@ -125,14 +125,13 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item title="Language" @click="selectLanguage" :arrow="false">
+                    <u-cell-item :title="i18n.my.languageSwitch" @click="selectLanguage" :arrow="false">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-language"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
-                            
                             v-show="language === 'zh-cn'"
                         >
                         </fa-FontAwesome>
