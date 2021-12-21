@@ -1,51 +1,5 @@
 <template>
     <view class="index">
-        <!-- <u-navbar :is-back="false">
-            <view class="slot-wrap nav">
-                <u-dropdown
-                    ref="uDropdown"
-                    class="u-dropdown"
-                    active-color="#f04a82"
-                >
-                    <u-dropdown-item
-                        v-model="cateInfo.value"
-                        :title="cateInfo.label"
-                        :options="categoryList"
-                        @change="selectCategory"
-                    ></u-dropdown-item>
-                </u-dropdown>
-                <div class="left">
-                    <fa-FontAwesome
-                        type="fas fa-language"
-                        size="36"
-                        class="mr-10"
-                        color="#f04a82"
-                        @tap="selectLanguage"
-                        v-show="language === 'zh-cn'"
-                    >
-                    </fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="fas fa-language"
-                        size="36"
-                        class="mr-10"
-                        color="#03a9f4"
-                        @tap="selectLanguage"
-                        v-show="language === 'en'"
-                    >
-                    </fa-FontAwesome>
-                </div>
-                <div class="right" v-if="validLogin()">
-                    <fa-FontAwesome
-                        type="fas fa-plus"
-                        size="36"
-                        class="mr-10"
-                        color="#f04a82"
-                        @tap="goUrl('editor')"
-                    >
-                    </fa-FontAwesome>
-                </div>
-            </view>
-        </u-navbar> -->
         <u-navbar :is-back="false" class="nav">
             <u-tabs
                 :list="categoryList"
@@ -55,6 +9,7 @@
                 active-color="#f04a82"
                 bg-color="#fafafa"
                 class="nav-tab"
+                :show-bar="false"
             ></u-tabs>
         </u-navbar>
         <TopicList :postList="postList"></TopicList>
@@ -71,9 +26,7 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <PostTopicButton
-            v-show="postTopicButtonShow"
-        ></PostTopicButton>
+        <PostTopicButton v-show="postTopicButtonShow"></PostTopicButton>
     </view>
 </template>
 
@@ -94,7 +47,6 @@ export default {
     },
     data() {
         return {
-            language: getStore("language"),
             current: 0, //tab当前选项
             cateInfo: {
                 value: 1,
@@ -112,7 +64,7 @@ export default {
             versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
-            postTopicButtonShow:true,//控制发帖按钮显隐
+            postTopicButtonShow: true, //控制发帖按钮显隐
         };
     },
     //上拉刷新
@@ -137,23 +89,6 @@ export default {
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
-        if (!getStore("language")) {
-            uni.getSystemInfo({
-				success: function(res){
-					if (res.language === "zh-CN") {
-                        setStore("language", "zh-cn");
-                    } else {
-                        setStore("language", "en");
-                    }
-				},
-                fail: function(){
-                    setStore("language", "en");
-                }
-            });
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
-        }
     },
     activated() {
         this.getUnreadMsg();
@@ -193,7 +128,7 @@ export default {
                 },
                 {
                     name: "SuperHero",
-                }
+                },
             ];
         },
     },
@@ -269,21 +204,6 @@ export default {
             }; //页码信息
             this.getPostList();
         },
-        //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
-            }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
-            let index = parseInt(this.index) + 1;
-            this.cateInfo.value = index;
-            this.cateInfo.label = this.categoryList[this.index].label;
-        },
         //获取服务端版本信息
         getVersionInfo() {
             this.$http
@@ -309,7 +229,7 @@ export default {
 .index {
     .nav {
         /deep/ .u-navbar-inner {
-            display: inline!important;
+            display: inline !important;
         }
         .nav-tab {
             width: 100%;

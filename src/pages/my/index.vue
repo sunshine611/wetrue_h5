@@ -98,7 +98,10 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="i18n.my.defi" @click="goUrl('mappingDig')">
+                    <u-cell-item
+                        :title="i18n.my.defi"
+                        @click="goUrl('mappingDig')"
+                    >
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-hammer"
@@ -122,15 +125,24 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item
-                        title="Language"
-                    >
+                    <u-cell-item title="Language" @click="selectLanguage" :arrow="false">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-language"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
+                            
+                            v-show="language === 'zh-cn'"
+                        >
+                        </fa-FontAwesome>
+                        <fa-FontAwesome
+                            slot="icon"
+                            type="fas fa-language"
+                            size="32"
+                            class="mr-10"
+                            color="#03a9f4"
+                            v-show="language === 'en'"
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
@@ -138,7 +150,7 @@
             </div>
             <div class="version">
                 <div class="version-code" @click="versionCheck">
-                    {{ i18n.my.version }}：{{ version}}
+                    {{ i18n.my.version }}：{{ version }}
                     <u-badge
                         v-if="versionCode < parseInt(versionInfo.newVer)"
                         type="error"
@@ -198,7 +210,8 @@ import { version } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
-import { getStore } from "@/util/service";
+import { getStore, setStore } from "@/util/service";
+import moment from "moment";
 
 export default {
     components: {
@@ -215,6 +228,7 @@ export default {
             versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             keystoreArr: getStore("keystoreArr"),
+            language: getStore("language"),
         };
     },
     computed: {
@@ -230,18 +244,18 @@ export default {
         this.uSetBarTitle(this.i18n.titleBar.my);
         if (!!this.token) {
             this.getUserInfo();
-            this.getAccount().then(res=>{
+            this.getAccount().then((res) => {
                 this.balance = res;
-            })
+            });
             this.getUnreadMsg();
         }
     },
     activated() {
         if (!!this.token) {
             this.getUserInfo();
-            this.getAccount().then(res=>{
+            this.getAccount().then((res) => {
                 this.balance = res;
-            })
+            });
             this.getUnreadMsg();
         }
         this.getVersionInfo();
@@ -265,7 +279,7 @@ export default {
         },
         //复制粘贴板
         copy() {
-            this.copyContent(this.userInfo.userAddress)
+            this.copyContent(this.userInfo.userAddress);
         },
         //打开白皮书
         whitePaper() {
@@ -296,6 +310,18 @@ export default {
             } else {
                 this.uShowToast(this.i18n.my.versionTips);
             }
+        },
+        //切换语言
+        selectLanguage() {
+            if (getStore("language") === "zh-cn") {
+                setStore("language", "en");
+            } else if (getStore("language") === "en") {
+                setStore("language", "zh-cn");
+            }
+            //控制语言显示
+            this.language = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
         },
     },
 };
