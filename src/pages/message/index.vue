@@ -17,7 +17,7 @@
                 v-for="(item, index) in msgList"
                 :key="index"
             >
-                <div class="comment" v-if="item.type === 'comment'">
+                <div class="comment" v-if="item.type === 'comment' || (item.type == 'mentions' && !item.topic.payload)">
                     <div class="user-area">
                         <div class="head-box">
                             <HeadImg
@@ -34,7 +34,7 @@
                             <div class="time">
                                 <text>{{
                                     $moment(parseInt(item.utctime)).format(
-                                        "yyyy-MM-DD HH:mm"
+                                        "yyyy-MM-DD HH:mm"
                                     )
                                 }}</text>
                             </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="reply" v-if="item.type === 'reply'">
+                <div class="reply" v-if="item.type === 'reply'  || (item.type == 'mentions' && item.topic.payload)">
                     <div class="user-area">
                         <div class="head-box">
                             <HeadImg
@@ -227,6 +227,7 @@ export default {
                                 this.msgList = this.msgList.concat(res.data.data);
                             }
                         }
+                        console.log(this.msgList);
                     } else {
                         this.more = "nomore";
                     }

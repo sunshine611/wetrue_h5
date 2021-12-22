@@ -1,7 +1,7 @@
 <!--质押挖矿-->
 <template>
     <div class="mapping-dig">
-        <div class="icon-list" v-if="!validThirdPartySource()">
+        <div class="icon-list" v-show="!validThirdPartySource()">
             <u-icon
                 name="home"
                 class="mr-30"

@@ -1,6 +1,6 @@
 <template>
     <view class="user-list">
-        <u-navbar :title="title">
+        <u-navbar :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"

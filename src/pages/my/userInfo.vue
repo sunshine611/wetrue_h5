@@ -1,6 +1,6 @@
 <template>
     <view class="user-info">
-        <u-navbar :title="i18n.my.userInfo">
+        <u-navbar :title="i18n.my.userInfo" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -100,7 +100,6 @@ import TopicList from "@/components/TopicList.vue";
 import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
-import { aeknow, nodeUrl } from "@/config/config.js";
 import Backend from "@/util/backend";
 import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
@@ -297,7 +296,7 @@ export default {
                     });
                 })
                 .then(() => {
-                    http.get(aeknow + "/api/token/" + this.userAddress).then(
+                    http.get(Backend.aeknowApiTokenList(this.userAddress)).then(
                         (res) => {
                             if (res.data.tokens.length > 0) {
                                 this.postList = this.postList.concat(

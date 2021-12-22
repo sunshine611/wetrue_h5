@@ -96,6 +96,7 @@ export default {
 		backMy:'Go Back My',
 		passwordErr:'Error Password',
 		connectionFail:'AE Node Connection Fail',
+		languageSwitch:'Language Switch',
 	},
 	index:{
 		praise:'Likes',

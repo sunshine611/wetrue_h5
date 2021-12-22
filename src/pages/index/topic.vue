@@ -1,6 +1,6 @@
 <template>
     <view class="topic">
-        <u-navbar :title="keyword" v-if="!validThirdPartySource()">
+        <u-navbar :title="keyword" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"

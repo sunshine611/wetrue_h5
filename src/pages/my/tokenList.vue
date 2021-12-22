@@ -1,6 +1,6 @@
 <template>
     <div class="token-list">
-        <u-navbar :title="i18n.my.myWallet" v-if="!validThirdPartySource()">
+        <u-navbar :title="i18n.my.myWallet" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"

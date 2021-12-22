@@ -172,6 +172,24 @@ export default {
                             );
                         }
                     }
+                    const mentionsArr = document.getElementsByClassName("mentions-text");
+                    if (mentionsArr.length > 0) {
+                        for (let i = 0; i < mentionsArr.length; i++) {
+                            mentionsArr[i].addEventListener(
+                                "click",
+                                (e) => {
+                                    let text = mentionsArr[i].innerText;
+                                    Backend.nodeApiGetAddressByNames(text.split("@").join("")).then((res) => {
+                                        this.goUrl(
+                                            "/pages/my/userInfo?userAddress=" + res
+                                        );
+                                    });
+                                    e.stopPropagation();
+                                },
+                                true
+                            );
+                        }
+                    }
                 });
             },
             deep: true,
@@ -292,6 +310,9 @@ export default {
                         overflow: hidden;
                     }
                     /deep/ .topic-text {
+                        color: #f04a82;
+                    }
+                    /deep/ .mentions-text {
                         color: #f04a82;
                     }
                 }

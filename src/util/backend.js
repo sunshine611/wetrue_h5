@@ -3,8 +3,8 @@ import { baseUrl, nodeUrl, aeknow } from "@/config/config.js";
 import store from "@/store";
 
 export default class Backend {
-	static nodeApiNames = (domainName) => {
-		return `${nodeUrl}/v3/names/${domainName}`;
+	static nodeApiNames = (names) => {
+		return `${nodeUrl}/v3/names/${names}`;
 	};
 
 	static nodeApiAccounts = (address) => {
@@ -19,7 +19,23 @@ export default class Backend {
 		return `${aeknow}/api/token/${token}`;
 	};
 
-	
+	static nodeApiGetAddressByNames = async (names) => {
+		const http = new Request();
+		return new Promise((resolve) => {
+			http.get(
+				`${nodeUrl}/v3/names/${names}`
+			).then((res) => {
+				if (res.data.id) {
+					if (res.data.pointers.length > 0) {
+						resolve(res.data.pointers[0].id);
+					} else {
+						resolve(res.data.owner);
+					}
+				}
+			});
+		});
+	};
+
 	static aeknowApiMyToken= (
 		address,
 		contract,

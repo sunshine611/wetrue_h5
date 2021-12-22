@@ -31,9 +31,7 @@
 </template>
 
 <script>
-import { getStore, setStore } from "@/util/service";
 import { version } from "@/config/config.js";
-import moment from "moment";
 import TopicList from "@/components/TopicList.vue";
 import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
