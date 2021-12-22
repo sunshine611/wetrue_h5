@@ -14,7 +14,8 @@
         <div :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || i18n.my.cryptonym }}
         </div>
-        <text class="userid">ID:{{ userInfo.userAddress.slice(-4) }}</text>
+        <text class="userid">ID:{{ userInfo.userAddress.slice(-4)  }}</text>
+        <text class="userid" v-show="userInfo.defaultAens">AENS:{{ userInfo.defaultAens }}</text>
     </div>
 </template>
 <script>
