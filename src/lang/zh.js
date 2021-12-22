@@ -26,6 +26,7 @@ export default {
 		hotRecommend: '推荐',
 		newPic :'图片',
 		myFocus: '关注',
+		superHero: '超级英雄',
 	},
 	login:{
 		login:'登录',
