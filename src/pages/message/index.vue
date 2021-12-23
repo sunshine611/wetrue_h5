@@ -227,7 +227,6 @@ export default {
                                 this.msgList = this.msgList.concat(res.data.data);
                             }
                         }
-                        console.log(this.msgList);
                     } else {
                         this.more = "nomore";
                     }
