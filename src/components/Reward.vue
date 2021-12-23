@@ -203,7 +203,8 @@ export default {
                 Backend.aeMdwApiMyToken(this.token, wttContract)
                 //Backend.aeknowApiMyToken(this.token, wttContract)
             ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.amount || res.data.balance);
+                this.wttBalance = this.balanceFormat(res.data.amount);
+                //this.wttBalance = this.balanceFormat(res.data.balance);
             });
         },
     },
