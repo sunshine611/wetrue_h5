@@ -125,7 +125,7 @@ export default {
                     name: this.i18n.home.myFocus,
                 },
                 {
-                    name: "SuperHero",
+                    name: this.i18n.home.superHero,
                 },
             ];
         },

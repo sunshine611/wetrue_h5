@@ -1,4 +1,4 @@
-import { getStore } from "@/util/service";
+import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
 import { sha256 } from "js-sha256";
@@ -21,7 +21,11 @@ const mixins = {
     data() {
         return {};
     },
-    onLoad() {},
+    onLoad() {
+        if (!getStore("language")) {
+            setStore("language", "zh-cn");
+        }
+    },
     onShow() {
         const { tabBar } = this.$_i18n.messages[this.$_i18n.locale];
         uni.setTabBarItem({

@@ -26,6 +26,7 @@ export default {
 		hotRecommend: 'For You',
 		newPic: 'Pictures',
 		myFocus: 'Following',
+		superHero: 'SuperHero',
 	},
 	login:{
 		login:'Login',

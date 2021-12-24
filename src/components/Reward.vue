@@ -200,9 +200,11 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeknowApiMyToken(this.token, wttContract)
+                Backend.aeMdwApiMyToken(this.token, wttContract)
+                //Backend.aeknowApiMyToken(this.token, wttContract)
             ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.balance);
+                this.wttBalance = this.balanceFormat(res.data.amount);
+                //this.wttBalance = this.balanceFormat(res.data.balance);
             });
         },
     },

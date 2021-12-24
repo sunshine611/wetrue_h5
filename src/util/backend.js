@@ -1,5 +1,5 @@
 import Request from "luch-request";
-import { baseUrl, nodeUrl, aeknow } from "@/config/config.js";
+import { baseUrl, nodeUrl, aeknow, aeMdw } from "@/config/config.js";
 import store from "@/store";
 
 export default class Backend {
@@ -36,7 +36,7 @@ export default class Backend {
 		});
 	};
 
-	static aeknowApiMyToken= (
+	static aeknowApiMyToken = (
 		address,
 		contract,
 		) => {
@@ -69,6 +69,16 @@ export default class Backend {
 			query += `/${contract}`;
 			query += `/${limit}`;
 			query += `/${offset}`;
+		return query;
+	};
+
+	static aeMdwApiMyToken = (
+		address,
+		contract,
+		) => {
+		let query = `${aeMdw}/aex9/balance`;
+			query += `/${contract}`;
+			query += `/${address}`;
 		return query;
 	};
 

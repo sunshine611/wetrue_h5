@@ -60,6 +60,10 @@
                                     :size="30"
                                     @click="praise('comment', item)"
                                 ></u-icon>
+                                <TopicMore
+                                    :topicInfo="item"
+                                    class="ml-20"
+                                ></TopicMore>
                             </view>
                         </view>
                         <view class="content">
@@ -220,15 +224,18 @@
 <script>
 import inputComment from "@/components/input-comment/input-comment.vue";
 import TopicContent from "@/components/TopicContent";
+import TopicMore from "@/components/TopicMore";
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
 import Name from "@/components/Name";
 
+
 export default {
     components: {
         inputComment,
         TopicContent,
+        TopicMore,
         HeadImg,
         mpHtml,
         Reward,
