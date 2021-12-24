@@ -61,6 +61,7 @@ export default {
         box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82, 0.3);
         width: 80rpx;
         height: 80rpx;
+        line-height: 80rpx;
         border-radius: 40rpx;
         display: flex;
         justify-content: center;

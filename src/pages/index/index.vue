@@ -10,9 +10,10 @@
                 bg-color="#fafafa"
                 class="nav-tab"
                 :show-bar="false"
+                 :style="{'paddingTop':iphoneTop()?'14px':'0'}"
             ></u-tabs>
         </u-navbar>
-        <TopicList :postList="postList"></TopicList>
+        <TopicList :postList="postList" :style="{'marginTop':iphoneTop()?'14px':'0'}"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
@@ -87,9 +88,11 @@ export default {
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
+        
     },
     activated() {
         this.getUnreadMsg();
+        this.iphoneTop()
     },
     onTabItemTap() {
         if (this.tabClick) {

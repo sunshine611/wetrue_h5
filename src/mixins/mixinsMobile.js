@@ -29,17 +29,17 @@ const mixins = {
     onShow() {
         const { tabBar } = this.$_i18n.messages[this.$_i18n.locale];
         uni.setTabBarItem({
-            index:0,
-            text:tabBar.index
-        })
+            index: 0,
+            text: tabBar.index,
+        });
         uni.setTabBarItem({
-            index:1,
-            text:tabBar.message
-        })
+            index: 1,
+            text: tabBar.message,
+        });
         uni.setTabBarItem({
-            index:2,
-            text:tabBar.my
-        })
+            index: 2,
+            text: tabBar.my,
+        });
     },
     methods: {
         uShowToast(title, icon, time) {
@@ -64,7 +64,7 @@ const mixins = {
             uni.showModal({
                 title: title,
                 content: content,
-                success: function(res) {
+                success: function (res) {
                     if (res.confirm) {
                         callback();
                         // console.log('用户点击确定');
@@ -125,11 +125,11 @@ const mixins = {
         //获取账户AE余额
         async getAccount() {
             return new Promise((resolve) => {
-                http.get(
-                        Backend.nodeApiAccounts(getStore("token"))
-                    ).then((res) => {
+                http.get(Backend.nodeApiAccounts(getStore("token"))).then(
+                    (res) => {
                         resolve(this.balanceFormat(res.data.balance));
-                });
+                    }
+                );
             });
         },
         //余额格式化
@@ -219,7 +219,8 @@ const mixins = {
         //话题及@高亮
         topicHighlight(value) {
             let expt, expm;
-            expt = /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
+            expt =
+                /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
             expm = /@[\p{L}\d]+.chain/gu;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
@@ -245,7 +246,7 @@ const mixins = {
             });
             uni.setClipboardData({
                 data: content,
-                success: function() {
+                success: function () {
                     uni.showToast({
                         title: this.i18n.my.copySuccess,
                         icon: "none",
@@ -389,11 +390,11 @@ const mixins = {
                 if (thirdPartySource) {
                     //第三方来源上链
                     let postPayload = {
-                            type: "send_AE",
-                            amount: amount,
-                            receivingAccount: configInfo.receivingAccount,
-                            contractAddress: "",
-                            payload: content,
+                        type: "send_AE",
+                        amount: amount,
+                        receivingAccount: configInfo.receivingAccount,
+                        contractAddress: "",
+                        payload: content,
                     };
                     thirdPartyPost(postPayload);
                     //后续等暴露方法要求
@@ -401,12 +402,12 @@ const mixins = {
                     //WeTrue上链
                     client = await this.client();
                     const res = await client.spend(
-                            amount,
-                            configInfo.receivingAccount,
-                            {
-                                payload: JSON.stringify(content),
-                            }
-                        );
+                        amount,
+                        configInfo.receivingAccount,
+                        {
+                            payload: JSON.stringify(content),
+                        }
+                    );
                     return await this.postHashToWeTrue(res);
                 }
             } catch (err) {
@@ -443,10 +444,25 @@ const mixins = {
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },
+        //苹果刘海屏顶部兼容性调整
+        iphoneTop() {
+            let iphones = ["iPhone Xs","iPhone Xr"];
+            let result;
+            uni.getSystemInfo({
+                success(res) {
+                    if (iphones.includes(res.model)) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                },
+            });
+            return result;
+        },
     },
 };
 const mixinsMobile = {
-    install: function(Vue, options) {
+    install: function (Vue, options) {
         Vue.mixin(mixins);
     },
 };
