@@ -464,11 +464,7 @@ const mixins = {
              let _that = this;
              uni.getSystemInfo({
                  success(e) {
-                     if(e.platform == "ios" || e.platform == "devtools"){
-                         _that.statusBarHeight = e.statusBarHeight;
-                     }else{
-                         _that.statusBarHeight = e.statusBarHeight;
-                     }
+                    _that.statusBarHeight = e.statusBarHeight;
                  }
              })
          },

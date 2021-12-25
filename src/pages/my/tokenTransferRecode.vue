@@ -202,7 +202,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open(Backend.aeknowSearchUrl(hash));
+            window.open(Backend.viewExplorerUrl(hash));
         },
     },
 };

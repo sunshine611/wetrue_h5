@@ -293,7 +293,7 @@ export default {
         //查看合约调用成功后返回的交易哈希
         viewHash() {
             this.hashShow = false;
-            window.open(Backend.aeknowSearchUrl(this.result.hash));
+            window.open(Backend.viewExplorerUrl(this.result.hash));
         },
     },
 };
