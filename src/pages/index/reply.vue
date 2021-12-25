@@ -54,6 +54,10 @@
                         :size="30"
                         @click="praise('comment')"
                     ></u-icon>
+                    <TopicMore
+                        :topicInfo="commentInfo"
+                        class="ml-20"
+                    ></TopicMore>
                 </view>
             </view>
             <view class="content">
@@ -108,6 +112,10 @@
                                 :size="30"
                                 @click="praise('reply', item)"
                             ></u-icon>
+                            <TopicMore
+                                :topicInfo="item"
+                                class="ml-20"
+                            ></TopicMore>
                         </view>
                     </view>
                     <view class="content">
@@ -149,12 +157,14 @@
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
 
 export default {
     components: {
         mpHtml,
         HeadImg,
         Name,
+        TopicMore,
     },
     data() {
         return {
