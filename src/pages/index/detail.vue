@@ -1,6 +1,7 @@
 <template>
     <view class="detail">
-        <u-navbar :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -280,6 +281,7 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.contentDetails);
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();

@@ -1,10 +1,7 @@
 <template>
-    <div class="editor">
-        <u-navbar
-            back-text=""
-            :title="i18n.index.sendContent"
-            :border-bottom="false"
-        >
+    <view class="editor">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" back-text="" :title="i18n.index.sendContent" :border-bottom="false">
             <div slot="right" class="right-btn">
                 <u-button
                     type="primary"
@@ -32,7 +29,7 @@
         />
         <u-gap height="40"></u-gap>
 		<!-- <u-upload ref="wetrueImg" :auto-upload="false" :file-list="fileList" :max-count="9" del-bg-color="#f04a82" @on-choose-complete="uploadImg"></u-upload> -->
-    </div>
+    </view>
 </template>
 
 <script>
@@ -48,6 +45,7 @@ export default {
         };
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.sendContent);
         this.isPassword();
         if (!!option.topic) {
@@ -143,7 +141,6 @@ export default {
 page {
     background-color: #fff;
 }
-
 .editor {
     padding: 30rpx;
 

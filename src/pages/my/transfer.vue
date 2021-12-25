@@ -1,6 +1,7 @@
 <template>
     <div class="transfer">
-        <u-navbar :title="title" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -140,6 +141,7 @@ export default {
         },
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.isPassword();
         if (!!option.contractId) {
             this.tokenInfo = {

@@ -2,6 +2,7 @@
 <template>
     <div class="mapping-dig">
         <div class="icon-list" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
             <u-icon
                 name="home"
                 class="mr-30"
@@ -268,6 +269,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.getUserInfo();
         this.getMappingInfo();
         this.getAccount();

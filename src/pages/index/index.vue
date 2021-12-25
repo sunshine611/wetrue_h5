@@ -1,19 +1,19 @@
 <template>
     <view class="index">
-        <u-navbar :is-back="false" class="nav">
-            <u-tabs
-                :list="categoryList"
-                :is-scroll="true"
-                @change="selectCategory"
-                :current="current"
-                active-color="#f04a82"
-                bg-color="#fafafa"
-                class="nav-tab"
-                :show-bar="false"
-                 :style="{'paddingTop':iphoneTop()?'14px':'0'}"
-            ></u-tabs>
-        </u-navbar>
-        <TopicList :postList="postList" :style="{'marginTop':iphoneTop()?'14px':'0'}"></TopicList>
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+            <u-navbar class="nav" :is-fixed="false" :is-back="false">
+                <u-tabs
+                    class="nav-tab"
+                    :list="categoryList"
+                    :is-scroll="true"
+                    @change="selectCategory"
+                    :current="current"
+                    active-color="#f04a82"
+                    bg-color="#fafafa"
+                    :show-bar="false"
+                ></u-tabs>
+            </u-navbar>
+        <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
         </div>
@@ -82,17 +82,16 @@ export default {
         this.getUnreadMsg();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.index);
         setThirdPartySource(option);
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
-        
     },
     activated() {
         this.getUnreadMsg();
-        this.iphoneTop()
     },
     onTabItemTap() {
         if (this.tabClick) {

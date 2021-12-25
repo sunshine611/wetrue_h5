@@ -1,6 +1,7 @@
 <template>
     <div class="user-info">
-        <u-navbar :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -124,6 +125,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.infoEdit);
         this.getUserInfo();
     },
