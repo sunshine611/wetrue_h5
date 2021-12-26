@@ -42,13 +42,18 @@
                     <div class="text-content">
                         <mp-html :content="item.payload"/>
                     </div>
-                    <div class="img-list">
+                    <div
+                        class="img-list"
+                        v-for="(items, index) in item.mediaList"
+                        :key="index"
+                    >
                         <u-image
                             width="200rpx"
                             height="200rpx"
-                            :src="item.imgTx"
-                            v-if="item.imgTx"
+                            :src="ipfsUrl + items.image"
+                            v-if="items.image"
                         ></u-image>
+                    </div>
                         <u-image
                             width="200rpx"
                             height="200rpx"
@@ -65,7 +70,6 @@
                                 {{ item.simpleUrl }}
                             </span>
                         </a>
-                    </div>
                 </div>
                 <div class="operation">
                     <div
@@ -139,6 +143,10 @@ export default {
         postList: {
             type: Array,
             default: [],
+        },
+        ipfsUrl: {
+            type: Object,
+            default: () => "https://dweb.link/ipfs/",
         },
     },
     data() {

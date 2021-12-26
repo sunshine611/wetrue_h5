@@ -43,14 +43,19 @@
                         ref="mpHtml"
                     />
                 </div>
-                <div class="img-list">
+                <div
+                    class="img-list"
+                    v-for="(item, index) in postInfo.mediaList"
+                    :key="index"
+                >
                     <u-image
-                        width="150rpx"
-                        height="150rpx"
-                        :src="postInfo.imgTx"
-                        v-if="postInfo.imgTx"
+                        width="200rpx"
+                        height="200rpx"
+                        :src="ipfsUrl + item.image"
+                        v-if="item.image"
                     ></u-image>
-                    <u-image
+                </div>
+                <u-image
                         width="200rpx"
                         height="200rpx"
                         :src="postInfo.image"
@@ -66,7 +71,6 @@
                             {{ postInfo.simpleUrl }}
                         </span>
                     </a>
-                </div>
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
                         class="reward-list"
@@ -173,6 +177,10 @@ export default {
         postInfo: {
             type: Object,
             default: () => {},
+        },
+        ipfsUrl: {
+            type: Object,
+            default: () => "https://dweb.link/ipfs/",
         },
     },
     data() {
