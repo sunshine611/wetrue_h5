@@ -1,5 +1,6 @@
 <template>
     <view class="index">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
         <u-tabs
             :list="tabList"
             :is-scroll="false"
@@ -183,6 +184,7 @@ export default {
         this.getMsgList();
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.message);
         this.getMsgList();
         this.getVersionInfo();

@@ -1,6 +1,7 @@
 <template>
     <view class="user-list">
-        <u-navbar :title="title" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -59,6 +60,7 @@ export default {
         this.getUserList();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "focus") {
             this.type = "focus";
             this.title = this.i18n.my.myFocus;

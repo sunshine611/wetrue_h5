@@ -1,5 +1,6 @@
 <template>
     <div class="my">
+        <view class="top-background" :style="`padding-top:${statusBarHeight}px`"></view>
         <div class="user-info" v-if="!!token">
             <div class="my-info">
                 <div class="block">
@@ -240,6 +241,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.my);
         if (!!this.token) {
             this.getUserInfo();
@@ -332,6 +334,9 @@ page {
 }
 
 .my {
+    .top-background {
+        background: #f04a82;
+    }
     .user-info {
         .my-info {
             .block {

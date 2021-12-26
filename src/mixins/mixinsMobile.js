@@ -446,7 +446,7 @@ const mixins = {
         },
         //苹果刘海屏顶部兼容性调整
         iphoneTop() {
-            let iphones = ["iPhone Xs","iPhone Xr"];
+            let iphones = ["iPhone X","iPhone Xs","iPhone XS Max","iPhone Xr","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max"];
             let result;
             uni.getSystemInfo({
                 success(res) {
@@ -459,6 +459,15 @@ const mixins = {
             });
             return result;
         },
+        //获取状态栏高度
+        getSystemStatusBarHeight(){
+             let _that = this;
+             uni.getSystemInfo({
+                 success(e) {
+                    _that.statusBarHeight = e.statusBarHeight;
+                 }
+             })
+         },
     },
 };
 const mixinsMobile = {

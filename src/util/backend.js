@@ -1,8 +1,13 @@
 import Request from "luch-request";
-import { baseUrl, nodeUrl, aeknow, aeMdw } from "@/config/config.js";
+import { baseUrl, nodeUrl, aeknow, aeMdw, aeExplorer } from "@/config/config.js";
 import store from "@/store";
 
 export default class Backend {
+
+	static viewExplorerUrl = (hash) => {
+		return this.explorerViewhUrl(hash);
+	};
+
 	static nodeApiNames = (names) => {
 		return `${nodeUrl}/v3/names/${names}`;
 	};
@@ -11,8 +16,12 @@ export default class Backend {
 		return `${nodeUrl}/v3/accounts/${address}`;
 	};
 
-	static aeknowSearchUrl = (content) => {
-		return `${aeknow}/miner/viewaccount/${content}`;
+	static aeknowViewhUrl = (hash) => {
+		return `${aeknow}/miner/viewaccount/${hash}`;
+	};
+	
+	static explorerViewhUrl = (hash) => {
+		return `${aeExplorer}/transactions/${hash}`;
 	};
 
 	static aeknowApiTokenList = (token) => {

@@ -1,6 +1,7 @@
 <template>
     <div class="transfer-record">
-        <u-navbar :title="i18n.my.transactions" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.my.transactions" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -122,6 +123,7 @@ export default {
         },
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.transactions);
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;
@@ -200,7 +202,7 @@ export default {
         },
         //查看详情
         view(hash) {
-            window.open(Backend.aeknowSearchUrl(hash));
+            window.open(Backend.viewExplorerUrl(hash));
         },
     },
 };

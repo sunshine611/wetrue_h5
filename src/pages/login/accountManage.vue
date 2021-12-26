@@ -1,6 +1,7 @@
 <template>
     <div class="account-manage">
-        <u-navbar :title="i18n.login.accountManage">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.login.accountManage">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -163,6 +164,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.isLogin();
         this.uSetBarTitle(this.i18n.titleBar.accountManage);
     },

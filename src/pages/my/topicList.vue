@@ -1,6 +1,7 @@
 <template>
     <view class="myTopic" :title="title">
-        <u-navbar :title="title" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -62,6 +63,7 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "myTopic") {
             this.type = "myTopic";
             this.title = this.i18n.my.myTopic;

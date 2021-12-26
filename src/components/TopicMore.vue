@@ -61,6 +61,10 @@ export default {
                     text: this.i18n.index.aeknow,
                     subText: this.i18n.index.aeknowText,
                 },
+                {
+                    text: this.i18n.index.aeternal,
+                    subText: this.i18n.index.aeternalText,
+                },
             ];
         },
     },
@@ -89,7 +93,11 @@ export default {
                 this.complain();
             } else if (index === 2) {
                 window.open(
-                    Backend.aeknowSearchUrl(this.topicInfo.hash)
+                    Backend.aeknowViewhUrl(this.topicInfo.hash)
+                );
+            } else if (index === 3) {
+                window.open(
+                    Backend.explorerViewhUrl(this.topicInfo.hash)
                 );
             }
         },
