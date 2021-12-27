@@ -58,10 +58,6 @@ export default {
                     subText: this.i18n.index.complainText,
                 },
                 {
-                    text: this.i18n.index.aeknow,
-                    subText: this.i18n.index.aeknowText,
-                },
-                {
                     text: this.i18n.index.aeternal,
                     subText: this.i18n.index.aeternalText,
                 },
@@ -92,10 +88,6 @@ export default {
             } else if (index === 1) {
                 this.complain();
             } else if (index === 2) {
-                window.open(
-                    Backend.aeknowViewhUrl(this.topicInfo.hash)
-                );
-            } else if (index === 3) {
                 window.open(
                     Backend.explorerViewhUrl(this.topicInfo.hash)
                 );
