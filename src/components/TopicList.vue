@@ -66,9 +66,9 @@
                             rel="noopener noreferrer"
                             :href="item.url"
                             v-if="item.url"
-                        ><span>
+                        ><text>
                                 {{ item.simpleUrl }}
-                            </span>
+                            </text>
                         </a>
                 </div>
                 <div class="operation">
@@ -145,8 +145,7 @@ export default {
             default: [],
         },
         ipfsUrl: {
-            type: Object,
-            default: () => "https://dweb.link/ipfs/",
+            default: "https://dweb.link/ipfs/",
         },
     },
     data() {
@@ -187,7 +186,7 @@ export default {
                                 "click",
                                 (e) => {
                                     let text = mentionsArr[i].innerText;
-                                    Backend.nodeApiGetAddressByNames(text.split("@").join("")).then((res) => {
+                                    Backend.nodeApiGetAddressByNames(text.slice(1)).then((res) => {
                                         this.goUrl(
                                             "/pages/my/userInfo?userAddress=" + res
                                         );

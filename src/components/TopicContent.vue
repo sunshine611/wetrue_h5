@@ -29,7 +29,7 @@
                     </div>
                     <div class="time">
                         <text class="mr-20">{{
-                            $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
+                            $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
                         }}</text
                         >{{ i18n.index.source + postInfo.source }}
                     </div>
@@ -66,10 +66,10 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         :href="postInfo.url"
-                        v-if="postInfo.url"
-                    ><span>
+                        v-if="postInfo.url"                        
+                    ><text>
                             {{ postInfo.simpleUrl }}
-                        </span>
+                        </text>
                     </a>
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
@@ -179,8 +179,7 @@ export default {
             default: () => {},
         },
         ipfsUrl: {
-            type: Object,
-            default: () => "https://dweb.link/ipfs/",
+            default: "https://dweb.link/ipfs/",
         },
     },
     data() {
@@ -225,7 +224,7 @@ export default {
                                 "click",
                                 (e) => {
                                     let text = mentionsArr[i].innerText;
-                                    Backend.nodeApiGetAddressByNames(text.split("@").join("")).then((res) => {
+                                    Backend.nodeApiGetAddressByNames(text.slice(1)).then((res) => {
                                         this.goUrl(
                                             "/pages/my/userInfo?userAddress=" + res
                                         );
