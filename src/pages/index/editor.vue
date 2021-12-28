@@ -93,9 +93,14 @@ export default {
         //发布
         async release() {
             this.btnLoading = true;
+            let media = [
+                {
+                    image: this.form.media,
+                },
+            ];
             let payload = {
                 content: this.form.text,
-                media:   this.form.media,
+                media:   media,
             };
             let res = await this.wetrueSend("topic", payload);
             this.releaseCallback(res);

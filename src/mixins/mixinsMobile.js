@@ -335,18 +335,13 @@ const mixins = {
 
                 if (type === "topic") {
                     //发送主贴
-                    let media = [
-                        {
-                            image: payload.media,
-                        },
-                    ];
                     amount = configInfo.topicAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
                         source: source,
                         type: "topic",
                         content: payload.content,
-                        media: media,
+                        media: payload.media,
                     };
                 } else if (type === "comment") {
                     //发送评论
