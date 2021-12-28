@@ -222,7 +222,7 @@ export default {
                         const res = await client.spend(
                             this.form.money * Math.pow(10, 18),
                             this.form.address,
-                            {payload: "For WeTrue Wallet"}
+                            {payload: "WeTrue Wallet"}
                         );
                         if (JSON.stringify(res) !== "{}" && !!res) {
                             uni.hideLoading();

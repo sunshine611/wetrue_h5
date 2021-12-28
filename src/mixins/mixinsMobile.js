@@ -341,6 +341,7 @@ const mixins = {
                         source: source,
                         type: "topic",
                         content: payload.content,
+                        media: payload.media,
                     };
                 } else if (type === "comment") {
                     //发送评论
