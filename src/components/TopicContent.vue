@@ -187,6 +187,16 @@ export default {
             rewardRecordShow: false, //控制打赏记录弹层
         };
     },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res,true).then((res) => {
+                    this.releaseCallback(res);
+                });
+            }
+        };
+    },
     computed: {
         ...mapGetters(["configInfo"]),
         //国际化
@@ -201,7 +211,6 @@ export default {
             handler() {
                 this.$nextTick(() => {
                     const topicArr = document.getElementsByClassName("topic-text");
-                    
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -243,15 +252,20 @@ export default {
     methods: {
         //是否收藏
         star() {
-            let params = {
-                hash: this.postInfo.hash,
+            let payload = {
+                action: this.postInfo.isStar,
+                content: this.postInfo.hash,
             };
-            this.$http.post("/Submit/contentStar", params).then((res) => {
-                if (res.code === 200) {
-                    this.postInfo.isStar = res.data.isStar;
-                    this.postInfo.star = res.data.star;
-                }
+            this.wetrueSend("star", payload).then((res) => {
+                this.releaseCallback(res);
             });
+        },
+        releaseCallback(res){
+            if (res.code == 200) {
+                this.postInfo.isStar = res.data.isStar;
+                this.postInfo.star = res.data.star;
+            }
+            this.uHideLoading();
         },
         copy() {
             let text = this.$refs.mpHtml.getText();

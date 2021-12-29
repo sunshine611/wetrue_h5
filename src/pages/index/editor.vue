@@ -27,7 +27,9 @@
             :placeholder="i18n.index.wetrueTips"
             :clearable="false"
         />
+        <!-- -->
         <text>-------</text>
+        <u-gap height="40"></u-gap>
         <u-input
             v-model="form.media"
             type="textarea"

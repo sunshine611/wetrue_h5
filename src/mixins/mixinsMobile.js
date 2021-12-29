@@ -256,8 +256,20 @@ const mixins = {
             });
         },
         //提交hash到WeTrue
-        postHashToWeTrue(res) {
+        postHashToWeTrue(res, opt) {
             this.uShowLoading(this.i18n.mixins.radio);
+            if (opt) {
+                return new Promise((resolve) => {
+                    this.$http.post("/Submit/hash", {
+                        hash: res.hash,
+                        await: true,
+                    }).then(
+                        (res) => {
+                            resolve(res);
+                        }
+                    );
+                });
+            }
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -319,6 +331,7 @@ const mixins = {
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
+                let opt = false;
                 await this.getAccount().then((res) => {
                     account = res;
                 });
@@ -339,7 +352,7 @@ const mixins = {
                     content = {
                         WeTrue: configInfo.WeTrue,
                         source: source,
-                        type: "topic",
+                        type: type,
                         content: payload.content,
                         media: payload.media,
                     };
@@ -348,7 +361,7 @@ const mixins = {
                     amount = configInfo.commentAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "comment",
+                        type: type,
                         source: source,
                         toHash: payload.hash,
                         content: payload.content,
@@ -358,7 +371,7 @@ const mixins = {
                     amount = configInfo.replyAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "reply",
+                        type: type,
                         source: source,
                         reply_type: payload.type,
                         to_hash: payload.toHash,
@@ -371,7 +384,7 @@ const mixins = {
                     amount = configInfo.nicknameAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "nickname",
+                        type: type,
                         content: payload.content,
                     };
                 } else if (type === "sex") {
@@ -379,7 +392,18 @@ const mixins = {
                     amount = configInfo.sexAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "sex",
+                        type: type,
+                        content: payload.content,
+                    };
+                } else if (type === "focus" || type === "star") {
+                    //关注或收藏
+                    opt = true;
+                    amount = configInfo.focusAmount;
+                    if(type === "star") amount = configInfo.starAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: type,
+                        action: payload.action,
                         content: payload.content,
                     };
                 }
@@ -387,7 +411,6 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.amountsAbnormal);
                     return;
                 }
-                this.uShowLoading(this.i18n.mixins.inChain);
                 if (thirdPartySource) {
                     //第三方来源上链
                     let postPayload = {
@@ -397,19 +420,19 @@ const mixins = {
                         contractAddress: "",
                         payload: content,
                     };
-                    thirdPartyPost(postPayload);
-                    //后续等暴露方法要求
+                    return thirdPartyPost(postPayload);
                 } else {
                     //WeTrue上链
+                    this.uShowLoading(this.i18n.mixins.inChain);
                     client = await this.client();
-                    const res = await client.spend(
+                    let res = await client.spend(
                         amount,
                         configInfo.receivingAccount,
                         {
                             payload: JSON.stringify(content),
                         }
                     );
-                    return await this.postHashToWeTrue(res);
+                    return await this.postHashToWeTrue(res, opt);
                 }
             } catch (err) {
                 this.uShowToast(this.i18n.mixins.fail);
