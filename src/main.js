@@ -11,7 +11,7 @@ import 'default-passive-events';
 Vue.prototype.$http = http;
 Vue.prototype.$store = store;
 Vue.prototype.$moment = moment;
-Vue.prototype.$ipfs = create({ host: 'liushao.cc', port: '15501', apiPath: '/api/v0', protocol: 'https' });
+Vue.prototype.$ipfs = create({ host: 'liushao.cc', port: '15601', apiPath: '/api/v0', protocol: 'https' });
 Vue.use(uView);
 Vue.config.productionTip = false;
 Vue.prototype.$_i18n = i18n;

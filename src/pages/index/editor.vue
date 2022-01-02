@@ -124,6 +124,7 @@ export default {
 			const ipfs = await this.$ipfs;
             const added = await ipfs.add('WeTrue');
             console.log(added.cid.toString());
+            this.form.media = added.cid.toString();
 
             /*
 			try{
