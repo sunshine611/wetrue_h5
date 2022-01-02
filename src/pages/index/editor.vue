@@ -122,11 +122,9 @@ export default {
 		async uploadImg(file){
 
 			const ipfs = await this.$ipfs;
-            let buffer = Buffer.from(file);
+            const added = await ipfs.add('WeTrue');
+            console.log(added.cid.toString());
 
-
-            //let files = file[0].file;
-            console.log(buffer);
             /*
 			try{
 				const added = await ipfs.add(buffer,{
@@ -134,7 +132,7 @@ export default {
 				});
 				console.log(added)
 				const hashCode = added.cid.toString();
-				console.log('https://liushao.cc:15601/ipfs/'+hashCode)
+				console.log('https://liushao.cc:15680/ipfs/'+hashCode)
 			}catch(err){
 				console.log(err)
 			}*/
@@ -148,7 +146,7 @@ export default {
                     progress: (prog) => console.log(`received: ${prog}`),
                 });
 
-                // 获取上传文件hash值，'https://ipfs.io/ipfs/'+hashCode 即为上传后的文件地址
+                // 获取上传文件hash值，'https://liushao.cc:15680/ipfs/'+hashCode 即为上传后的文件地址
                 const hashCode = added.cid.toString();
 				console.log(hashCode)
 

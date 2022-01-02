@@ -1,7 +1,6 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import shajs from 'sha.js'
 import { source as WeTrueSource } from "@/config/config";
 import {
     Node,
@@ -10,6 +9,7 @@ import {
     MemoryAccount,
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
+import shajs from 'sha.js'
 import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
