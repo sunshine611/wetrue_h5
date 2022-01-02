@@ -218,10 +218,10 @@ const mixins = {
         },
         //话题及@高亮
         topicHighlight(value) {
-            let expt, expm;
-            expt =
-                /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
+            let expt, expm, exps;
+            expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
             expm = /@[\p{L}\d]+.chain/gu;
+            exps = /#([^#]*)(\[ST\])#/g;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
@@ -230,6 +230,8 @@ const mixins = {
                 let newVal = `<text class="mentions-text">${item}</text>`;
                 return newVal;
             });
+            value = value.replace(exps, `<text class="topic-text">⚡$1</text>`);
+        
             return value;
         },
         //复制粘贴板
