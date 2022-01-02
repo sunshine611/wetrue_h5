@@ -1,7 +1,7 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import { sha256 } from "js-sha256";
+import shajs from 'sha.js'
 import { source as WeTrueSource } from "@/config/config";
 import {
     Node,
@@ -157,13 +157,13 @@ const mixins = {
                 third,
                 fourth,
                 fifth = "";
-            first = sha256("WeTrue" + password);
+            first = shajs('sha256').update("WeTrue" + password).digest('hex');
             second = "";
             for (let i = 0; i < first.length; i++) {
                 second += first[i];
                 i++;
             }
-            third = sha256(second);
+            third = shajs('sha256').update(second).digest('hex');
             fourth = "";
             for (let i = 0; i < third.length; i++) {
                 i++;
