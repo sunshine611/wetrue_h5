@@ -259,16 +259,15 @@ const mixins = {
         postHashToWeTrue(res, opt) {
             this.uShowLoading(this.i18n.mixins.radio);
             if (opt) {
-                return new Promise((resolve) => {
-                    this.$http.post("/Submit/hash", {
-                        hash: res.hash,
-                        await: true,
-                    }).then(
-                        (res) => {
-                            resolve(res);
+                return Promise.resolve(
+                    this.$http.post(
+                        "/Submit/hash", 
+                        {
+                            hash: res.hash,
+                            await: true,
                         }
-                    );
-                });
+                    )
+                );
             }
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
