@@ -27,7 +27,9 @@
             :placeholder="i18n.index.wetrueTips"
             :clearable="false"
         />
+        <!-- -->
         <text>-------</text>
+        <u-gap height="40"></u-gap>
         <u-input
             v-model="form.media"
             type="textarea"
@@ -40,7 +42,7 @@
         />
         
         <u-gap height="40"></u-gap>
-		<!-- <u-upload ref="wetrueImg" :auto-upload="false" :file-list="fileList" :max-count="9" del-bg-color="#f04a82" @on-choose-complete="uploadImg"></u-upload> -->
+		<u-upload ref="wetrueImg" :auto-upload="false" :file-list="fileList" :max-count="9" del-bg-color="#f04a82" @on-choose-complete="uploadImg"></u-upload> -->
     </view>
 </template>
 
@@ -118,32 +120,34 @@ export default {
         },
 		//上传图片
 		async uploadImg(file){
-            console.log(this.fileList)
-			// console.log(this.$refs.wetrueImg)
-			console.log(file[0].file)
+
 			const ipfs = await this.$ipfs;
-			let text = file[0].file;
+            const added = await ipfs.add('WeTrue');
+            console.log(added.cid.toString());
+            this.form.media = added.cid.toString();
+
+            /*
 			try{
-				const added = await ipfs.add(text,{
+				const added = await ipfs.add(buffer,{
 					progress: (prog) => console.log(`received: ${prog}`),
 				});
 				console.log(added)
 				const hashCode = added.cid.toString();
-				console.log('https://ipfs.io/ipfs/'+hashCode)
+				console.log('https://liushao.cc:15680/ipfs/'+hashCode)
 			}catch(err){
 				console.log(err)
-			}
+			}*/
 		},
         async saveToIpfs(event) {
             // 获取input上传的文件
-            let file = 'Wetrue';
+            let file = 'WeTrue';
             const ipfs = await this.$ipfs;
             try {
                 const added = await ipfs.add(file, {
                     progress: (prog) => console.log(`received: ${prog}`),
                 });
 
-                // 获取上传文件hash值，'https://ipfs.io/ipfs/'+hashCode 即为上传后的文件地址
+                // 获取上传文件hash值，'https://liushao.cc:15680/ipfs/'+hashCode 即为上传后的文件地址
                 const hashCode = added.cid.toString();
 				console.log(hashCode)
 

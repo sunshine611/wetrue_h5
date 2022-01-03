@@ -151,6 +151,16 @@ export default {
     data() {
         return {};
     },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res,true).then((res) => {
+                    this.releaseCallback(res);
+                });
+            }
+        };
+    },
     computed: {
         //国际化
         i18n: {
@@ -226,15 +236,20 @@ export default {
         },
         //是否收藏
         star(item) {
-            let params = {
-                hash: item.hash,
+            let payload = {
+                action: item.isStar,
+                content: item.hash,
             };
-            this.$http.post("/Submit/contentStar", params).then((res) => {
-                if (res.code === 200) {
-                    item.isStar = res.data.isStar;
-                    item.star = res.data.star;
-                }
+            this.wetrueSend("star", payload).then((res) => {
+                this.releaseCallback(res);
             });
+        },
+        releaseCallback(res){
+            if (res.code == 200) {
+                item.isStar = res.data.isStar;
+                item.star = res.data.star;
+            }
+            this.uHideLoading();
         },
     },
 };

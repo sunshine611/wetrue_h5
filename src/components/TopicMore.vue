@@ -39,6 +39,16 @@ export default {
             moreShow: false, //下箭头控制显示更多操作
         };
     },
+    mounted() {
+        //暴露方法名"receiveWeTrueMessage"
+        window["receiveWeTrueMessage"] = async (res) => {
+            if (res.code == 200) {
+                this.postHashToWeTrue(res,true).then((res) => {
+                    this.releaseCallback(res);
+                });
+            }
+        };
+    },
     computed: {
         //国际化
         i18n: {
@@ -95,25 +105,30 @@ export default {
         },
         //是否关注
         focus() {
-            let params = {
-                userAddress: this.topicInfo.users.userAddress,
+            let payload = {
+                action: this.topicInfo.isFocus,
+                content: this.topicInfo.users.userAddress,
             };
-            this.$http.post("/Submit/focus", params).then((res) => {
-                if (res.code === 200) {
-                    if (this.postList.length > 0) {
-                        for (let i = 0; i < this.postList.length; i++) {
-                            if (
-                                this.postList[i].users.userAddress ===
-                                this.topicInfo.users.userAddress
-                            ) {
-                                this.postList[i].isFocus = res.data.isFocus;
-                            }
-                        }
-                    } else {
-                        this.topicInfo.isFocus = res.data.isFocus;
-                    }
-                }
+            this.wetrueSend("focus", payload).then((res) => {
+                this.releaseCallback(res);
             });
+        },
+        releaseCallback(res){
+            if (res.code === 200) {
+                if (this.postList.length > 0) {
+                    for (let i = 0; i < this.postList.length; i++) {
+                        if (
+                            this.postList[i].users.userAddress ===
+                            this.topicInfo.users.userAddress
+                        ) {
+                            this.postList[i].isFocus = res.data.isFocus;
+                        }
+                    }
+                } else {
+                    this.topicInfo.isFocus = res.data.isFocus;
+                }
+            }
+            this.uHideLoading();
         },
         //投诉
         complain() {

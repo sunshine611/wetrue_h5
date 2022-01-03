@@ -1,7 +1,6 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import { sha256 } from "js-sha256";
 import { source as WeTrueSource } from "@/config/config";
 import {
     Node,
@@ -10,6 +9,7 @@ import {
     MemoryAccount,
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
+import shajs from 'sha.js'
 import { FungibleTokenFull } from "@/util/FungibleTokenFull";
 import Request from "luch-request";
 const http = new Request();
@@ -157,13 +157,13 @@ const mixins = {
                 third,
                 fourth,
                 fifth = "";
-            first = sha256("WeTrue" + password);
+            first = shajs('sha256').update("WeTrue" + password).digest('hex');
             second = "";
             for (let i = 0; i < first.length; i++) {
                 second += first[i];
                 i++;
             }
-            third = sha256(second);
+            third = shajs('sha256').update(second).digest('hex');
             fourth = "";
             for (let i = 0; i < third.length; i++) {
                 i++;
@@ -218,10 +218,10 @@ const mixins = {
         },
         //话题及@高亮
         topicHighlight(value) {
-            let expt, expm;
-            expt =
-                /#[x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ][^(?!#@)]{1,25}#/g;
+            let expt, expm, exps;
+            expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
             expm = /@[\p{L}\d]+.chain/gu;
+            exps = /#([^#]*)(\[ST\])#/g;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
@@ -230,6 +230,8 @@ const mixins = {
                 let newVal = `<text class="mentions-text">${item}</text>`;
                 return newVal;
             });
+            value = value.replace(exps, `<text class="topic-text">⚡$1</text>`);
+        
             return value;
         },
         //复制粘贴板
@@ -256,8 +258,19 @@ const mixins = {
             });
         },
         //提交hash到WeTrue
-        postHashToWeTrue(res) {
+        postHashToWeTrue(res, opt) {
             this.uShowLoading(this.i18n.mixins.radio);
+            if (opt) {
+                return Promise.resolve(
+                    this.$http.post(
+                        "/Submit/hash", 
+                        {
+                            hash: res.hash,
+                            await: true,
+                        }
+                    )
+                );
+            }
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -319,6 +332,7 @@ const mixins = {
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
+                let opt = false;
                 await this.getAccount().then((res) => {
                     account = res;
                 });
@@ -339,7 +353,7 @@ const mixins = {
                     content = {
                         WeTrue: configInfo.WeTrue,
                         source: source,
-                        type: "topic",
+                        type: type,
                         content: payload.content,
                         media: payload.media,
                     };
@@ -348,7 +362,7 @@ const mixins = {
                     amount = configInfo.commentAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "comment",
+                        type: type,
                         source: source,
                         toHash: payload.hash,
                         content: payload.content,
@@ -358,7 +372,7 @@ const mixins = {
                     amount = configInfo.replyAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "reply",
+                        type: type,
                         source: source,
                         reply_type: payload.type,
                         to_hash: payload.toHash,
@@ -371,7 +385,7 @@ const mixins = {
                     amount = configInfo.nicknameAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "nickname",
+                        type: type,
                         content: payload.content,
                     };
                 } else if (type === "sex") {
@@ -379,7 +393,18 @@ const mixins = {
                     amount = configInfo.sexAmount;
                     content = {
                         WeTrue: configInfo.WeTrue,
-                        type: "sex",
+                        type: type,
+                        content: payload.content,
+                    };
+                } else if (type === "focus" || type === "star") {
+                    //关注或收藏
+                    opt = true;
+                    amount = configInfo.focusAmount;
+                    if(type === "star") amount = configInfo.starAmount;
+                    content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: type,
+                        action: payload.action,
                         content: payload.content,
                     };
                 }
@@ -387,7 +412,6 @@ const mixins = {
                     this.uShowToast(this.i18n.mixins.amountsAbnormal);
                     return;
                 }
-                this.uShowLoading(this.i18n.mixins.inChain);
                 if (thirdPartySource) {
                     //第三方来源上链
                     let postPayload = {
@@ -397,19 +421,19 @@ const mixins = {
                         contractAddress: "",
                         payload: content,
                     };
-                    thirdPartyPost(postPayload);
-                    //后续等暴露方法要求
+                    return thirdPartyPost(postPayload);
                 } else {
                     //WeTrue上链
+                    this.uShowLoading(this.i18n.mixins.inChain);
                     client = await this.client();
-                    const res = await client.spend(
+                    let res = await client.spend(
                         amount,
                         configInfo.receivingAccount,
                         {
                             payload: JSON.stringify(content),
                         }
                     );
-                    return await this.postHashToWeTrue(res);
+                    return await this.postHashToWeTrue(res, opt);
                 }
             } catch (err) {
                 this.uShowToast(this.i18n.mixins.fail);
