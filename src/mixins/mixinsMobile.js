@@ -236,6 +236,7 @@ const mixins = {
         },
         //复制粘贴板
         copyContent(content) {
+            // #ifdef H5
             let clipboard = new Clipboard("#copy", {
                 text: (trigger) => {
                     uni.showToast({
@@ -246,6 +247,8 @@ const mixins = {
                     return content;
                 },
             });
+            // #endif
+            // #ifndef H5
             uni.setClipboardData({
                 data: content,
                 success: function () {
@@ -256,6 +259,7 @@ const mixins = {
                     });
                 },
             });
+            // #endif
         },
         //提交hash到WeTrue
         postHashToWeTrue(res, opt) {
