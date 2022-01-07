@@ -56,21 +56,21 @@
                     ></u-image>
                 </div>
                 <u-image
-                        width="200rpx"
-                        height="200rpx"
-                        :src="postInfo.image"
-                        v-if="postInfo.image"
-                    ></u-image>
-                    <a
-                        class="topic-url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        :href="postInfo.url"
-                        v-if="postInfo.url"                        
+                    width="200rpx"
+                    height="200rpx"
+                    :src="postInfo.image"
+                    v-if="postInfo.image"
+                ></u-image>
+                <a
+                    class="topic-url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :href="postInfo.url"
+                    v-if="postInfo.url"
                     ><text>
-                            {{ postInfo.simpleUrl }}
-                        </text>
-                    </a>
+                        {{ postInfo.simpleUrl }}
+                    </text>
+                </a>
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
                         class="reward-list"
@@ -82,12 +82,12 @@
                             color="#f04a82"
                             class="mr-6"
                         ></u-icon
-                        >{{ item.nickname }}
-                        [ {{ item.sender_id.slice(-4) }} ]
+                        >{{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
                         {{ i18n.components.reward }}
                         <text class="name">
                             {{ balanceFormat(item.amount, 1) }}
-                        </text> WTT
+                        </text>
+                        WTT
                     </div>
                     <u-gap
                         height="5"
@@ -191,7 +191,7 @@ export default {
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
-                this.postHashToWeTrue(res,true).then((res) => {
+                this.postHashToWeTrue(res, true).then((res) => {
                     this.releaseCallback(res);
                 });
             }
@@ -210,7 +210,8 @@ export default {
         postInfo: {
             handler() {
                 this.$nextTick(() => {
-                    const topicArr = document.getElementsByClassName("topic-text");
+                    const topicArr =
+                        document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
                             topicArr[i].addEventListener(
@@ -226,16 +227,20 @@ export default {
                             );
                         }
                     }
-                    const mentionsArr = document.getElementsByClassName("mentions-text");
+                    const mentionsArr =
+                        document.getElementsByClassName("mentions-text");
                     if (mentionsArr.length > 0) {
                         for (let i = 0; i < mentionsArr.length; i++) {
                             mentionsArr[i].addEventListener(
                                 "click",
                                 (e) => {
                                     let text = mentionsArr[i].innerText;
-                                    Backend.nodeApiGetAddressByNames(text.slice(1)).then((res) => {
+                                    Backend.nodeApiGetAddressByNames(
+                                        text.slice(1)
+                                    ).then((res) => {
                                         this.goUrl(
-                                            "/pages/my/userInfo?userAddress=" + res
+                                            "/pages/my/userInfo?userAddress=" +
+                                                res
                                         );
                                     });
                                     e.stopPropagation();
@@ -260,7 +265,7 @@ export default {
                 this.releaseCallback(res);
             });
         },
-        releaseCallback(res){
+        releaseCallback(res) {
             if (res.code == 200) {
                 this.postInfo.isStar = res.data.isStar;
                 this.postInfo.star = res.data.star;
@@ -279,8 +284,13 @@ export default {
             if (text.length > 100) {
                 shareTextLength = "...";
             }
-            let shareText = "WeTrue:\n" + shareUrl + "\n" + text.slice(0, 100) + shareTextLength;
-            this.copyContent(shareText);
+            let shareText =
+                "WeTrue:\n" +
+                shareUrl +
+                "\n" +
+                text.slice(0, 100) +
+                shareTextLength;
+            this.copyContent(shareText, "#share");
         },
     },
 };

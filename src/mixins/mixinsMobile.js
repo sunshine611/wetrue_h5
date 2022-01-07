@@ -235,9 +235,9 @@ const mixins = {
             return value;
         },
         //复制粘贴板
-        copyContent(content) {
+        copyContent(content,divId) {
             // #ifdef H5
-            let clipboard = new Clipboard("#copy", {
+            let clipboard = new Clipboard(divId || "#copy", {
                 text: (trigger) => {
                     uni.showToast({
                         title: this.i18n.my.copySuccess,
