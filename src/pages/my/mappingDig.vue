@@ -272,7 +272,7 @@ export default {
         this.getSystemStatusBarHeight(); //状态栏高度
         this.getUserInfo();
         this.getMappingInfo();
-        this.getAccount();
+        this.getBalance();
         this.getWttBalance();
         this.getConfigInfo();
         this.getTop();
@@ -281,7 +281,7 @@ export default {
     //上拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
-        this.getAccount();
+        this.getBalance();
         this.getWttBalance();
         setTimeout(function() {
             uni.stopPullDownRefresh();
@@ -414,22 +414,18 @@ export default {
             }
         },
         //获取账户AE余额
-        getAccount() {
-            http.get(
-                Backend.nodeApiAccounts(this.token)
-            ).then((res) => {
-                this.aeBalance = this.balanceFormat(res.data.balance);
+        getBalance() {
+            this.getAccount().then((res) => {
+                this.aeBalance = res;
             });
         },
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeknowApiMyToken(this.token, wttContract)
-            ).then(
-                (res) => {
-                    this.wttBalance = this.balanceFormat(res.data.balance);
-                }
-            );
+                Backend.aeMdwApiMyToken(this.token, wttContract)
+            ).then((res) => {
+                this.wttBalance = this.balanceFormat(res.data.amount);
+            });
         },
         //获取映射榜单
         getTop(){

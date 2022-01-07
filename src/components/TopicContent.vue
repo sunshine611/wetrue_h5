@@ -273,13 +273,13 @@ export default {
         },
         //分享
         share() {
-            let url = this.configInfo.frontEndUrl + this.__page__.fullPath;
+            let shareUrl = this.configInfo.frontEndUrl + this.__page__.fullPath;
             let text = this.$refs.mpHtml.getText();
             let shareTextLength = "";
             if (text.length > 100) {
                 shareTextLength = "...";
             }
-            let shareText = "WeTrue:\n" + url + "\n" + text.slice(0, 100) + shareTextLength;
+            let shareText = "WeTrue:\n" + shareUrl + "\n" + text.slice(0, 100) + shareTextLength;
             this.copyContent(shareText);
         },
     },
