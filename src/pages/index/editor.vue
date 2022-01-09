@@ -27,9 +27,9 @@
             :placeholder="i18n.index.wetrueTips"
             :clearable="false"
         />
-        <!-- 
         <text>-------</text>
         <u-gap height="40"></u-gap>
+        <!-- 
         <u-input
             v-model="form.media"
             type="textarea"
@@ -120,23 +120,10 @@ export default {
         },
 		//上传图片
 		async uploadImg(file){
-
 			const ipfs = await this.$ipfs;
             const added = await ipfs.add('WeTrue');
             console.log(added.cid.toString());
             this.form.media = added.cid.toString();
-
-            /*
-			try{
-				const added = await ipfs.add(buffer,{
-					progress: (prog) => console.log(`received: ${prog}`),
-				});
-				console.log(added)
-				const hashCode = added.cid.toString();
-				console.log('https://liushao.cc:15680/ipfs/'+hashCode)
-			}catch(err){
-				console.log(err)
-			}*/
 		},
         async saveToIpfs(event) {
             // 获取input上传的文件

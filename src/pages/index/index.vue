@@ -66,7 +66,7 @@ export default {
             postTopicButtonShow: true, //控制发帖按钮显隐
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.pageInfo.page = 1;
         this.getPostList();
@@ -75,7 +75,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         this.pageInfo.page++;
         this.getPostList();

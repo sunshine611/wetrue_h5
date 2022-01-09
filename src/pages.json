@@ -220,6 +220,16 @@
         "navigationBarTitleText": "Message",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/roomchat/index",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "Chat",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
@@ -245,7 +255,13 @@
         "iconPath": "static/message.png",
         "selectedIconPath": "static/message_on.png",
         "text": "消息"
-      },
+      },/*
+      {
+        "pagePath": "pages/roomchat/index",
+        "iconPath": "static/message.png",
+        "selectedIconPath": "static/message_on.png",
+        "text": "聊天"
+      },*/
       {
         "pagePath": "pages/my/index",
         "iconPath": "static/my.png",

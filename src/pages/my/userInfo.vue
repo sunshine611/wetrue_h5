@@ -145,7 +145,7 @@ export default {
             ],
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.pageInfo.page = 1;
         this.getUserInfo();
@@ -154,7 +154,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         if ([0, 1, 2, 3].includes(this.current)) {
             this.pageInfo.page++;

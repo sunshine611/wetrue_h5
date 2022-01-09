@@ -152,7 +152,7 @@ export default {
             })
         this.getTokenList();
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getAccount().then(res=>{
                 this.aeBalance = res;

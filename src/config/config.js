@@ -12,6 +12,6 @@ export const aeknow     = 'https://www.aeknow.org'
 export const aeMdw      = 'https://testnet.aeternity.io/mdw'
 export const aeExplorer = 'https://explorer.testnet.aeternity.io'
 */
-export const version = '2.5.8'
+export const version = '2.5.9'
 export const source = 'WeTrue'
 export const wttContract ='ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM'

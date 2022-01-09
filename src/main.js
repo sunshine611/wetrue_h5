@@ -7,16 +7,18 @@ import store from 'store';
 import moment from 'moment';
 import './mixins/install';
 import 'default-passive-events';
+
 Vue.prototype.$http = http;
 Vue.prototype.$store = store;
 Vue.prototype.$moment = moment;
 Vue.use(uView);
 Vue.config.productionTip = false;
 Vue.prototype.$_i18n = i18n;
-App.mpType = 'app';
 
+App.mpType = 'app';
 const app = new Vue({
 	i18n,
 	...App,
 });
+
 app.$mount();
