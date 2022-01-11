@@ -1,7 +1,7 @@
 <template>
     <view class="index">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" title="Chat Room">
+        <u-navbar :is-fixed="false" :back-text="online" title="Chat Room">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -18,8 +18,16 @@
             :key="index"
         >
             <view class="messages" >
-                <view v-text="item"></view>
-            </view><br>
+                <view v-text="`${
+                        item.nickname 
+                        ? item.nickname 
+                        : 'ak_' + data.address.slice(-4)
+                    }:
+                    ${
+                        item.msg
+                    }`"></view>
+            </view>
+            <br>
         </view>
         <u-gap height="80"></u-gap>
 
@@ -41,15 +49,18 @@
 
 <script>
 import socket from '@/util/socketio.js';
+import { getStore } from "@/util/service";
 
 export default {
     components: {},
     data() {
         return {
             btnLoading: false,
+            online: "0/0",
             content: '',
-            chat:[],
-            serverMsg:[],
+            chat: [],
+            serverMsg: [],
+            sendServerData: [],
         };
     },
     //下拉刷新
@@ -59,13 +70,28 @@ export default {
         this.getSystemStatusBarHeight(); //状态栏高度
     },
     mounted() {
-        socket.on('join', (msg)=> {
-            this.serverMsg.push(msg);
+        this.sendServerData = {
+            address: getStore("keystore").public_key,
+        };
+        console.log(this.sendServerData);
+        socket.emit("joinRoomChat", this.sendServerData); //加入聊天室
+
+        socket.on('joinRoomChat', (userOnl)=> {
+            this.online = `${ userOnl ? userOnl : 0 }/0`;
         });
 
-        socket.on('message', (msg)=> {
-            this.serverMsg.push(msg);
+        socket.on('message', (data)=> {
+            this.serverMsg.push(data);
         });
+
+        socket.on('serverMessage', (data)=> {
+            this.serverMsg.push(data);
+        });
+
+        socket.on('close', (userOnl)=> {
+            this.online = `${ userOnl ? userOnl : 0 }/0`;
+        });
+
     },
     computed: {
         //国际化
@@ -83,7 +109,8 @@ export default {
 					return false;
 				}
 				//this.btnLoading = true;
-                socket.emit("message", this.content); //将消息发送给服务器
+                this.sendServerData.msg = this.content;
+                socket.emit("message", this.sendServerData); //将消息发送给服务器
                 this.content = "";
 			},
     },
