@@ -2,7 +2,7 @@
     <view class="index">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
         <u-tabs
-            :list="tabList"
+            :list="categoryList"
             :is-scroll="false"
             :current="current"
             @change="tabChange"
@@ -154,7 +154,6 @@ export default {
         UGap,
     },
     data() {
-        const { message } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             current: 0, //当前tab索引
             msgList: [], //帖子列表
@@ -165,9 +164,8 @@ export default {
             }, //页码信息
             more: "loadmore", //加载更多
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/./g, "")), //版本号
+            versionCode: parseInt(version.replace(/./g, )), //版本号
             versionShow: false, //版本提示弹层
-            tabList: [{name: message.dynamic}],
         };
     },
     //下拉刷新
@@ -200,6 +198,14 @@ export default {
             get() {
                 return this.$_i18n.messages[this.$_i18n.locale];
             },
+        },
+        //类别列表
+        categoryList() {
+            return [
+                {
+                    name: this.i18n.message.dynamic
+                },
+            ];
         },
     },
     methods: {

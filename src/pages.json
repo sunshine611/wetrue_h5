@@ -222,13 +222,23 @@
       }
     },
     {
-      "path": "pages/roomchat/index",
+      "path": "pages/chat/index",
       "style": {
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "Chat",
+        "navigationBarTitleText": "聊天",
         "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/chat/room",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "ChatRoom",
+        "navigationStyle": "custom" // 隐藏系统导航栏
       }
     }
   ],
@@ -255,13 +265,13 @@
         "iconPath": "static/message.png",
         "selectedIconPath": "static/message_on.png",
         "text": "消息"
-      },/*
+      },
       {
-        "pagePath": "pages/roomchat/index",
+        "pagePath": "pages/chat/index",
         "iconPath": "static/message.png",
         "selectedIconPath": "static/message_on.png",
         "text": "聊天"
-      },*/
+      },
       {
         "pagePath": "pages/my/index",
         "iconPath": "static/my.png",

@@ -6,7 +6,7 @@
                     class="nav-tab"
                     :list="categoryList"
                     :is-scroll="true"
-                    @change="selectCategory"
+                    @change="tabChange"
                     :current="current"
                     active-color="#f04a82"
                     bg-color="#fafafa"
@@ -194,8 +194,8 @@ export default {
                     }
                 });
         },
-        //选择类别
-        selectCategory(index) {
+        //切换顶部tab事件
+        tabChange(index) {
             this.current = index;
             this.postList = [];
             this.pageInfo = {
