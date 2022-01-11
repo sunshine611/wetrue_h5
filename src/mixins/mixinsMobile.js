@@ -1,7 +1,7 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import { source as WeTrueSource } from "@/config/config";
+import { compilerUrl, source as WeTrueSource } from "@/config/config";
 import {
     Node,
     Universal,
@@ -297,7 +297,7 @@ const mixins = {
                     url: store.state.user.nodeUrl,
                 });
                 const client = await Universal({
-                    compilerUrl: "https://compiler.aeasy.io",
+                    compilerUrl: compilerUrl,
                     nodes: [
                         {
                             name: "WeTrue",
