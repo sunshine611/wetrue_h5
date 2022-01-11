@@ -220,7 +220,7 @@
         "navigationBarTitleText": "Message",
         "enablePullDownRefresh": true
       }
-    },
+    },/*
     {
       "path": "pages/chat/index",
       "style": {
@@ -230,7 +230,7 @@
         "navigationBarTitleText": "聊天",
         "enablePullDownRefresh": true
       }
-    },
+    },*/
     {
       "path": "pages/chat/room",
       "style": {
