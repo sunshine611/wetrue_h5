@@ -17,17 +17,28 @@
             v-for="(item, index) in serverMsg"
             :key="index"
         >
-            <view class="messages" >
-                <view v-text="`${
+            <view class="messages">
+                <div class="auth-sign" v-if="item.isAuth">
+                    <fa-FontAwesome
+                        type="fas fa-user-secret"
+                        size="28"
+                        color="#2979FF"
+                    >
+                    </fa-FontAwesome>
+                </div>
+                
+                <text :class="['name', item.isAuth ? 'auth' : '']">
+                    {{
                         item.nickname 
                         ? item.nickname 
-                        : 'ak_' + data.address.slice(-4)
-                    }:
-                    ${
-                        item.msg
-                    }`"></view>
-            </view>
-            <br>
+                        : item.defaultAens 
+                        ? item.defaultAens 
+                        : 'ak_' + item.userAddress.slice(-4) 
+                    }}
+                </text>
+                <text class="">:</text>
+                <text class="userid">{{ item.msg }}</text>
+            </view><br>
         </view>
         <u-gap height="80"></u-gap>
 
@@ -50,6 +61,8 @@
 <script>
 import socket from '@/util/socketio.js';
 import { getStore } from "@/util/service";
+import store from "@/store";
+import { Crypto } from '@aeternity/aepp-sdk';
 
 export default {
     components: {},
@@ -71,25 +84,29 @@ export default {
     },
     mounted() {
         this.sendServerData = {
-            address: getStore("keystore").public_key,
+            address: getStore("token"),
         };
-        console.log(this.sendServerData);
         socket.emit("joinRoomChat", this.sendServerData); //加入聊天室
 
-        socket.on('joinRoomChat', (userOnl)=> {
-            this.online = `${ userOnl ? userOnl : 0 }/0`;
+        //监听加入
+        socket.on('joinRoomChat', (onlineNumber)=> {
+            this.online = `${onlineNumber.online}/${onlineNumber.total}`;
         });
-
+        //监听消息
         socket.on('message', (data)=> {
             this.serverMsg.push(data);
         });
-
+        //监听系统消息
         socket.on('serverMessage', (data)=> {
             this.serverMsg.push(data);
         });
-
-        socket.on('close', (userOnl)=> {
-            this.online = `${ userOnl ? userOnl : 0 }/0`;
+        //监听错误
+        socket.on('error', (msg)=> {
+            this.uShowToast(msg);
+        });
+        //监听关闭
+        socket.on('close', (onlineNumber)=> {
+            this.online = `${onlineNumber.online}/${onlineNumber.total}`;
         });
 
     },
@@ -103,16 +120,34 @@ export default {
     },
     methods: {
         //发送消息
-        submitMsg() {
-				if (!this.content) {
-					this.uShowToast(this.i18n.components.enterContent);
-					return false;
-				}
-				//this.btnLoading = true;
+        async submitMsg() {
+            if (!this.content) {
+                this.uShowToast(this.i18n.components.enterContent);
+                return false;
+            }
+
+            try{
+                //对消息签名
+                const secretKey = await this.keystoreToSecretKey(store.state.user.password);
+                const secretKeyHex = Buffer.from(secretKey, 'hex');
+                const sign_array = Crypto.sign(Buffer.from(this.content), secretKeyHex);
+                const sign_hex = this.uint8ArrayToHex(sign_array);
+
+                this.sendServerData.sign = sign_hex;
                 this.sendServerData.msg = this.content;
                 socket.emit("message", this.sendServerData); //将消息发送给服务器
                 this.content = "";
-			},
+            }  catch (error) {
+                this.uShowToast("消息签名错误");
+                return;
+            }
+		},
+        // Uint8Array 转 HexString
+        uint8ArrayToHex(arr) {
+            return Array.from(
+                arr, i => i.toString(16).padStart(2, "0")
+            ).join("");
+        },
     },
 };
 </script>
@@ -120,8 +155,26 @@ export default {
 <style lang="scss" scoped>
 .messages {
     position: absolute;
-    list-style-type: none;
     padding: 5px 10px;
+}
+
+.name {
+    display: inline-block;
+    color: #4e4e4e;
+    font-size: 26rpx;
+    &.auth {
+        color: #2979ff;
+        font-weight: bold;
+    }
+}
+
+.auth-sign {
+    display: inline-block;
+}
+
+.userid {
+    margin-left: 5rpx;
+    color: #0f0f0f;
 }
 
 .comment {
@@ -163,5 +216,4 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
 </style>

@@ -14,7 +14,7 @@
             shape="circle"
             size="mini"
             class="panel"
-            @click="goUrl('/pages/chat/room')"
+            @click="goChatRoom"
         >
         登陆聊天室
         </u-button>
@@ -22,22 +22,30 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 
 export default {
     components: {},
     data() {
         return {
             current: 0, //当前tab索引
+            userInfo: {}, //用户信息
         };
     },
     //下拉刷新
     onPullDownRefresh() {
+        this.getUserInfo();
+        setTimeout(function() {
+            uni.stopPullDownRefresh();
+        }, 500);
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
         this.tabList = [{name: "聊天室"}];
+        this.getUserInfo();
     },
      computed: {
+         ...mapGetters(["token"]),
         //国际化
         i18n: {
             get() {
@@ -46,9 +54,26 @@ export default {
         },
     },
     methods: {
-        //切换顶部tab事件
-        tabChange(index) {
-            this.current = index;
+        //获取用户信息
+        getUserInfo() {
+            let params = {
+                userAddress: this.token,
+            };
+            this.$http
+                .post("/User/info", params, { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.userInfo = res.data;
+                    }
+                });
+        },
+        goChatRoom() {
+            //this.getUserInfo();
+            if (!this.userInfo.isMapping) {
+                this.uShowToast("你没有权限进入");
+                return;
+            }
+            this.goUrl('/pages/chat/room');
         },
     },
 };
