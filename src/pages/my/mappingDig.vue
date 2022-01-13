@@ -278,7 +278,7 @@ export default {
         this.getTop();
     },
     activated() {},
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
         this.getBalance();

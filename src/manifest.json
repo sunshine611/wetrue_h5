@@ -2,8 +2,8 @@
     "name" : "WeTrue",
     "appid" : "__UNI__BC48802",
     "description" : "A decentralized open-source microblog that includes functions of wallets",
-    "versionName" : "2.5.8",
-    "versionCode" : 257,
+    "versionName" : "2.5.9",
+    "versionCode" : 259,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -117,6 +117,11 @@
                     "pathRewrite" : {
                         "^https://www.aeknow.org/" : "/"
                     }
+                },
+                "/socket.io": {
+                    "target": "https://api.wetrue.io:50001",
+                    "ws": true,
+                    "changeOrigin": true
                 }
             },
             "https" : false

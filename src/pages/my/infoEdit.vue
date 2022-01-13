@@ -140,7 +140,7 @@ export default {
             this.releaseCallback(res);
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
         setTimeout(function() {

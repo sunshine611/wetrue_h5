@@ -1,7 +1,7 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import queryParams from "@/uview-ui/libs/function/queryParams";
-import { source as WeTrueSource } from "@/config/config";
+import { compilerUrl, source as WeTrueSource } from "@/config/config";
 import {
     Node,
     Universal,
@@ -218,20 +218,18 @@ const mixins = {
         },
         //话题及@高亮
         topicHighlight(value) {
-            let expt, expm, exps;
-            expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
-            expm = /@[\p{L}\d]+.chain/gu;
-            exps = /#([^#]*)(\[ST\])#/g;
+            let expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
             });
+            let expm = /@[\p{L}\d]+.chain/gu;
             value = value.replace(expm, (item) => {
                 let newVal = `<text class="mentions-text">${item}</text>`;
                 return newVal;
             });
-            value = value.replace(exps, `<text class="topic-text">⚡$1</text>`);
-        
+            //let exps = /#([^#]*)(\[ST\])#/g;
+            //value = value.replace(exps, `<text class="topic-text">⚡$1</text>`);
             return value;
         },
         //复制粘贴板
@@ -299,7 +297,7 @@ const mixins = {
                     url: store.state.user.nodeUrl,
                 });
                 const client = await Universal({
-                    compilerUrl: "https://compiler.aeasy.io",
+                    compilerUrl: compilerUrl,
                     nodes: [
                         {
                             name: "WeTrue",

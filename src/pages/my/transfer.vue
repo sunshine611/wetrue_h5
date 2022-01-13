@@ -159,7 +159,7 @@ export default {
     activated() {
 
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getAccount();
         setTimeout(function() {

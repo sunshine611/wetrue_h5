@@ -135,7 +135,7 @@ export default {
             this.getAeRecodeList();
         }
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.pageInfo.offset = 0;
         if (!!this.contract) {
@@ -147,7 +147,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         this.pageInfo.offset += this.pageInfo.limit;
         if (!!this.contract) {

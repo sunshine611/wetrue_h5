@@ -266,7 +266,7 @@ export default {
             rewardShow: false, //控制打赏弹层
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getPostInfo();
         this.pageInfo.page = 1;
@@ -275,7 +275,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         this.pageInfo.page++;
         this.getCommentList();

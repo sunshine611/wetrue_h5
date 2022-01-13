@@ -184,7 +184,7 @@ export default {
             more: "loadmore", //加载更多
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.getCommentInfo();
         this.pageInfo.page = 1;
@@ -193,7 +193,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         this.pageInfo.page++;
         this.getReply();

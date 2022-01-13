@@ -6,7 +6,7 @@
                     class="nav-tab"
                     :list="categoryList"
                     :is-scroll="true"
-                    @change="selectCategory"
+                    @change="tabChange"
                     :current="current"
                     active-color="#f04a82"
                     bg-color="#fafafa"
@@ -66,7 +66,7 @@ export default {
             postTopicButtonShow: true, //控制发帖按钮显隐
         };
     },
-    //上拉刷新
+    //下拉刷新
     onPullDownRefresh() {
         this.pageInfo.page = 1;
         this.getPostList();
@@ -75,7 +75,7 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    //下拉加载
+    //上拉加载
     onReachBottom() {
         this.pageInfo.page++;
         this.getPostList();
@@ -194,8 +194,8 @@ export default {
                     }
                 });
         },
-        //选择类别
-        selectCategory(index) {
+        //切换顶部tab事件
+        tabChange(index) {
             this.current = index;
             this.postList = [];
             this.pageInfo = {

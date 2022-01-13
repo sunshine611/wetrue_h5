@@ -70,56 +70,56 @@
 	}
 </script>
 <style lang="scss" scoped>
-	.comment-other {
-		position: fixed;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 100%;
-		height: 100%;
-		max-width: 720px;
-		background-color: rgba(0, 0, 0, 0.5);
-		z-index: 100;
-	}
+.comment-other {
+	position: fixed;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	height: 100%;
+	max-width: 720px;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 100;
+}
 
-	.comment {
-		z-index: 999;
-		position: fixed;
-		bottom: 0;
-		z-index: 100;
+.comment {
+	z-index: 999;
+	position: fixed;
+	bottom: 0;
+	z-index: 100;
+	width: 100%;
+	max-width: 720px;
+	background-color: white;
+	padding: 20upx;
+	border-top: 1px solid #aaa;
+	font-size: 28rpx;
+}
+
+.comment-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+.comment-input {
+	width: 80%;
+	height: 230rpx;
+
+	.content {
 		width: 100%;
-		max-width: 720px;
-		background-color: white;
-		padding: 20upx;
-		border-top: 1px solid #aaa;
+		box-sizing: border-box;
+		background-color: rgba(232, 232, 232, 0.57);
 		font-size: 28rpx;
+		padding: 20upx;
+		max-height: 230rpx;
+		border-radius: 20rpx;
 	}
+}
 
-	.comment-info {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.comment-input {
-		width: 80%;
-		height: 230rpx;
-
-		.content {
-			width: 100%;
-			box-sizing: border-box;
-			background-color: rgba(232, 232, 232, 0.57);
-			font-size: 28rpx;
-			padding: 20upx;
-			max-height: 230rpx;
-			border-radius: 20rpx;
-		}
-	}
-
-	.comment-submit {
-		width: 20%;
-		color: #f04a82;
-		display: flex;
-		justify-content: center;
-		align-items: flex-end;
-	}
+.comment-submit {
+	width: 20%;
+	color: #f04a82;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+}
 </style>
