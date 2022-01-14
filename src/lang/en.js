@@ -18,6 +18,7 @@ export default {
 	tabBar: {
 		index: 'Home',
 		message: 'Msg',
+		chat: 'Chat',
 		my :'My',
 	},
 	home: {

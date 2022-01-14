@@ -5,6 +5,7 @@ export const aeknow      = 'https://www.aeknow.org'
 export const aeMdw       = 'https://mainnet.aeternity.io/mdw'
 export const aeExplorer  = 'https://explorer.aeternity.io'
 export const compilerUrl = 'https://compiler.aepps.com'
+export const chatapi     = 'https://api.wetrue.io'
 
 /*
 export const baseUrl     = 'https://liushao.cc:1817'
@@ -13,6 +14,7 @@ export const aeknow      = 'https://www.aeknow.org'
 export const aeMdw       = 'https://testnet.aeternity.io/mdw'
 export const aeExplorer  = 'https://explorer.testnet.aeternity.io'
 export const compilerUrl = 'https://compiler.aeasy.io'
+export const chatapi     = 'http://192.168.1.111:50001'
 */
 export const version = '2.5.9'
 export const source = 'WeTrue'

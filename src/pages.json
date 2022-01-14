@@ -227,7 +227,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "聊天",
+        "navigationBarTitleText": "Chat",
         "enablePullDownRefresh": true
       }
     },
@@ -237,7 +237,7 @@
         "app-plus": {
           "titleNView": false //禁用原生导航栏
         },
-        "navigationBarTitleText": "ChatRoom",
+        "navigationBarTitleText": "Chat Room",
         "navigationStyle": "custom" // 隐藏系统导航栏
       }
     }
@@ -270,7 +270,7 @@
         "pagePath": "pages/chat/index",
         "iconPath": "static/message.png",
         "selectedIconPath": "static/message_on.png",
-        "text": "聊天"
+        "text": "Chat"
       },
       {
         "pagePath": "pages/my/index",

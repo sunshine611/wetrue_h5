@@ -46,7 +46,13 @@
             <view class="comment">
                 <view class="comment-info">
                     <view class="comment-input">
-                        <textarea class="comment-content" v-model="content" placeholder="write a message..." maxlength="500" />
+                        <u-input
+                            class="comment-content"
+                            v-model="content"
+                            type="text"
+                            placeholder="write a message..."
+                            @confirm="submitMsg"
+                        />
                     </view>
                     <view class="comment-submit">
                         <u-button size="mini" @click.stop="submitMsg" :loading="btnLoading" type="primary">Send</u-button>
@@ -130,7 +136,7 @@ export default {
                 //对消息签名
                 const secretKey = await this.keystoreToSecretKey(store.state.user.password);
                 const secretKeyHex = Buffer.from(secretKey, 'hex');
-                const sign_array = Crypto.sign(Buffer.from(this.content), secretKeyHex);
+                const sign_array = Crypto.signMessage(this.content, secretKeyHex);
                 const sign_hex = this.uint8ArrayToHex(sign_array);
 
                 this.sendServerData.sign = sign_hex;
@@ -173,6 +179,7 @@ export default {
 }
 
 .userid {
+    padding: 5px 10px;
     margin-left: 5rpx;
     color: #0f0f0f;
 }

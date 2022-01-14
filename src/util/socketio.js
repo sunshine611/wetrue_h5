@@ -1,3 +1,5 @@
 import io from 'socket.io-client'
-let socket = io.connect('/', {transports: ['websocket']});
+import { chatapi } from "@/config/config";
+
+const socket = io.connect(chatapi, {transports: ['websocket']});
 module.exports = socket;
