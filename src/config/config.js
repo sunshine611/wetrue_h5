@@ -4,7 +4,7 @@ export const nodeUrl     = 'https://mainnet.aeternity.io'
 export const aeknow      = 'https://www.aeknow.org'
 export const aeMdw       = 'https://mainnet.aeternity.io/mdw'
 export const aeExplorer  = 'https://explorer.aeternity.io'
-export const compilerUrl = 'https://compiler.aepps.com'
+export const compilerUrl = 'https://compiler.aeternity.io'
 export const chatapi     = 'https://api.wetrue.io'
 
 /*

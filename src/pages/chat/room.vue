@@ -26,7 +26,6 @@
                     >
                     </fa-FontAwesome>
                 </div>
-                
                 <text :class="['name', item.isAuth ? 'auth' : '']">
                     {{
                         item.nickname 
@@ -36,6 +35,9 @@
                         : 'ak_' + item.userAddress.slice(-4) 
                     }}
                 </text>
+                <text class="time">{{
+                    $moment(item.msgUtcTime).format(" MM/DD HH:mm")
+                }}</text>
                 <text class="">:</text>
                 <text class="userid">{{ item.msg }}</text>
             </view><br>
@@ -65,8 +67,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import socket from '@/util/socketio.js';
-import { getStore } from "@/util/service";
 import store from "@/store";
 import { Crypto } from '@aeternity/aepp-sdk';
 
@@ -79,7 +81,7 @@ export default {
             content: '',
             chat: [],
             serverMsg: [],
-            sendServerData: [],
+            sendMsgData: [],
         };
     },
     //下拉刷新
@@ -87,12 +89,13 @@ export default {
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
+        this.isPassword();
     },
     mounted() {
-        this.sendServerData = {
-            address: getStore("token"),
+        this.sendMsgData = {
+            userAddress: this.token,
         };
-        socket.emit("joinRoomChat", this.sendServerData); //加入聊天室
+        socket.emit("joinRoomChat", this.sendMsgData); //加入聊天室
 
         //监听加入
         socket.on('joinRoomChat', (onlineNumber)=> {
@@ -117,6 +120,7 @@ export default {
 
     },
     computed: {
+        ...mapGetters(["token"]),
         //国际化
         i18n: {
             get() {
@@ -136,12 +140,12 @@ export default {
                 //对消息签名
                 const secretKey = await this.keystoreToSecretKey(store.state.user.password);
                 const secretKeyHex = Buffer.from(secretKey, 'hex');
-                const sign_array = Crypto.signMessage(this.content, secretKeyHex);
-                const sign_hex = this.uint8ArrayToHex(sign_array);
+                const signArray = Crypto.signMessage(this.content, secretKeyHex);
+                const signHex = this.uint8ArrayToHex(signArray);
 
-                this.sendServerData.sign = sign_hex;
-                this.sendServerData.msg = this.content;
-                socket.emit("message", this.sendServerData); //将消息发送给服务器
+                this.sendMsgData.sign = signHex;
+                this.sendMsgData.msg = this.content;
+                socket.emit("message", this.sendMsgData); //将消息发送给服务器
                 this.content = "";
             }  catch (error) {
                 this.uShowToast("消息签名错误");
