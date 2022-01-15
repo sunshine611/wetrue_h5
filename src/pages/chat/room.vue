@@ -1,230 +1,129 @@
-<template>
-    <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :back-text="online" title="Chat Room">
-            <div slot="right">
-                <u-icon
-                    name="home"
-                    class="mr-30"
-                    size="34"
-                    color="#f04a82"
-                    @click="reLaunchUrl('index')"
-                ></u-icon>
-            </div>
-        </u-navbar>
-        <view 
-            class="chat-content" 
-            v-for="(item, index) in serverMsg"
-            :key="index"
-        >
-            <view class="messages">
-                <div class="auth-sign" v-if="item.isAuth">
-                    <fa-FontAwesome
-                        type="fas fa-user-secret"
-                        size="28"
-                        color="#2979FF"
-                    >
-                    </fa-FontAwesome>
-                </div>
-                <text :class="['name', item.isAuth ? 'auth' : '']">
-                    {{
-                        item.nickname 
-                        ? item.nickname 
-                        : item.defaultAens 
-                        ? item.defaultAens 
-                        : 'ak_' + item.userAddress.slice(-4) 
-                    }}
-                </text>
-                <text class="time">{{
-                    $moment(item.msgUtcTime).format(" MM/DD HH:mm")
-                }}</text>
-                <text class="">:</text>
-                <text class="userid">{{ item.msg }}</text>
-            </view><br>
-        </view>
-        <u-gap height="80"></u-gap>
+<script>
+	import chatInput from '@/components/chat/chatinput';
+	import messageShow from '@/components/chat/messageshow';
 
-        <view class="safe-area-inset-bottom" style="display:inline-block">
-            <view class="comment">
-                <view class="comment-info">
-                    <view class="comment-input">
-                        <u-input
-                            class="comment-content"
-                            v-model="content"
-                            type="text"
-                            placeholder="write a message..."
-                            @confirm="submitMsg"
-                        />
-                    </view>
-                    <view class="comment-submit">
-                        <u-button size="mini" @click.stop="submitMsg" :loading="btnLoading" type="primary">Send</u-button>
-                    </view>
-                </view>
-            </view>
-        </view>
-        
-    </view>
+	export default {
+		data() {
+			return {
+				style: {
+					pageHeight: 0,
+					contentViewHeight: 0,
+					footViewHeight: 90,
+					mitemHeight: 0,
+				},
+				scrollTop: 0,
+				messages: [{
+					user: 'home',
+					type: 'head',//'head', //input,content 
+					content: '你好!'
+				}]
+			}
+		},
+		components: {
+			chatInput,
+			messageShow
+		},
+		created: function () { 
+			const res = uni.getSystemInfoSync();
+			this.style.pageHeight = res.windowHeight;
+			this.style.contentViewHeight = res.windowHeight - uni.getSystemInfoSync().screenWidth / 750 * (100); //像素
+		},
+		methods: {
+			getInputMessage: function (message) { //获取子组件的输入数据
+				// console.log(message);
+				this.addMessage('customer', message.content, false);
+				this.toRobot(message.content);
+			},
+			addMessage: function (user, content, hasSub, subcontent) {
+				var that = this;
+				that.messages.push({
+					user: user,
+					content: content,
+					hasSub: hasSub,
+					subcontent: subcontent
+				});
+			},
+			scrollToBottom: function () {
+				var that = this;
+				var query = uni.createSelectorQuery();
+				query.selectAll('.m-item').boundingClientRect();
+				query.select('#scrollview').boundingClientRect();
+
+				query.exec(function (res) {
+					that.style.mitemHeight = 0;
+					res[0].forEach(function (rect) {
+						// console.info(rect.height);
+						that.style.mitemHeight = that.style.mitemHeight + rect.height + 20;
+					});
+
+					if (that.style.mitemHeight > that.style.contentViewHeight) {
+						that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight;
+					}
+				});
+			},
+			toRobot: function (info) {
+
+				this.addMessage('home', info, false);
+				this.scrollToBottom();
+				/*
+				var apiUrl = 'http://www.tuling123.com/openapi/api';
+				uni.request({
+					url: apiUrl,
+					data: {
+						"key": 'acfbca724ea1b5db96d2eef88ce677dc',
+						"info": info,
+						"userid": 'uni-test'
+					},
+					success: (res) => {
+						this.addMessage('home', res.data.text, false);
+						this.scrollToBottom();
+						console.log('request success:' + res.data.text);
+					},
+					fail: (err) => {
+						console.log('request fail', err);
+						uni.showModal({
+							content: err.errMsg,
+							showCancel: false
+						})
+					}
+				});
+				*/
+			}
+		}
+	}
+</script>
+<template>
+	<view class="uni-column">
+		<view class="content" id="content" :style="{height:style.contentViewHeight+'px'}">
+			<scroll-view id="scrollview"   scroll-y="true" :style="{height:style.contentViewHeight+'px'}" :scroll-with-animation="true"
+			    :scroll-top="scrollTop">
+				<message-show v-for="(message,index) in messages" :key="index" v-bind:message="message" :id="index"></message-show>
+				<view id="bottom"></view>
+			</scroll-view>
+		</view>
+		<view class="foot">
+			<chat-input @send-message="getInputMessage" ></chat-input>
+		</view>
+	</view>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-import socket from '@/util/socketio.js';
-import store from "@/store";
-import { Crypto } from '@aeternity/aepp-sdk';
-
-export default {
-    components: {},
-    data() {
-        return {
-            btnLoading: false,
-            online: "0/0",
-            content: '',
-            chat: [],
-            serverMsg: [],
-            sendMsgData: [],
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-    },
-    onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.isPassword();
-    },
-    mounted() {
-        this.sendMsgData = {
-            userAddress: this.token,
-        };
-        socket.emit("joinRoomChat", this.sendMsgData); //加入聊天室
-
-        //监听加入
-        socket.on('joinRoomChat', (onlineNumber)=> {
-            this.online = `${onlineNumber.online}/${onlineNumber.total}`;
-        });
-        //监听消息
-        socket.on('message', (data)=> {
-            this.serverMsg.push(data);
-        });
-        //监听系统消息
-        socket.on('serverMessage', (data)=> {
-            this.serverMsg.push(data);
-        });
-        //监听错误
-        socket.on('error', (msg)=> {
-            this.uShowToast(msg);
-        });
-        //监听关闭
-        socket.on('close', (onlineNumber)=> {
-            this.online = `${onlineNumber.online}/${onlineNumber.total}`;
-        });
-
-    },
-    computed: {
-        ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
-    methods: {
-        //发送消息
-        async submitMsg() {
-            if (!this.content) {
-                this.uShowToast(this.i18n.components.enterContent);
-                return false;
-            }
-
-            try{
-                //对消息签名
-                const secretKey = await this.keystoreToSecretKey(store.state.user.password);
-                const secretKeyHex = Buffer.from(secretKey, 'hex');
-                const signArray = Crypto.signMessage(this.content, secretKeyHex);
-                const signHex = this.uint8ArrayToHex(signArray);
-
-                this.sendMsgData.sign = signHex;
-                this.sendMsgData.msg = this.content;
-                socket.emit("message", this.sendMsgData); //将消息发送给服务器
-                this.content = "";
-            }  catch (error) {
-                this.uShowToast("消息签名错误");
-                return;
-            }
-		},
-        // Uint8Array 转 HexString
-        uint8ArrayToHex(arr) {
-            return Array.from(
-                arr, i => i.toString(16).padStart(2, "0")
-            ).join("");
-        },
-    },
-};
-</script>
-
-<style lang="scss" scoped>
-.messages {
-    position: absolute;
-    padding: 5px 10px;
-}
-
-.name {
-    display: inline-block;
-    color: #4e4e4e;
-    font-size: 26rpx;
-    &.auth {
-        color: #2979ff;
-        font-weight: bold;
-    }
-}
-
-.auth-sign {
-    display: inline-block;
-}
-
-.userid {
-    padding: 5px 10px;
-    margin-left: 5rpx;
-    color: #0f0f0f;
-}
-
-.comment {
-    z-index: 999;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    max-width: 720px;
-    background-color: white;
-    padding: 20upx;
-    border-top: 1px solid rgb(243, 234, 229);
-    font-size: 28rpx;
-}
-
-.comment-info {
-    display: flex;
-    justify-content: space-between;
-}
-
-.comment-input {
-    width: 96%;
-    max-height: 280rpx;
-
-    .comment-content {
-        width: 96%;
-        max-height: 180rpx;
-        box-sizing: border-box;
-        background-color: rgba(232, 232, 232, 0.57);
-        font-size: 28rpx;
-        padding: 20upx;
-        border-radius: 20rpx;
-    }
-}
-
-.comment-submit {
-    width: 10%;
-    color: #f04a82;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+<style>
+	.uni-column {
+		display: flex;
+		flex-direction: column;
+	}
+	.content {
+		display: flex;
+		flex: 1;
+		margin-bottom: 100rpx;
+	}
+	.foot {
+		position: fixed;
+		width: 100%;
+		height: 90rpx;
+		min-height: 90rpx;
+		left: 0rpx;
+		bottom: 0rpx;
+		overflow: hidden;
+	}
 </style>
