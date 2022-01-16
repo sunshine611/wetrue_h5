@@ -1,32 +1,35 @@
 <template>
 	<view class="m-item" :id="'message'+id">
 		<view class="m-left">
-			<image class="head_icon" src="@/static/homeHL.png" v-if="message.user=='home'"></image>
+			<view v-if="message.userType=='home'" :class="['head_name', message.isAuth ? 'auth' : '']">
+				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
+				<view class="m-time">{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm") }}</view>
+			</view>
 		</view>
+		
 		<view class="m-content">
-			<view class="m-content-head" :class="{'m-content-head-right':message.user=='customer'}">
-				<view :class="'m-content-head-'+message.user">{{message.content}} </view>
+			<view class="m-content-head" :class="{'m-content-head-right':message.userType=='customer'}">
+				<view :class="'m-content-head-'+message.userType">{{message.msg}} </view>
 			</view>
 		</view>
 		<view class="m-right">
-			<image class="head_icon" src="@/static/customerHL.png" v-if="message.user=='customer'"></image>
+			<view v-if="message.userType=='customer'" :class="['head_name', message.isAuth ? 'auth' : '']">
+				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
+				<view class="m-time">{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm") }}</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
 
-	export default {
-		data() {
-			return {
-			}
-		},
-		props: ['message', 'id'],
-		computed: mapState(['user'])
-	}
+export default {
+	data() {
+		return {
+		}
+	},
+	props: ['message', 'id'],
+}
 </script>
 
 <style>
@@ -37,7 +40,7 @@
 	}
 	.m-left {
 		display: flex;
-		width: 120rpx;
+		width: 280rpx;
 		justify-content: center;
 		align-items: flex-start;
 	}
@@ -48,9 +51,14 @@
 		justify-content: center;
 		word-break: break-all;
 	}
+	.m-time {
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+	}
 	.m-right {
 		display: flex;
-		width: 120rpx;
+		width: 280rpx;
 		justify-content: center;
 		align-items: flex-start;
 	}
@@ -58,7 +66,17 @@
 		width: 80rpx;
 		height: 80rpx;
 	}
+	.head_name {
+		display: inline-block;
+		color: #4e4e4e;
+		font-size: 26rpx;
+		&.auth {
+			color: #2979ff;
+			font-weight: bold;
+		}
+	}
 	.m-content-head {
+		display: flex;
 		position: relative;
 	}
 	.m-content-head-right {
@@ -83,7 +101,7 @@
 		content: ' '
 	}
 	.m-content-head-customer {
-		border: 1rpx white solid;
+		border: 1rpx solid white;
 		background: white;
 		border-radius: 20rpx;
 		padding: 20rpx;

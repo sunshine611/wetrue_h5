@@ -4,7 +4,12 @@
 			<view class="uni-icon uni-icon-mic" @tap="startRecognize"> </view>
 		</view>
 		<view class="footer-center">
-			<input class="input-text" type="text" v-model="inputValue"></input>
+			<input class="input-text" 
+				@confirm="sendMessge" 
+				type="text" 
+				v-model="inputValue"
+				placeholder="write a message..."
+			></input>
 		</view>
 		<view class="footer-right" @tap="sendMessge">
 			<view id='msg-type' >发送</view>
