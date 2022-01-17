@@ -1,34 +1,54 @@
 <template>
-	<view class="m-item" :id="'message'+id">
-		<view class="m-left">
-			<view v-if="message.userType=='home'" :class="['head_name', message.isAuth ? 'auth' : '']">
+	<view class="m-item">
+		<view class="m-left" v-if="userType(message.userAddress)=='home'">
+			<view class="head-name" :class="[message.isAuth ? 'head-name-auth' : '']">
 				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
-				<view class="m-time">{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm") }}</view>
 			</view>
 		</view>
-		
 		<view class="m-content">
-			<view class="m-content-head" :class="{'m-content-head-right':message.userType=='customer'}">
-				<view :class="'m-content-head-'+message.userType">{{message.msg}} </view>
+			<view class="m-content-head" :class="{'m-content-head-right':userType(message.userAddress)=='customer'}">
+				{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm:ss") }}
+			</view>
+			<view class="m-content-head" :class="{'m-content-head-right':userType(message.userAddress)=='customer'}">
+				<view :class="'m-content-head-'+userType(message.userAddress)">{{message.msgContent}} </view>
 			</view>
 		</view>
-		<view class="m-right">
-			<view v-if="message.userType=='customer'" :class="['head_name', message.isAuth ? 'auth' : '']">
+		<view class="m-right" v-if="userType(message.userAddress)=='customer'">
+			<view class="head-name" :class="[message.isAuth ? 'head-name-auth' : '']">
 				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
-				<view class="m-time">{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm") }}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 
 export default {
 	data() {
 		return {
+
 		}
 	},
-	props: ['message', 'id'],
+	props: ['message'],
+	computed: {
+        ...mapGetters(["token"]),
+        //国际化
+        i18n: {
+            get() {
+                return this.$_i18n.messages[this.$_i18n.locale];
+            },
+        },
+    },
+	methods: {
+        userType(userAddress) {
+			if (userAddress==this.token) {
+				return 'customer'
+			} else {
+				return 'home'
+			}
+        },
+	},
 }
 </script>
 
@@ -40,7 +60,7 @@ export default {
 	}
 	.m-left {
 		display: flex;
-		width: 280rpx;
+		width: 140rpx;
 		justify-content: center;
 		align-items: flex-start;
 	}
@@ -58,22 +78,17 @@ export default {
 	}
 	.m-right {
 		display: flex;
-		width: 280rpx;
+		width: 140rpx;
 		justify-content: center;
 		align-items: flex-start;
 	}
-	.head_icon {
-		width: 80rpx;
-		height: 80rpx;
-	}
-	.head_name {
+	.head-name {
 		display: inline-block;
-		color: #4e4e4e;
 		font-size: 26rpx;
-		&.auth {
-			color: #2979ff;
-			font-weight: bold;
-		}
+	}
+	.head-name-auth {
+		color: #2979ff;
+		font-weight: bold;
 	}
 	.m-content-head {
 		display: flex;
@@ -85,15 +100,14 @@ export default {
 	}
 	.m-content-head-home {
 		text-align: left;
-		background: #1482d1;
-		border: 1px #1482d1 solid;
+		background: white;
+		border: 1px solid white;
 		border-radius: 20rpx;
 		padding: 20rpx;
-		color: white;
 	}
 	.m-content-head-home:before {
 		border: 15rpx solid transparent;
-		border-right: 15rpx solid #1482d1;
+		border-right: 15rpx solid white;
 		left: -26rpx;
 		width: 0;
 		height: 0;
@@ -101,14 +115,15 @@ export default {
 		content: ' '
 	}
 	.m-content-head-customer {
-		border: 1rpx solid white;
-		background: white;
+		border: 1rpx solid #1482d1;
+		background: #1482d1;
 		border-radius: 20rpx;
 		padding: 20rpx;
+		color: white;
 	}
 	.m-content-head-customer:after {
 		border: 15rpx solid transparent;
-		border-left: 15rpx solid white;
+		border-left: 15rpx solid #1482d1;
 		top: 20rpx;
 		right: -26rpx;
 		width: 0;

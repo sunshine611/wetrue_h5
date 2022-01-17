@@ -13,7 +13,7 @@
             </div>
         </u-navbar>
 		<view class="content" id="content" :style="{height:style.contentViewHeight+'px'}">
-			<scroll-view id="scrollview"   scroll-y="true" :style="{height:style.contentViewHeight+'px'}" :scroll-with-animation="true"
+			<scroll-view id="scrollview" scroll-y="true" :style="{height:style.contentViewHeight+'px'}" :scroll-with-animation="true"
 			    :scroll-top="scrollTop">
 				<message-show v-for="(message,index) in messages" :key="index" v-bind:message="message" :id="index"></message-show>
 				<view id="bottom"></view>
@@ -31,8 +31,15 @@ import { mapGetters } from "vuex";
 import socket from '@/util/socketio.js';
 import store from "@/store";
 import { Crypto } from '@aeternity/aepp-sdk';
+import { chatRommKeyIv } from "@/config/config";
+import CryptoJS from 'crypto-js';
+
 
 export default {
+	components: {
+		chatInput,
+		messageShow
+	},
 	data() {
 		return {
 			style: {
@@ -50,10 +57,13 @@ export default {
 			sendMsgData: [],
 		}
 	},
-	components: {
-		chatInput,
-		messageShow
-	},
+	//下拉刷新
+    onPullDownRefresh() {
+    },
+    onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
+		this.isPassword();
+    },
 	created: function () { 
 		const res = uni.getSystemInfoSync();
 		this.style.pageHeight = res.windowHeight;
@@ -63,29 +73,23 @@ export default {
 		this.sendMsgData = {
 			userAddress: this.token,
 		};
-		socket.emit("joinRoomChat", this.sendMsgData); //加入聊天室
-
+		socket.emit("joinRoom", this.sendMsgData); //加入聊天室
 		//监听加入
-		socket.on('joinRoomChat', (onlineNumber)=> {
-			this.online = `${onlineNumber.online}/${onlineNumber.total}`;
-		});
+		socket.on('joinRoom', (onlineNumber) => 
+			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
+		)
 		//监听消息
-		socket.on('message', (data)=> {
-			this.addMessage(data);
-		});
+		socket.on('message', (res) => this.addMessage(res))
 		//监听系统消息
-		socket.on('serverMessage', (data)=> {
-			this.serverMsg.push(data);
-		});
+		socket.on('serverMessage', (data)=> this.serverMsg.push(data))
 		//监听错误
-		socket.on('error', (msg)=> {
-			this.uShowToast(msg);
-		});
+		socket.on('error', (msg) => this.uShowToast(msg))
 		//监听关闭
-		socket.on('close', (onlineNumber)=> {
-			this.online = `${onlineNumber.online}/${onlineNumber.total}`;
-		});
-
+		socket.on('close', (onlineNumber) => 
+			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
+		)
+		//监听断线
+		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
 	},
 	computed: {
         ...mapGetters(["token"]),
@@ -98,61 +102,91 @@ export default {
     },
 	methods: {
 		//发送消息
-        getInputMessage: async function (message) { //获取子组件的输入数据
-            if (!message.content) {
-                this.uShowToast(this.i18n.components.enterContent);
-                return false;
+        getInputMessage: async function (sendMsg) { //获取子组件的输入数据
+            if (!this.sendMsgData.userAddress) {
+                this.uShowToast('账户获取失败')
+                return false
             }
             try{
                 //对消息签名
-                const secretKey = await this.keystoreToSecretKey(store.state.user.password);
-                const secretKeyHex = Buffer.from(secretKey, 'hex');
-                const signArray = Crypto.signMessage(message.content, secretKeyHex);
-                const signHex = this.uint8ArrayToHex(signArray);
-
-                this.sendMsgData.sign = signHex;
-                this.sendMsgData.msg = message.content;
-                socket.emit("message", this.sendMsgData); //将消息发送给服务器
+                const secretKey = await this.keystoreToSecretKey(store.state.user.password)
+                const secretKeyHex = Buffer.from(secretKey, 'hex')
+                const signArray = Crypto.signMessage(sendMsg.msgContent, secretKeyHex)
+                const signHex = this.uint8ArrayToHex(signArray)
+                this.sendMsgData.msgSign = signHex
+				//加密消息内容
+                this.sendMsgData.msgContent = this.aesEncrypt(sendMsg.msgContent)
+                socket.emit("message", this.sendMsgData)
             }  catch (error) {
-                this.uShowToast("消息签名错误");
-                return;
+                this.uShowToast("消息签名错误")
+                return
             }
 		},
         // Uint8Array 转 HexString
         uint8ArrayToHex(arr) {
             return Array.from(
                 arr, i => i.toString(16).padStart(2, "0")
-            ).join("");
+            ).join("")
         },
-		addMessage: function (msgData) {
-			var that = this;
-			that.messages.push({
-				userType: msgData.userAddress == this.token ? 'customer' : 'home',
-				nickname: msgData.nickname,//msgData.nickname,
-				defaultAens: msgData.defaultAens,
-				userAddress: msgData.userAddress,
-				msgUtcTime: msgData.msgUtcTime,
-				msg: msgData.msg,
-			});
-			this.scrollToBottom();
+		addMessage: function (msgLists) {
+			const that = this;
+			for (let i = 0; i < msgLists.length; i++) {
+				let aMsg = {
+					userAddress: msgLists[i].userAddress,
+					nickname: msgLists[i].nickname,
+					isMap: msgLists[i].isMap,
+					sex: msgLists[i].sex,
+					isAuth: msgLists[i].isAuth,
+					defaultAens: msgLists[i].defaultAens,
+					msgContent: this.aesDecrypt(msgLists[i].msgContent),
+					msgUtcTime: msgLists[i].msgUtcTime,
+				}
+				that.messages.push(aMsg)
+			}
+			setTimeout(() => {
+				this.scrollToBottom()
+			}, 150);
 		},
 		scrollToBottom: function () {
-			var that = this;
-			var query = uni.createSelectorQuery();
+			const that = this;
+			let query = uni.createSelectorQuery();
 			query.selectAll('.m-item').boundingClientRect();
 			query.select('#scrollview').boundingClientRect();
 
 			query.exec(function (res) {
 				that.style.mitemHeight = 0;
 				res[0].forEach(function (rect) {
-					// console.info(rect.height);
-					that.style.mitemHeight = that.style.mitemHeight + rect.height + 20;
+					that.style.mitemHeight = that.style.mitemHeight + rect.height + 40;
 				});
-
 				if (that.style.mitemHeight > that.style.contentViewHeight) {
 					that.scrollTop = that.style.mitemHeight - that.style.contentViewHeight;
 				}
 			});
+		},
+		 //AES加密
+		aesEncrypt (text, key, iv) {
+			if (!key) key = chatRommKeyIv.key;
+			if (!iv) iv = chatRommKeyIv.iv;
+			let srcs = CryptoJS.enc.Utf8.parse(text);
+			let encrypted = CryptoJS.AES.encrypt(srcs, CryptoJS.enc.Utf8.parse(key), {
+				iv: CryptoJS.enc.Utf8.parse(iv),
+				mode: CryptoJS.mode.CBC,
+				padding: CryptoJS.pad.Pkcs7
+			});
+			return encrypted.ciphertext.toString().toUpperCase();
+		},
+		//AES解密
+		aesDecrypt (text, key, iv) {
+			if (!key) key = chatRommKeyIv.key
+			if (!iv) iv = chatRommKeyIv.iv
+			let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
+			let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+			let decrypt = CryptoJS.AES.decrypt(srcs, CryptoJS.enc.Utf8.parse(key), {
+				iv: CryptoJS.enc.Utf8.parse(iv),
+				mode: CryptoJS.mode.CBC,
+				padding: CryptoJS.pad.Pkcs7
+			}).toString(CryptoJS.enc.Utf8);
+			return decrypt.toString();
 		}
 	}
 }

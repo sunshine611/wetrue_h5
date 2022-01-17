@@ -1,7 +1,9 @@
 <template>
 	<view class="footer">
 		<view class="footer-left">
-			<view class="uni-icon uni-icon-mic" @tap="startRecognize"> </view>
+			<view @tap="startRecognize">
+				<fa-FontAwesome type="fas fa-microphone"></fa-FontAwesome>
+			</view>
 		</view>
 		<view class="footer-center">
 			<input class="input-text" 
@@ -25,6 +27,11 @@
 				inputValue: ''
 			}
 		},
+		computed: {
+			i18n: {
+				get() { return this.$_i18n.messages[this.$_i18n.locale];},
+			},
+		},
 		methods: {
 			startRecognize: function () {
 				var options = {};
@@ -41,14 +48,13 @@
 			sendMessge: function () {
 				var that = this;
 				if (that.inputValue.trim() == '') {
-
+					this.uShowToast(this.i18n.components.enterContent);
 					that.inputValue = '';
 				} else {
-
 					//点击发送按钮时，通知父组件用户输入的内容
 					this.$emit('send-message', {
 						type: 'text',
-						content: that.inputValue
+						msgContent: that.inputValue
 					});
 					that.inputValue = '';
 				}
@@ -58,8 +64,6 @@
 </script>
 
 <style>
-	@import "@/common/icon.css";
-
 	.footer {
 		display: flex;
 		flex-direction: row;
