@@ -102,7 +102,7 @@ export default {
     },
 	methods: {
 		//发送消息
-        getInputMessage: async function (sendMsg) { //获取子组件的输入数据
+        async getInputMessage(sendMsg) { //获取子组件的输入数据
             if (!this.sendMsgData.userAddress) {
                 this.uShowToast('账户获取失败')
                 return false
@@ -128,7 +128,7 @@ export default {
                 arr, i => i.toString(16).padStart(2, "0")
             ).join("")
         },
-		addMessage: function (msgLists) {
+		addMessage(msgLists) {
 			const that = this;
 			for (let i = 0; i < msgLists.length; i++) {
 				let aMsg = {
@@ -147,7 +147,7 @@ export default {
 				this.scrollToBottom()
 			}, 150);
 		},
-		scrollToBottom: function () {
+		scrollToBottom() {
 			const that = this;
 			let query = uni.createSelectorQuery();
 			query.selectAll('.m-item').boundingClientRect();
@@ -164,7 +164,7 @@ export default {
 			});
 		},
 		 //AES加密
-		aesEncrypt (text, key, iv) {
+		aesEncrypt(text, key, iv) {
 			if (!key) key = chatRommKeyIv.key;
 			if (!iv) iv = chatRommKeyIv.iv;
 			let srcs = CryptoJS.enc.Utf8.parse(text);
@@ -176,7 +176,7 @@ export default {
 			return encrypted.ciphertext.toString().toUpperCase();
 		},
 		//AES解密
-		aesDecrypt (text, key, iv) {
+		aesDecrypt(text, key, iv) {
 			if (!key) key = chatRommKeyIv.key
 			if (!iv) iv = chatRommKeyIv.iv
 			let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
