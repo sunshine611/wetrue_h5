@@ -39,11 +39,6 @@ export default {
             uni.stopPullDownRefresh();
         }, 500);
     },
-    onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.tabList = [{name: "聊天室"}];
-        this.getUserInfo();
-    },
      computed: {
          ...mapGetters(["token"]),
         //国际化
@@ -52,6 +47,12 @@ export default {
                 return this.$_i18n.messages[this.$_i18n.locale];
             },
         },
+    },
+    onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
+        this.uSetBarTitle(this.i18n.titleBar.chat);
+        this.tabList = [{name: "聊天室"}];
+        this.getUserInfo();
     },
     methods: {
         //获取用户信息

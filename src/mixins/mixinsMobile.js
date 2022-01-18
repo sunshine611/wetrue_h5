@@ -4,6 +4,7 @@ import queryParams from "@/uview-ui/libs/function/queryParams";
 import { compilerUrl, source as WeTrueSource } from "@/config/config";
 import {
     Node,
+    Crypto,
     Universal,
     Keystore,
     MemoryAccount,
@@ -38,6 +39,10 @@ const mixins = {
         });
         uni.setTabBarItem({
             index: 2,
+            text: tabBar.chat,
+        });
+        uni.setTabBarItem({
+            index: 3,
             text: tabBar.my,
         });
     },
@@ -179,6 +184,14 @@ const mixins = {
                 return str;
             });
         },
+        //签名文本等消息
+        async signMessage(signText) {
+            const secretKey = await this.keystoreToSecretKey(store.state.user.password)
+            const secretKeyHex = Buffer.from(secretKey, 'hex')
+            const signArray = Crypto.signMessage(signText, secretKeyHex)
+            const signHex = Buffer.from(signArray).toString('hex');
+            return signHex;
+        },
         //验证密码是否存在
         isPassword() {
             if (!store.state.user.password) {
@@ -214,6 +227,15 @@ const mixins = {
                 return false;
             } else {
                 return true;
+            }
+        },
+        //验证是否管理员
+        validAdmin() {
+            let userInfo = getStore("userInfo");
+            if (userInfo.isAdmin) {
+                return true;
+            } else {
+                return false;
             }
         },
         //话题及@高亮

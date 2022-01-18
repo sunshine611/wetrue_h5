@@ -18,6 +18,7 @@ export default {
 	tabBar: {
 		index: '首页',
 		message: '消息',
+		chat: '聊天',
 		my :'我的',
 	},
 	home: {

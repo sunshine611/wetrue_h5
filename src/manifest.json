@@ -117,11 +117,6 @@
                     "pathRewrite" : {
                         "^https://www.aeknow.org/" : "/"
                     }
-                },
-                "/socket.io": {
-                    "target": "https://api.wetrue.io:50001",
-                    "ws": true,
-                    "changeOrigin": true
                 }
             },
             "https" : false
