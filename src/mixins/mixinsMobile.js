@@ -39,6 +39,10 @@ const mixins = {
         });
         uni.setTabBarItem({
             index: 2,
+            text: tabBar.chat,
+        });
+        uni.setTabBarItem({
+            index: 3,
             text: tabBar.my,
         });
     },
