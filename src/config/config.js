@@ -16,4 +16,4 @@ export const source      = 'WeTrue'
 export const aeknow      = 'https://www.aeknow.org'
 export const compilerUrl = 'https://compiler.aeternity.io'
 export const wttContract ='ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM'
-export const chatRommKeyIv = {key: '20200425FEAACD66',iv:  '66DCAAEF20200425'}
+export const chatRommKeyIv = {key: '20200425FEAACD66',iv: '66DCAAEF20200425'}

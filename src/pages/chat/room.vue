@@ -26,7 +26,7 @@
 </template>
 <script>
 import chatInput from '@/components/chat/chatinput';
-import messageShow from '@/components/chat/messageshow';
+import messageShow from '@/components/chat/roomMessageShow';
 import { mapGetters } from "vuex";
 import socket from '@/util/socketio.js';
 import store from "@/store";
@@ -73,13 +73,13 @@ export default {
 		this.sendMsgData = {
 			userAddress: this.token,
 		};
-		socket.emit("joinRoom", this.sendMsgData); //加入聊天室
+		socket.emit("roomJoin", this.sendMsgData); //加入聊天室
 		//监听加入
-		socket.on('joinRoom', (onlineNumber) => 
+		socket.on('roomJoin', (onlineNumber) => 
 			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
 		)
 		//监听消息
-		socket.on('message', (res) => this.addMessage(res))
+		socket.on('roomMessage', (res) => this.addMessage(res))
 		//监听系统消息
 		socket.on('serverMessage', (data)=> this.serverMsg.push(data))
 		//监听错误
@@ -108,28 +108,17 @@ export default {
                 return false
             }
             try{
-                //对消息签名
-                const secretKey = await this.keystoreToSecretKey(store.state.user.password)
-                const secretKeyHex = Buffer.from(secretKey, 'hex')
-                const signArray = Crypto.signMessage(sendMsg.msgContent, secretKeyHex)
-                const signHex = this.uint8ArrayToHex(signArray)
-                this.sendMsgData.msgSign = signHex
-				//加密消息内容
-                this.sendMsgData.msgContent = this.aesEncrypt(sendMsg.msgContent)
-                socket.emit("message", this.sendMsgData)
+				this.sendMsgData.msgContent = sendMsg.msgContent
+                this.sendMsgData.msgSign = await this.signMessage(sendMsg.msgContent); //对消息签名
+				let enSendMsgData = this.aesEncrypt(JSON.stringify(this.sendMsgData)) //加密消息内容
+                socket.emit("roomMessage", enSendMsgData)
             }  catch (error) {
                 this.uShowToast("消息签名错误")
-                return
             }
 		},
-        // Uint8Array 转 HexString
-        uint8ArrayToHex(arr) {
-            return Array.from(
-                arr, i => i.toString(16).padStart(2, "0")
-            ).join("")
-        },
-		addMessage(msgLists) {
-			const that = this;
+		addMessage(enMsgLists) {
+			let msgLists = this.aesDecrypt(enMsgLists)
+			msgLists = JSON.parse(msgLists)
 			for (let i = 0; i < msgLists.length; i++) {
 				let aMsg = {
 					userAddress: msgLists[i].userAddress,
@@ -138,10 +127,10 @@ export default {
 					sex: msgLists[i].sex,
 					isAuth: msgLists[i].isAuth,
 					defaultAens: msgLists[i].defaultAens,
-					msgContent: this.aesDecrypt(msgLists[i].msgContent),
+					msgContent: msgLists[i].msgContent,
 					msgUtcTime: msgLists[i].msgUtcTime,
 				}
-				that.messages.push(aMsg)
+				this.messages.push(aMsg)
 			}
 			setTimeout(() => {
 				this.scrollToBottom()

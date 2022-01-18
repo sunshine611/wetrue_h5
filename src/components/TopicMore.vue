@@ -58,7 +58,7 @@ export default {
         },
         //显示更多操作
         moreList() {
-            return [
+            let moreList = [
                 {
                     text: this.i18n.index.focus,
                     subText: this.i18n.index.focusText,
@@ -70,8 +70,15 @@ export default {
                 {
                     text: this.i18n.index.aeternal,
                     subText: this.i18n.index.aeternalText,
-                },
-            ];
+                }
+            ]
+            if (this.validAdmin()){
+                moreList.push({
+                    text: 'testAdmin',
+                    subText: 'testAdmin',
+                })
+            }
+            return moreList;
         },
     },
     watch: {},
