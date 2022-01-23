@@ -108,11 +108,11 @@ export default {
             this.postList = [];
             this.pageInfo.page = 1;
             this.getPostList();
-            this.newContentCount();
         }
         this.tabClick = true;
         setTimeout(() => {
             this.tabClick = false;
+            this.newContentCount();
         }, 500);
     },
     computed: {
