@@ -9,7 +9,7 @@ export const baseUrl     = 'https://liushao.cc:1817'
 export const nodeUrl     = 'https://testnet.aeternity.io'
 export const aeMdw       = 'https://testnet.aeternity.io/mdw'
 export const aeExplorer  = 'https://explorer.testnet.aeternity.io'
-export const chatapi     = 'http://192.168.1.111:50001'
+export const chatapi     = 'http://192.168.1.1:50001'
 */
 export const version     = '2.5.9'
 export const source      = 'WeTrue'

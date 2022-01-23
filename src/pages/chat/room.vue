@@ -29,8 +29,6 @@ import chatInput from '@/components/chat/chatinput';
 import messageShow from '@/components/chat/roomMessageShow';
 import { mapGetters } from "vuex";
 import socket from '@/util/socketio.js';
-import store from "@/store";
-import { Crypto } from '@aeternity/aepp-sdk';
 import { chatRommKeyIv } from "@/config/config";
 import CryptoJS from 'crypto-js';
 
@@ -63,17 +61,6 @@ export default {
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
 		this.isPassword();
-    },
-	created: function () { 
-		const res = uni.getSystemInfoSync();
-		this.style.pageHeight = res.windowHeight;
-		this.style.contentViewHeight = res.windowHeight - uni.getSystemInfoSync().screenWidth / 750 * (100); //像素
-	},
-	mounted() {
-		this.sendMsgData = {
-			userAddress: this.token,
-		};
-		socket.emit("roomJoin", this.sendMsgData); //加入聊天室
 		//监听加入
 		socket.on('roomJoin', (onlineNumber) => 
 			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
@@ -90,6 +77,17 @@ export default {
 		)
 		//监听断线
 		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
+    },
+	created: function () { 
+		const res = uni.getSystemInfoSync();
+		this.style.pageHeight = res.windowHeight;
+		this.style.contentViewHeight = res.windowHeight - uni.getSystemInfoSync().screenWidth / 750 * (100); //像素
+	},
+	mounted() {
+		this.sendMsgData = {
+			userAddress: this.token,
+		};
+		socket.emit("roomJoin", this.sendMsgData); //加入聊天室
 	},
 	computed: {
         ...mapGetters(["token"]),
