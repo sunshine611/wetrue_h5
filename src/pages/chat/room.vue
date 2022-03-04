@@ -61,6 +61,8 @@ export default {
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
 		this.isPassword();
+    },
+	onReady() {
 		//监听加入
 		socket.on('roomJoin', (onlineNumber) => 
 			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
@@ -77,7 +79,7 @@ export default {
 		)
 		//监听断线
 		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
-    },
+	}
 	created: function () { 
 		const res = uni.getSystemInfoSync();
 		this.style.pageHeight = res.windowHeight;
