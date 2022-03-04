@@ -79,8 +79,8 @@ export default {
 		)
 		//监听断线
 		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
-	}
-	created: function () { 
+	},
+	created() {
 		const res = uni.getSystemInfoSync();
 		this.style.pageHeight = res.windowHeight;
 		this.style.contentViewHeight = res.windowHeight - uni.getSystemInfoSync().screenWidth / 750 * (100); //像素
