@@ -64,7 +64,7 @@ export default {
         this.uSetBarTitle(this.i18n.titleBar.sendContent);
         this.isPassword();
         if (!!option.topic) {
-            this.form= {
+            this.form = {
                 text: option.topic + " ",
             };
         }

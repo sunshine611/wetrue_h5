@@ -37,6 +37,7 @@ import TopicList from "@/components/TopicList.vue";
 import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { setThirdPartySource } from "@/util/thirdPartySource/source";
+import socket from '@/util/socketio.js';
 
 export default {
     components: {
@@ -56,6 +57,7 @@ export default {
                 page: 1,
                 pageSize: 10,
                 totalPage: 1,
+                totalSize: 0,
             }, //页码信息
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
@@ -64,6 +66,7 @@ export default {
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
             postTopicButtonShow: true, //控制发帖按钮显隐
+            newCount: 0, //最新总贴数
         };
     },
     //下拉刷新
@@ -89,6 +92,13 @@ export default {
         this.getPostList();
         this.getVersionInfo();
         this.getUnreadMsg();
+        //监听最新总贴数
+		socket.on('contentListCount', (res) => {
+            this.newCount = res.countSize;
+            this.newContentCount();
+        })
+        //监听错误
+		socket.on('error', (msg) => this.uShowToast(msg))
     },
     activated() {
         this.getUnreadMsg();
@@ -102,6 +112,7 @@ export default {
         this.tabClick = true;
         setTimeout(() => {
             this.tabClick = false;
+            this.newContentCount();
         }, 500);
     },
     computed: {
@@ -160,6 +171,7 @@ export default {
                         this.pageInfo.totalPage = parseInt(res.data.totalPage);
                         this.more = "loadmore";
                         if (this.pageInfo.page === 1) {
+                            this.pageInfo.totalSize = parseInt(res.data.totalSize);
                             this.$nextTick(() => {
                                 this.postList = res.data.data.map((item) => {
                                     item.payload = this.topicHighlight(
@@ -203,6 +215,22 @@ export default {
                 pageSize: 10,
             }; //页码信息
             this.getPostList();
+        },
+        //新未读帖
+        newContentCount() {
+            let oldCount = this.pageInfo.totalSize
+            if (this.current === 0) {
+                if (this.newCount > oldCount) {
+                    uni.setTabBarBadge({
+                        index: 0,
+                        text: `${this.newCount - oldCount}`,
+                    });
+                } else {
+                    uni.hideTabBarRedDot({
+                        index: 0,
+                    });
+                }
+            }
         },
         //获取服务端版本信息
         getVersionInfo() {
