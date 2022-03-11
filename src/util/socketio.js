@@ -10,7 +10,6 @@ let sendMsgData = {
 
 setTimeout(() => {
     socket.emit("roomJoin", sendMsgData); //加入聊天室
-    
     if (socket.connected) {
         uni.showToast({ 
             icon: "none",

@@ -97,6 +97,12 @@ export default {
             this.newCount = res.countSize;
             this.newContentCount();
         })
+        //监听最新未读消息
+		socket.on('msgStateSize', (res) => {
+            if(res.msgStateSize == 'new') {
+                this.getUnreadMsg();
+            }
+        })
         //监听错误
 		socket.on('error', (msg) => this.uShowToast(msg))
     },

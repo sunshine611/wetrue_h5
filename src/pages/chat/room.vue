@@ -78,7 +78,7 @@ export default {
 			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
 		)
 		//监听断线
-		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
+		socket.on('disconnect', ()=> this.uShowToast('disconnect'))
 	},
 	created() {
 		const res = uni.getSystemInfoSync();
