@@ -318,7 +318,7 @@ export default {
                     .content {
                         margin-top: 10rpx;
                         font-size: 24rpx;
-                        /deep/ ._root {
+                        ::v-deep ._root {
                             word-break: break-all;
                             text-overflow: ellipsis;
                             display: -webkit-box;
@@ -377,7 +377,7 @@ export default {
                         .content {
                             margin-top: 10rpx;
                             font-size: 24rpx;
-                            /deep/ ._root {
+                            ::v-deep ._root {
                                 word-break: break-all;
                                 text-overflow: ellipsis;
                                 display: -webkit-box;
@@ -391,7 +391,7 @@ export default {
             }
             .compiler {
                 display: inline !important;
-                /deep/ * {
+                ::v-deep * {
                     display: inline !important;
                     word-wrap: break-word;
                     word-break: break-all;

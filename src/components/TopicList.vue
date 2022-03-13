@@ -323,7 +323,7 @@ export default {
                     word-wrap: break-word;
                     word-break: normal;
                     overflow: hidden;
-                    /deep/ ._root {
+                    ::v-deep ._root {
                         word-break: break-all;
                         text-overflow: ellipsis;
                         display: -webkit-box;
@@ -331,10 +331,10 @@ export default {
                         -webkit-line-clamp: 8;
                         overflow: hidden;
                     }
-                    /deep/ .topic-text {
+                    ::v-deep .topic-text {
                         color: #f04a82;
                     }
-                    /deep/ .mentions-text {
+                    ::v-deep .mentions-text {
                         color: #f04a82;
                     }
                 }

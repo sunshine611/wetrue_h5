@@ -648,10 +648,10 @@ export default {
                         word-wrap: break-word;
                         word-break: break-all;
                         overflow: hidden;
-                        /deep/ .topic-text {
+                        ::v-deep .topic-text {
                             color: #f04a82;
                         }
-                        /deep/ .mentions-text {
+                        ::v-deep .mentions-text {
                             color: #f04a82;
                         }
                     }
@@ -680,7 +680,7 @@ export default {
                                 }
                                 .compiler {
                                     display: inline !important;
-                                    /deep/ * {
+                                    ::v-deep * {
                                         display: inline !important;
                                         word-wrap: break-word;
                                         word-break: break-all;

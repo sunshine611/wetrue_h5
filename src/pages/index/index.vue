@@ -262,7 +262,7 @@ export default {
 <style lang="scss" scoped>
 .index {
     .nav {
-        /deep/ .u-navbar-inner {
+        ::v-deep .u-navbar-inner {
             display: inline !important;
         }
         .nav-tab {
