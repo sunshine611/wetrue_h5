@@ -1,16 +1,21 @@
 <template>
     <view class="topic">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="keyword" v-show="!validThirdPartySource()">
-            <div slot="right">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="keyword" 
+            :placeholder="true"
+            :autoBack="true"
+            v-show="!validThirdPartySource()"
+        >
+            <view slot="right">
                 <u-icon
-                    class="mr-30"
                     name="home"
-                    size="34"
                     color="#f04a82"
+                    class="mr-30"
+                    size="34"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </view>
         </u-navbar>
         <div class="tipic-info">
             <div class="topic-box">
@@ -84,7 +89,6 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(
             `${option.keyword 
             + " "

@@ -1,8 +1,12 @@
 <template>
-    <div class="account-manage">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.login.accountManage">
-            <div slot="right">
+    <view class="account-manage">
+        <u-status-bar></u-status-bar>
+        <u-navbar
+            :title="i18n.login.accountManage"
+            :placeholder="true"
+            :autoBack="true"
+        >
+            <view slot="right">
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,9 +14,10 @@
                     color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </view>
+
         </u-navbar>
-        <div class="account">
+        <view class="account">
             <draggable
                 v-model="keystoreArr"
                 group="keystore"
@@ -21,12 +26,12 @@
                 delay="100"
             >
                 <transition-group>
-                    <div
+                    <view
                         class="account-list"
                         v-for="(item, index) in keystoreArr"
                         :key="item.id"
                     >
-                        <div class="active" v-show="item.public_key === token">
+                        <view class="active" v-show="item.public_key === token">
                             <fa-FontAwesome
                                 type="fas fa-check"
                                 size="24"
@@ -34,18 +39,18 @@
                                 color="#fff"
                             >
                             </fa-FontAwesome>
-                        </div>
-                        <div
+                        </view>
+                        <view
                             class="address"
                             @click="copy(index)"
                             :ref="'address' + index"
                         >
-                            {{ item.public_key }}
-                        </div>
-                        <div class="dotted"></div>
-                        <div class="opera clearfix">
-                            <div class="pull-right">
-                                <div
+                            <u--text :text="item.public_key"></u--text>
+                        </view>
+                        <view class="dotted"></view>
+                        <view class="opera clearfix">
+                            <view class="pull-right">
+                                <view
                                     class="item"
                                     @click="
                                         showDelete = true;
@@ -59,9 +64,9 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.delete}}
-                                </div>
-                                <div
+                                    <u--text :text="i18n.login.delete"></u--text>
+                                </view>
+                                <view
                                     class="item"
                                     @click="
                                         showQrcode = true;
@@ -75,9 +80,9 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.qrcode}}
-                                </div>
-                                <div
+                                    <u--text :text="i18n.login.qrcode"></u--text>
+                                </view>
+                                <view
                                     class="item"
                                     @click="switchAccount(item.public_key)"
                                 >
@@ -88,23 +93,23 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.replace}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <u--text :text="i18n.login.replace"></u--text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
                 </transition-group>
             </draggable>
 
             <u-gap :height="120"></u-gap>
-        </div>
+        </view>
         <u-modal
             v-model="showDelete"
             :content="i18n.login.deleteAccount"
             @confirm="deleteAccount"
             :show-cancel-button="true"
         ></u-modal>
-        <div class="add-area">
+        <view class="add-area">
             <u-button
                 class="add-btn"
                 shape="circle"
@@ -112,30 +117,30 @@
                 :plain="true"
                 @click="goUrl('login')"
                 ><fa-FontAwesome
-                    type="fas fa-user-plus
-"
+                    type="fas fa-user-plus"
                     size="28"
                     class="mr-10"
                     color="#f04a82"
                 >
                 </fa-FontAwesome>
-                {{i18n.login.addAccount}}
+                <u--text :text="i18n.login.addAccount"></u--text>
             </u-button>
-        </div>
+        </view>
         <Qrcode v-model="showQrcode" :address="currentAddress"></Qrcode>
-    </div>
+    </view>
 </template>
 
 <script>
 import { getStore, setStore } from "@/util/service";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import Qrcode from "@/components/Qrcode";
 import draggable from "vuedraggable";
 
 export default {
-    components: { UGap, UButton, Qrcode, draggable },
+    components: { 
+        Qrcode,
+        draggable
+    },
     data() {
         return {
             keystoreArr: getStore("keystoreArr"),
@@ -164,7 +169,6 @@ export default {
         },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.isLogin();
         this.uSetBarTitle(this.i18n.titleBar.accountManage);
     },

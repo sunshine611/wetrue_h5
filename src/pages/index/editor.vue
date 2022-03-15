@@ -1,32 +1,33 @@
 <template>
     <view class="editor">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" back-text="" :title="i18n.index.sendContent" :border-bottom="false">
-            <div slot="right" class="right-btn">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="i18n.index.sendContent" 
+            :placeholder="true"
+            :autoBack="true"
+        >
+            <view slot="right" class="right-btn">
                 <u-button
                     type="primary"
                     size="mini"
                     :disabled="form.text.length === 0"
                     @click="release"
                     :loading="btnLoading"
-                    >{{ i18n.index.send }}</u-button
-                >
-            </div>
+                    >{{ i18n.index.send }}
+                </u-button>
+            </view>
         </u-navbar>
         <div class="font-24" style="color:#f04a82">
             {{ i18n.index.sendHint }}
         </div>
         <u-gap height="40"></u-gap>
-        <u-input
+        <u--textarea
             v-model="form.text"
-            type="textarea"
-            :border="false"
             height="300"
-            :auto-height="true"
             :maxlength="50000"
             :placeholder="i18n.index.wetrueTips"
-            :clearable="false"
-        />
+            count
+        ></u--textarea>
         <text>-------</text>
         <u-gap height="40"></u-gap>
         <!-- 
@@ -60,7 +61,6 @@ export default {
         };
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.sendContent);
         this.isPassword();
         if (!!option.topic) {

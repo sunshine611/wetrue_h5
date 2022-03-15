@@ -1,30 +1,31 @@
 <template>
 	<view class="login">
-		<div class="login-box">
-			<div class="title">
+		<view class="login-box">
+			<view class="title">
 				<u-image width="92rpx" height="46rpx" src="../../static/logo.png" class="inline mr-5"></u-image>
 				{{i18n.login.createAccount}}
-			</div>
+			</view>
 			<u-gap height="60"></u-gap>
-			<div class="form">
-				<div class="form-title">{{i18n.login.createAccount}}</div>
+			<view class="form">
+				<view class="form-title">
+					<u--text :text="i18n.login.createAccount"></u--text>
+				</view>
 				<u-gap height="14"></u-gap>
-				<u-input v-model="form.address" type="textarea" class="address" :clearable="false" height="120"
-					:custom-style="{padding:'15rpx'}" disabled />
+				<u-textarea v-model="form.address" class="address" :clearable="false" disabled />
 				<u-gap height="30"></u-gap>
-				<div class="form-title">{{i18n.MnemonicTips}}</div>
+				<view class="form-title">{{i18n.MnemonicTips}}</view>
 				<u-gap height="14"></u-gap>
-				<u-input v-model="form.mnemonic" type="textarea" class="textarea" :clearable="false" height="160" disabled
+				<u-textarea v-model="form.mnemonic" class="textarea" :clearable="false" height="160" disabled
 					:custom-style="{padding:'15rpx',wordWrap:'break-word',wordBreak:'normal'}" />
-			</div>
+			</view>
 			<u-gap height="40"></u-gap>
-			<u-button size="default" type="primary" shape="circle" ripple @tap="createAccount" :throttle-time="200">{{i18n.login.rebuild}}</u-button>
+			<u-button size="default" type="primary" shape="circle" ripple @tap="createAccount" :throttle-time="200" :text="i18n.login.rebuild"></u-button>
 			<u-gap height="25"></u-gap>
-			<div class="clearfix">
-				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.home.index}}</div>
-				<div class="pull-right mnemonic" @tap="goUrl('login')">{{i18n.login.mnemonicLogin}}</div>
-			</div>
-		</div>
+			<view class="clearfix">
+				<view class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.home.index}}</view>
+				<view class="pull-right mnemonic" @tap="goUrl('login')">{{i18n.login.mnemonicLogin}}</view>
+			</view>
+		</view>
 	</view>
 </template>
 

@@ -1,13 +1,9 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-status-bar></u-status-bar>
         <u-tabs
             :list="categoryList"
-            :is-scroll="false"
-            :current="current"
-            @change="tabChange"
-            active-color="#f04a82"
-            style="border-bottom:1px solid #e4e7ed"
+            @click="tabChange"
         ></u-tabs>
         <div class="empty" v-show="msgList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -141,7 +137,6 @@
 import { version } from "@/config/config.js";
 import VersionTip from "@/components/VersionTip.vue";
 import Name from "@/components/Name.vue";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
 
@@ -151,7 +146,6 @@ export default {
         Name,
         mpHtml,
         HeadImg,
-        UGap,
     },
     data() {
         return {
@@ -182,7 +176,6 @@ export default {
         this.getMsgList();
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.message);
         this.getMsgList();
         this.getVersionInfo();
@@ -243,8 +236,8 @@ export default {
                 })
         },
         //切换顶部tab事件
-        tabChange(index) {
-            this.current = index;
+        tabChange(item) {
+            this.current = item.index;
         },
         //获取服务端版本信息
         getVersionInfo() {

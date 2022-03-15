@@ -18,7 +18,9 @@
         <text class="userid" v-show="userInfo.defaultAens">AENS:{{ userInfo.defaultAens }}</text>
     </div>
 </template>
+
 <script>
+
 export default {
     props: {
         userInfo: {

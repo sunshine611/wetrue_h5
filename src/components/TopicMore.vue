@@ -14,6 +14,7 @@
         ></u-action-sheet>
     </div>
 </template>
+
 <script>
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";

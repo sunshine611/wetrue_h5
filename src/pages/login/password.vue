@@ -21,14 +21,14 @@
             <u-gap height="60"></u-gap>
             <div class="form">
                 <u-gap height="14"></u-gap>
-                <u-input
+                <u--input
                     @confirm="login"
                     v-model="form.password"
                     type="text"
                     :focus="true"
-                    border
+                    border="surround"
                     :placeholder="`ak_...${token.slice(-4)} ` + i18n.login.securePassword"
-                />
+                ></u--input>
             </div>
             <u-gap height="40"></u-gap>
             <u-button
@@ -39,7 +39,8 @@
                 @click.native="login"
                 :throttle-time="3000"
                 :loading="btnLoading"
-                >{{ i18n.login.verify }}
+                :text="i18n.login.verify"
+                >
             </u-button>
             <u-gap height="25"></u-gap>
             <div class="clearfix">

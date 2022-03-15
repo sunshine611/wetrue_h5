@@ -126,6 +126,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";

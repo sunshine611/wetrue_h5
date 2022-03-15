@@ -1,18 +1,11 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-            <u-navbar class="nav" :is-fixed="false" :is-back="false">
-                <u-tabs
-                    class="nav-tab"
-                    :list="categoryList"
-                    :is-scroll="true"
-                    @change="tabChange"
-                    :current="current"
-                    active-color="#f04a82"
-                    bg-color="#fafafa"
-                    :show-bar="false"
-                ></u-tabs>
-            </u-navbar>
+        <u-status-bar></u-status-bar>
+            <u-tabs
+                class="nav-tab"
+                :list="categoryList"
+                @click="tabChange"
+            ></u-tabs>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
             <u-empty :text="i18n.index.noData" mode="list"></u-empty>
@@ -28,6 +21,7 @@
             :versionInfo="versionInfo"
         ></VersionTip>
         <PostTopicButton v-show="postTopicButtonShow"></PostTopicButton>
+        <u-safe-bottom></u-safe-bottom>
     </view>
 </template>
 
@@ -85,7 +79,6 @@ export default {
         this.getUnreadMsg();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.index);
         setThirdPartySource(option);
         this.cateInfo.label = this.i18n.home.newRelease;
@@ -213,8 +206,8 @@ export default {
                 });
         },
         //切换顶部tab事件
-        tabChange(index) {
-            this.current = index;
+        tabChange(item) {
+            this.current = item.index;
             this.postList = [];
             this.pageInfo = {
                 page: 1,

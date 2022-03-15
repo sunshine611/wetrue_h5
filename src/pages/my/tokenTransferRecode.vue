@@ -1,8 +1,13 @@
 <template>
     <div class="transfer-record">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.transactions" v-show="!validThirdPartySource()">
-            <div slot="right">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="i18n.my.transactions" 
+            :placeholder="true"
+            :autoBack="true"
+            v-show="!validThirdPartySource()"
+        >
+            <view slot="right">
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,11 +15,11 @@
                     color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </div>
+            </view>
         </u-navbar>
         <u-cell-group class="cell-box" v-if="recodeList.length > 0">
             <div v-for="item in recodeList" :key="item.txhash">
-                <u-cell-item
+                <u-cell
                     class="cell-out"
                     v-if="item.sender_id === (userAddress || token)"
                     :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
@@ -44,8 +49,8 @@
                                 (tokenName || "AE")
                         }}
                     </div>
-                </u-cell-item>
-                <u-cell-item
+                </u-cell>
+                <u-cell
                     class="cell-in"
                     v-else
                     :label="parseInt(item.utc) | date('yyyy-mm-dd hh:MM:ss')"
@@ -75,7 +80,7 @@
                                 (tokenName || "AE")
                         }}
                     </div>
-                </u-cell-item>
+                </u-cell>
             </div>
         </u-cell-group>
         <div class="empty" v-else><u-empty mode="list"></u-empty></div>
@@ -94,11 +99,9 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import uEmpty from "@/uview-ui/components/u-empty/u-empty.vue";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
 export default {
-    components: { uEmpty, UGap },
+    components: {},
     data() {
         return {
             userAddress: "", //用户地址
@@ -123,7 +126,6 @@ export default {
         },
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.transactions);
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;

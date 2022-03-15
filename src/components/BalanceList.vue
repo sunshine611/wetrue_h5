@@ -2,7 +2,7 @@
     <div class="balance-list">
         <u-cell-group :border="false">
             <div v-for="(item, index) in tokenList" :key="index">
-                <u-cell-item @click="transferRecord(item)">
+                <u-cell @click="transferRecord(item)">
                     <div slot="icon">
                         <div class="token-icon">
                             {{ item.tokenname }}
@@ -11,12 +11,14 @@
                     <div slot="right-icon" class="amount">
                         {{i18n.my.balance + ': ' + balanceFormat(item.balance) }}
                     </div>
-                </u-cell-item>
+                </u-cell>
             </div>
         </u-cell-group>
     </div>
 </template>
+
 <script>
+
 export default {
     components: {},
     props: {

@@ -1,8 +1,13 @@
 <template>
     <view class="detail">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
-            <div slot="right">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="i18n.index.contentDetails" 
+            :placeholder="true"
+            :autoBack="true"
+            v-show="!validThirdPartySource()"
+        >
+            <view slot="right">
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,18 +15,16 @@
                     color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </div>
+            </view>
         </u-navbar>
         <TopicContent :postInfo="postInfo"></TopicContent>
         <div class="comment">
             <div class="clearfix header">
                 <div class="title">
-                    <text class="mr-4">{{ i18n.index.comment }}</text
-                    >{{ postInfo.commentNumber }}
+                    <u--text class="mr-4" :text="i18n.index.comment + postInfo.commentNumber"></u--text>
                 </div>
                 <div class="praise">
-                    <text class="mr-4">{{ i18n.index.praise }}</text
-                    >{{ postInfo.praise }}
+                    <u--text class="mr-4" :text="i18n.index.praise + postInfo.praise"></u--text>
                 </div>
             </div>
             <div class="comment-list">
@@ -167,7 +170,7 @@
             v-show="commentList.length > 0"
         />
         <u-gap height="80"></u-gap>
-        <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
+        <div class="bar-opera" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
                     type="fas fa-coins"
@@ -175,7 +178,7 @@
                     class="mr-10"
                     color="#666"
                 ></fa-FontAwesome>
-                {{ i18n.index.reward }}
+                <u--text :text="i18n.index.reward"></u--text>
             </div>
             <div class="item" @tap="comment()">
                 <fa-FontAwesome
@@ -184,8 +187,8 @@
                     class="mr-10"
                     color="#666"
                 >
-                </fa-FontAwesome
-                >{{ i18n.index.comment }}
+                </fa-FontAwesome>
+                <u--text :text="i18n.index.comment"></u--text>
             </div>
             <div
                 class="item"
@@ -206,12 +209,11 @@
                     color="#f04a82"
                     :size="30"
                 >
-                </u-icon
-                >{{ i18n.index.praise }}
+                </u-icon>
+                <u--text :text="i18n.index.praise"></u--text>
             </div>
         </div>
         <inputComment
-            class="safe-area-inset-bottom"
             ref="inputComment"
             :isShow="isShowComment"
             :placeholder="placeholder"
@@ -219,6 +221,7 @@
             @submitComment="submitComment"
         ></inputComment>
         <Reward v-model="rewardShow" :postInfo="postInfo"></Reward>
+        <!-- <u-safe-bottom></u-safe-bottom> -->
     </view>
 </template>
 
@@ -281,7 +284,6 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.contentDetails);
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();

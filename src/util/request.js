@@ -2,7 +2,7 @@ import Request from "luch-request";
 import { baseUrl } from "@/config/config.js";
 import store from "../store/index.js";
 import { getStore } from "@/util/service";
-import queryParams from "@/uview-ui/libs/function/queryParams";
+
 var http = new Request({
     baseURL: baseUrl,
     custom: {
@@ -22,7 +22,7 @@ http.interceptors.request.use((config) => {
         if (!store.state.user.password) {
             let pageObj = getCurrentPages(); //实例化页面栈
             if (pageObj[0]) {
-                let link = pageObj[0].route + queryParams(pageObj[0].options);
+                let link = pageObj[0].route + uni.$u.queryParams(pageObj[0].options);
                 uni.navigateTo({
                     url: `/pages/login/password?link=${encodeURIComponent(
                         link

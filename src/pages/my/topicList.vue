@@ -1,16 +1,21 @@
 <template>
     <view class="myTopic" :title="title">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
-            <div slot="right">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="i18n.my.myWallet" 
+            :placeholder="true"
+            :autoBack="true"
+            v-show="!validThirdPartySource()"
+        >
+            <view slot="right">
                 <u-icon
                     name="home"
+                    color="#f04a82"
                     class="mr-30"
                     size="34"
-                    color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </view>
         </u-navbar>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
@@ -63,7 +68,6 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "myTopic") {
             this.type = "myTopic";
             this.title = this.i18n.my.myTopic;

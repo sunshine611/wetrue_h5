@@ -1,26 +1,31 @@
 <template>
     <div class="user-info">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
-            <div slot="right">
+        <u-status-bar></u-status-bar>
+        <u-navbar 
+            :title="i18n.my.infoEdit" 
+            :placeholder="true"
+            :autoBack="true"
+            v-show="!validThirdPartySource()"
+        >
+            <view slot="right">
                 <u-icon
                     name="home"
+                    color="#f04a82"
                     class="mr-30"
                     size="34"
-                    color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </view>
         </u-navbar>
         <u-cell-group>
-            <u-cell-item :title="i18n.my.profile">
+            <u-cell :title="i18n.my.profile">
                 <image
                     :src="userInfo.portrait"
                     slot="right-icon"
                     class="user-head"
                 ></image>
-            </u-cell-item>
-            <u-cell-item
+            </u-cell>
+            <u-cell
                 :title="i18n.my.nickname"
                 :value="userInfo.nickname || i18n.my.cryptonym"
                 @click="
@@ -28,9 +33,9 @@
                     nickname = userInfo.nickname;
                 "
             >
-            </u-cell-item>
-            <u-cell-item :title="i18n.my.sex" :value="sexName" @click="sexShow = true">
-            </u-cell-item>
+            </u-cell>
+            <u-cell :title="i18n.my.sex" :value="sexName" @click="sexShow = true">
+            </u-cell>
         </u-cell-group>
         <u-popup
             v-model="nameShow"
@@ -80,12 +85,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
-import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
 export default {
-    components: { UCellItem, UButton, UGap },
+    components: {},
     data() {
         const { my } = this.$_i18n.messages[this.$_i18n.locale];
         return {
@@ -125,7 +127,6 @@ export default {
         },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.infoEdit);
         this.getUserInfo();
     },

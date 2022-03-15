@@ -1,23 +1,22 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-status-bar></u-status-bar>
         <u-tabs
+            class="nav-tab"
             :list="tabList"
-            :is-scroll="false"
-            :current="current"
-            @change="tabChange"
-            active-color="#f04a82"
-            style="border-bottom:1px solid #e4e7ed"
+            @click="tabChange"
         ></u-tabs>
-        <u-button
-            type="primary"
-            shape="circle"
-            size="mini"
-            class="panel"
-            @click="goChatRoom"
-        >
-        登陆聊天室
-        </u-button>
+        <view>
+            <u-button
+                type="primary"
+                shape="circle"
+                size="mini"
+                class="panel"
+                @click="goChatRoom"
+            >
+            登陆聊天室
+            </u-button>
+        </view>
     </view>
 </template>
 
@@ -49,7 +48,6 @@ export default {
         },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.chat);
         this.tabList = [{name: "聊天室"}];
         this.getUserInfo();
@@ -82,8 +80,11 @@ export default {
 
 <style lang="scss" scoped>
 .panel {
-    position: absolute;
+    position: fixed;
     left:43%;
     top:40%;
+    width: 20%;
+    height: 60rpx;
+    justify-content: center;
 }
 </style>

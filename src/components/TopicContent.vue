@@ -81,8 +81,8 @@
                             name="thumb-up-fill"
                             color="#f04a82"
                             class="mr-6"
-                        ></u-icon
-                        >{{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
+                        ></u-icon>
+                        {{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
                         {{ i18n.components.reward }}
                         <text class="name">
                             {{ balanceFormat(item.amount, 1) }}
@@ -154,10 +154,10 @@
         ></RewardRecord>
     </div>
 </template>
+
 <script>
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
@@ -171,7 +171,6 @@ export default {
         RewardRecord,
         Name,
         TopicMore,
-        UGap,
     },
     props: {
         postInfo: {
