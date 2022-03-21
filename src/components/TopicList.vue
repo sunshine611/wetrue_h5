@@ -31,7 +31,7 @@
                         </div>
                         <div class="time">
                             <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ i18n.index.source + item.source }}
+                            >{{ i18n.index.source + item.source + '-' + item.chainId }}
                         </div>
                     </div>
                 </div>

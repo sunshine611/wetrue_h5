@@ -13,7 +13,8 @@ var http = new Request({
 http.interceptors.request.use((config) => {
     config.header = {
         "Content-type": "application/x-www-form-urlencoded",
-        "ak-token": getStore("token"),
+        "key": getStore("token"),
+        "chain-id": 457,
     };
     if (
         !!getStore("keystore") &&
