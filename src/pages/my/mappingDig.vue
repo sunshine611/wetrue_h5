@@ -1,24 +1,18 @@
 <!--质押挖矿-->
 <template>
-    <view class="mapping-dig">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >   
-            <view slot="left">
-                <u-icon
-                    name="home"
-                    color="#f04a82"
-                    class="mr-30"
-                    size="34"
-                    @click="reLaunchUrl('index')"
-                ></u-icon>
-            </view>
-        </u-navbar>
-        <view class="title">映射AE参与挖矿<br />领取WTT</view>
-        <view class="start-mapping" v-if="userInfo.isMapping">
+    <div class="mapping-dig">
+        <div class="icon-list" v-show="!validThirdPartySource()">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+            <u-icon
+                name="home"
+                class="mr-30"
+                size="34"
+                color="#fff"
+                @click="reLaunchUrl('index')"
+            ></u-icon>
+        </div>
+        <div class="title">映射AE参与挖矿<br />领取WTT</div>
+        <div class="start-mapping" v-if="userInfo.isMapping">
             <fa-FontAwesome
                 type="fas fa-trophy"
                 size="30"
@@ -27,11 +21,11 @@
                 @click="topShow=true"
             >
             </fa-FontAwesome>
-            <view class="mapping">
-                <view class="top">
-                    <view class="desc">我的收益(WTT)</view>
-                    <view class="earning">
-                        <view class="amount">
+            <div class="mapping">
+                <div class="top">
+                    <div class="desc">我的收益(WTT)</div>
+                    <div class="earning">
+                        <div class="amount">
                             <u-count-to
                                 color="##f04a82"
                                 :decimals="7"
@@ -41,9 +35,9 @@
                                 :end-val="balanceFormat(mappingInfo.earning, 7)"
                                 v-if="mappingInfo.earning"
                             ></u-count-to>
-                            <view v-else>≈0.00000000</view>
-                        </view>
-                        <view class="receive">
+                            <div v-else>≈0.00000000</div>
+                        </div>
+                        <div class="receive">
                             <u-button
                                 v-if="mappingInfo.state"
                                 type="primary"
@@ -54,25 +48,25 @@
                                 size="mini"
                                 >领取</u-button
                             >
-                        </view>
-                    </view>
-                </view>
-                <view class="bottom">
-                    <view class="mapping-num">
-                        <view class="desc">您已映射(AE)</view>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="mapping-num">
+                        <div class="desc">您已映射(AE)</div>
                         <u-gap :height="10"></u-gap>
-                        <view class="num">
+                        <div class="num">
                             {{ balanceFormat(mappingInfo.amount, 2) || "0.00" }}
-                        </view>
-                    </view>
-                    <view class="mapping-total">
-                        <view class="desc">总映射(AE)</view>
+                        </div>
+                    </div>
+                    <div class="mapping-total">
+                        <div class="desc">总映射(AE)</div>
                         <u-gap :height="10"></u-gap>
-                        <view class="num">
+                        <div class="num">
                             {{ balanceFormat(mappingInfo.total_ae, 2) || 0 }}
-                        </view>
-                    </view>
-                </view>
+                        </div>
+                    </div>
+                </div>
                 <u-button
                     v-if="mappingInfo.state"
                     type="primary"
@@ -90,9 +84,9 @@
                     :loading="btnLoading"
                     >开始映射</u-button
                 >
-            </view>
-        </view>
-        <view class="open-mapping" v-else>
+            </div>
+        </div>
+        <div class="open-mapping" v-else>
             <fa-FontAwesome
                 type="fas fa-trophy"
                 size="30"
@@ -101,7 +95,7 @@
                 @click="topShow=true"
             >
             </fa-FontAwesome>
-            <view class="title">
+            <div class="title">
                 <u-image
                     width="92rpx"
                     height="46rpx"
@@ -109,12 +103,12 @@
                     class="inline mr-5"
                 ></u-image>
                 开通映射挖矿
-            </view>
-            <view class="content">
-                <view class="text">
+            </div>
+            <div class="content">
+                <div class="text">
                     开通需支付680WTT，同意请勾选开通选项。
-                </view>
-            </view>
+                </div>
+            </div>
             <u-checkbox-group>
                 <u-checkbox v-model="isAgree" name="同意开通"
                     >同意开通</u-checkbox
@@ -125,12 +119,12 @@
                 >开通</u-button
             >
             <u-gap :height="20"></u-gap>
-            <view class="clearfix">
-                <view class="pull-right">WTT余额：{{ wttBalance }}WTT</view>
-            </view>
-        </view>
-        <view class="rule">
-            <view class="h3">WTT质押挖矿规则</view>
+            <div class="clearfix">
+                <div class="pull-right">WTT余额：{{ wttBalance }}WTT</div>
+            </div>
+        </div>
+        <div class="rule">
+            <div class="h3">WTT质押挖矿规则</div>
             <u-gap :height="10"></u-gap>
             挖矿资格:
             需支付680WTT开通权限,所消耗WTT划转至[AE中国社区公共账户]供后续发展WTT所用<br />
@@ -146,7 +140,7 @@
             映射期间账户余额不得少于映射数量,否则自动取消收益及挖矿资格,需要重新支付WTT开通<br />
             <u-gap :height="10"></u-gap>
             补充说明: 可同时叠加其它AE映射挖矿,实现多重收益
-        </view>
+        </div>
         <u-popup
             v-model="showMapping"
             mode="center"
@@ -154,7 +148,7 @@
             border-radius="20"
         >
             <view class="form-box">
-                <view class="title">
+                <div class="title">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -162,9 +156,9 @@
                         class="inline mr-5"
                     ></u-image>
                     映射AE
-                </view>
+                </div>
                 <u-gap :height="30"></u-gap>
-                <view class="balance-input">
+                <div class="balance-input">
                     <u-input
                         v-model="form.amount"
                         type="number"
@@ -180,14 +174,14 @@
                         @click="totalBalance"
                         >全部</u-button
                     >
-                </view>
+                </div>
                 <u-gap :height="10"></u-gap>
-                <view class="warnning" v-show="warning.amount">
+                <div class="warnning" v-show="warning.amount">
                     {{ i18n.my.balanceErr }}
-                </view>
-                <view class="clearfix">
-                    <view class="pull-right">账户余额：{{ aeBalance }}AE</view>
-                </view>
+                </div>
+                <div class="clearfix">
+                    <div class="pull-right">账户余额：{{ aeBalance }}AE</div>
+                </div>
                 <u-gap :height="30"></u-gap>
                 <u-button type="primary" @click="mapping" :loading="btnLoading"
                     >确定</u-button
@@ -200,8 +194,8 @@
             width="85%"
             :border-radius="10"
         >
-            <view class="top-content">
-                <view class="title mb-40">
+            <div class="top-content">
+                <div class="title mb-40">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -209,8 +203,7 @@
                         class="inline mr-5"
                     ></u-image>
                     映射挖矿排行榜
-                </view>
-                 <!-- 
+                </div>
                 <u-table>
                     <u-tr>
                         <u-th width="100rpx">排名</u-th>
@@ -223,18 +216,19 @@
                         <u-td>{{balanceFormat(item.amount, 2)}} AE</u-td>
                     </u-tr>
                 </u-table>
-                -->
-            </view>
+            </div>
         </u-popup>
         <u-modal
             v-model="blackHouseShow"
             content="您已违反规则进入小黑屋"
         ></u-modal>
-    </view>
+    </div>
 </template>
 
 <script>
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
@@ -242,7 +236,7 @@ import Backend from "@/util/backend";
 import { wttContract } from "@/config/config.js";
 
 export default {
-    components: {},
+    components: { UGap, UButton },
     data() {
         return {
             userInfo: {}, //用户信息
@@ -275,6 +269,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.getUserInfo();
         this.getMappingInfo();
         this.getBalance();

@@ -17,7 +17,6 @@
                     ></u-image>
                     {{i18n.components.recordList}}
                 </div>
-                <!-- 
                 <u-table>
                     <u-tr>
                         <u-th>{{i18n.components.recordMan}}</u-th>
@@ -28,12 +27,10 @@
                         <u-td>{{balanceFormat(item.amount, 1)}}</u-td>
                     </u-tr>
                 </u-table>
-                -->
             </div>
         </u-popup>
     </div>
 </template>
-
 <script>
 import { mapGetters } from "vuex";
 

@@ -14,14 +14,18 @@
             v-else
             src="@/static/default_head.png"
         ></u-image>
-        <div :class="['level',userInfo.sex === 1 ? 'man' : '' ,userInfo.sex === 0 ? 'woman' : '']" v-if="userInfo.userActive !== 0">
+        <div :class="['level',userInfo.sex === 1?'man':'',userInfo.sex === 0?'woman':'']" v-if="userInfo.userActive !== 0">
             <text class="text">V{{ userInfo.userActive }}</text>
         </div>
+        <!-- <div class="sex man" v-if="userInfo.sex === 1">
+            <text class="text"><u-icon name="man" color="#fff" size="20"></u-icon></text>
+        </div>
+        <div class="sex woman" v-if="userInfo.sex === 0">
+            <text class="text"><u-icon name="woman" color="#fff" size="20"></u-icon></text>
+        </div> -->
     </div>
 </template>
-
 <script>
-
 export default {
     props: {
         userInfo: {

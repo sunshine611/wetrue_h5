@@ -1,21 +1,16 @@
 <template>
     <view class="wrap">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :title="i18n.index.replyDetails" 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.index.replyDetails" v-show="!validThirdPartySource()">
+            <div slot="right">
                 <u-icon
-                    name="home"
-                    color="#f04a82"
                     class="mr-30"
+                    name="home"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
         <view class="comment">
             <view class="top">
@@ -204,6 +199,7 @@ export default {
         this.getReply();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.replyDetails);
         this.hash = option.hash;
         this.getCommentInfo();

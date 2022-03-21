@@ -1,21 +1,16 @@
 <template>
     <view class="user-info">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :title="i18n.my.userInfo" 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.my.userInfo" v-show="!validThirdPartySource()">
+            <div slot="right">
                 <u-icon
                     name="home"
-                    color="#f04a82"
                     class="mr-30"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
         <div class="user-box">
             <div class="user-top">
@@ -107,6 +102,7 @@ import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import Backend from "@/util/backend";
+import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
 export default {
     components: {
@@ -114,6 +110,7 @@ export default {
         HeadImg,
         User,
         BalanceList,
+        UGap,
     },
     data() {
         const { my } = this.$_i18n.messages[this.$_i18n.locale];
@@ -165,6 +162,7 @@ export default {
         }
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.userInfo);
         this.userAddress = option.userAddress;
         this.getUserInfo();

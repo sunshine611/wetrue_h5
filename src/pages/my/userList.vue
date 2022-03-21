@@ -1,21 +1,16 @@
 <template>
     <view class="user-list">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :title="title" 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
+            <div slot="right">
                 <u-icon
                     name="home"
-                    color="#f04a82"
                     class="mr-30"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
         <User :userList="userList" class="mb-20"></User>
         <div class="empty" v-show="userList.length === 0">
@@ -65,6 +60,7 @@ export default {
         this.getUserList();
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "focus") {
             this.type = "focus";
             this.title = this.i18n.my.myFocus;

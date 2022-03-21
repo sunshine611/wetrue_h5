@@ -1,21 +1,16 @@
 <template>
     <div class="transfer">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :title="title" 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
+            <div slot="right">
                 <u-icon
                     name="home"
-                    color="#f04a82"
                     class="mr-30"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
         <u-gap height="20"></u-gap>
         <div class="form">
@@ -111,9 +106,11 @@ const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 
 export default {
-    components: {},
+    components: { UCellItem, UButton },
     data() {
         return {
             title: "", //标题
@@ -144,6 +141,7 @@ export default {
         },
     },
     onLoad(option) {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.isPassword();
         if (!!option.contractId) {
             this.tokenInfo = {

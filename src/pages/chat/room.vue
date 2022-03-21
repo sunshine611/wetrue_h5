@@ -1,22 +1,16 @@
 <template>
 	<view class="uni-column">
-		<u-status-bar></u-status-bar>
-        <u-navbar 
-            title="Chat Room" 
-            :placeholder="true"
-            :autoBack="true"
-			:leftText="online"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+		<view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :back-text="online" title="Chat Room">
+            <div slot="right">
                 <u-icon
                     name="home"
-                    color="#f04a82"
                     class="mr-30"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
 		<view class="content" id="content" :style="{height:style.contentViewHeight+'px'}">
 			<scroll-view id="scrollview" scroll-y="true" :style="{height:style.contentViewHeight+'px'}" :scroll-with-animation="true"
@@ -65,6 +59,7 @@ export default {
     onPullDownRefresh() {
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
 		this.isPassword();
     },
 	onReady() {

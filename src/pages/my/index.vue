@@ -1,7 +1,6 @@
 <template>
     <div class="my">
-        <u-status-bar></u-status-bar>
-        <view class="top-background"></view>
+        <view class="top-background" :style="`padding-top:${statusBarHeight}px`"></view>
         <div class="user-info" v-if="!!token">
             <div class="my-info">
                 <div class="block">
@@ -86,7 +85,7 @@
             </div>
             <div class="menu">
                 <u-cell-group :border="false">
-                    <u-cell
+                    <u-cell-item
                         :title="i18n.my.myWallet"
                         :value="'AE：' + balance"
                         @click="goUrl('tokenList')"
@@ -99,8 +98,8 @@
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell>
-                    <u-cell
+                    </u-cell-item>
+                    <u-cell-item
                         :title="i18n.my.defi"
                         @click="goUrl('mappingDig')"
                     >
@@ -112,8 +111,8 @@
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell>
-                    <u-cell
+                    </u-cell-item>
+                    <u-cell-item
                         :title="i18n.my.accountManage"
                         @click="goUrl('../login/accountManage')"
                         v-if="!this.validThirdPartySource()"
@@ -126,8 +125,8 @@
                             color="#f04a82"
                         >
                         </fa-FontAwesome>
-                    </u-cell>
-                    <u-cell :title="i18n.my.languageSwitch" @click="selectLanguage" :arrow="false">
+                    </u-cell-item>
+                    <u-cell-item :title="i18n.my.languageSwitch" @click="selectLanguage" :arrow="false">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-language"
@@ -146,7 +145,7 @@
                             v-show="language === 'en'"
                         >
                         </fa-FontAwesome>
-                    </u-cell>
+                    </u-cell-item>
                 </u-cell-group>
             </div>
             <div class="version">
@@ -201,7 +200,6 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <u-safe-bottom></u-safe-bottom>
     </div>
 </template>
 
@@ -243,6 +241,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.my);
         if (!!this.token) {
             this.getUserInfo();

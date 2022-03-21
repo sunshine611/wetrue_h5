@@ -1,24 +1,19 @@
 <template>
-    <view class="token-list">
-        <u-status-bar></u-status-bar>
-        <u-navbar 
-            :title="i18n.my.myWallet" 
-            :placeholder="true"
-            :autoBack="true"
-            v-show="!validThirdPartySource()"
-        >
-            <view slot="right">
+    <div class="token-list">
+        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <u-navbar :is-fixed="false" :title="i18n.my.myWallet" v-show="!validThirdPartySource()">
+            <div slot="right">
                 <u-icon
                     name="home"
-                    color="#f04a82"
                     class="mr-30"
                     size="34"
+                    color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </view>
+            </div>
         </u-navbar>
-        <view class="ae-box">
-            <view class="ae-account" @click="goUrl(`tokenTransferRecode`)">
+        <div class="ae-box">
+            <div class="ae-account" @click="goUrl(`tokenTransferRecode`)">
                 <u-image
                     width="100rpx"
                     height="100rpx"
@@ -35,8 +30,8 @@
                         size="32"
                     ></u-icon
                 ></text>
-            </view>
-            <view class="ae-opera">
+            </div>
+            <div class="ae-opera">
                 <u-button
                     type="primary"
                     size="medium"
@@ -68,11 +63,11 @@
                     </fa-FontAwesome
                     >{{ i18n.my.receive }}</u-button
                 >
-            </view>
-        </view>
+            </div>
+        </div>
         <u-gap height="20"></u-gap>
         <u-cell-group>
-            <u-cell
+            <u-cell-item
                 v-for="item in tokenList"
                 :key="item.contract"
                 :arrow="false"
@@ -82,12 +77,12 @@
                     )
                 "
             >
-             <view slot="icon">
-                        <view class="token-icon">
+             <div slot="icon">
+                        <div class="token-icon">
                             {{item.tokenname}}
-                        </view>
-                    </view>
-                <view slot="right-icon" class="amount">
+                        </div>
+                    </div>
+                <div slot="right-icon" class="amount">
                     {{i18n.my.balance + ": " + balanceFormat(item.balance)}}
                     <u-button
                         shape="square"
@@ -110,10 +105,10 @@
                         </fa-FontAwesome
                         >{{ i18n.my.send }}</u-button
                     >
-                </view>
-            </u-cell>
+                </div>
+            </u-cell-item>
         </u-cell-group>
-    </view>
+    </div>
 </template>
 
 <script>
@@ -121,9 +116,11 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
+import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
+import UButton from "@/uview-ui/components/u-button/u-button.vue";
 
 export default {
-    components: {},
+    components: { UCellItem, UButton },
     data() {
         return {
             aeBalance: 0, //ae余额
@@ -140,6 +137,7 @@ export default {
         },
     },
     onLoad() {
+        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.i18n.titleBar.myWallet);
         this.isPassword();
         this.getAccount().then(res=>{

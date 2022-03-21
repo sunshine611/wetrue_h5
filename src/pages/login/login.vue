@@ -22,30 +22,30 @@
             <div class="form">
                 <div class="form-title">{{ i18n.ImportCreate }}</div>
                 <u-gap height="14"></u-gap>
-                <u--textarea
+                <u-input
                     v-model="form.mnemonic"
                     type="textarea"
-                    border="surround"
+                    border
                     trim
                     :clearable="false"
                     height="160"
                     placeholder="one two three..."
                     maxlength="220"
-                ></u--textarea>
+                />
                 <div class="warnning" v-show="warning.mnemonic">
                     {{ i18n.login.mnemonicWarning }}
                 </div>
                 <u-gap height="30"></u-gap>
                 <div class="form-title">{{ i18n.Setpassword }}</div>
                 <u-gap height="14"></u-gap>
-                <u--input
+                <u-input
                     v-model="form.password"
                     type="text"
-                    border="surround"
+                    border
                     clearable
                     placeholder="Password..."
                     maxlength="20"
-                ></u--input>
+                />
                 <div class="warnning" v-show="warning.password">
                     {{ i18n.login.passWarning }}
                 </div>
@@ -59,8 +59,9 @@
                 @tap="login"
                 :loading="loading"
                 :throttle-time="1000"
-                :text="i18n.login.login"
-            ></u-button>
+            >
+                {{ i18n.login.login }}
+            </u-button>
             <u-gap height="25"></u-gap>
             <div class="clearfix">
                 <div

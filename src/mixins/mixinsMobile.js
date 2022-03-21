@@ -1,5 +1,6 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
+import queryParams from "@/uview-ui/libs/function/queryParams";
 import { compilerUrl, source as WeTrueSource } from "@/config/config";
 import {
     Node,
@@ -197,7 +198,7 @@ const mixins = {
                 let pageObj = getCurrentPages(); //实例化页面栈
                 if (pageObj[0]) {
                     let link =
-                        pageObj[0].route + uni.$u.queryParams(pageObj[0].options);
+                        pageObj[0].route + queryParams(pageObj[0].options);
                     uni.navigateTo({
                         url: `/pages/login/password?link=${encodeURIComponent(
                             link
@@ -492,6 +493,30 @@ const mixins = {
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },
+        //苹果刘海屏顶部兼容性调整
+        iphoneTop() {
+            let iphones = ["iPhone X","iPhone Xs","iPhone XS Max","iPhone Xr","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max"];
+            let result;
+            uni.getSystemInfo({
+                success(res) {
+                    if (iphones.includes(res.model)) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                },
+            });
+            return result;
+        },
+        //获取状态栏高度
+        getSystemStatusBarHeight(){
+             let _that = this;
+             uni.getSystemInfo({
+                 success(e) {
+                    _that.statusBarHeight = e.statusBarHeight;
+                 }
+             })
+         },
     },
 };
 const mixinsMobile = {

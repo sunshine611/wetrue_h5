@@ -15,12 +15,6 @@ Vue.use(uView);
 Vue.config.productionTip = false;
 Vue.prototype.$_i18n = i18n;
 
-uni.$u.setConfig({
-	config: { //修改$u.config对象的属性
-		unit: 'rpx' //修改默认单位为rpx，相当于执行 uni.$u.config.unit = 'rpx'
-	}
-});
-
 App.mpType = 'app';
 const app = new Vue({
 	i18n,

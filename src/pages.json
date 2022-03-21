@@ -3,7 +3,7 @@
     "autoscan": true,
     "custom": {
       "fa-(.*)": "@/components/Am-$1/index.vue", // 加入此行即可
-      "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+      "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
     }
   },
   "pages": [
@@ -144,13 +144,13 @@
         "enablePullDownRefresh": true
       }
     },
-    //{
-    //  "path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
-    //  "style": {
-    //    "navigationBarTitleText": "头像裁剪",
-    //   "navigationBarBackgroundColor": "#000000"
-    //  }
-    //},
+    {
+      "path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+      "style": {
+        "navigationBarTitleText": "头像裁剪",
+        "navigationBarBackgroundColor": "#000000"
+      }
+    },
     {
       "path": "pages/my/tokenList",
       "style": {
