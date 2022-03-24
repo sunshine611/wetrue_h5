@@ -11,7 +11,7 @@ export const aeMdw       = 'https://testnet.aeternity.io/mdw'
 export const aeExplorer  = 'https://explorer.testnet.aeternity.io'
 export const chatapi     = 'http://192.168.1.111:50001'
 */
-export const version     = '2.6.1'
+export const version     = '2.6.2'
 export const source      = 'WeTrue'
 //export const aeknow      = 'https://www.aeknow.org'
 export const aeknow      = 'https://api.wetrue.io/Aeknow'

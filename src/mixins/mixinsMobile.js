@@ -473,20 +473,13 @@ const mixins = {
                 uni.showLoading({
                     title: this.i18n.mixins.compileContract,
                 });
-                const callDataCall = await client.contractEncodeCall(
-                    FungibleTokenFull,
-                    "transfer",
-                    [receiveId, AmountFormatter.toAettos(amount)]
-                );
+                const contract = await client.getContractInstance(
+                    { source: FungibleTokenFull, contractAddress: contractId }
+                  )
                 uni.showLoading({
                     title: this.i18n.mixins.executeContract,
                 });
-                const callResult = await client.contractCall(
-                    FungibleTokenFull,
-                    contractId,
-                    "transfer",
-                    callDataCall
-                );
+                const callResult = await contract.methods.transfer(receiveId, AmountFormatter.toAettos(amount))
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
