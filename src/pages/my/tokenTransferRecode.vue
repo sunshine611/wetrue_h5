@@ -94,11 +94,11 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import uEmpty from "@/uview-ui/components/u-empty/u-empty.vue";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
 export default {
-    components: { uEmpty, UGap },
+    components: {
+
+    },
     data() {
         return {
             userAddress: "", //用户地址

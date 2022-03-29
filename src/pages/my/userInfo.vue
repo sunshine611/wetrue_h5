@@ -102,7 +102,6 @@ import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import Backend from "@/util/backend";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 
 export default {
     components: {
@@ -110,7 +109,6 @@ export default {
         HeadImg,
         User,
         BalanceList,
-        UGap,
     },
     data() {
         const { my } = this.$_i18n.messages[this.$_i18n.locale];

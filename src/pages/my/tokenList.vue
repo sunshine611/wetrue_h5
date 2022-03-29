@@ -116,11 +116,11 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 
 export default {
-    components: { UCellItem, UButton },
+    components: {
+
+    },
     data() {
         return {
             aeBalance: 0, //ae余额

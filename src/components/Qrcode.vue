@@ -36,12 +36,10 @@
 <script>
 import { mapGetters } from "vuex";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
-import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 
 export default {
     components: {
         VueQrcode,
-        UGap,
     },
     props: {
         value: {

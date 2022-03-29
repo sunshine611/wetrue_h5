@@ -106,11 +106,11 @@ const http = new Request();
 import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 
 export default {
-    components: { UCellItem, UButton },
+    components: {
+
+    },
     data() {
         return {
             title: "", //标题

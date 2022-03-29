@@ -157,7 +157,6 @@
 <script>
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
@@ -171,7 +170,6 @@ export default {
         RewardRecord,
         Name,
         TopicMore,
-        UGap,
     },
     props: {
         postInfo: {

@@ -1,6 +1,5 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
-import queryParams from "@/uview-ui/libs/function/queryParams";
 import { compilerUrl, source as WeTrueSource } from "@/config/config";
 import {
     Node,

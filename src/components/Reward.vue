@@ -59,7 +59,6 @@
     </div>
 </template>
 <script>
-import UTag from "@/uview-ui/components/u-tag/u-tag.vue";
 import { mapGetters } from "vuex";
 import Request from "luch-request";
 const http = new Request();
@@ -68,7 +67,6 @@ import { wttContract } from "@/config/config.js";
 
 export default {
     components: {
-        UTag,
     },
     props: {
         value: {

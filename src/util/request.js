@@ -2,7 +2,6 @@ import Request from "luch-request";
 import { baseUrl } from "@/config/config.js";
 import store from "../store/index.js";
 import { getStore } from "@/util/service";
-import queryParams from "@/uview-ui/libs/function/queryParams";
 var http = new Request({
     baseURL: baseUrl,
     custom: {

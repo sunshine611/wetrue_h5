@@ -226,9 +226,7 @@
 </template>
 
 <script>
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
@@ -236,7 +234,9 @@ import Backend from "@/util/backend";
 import { wttContract } from "@/config/config.js";
 
 export default {
-    components: { UGap, UButton },
+    components: {
+
+    },
     data() {
         return {
             userInfo: {}, //用户信息
