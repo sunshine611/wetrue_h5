@@ -1,8 +1,9 @@
 export const version     = '2.6.4'
 export const source      = 'WeTrue'
 
-export const baseUrl     = 'https://api.wetrue.io'
-export const nodeUrl     = 'https://mainnet.aeternity.io'
+export const baseUrl     = 'https://api.wetrue.cc'
+//export const nodeUrl     = 'https://mainnet.aeternity.io'
+export const nodeUrl     = 'https://node.aechina.io'
 export const aeMdw       =  nodeUrl + '/mdw'
 export const aeExplorer  = 'https://explorer.aeternity.io'
 export const chatapi     = 'https://api.wetrue.io'
