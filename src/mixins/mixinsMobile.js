@@ -16,6 +16,7 @@ const http = new Request();
 import Clipboard from "clipboard";
 import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
+import queryParams from "uview-ui/libs/function/queryParams";
 
 const mixins = {
     data() {
