@@ -483,7 +483,7 @@ const mixins = {
                 uni.showLoading({
                     title: this.i18n.mixins.executeContract,
                 });
-                const callResult = await contract.methods.transfer_payload( receiveId, AmountFormatter.toAettos(amount) )
+                const callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
                 //const callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), "Test Payload")
                 uni.hideLoading();
                 return callResult;
