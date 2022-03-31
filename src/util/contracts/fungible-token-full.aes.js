@@ -1,4 +1,4 @@
-export const FungibleTokenFull = `
+module.exports = `
 // ISC License
 //
 // Copyright (c) 2017, aeternity developers
@@ -172,8 +172,13 @@ contract FungibleTokenFull =
     let allowance_accounts = { from_account = Call.caller, for_account = for_account }
     internal_change_allowance(allowance_accounts, - state.allowances[allowance_accounts])
 
-  /// Transfer the balance of \`value\` from \`Call.caller\` to \`to_account\` account
+  // Transfer the balance of \`value\` from \`Call.caller\` to \`to_account\` account
   stateful entrypoint transfer(to_account: address, value: int) =
+    internal_transfer(Call.caller, to_account, value)
+
+  // Transfer the balance of \`value\` from \`Call.caller\` to \`to_account\` 
+  // and Carry a payload of type string
+  stateful entrypoint transfer_payload(to_account: address, value: int, payload: string) =
     internal_transfer(Call.caller, to_account, value)
 
   // Destroys \`value\` tokens from \`Call.caller\`, reducing the total supply.
@@ -240,4 +245,4 @@ contract FungibleTokenFull =
     require_non_negative_value(new_allowance)
     put(state{ allowances[allowance_accounts] = new_allowance })
     Chain.event(Allowance(allowance_accounts.from_account, allowance_accounts.for_account, new_allowance))
-`
+`;

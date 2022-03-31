@@ -170,7 +170,7 @@ export default {
                     this.tokenList = res.data.tokens;
                 }
             });
-        }
+        },
     },
 };
 </script>

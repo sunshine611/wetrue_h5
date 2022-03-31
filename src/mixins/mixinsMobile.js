@@ -10,7 +10,8 @@ import {
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
 import shajs from 'sha.js'
-import { FungibleTokenFull } from "@/util/FungibleTokenFull";
+import FUNGIBLE_TOKEN_FULL from "@/util/contracts/fungible-token-full.aes";
+import FUNGIBLE_TOKEN_FULL_INTERFACE from "@/util/contracts/fungible-token-full-interface.aes";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
@@ -465,6 +466,9 @@ const mixins = {
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount) {
+            if (contractId == "ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM") {
+                contractId = "ct_2uMUwmL5uu81MjwpXqokT1xUovDBmzKwHKHZxWXkcPwJMPLCJg"
+            }
             try {
                 uni.showLoading({
                     title: this.i18n.mixins.readySend,
@@ -474,12 +478,13 @@ const mixins = {
                     title: this.i18n.mixins.compileContract,
                 });
                 const contract = await client.getContractInstance(
-                    { source: FungibleTokenFull, contractAddress: contractId }
-                  )
+                    { source: FUNGIBLE_TOKEN_FULL_INTERFACE, contractAddress: DcontractId }
+                )
                 uni.showLoading({
                     title: this.i18n.mixins.executeContract,
                 });
-                const callResult = await contract.methods.transfer(receiveId, AmountFormatter.toAettos(amount))
+                const callResult = await contract.methods.transfer_payload( receiveId, AmountFormatter.toAettos(amount) )
+                //const callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), "Test Payload")
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
