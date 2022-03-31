@@ -478,7 +478,7 @@ const mixins = {
                     title: this.i18n.mixins.compileContract,
                 });
                 const contract = await client.getContractInstance(
-                    { source: FUNGIBLE_TOKEN_FULL_INTERFACE, contractAddress: DcontractId }
+                    { source: FUNGIBLE_TOKEN_FULL_INTERFACE, contractAddress: contractId }
                 )
                 uni.showLoading({
                     title: this.i18n.mixins.executeContract,
