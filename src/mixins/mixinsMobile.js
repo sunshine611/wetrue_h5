@@ -489,8 +489,8 @@ const mixins = {
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },
-        //映射兑换
-        async contractTransfer(contractId, receiveId, amount) {
+        //迁移兑换 (迁移合约, 旧Token, 接收地址, 数量)
+        async contractMigrate(migrateContractId, migrateTokenId, receiveId, amount) {
             try {
                 uni.showLoading({
                     title: this.i18n.mixins.readySend,
@@ -499,17 +499,34 @@ const mixins = {
                 uni.showLoading({
                     title: this.i18n.mixins.compileContract,
                 });
-                const contract = await client.getContractInstance(
-                    { source: Migrate_Token_Interface, contractAddress: contractId, gas: 36969}
+                const allowanceCompiler = await client.getContractInstance(
+                    { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
                 )
                 uni.showLoading({
-                    title: this.i18n.mixins.executeContract,
+                    title: "创建合约授权",
                 });
-                const callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
-                //const callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), "Test Payload")
+                await allowanceCompiler.methods.create_allowance( migrateContractId, 0)
+                uni.showLoading({
+                    title: `授权合约 ${amount} AE`,
+                });
+                await allowanceCompiler.methods.change_allowance( migrateContractId, AmountFormatter.toAettos(amount) )
+                uni.showLoading({
+                    title: `编译迁移合约`,
+                });
+                const contract = await client.getContractInstance(
+                    { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
+                )
+                uni.showLoading({
+                    title: `正在迁移...`,
+                });
+                const callResult = await contract.methods.migrate_mapping( migrateTokenId, receiveId, AmountFormatter.toAettos(amount) )
+                uni.showLoading({
+                    title: `迁移成功`,
+                });
                 uni.hideLoading();
-                return callResult;
+                console.log(callResult);
             } catch (err) {
+                console.error(err)
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },
