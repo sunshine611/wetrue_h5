@@ -11,7 +11,7 @@
                 @click="reLaunchUrl('index')"
             ></u-icon>
         </div>
-        <div class="title">映射AE参与挖矿<br />领取WTT</div>
+        <div class="title">迁移WET兑换<br />WTT</div>
         <div class="start-mapping" v-if="userInfo.isMapping">
             <fa-FontAwesome
                 type="fas fa-trophy"
@@ -23,7 +23,7 @@
             </fa-FontAwesome>
             <div class="mapping">
                 <div class="top">
-                    <div class="desc">我的收益(WTT)</div>
+                    <div class="desc">可兑换(WET)</div>
                     <div class="earning">
                         <div class="amount">
                             <u-count-to
