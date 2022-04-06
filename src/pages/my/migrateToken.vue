@@ -31,14 +31,14 @@
                 </div>
                 <div class="bottom">
                     <div class="migrate-num">
-                        <div class="desc">您可迁移(WET)</div>
+                        <div class="desc">可迁移(WET)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
                             {{ balanceFormat(wetBalance, 4) || "0.0000" }}
                         </div>
                     </div>
                     <div class="migrate-total">
-                        <div class="desc">您余额(WTT)</div>
+                        <div class="desc">余额(WTT)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
                             {{ balanceFormat(wttBalance, 4) || "0.0000" }}
@@ -215,7 +215,7 @@ export default {
         },
         //迁移
         migrate() {
-            if ( !this.form.amount || parseFloat(this.form.amount) > this.wetBalance ) {
+            if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
                 this.warning.amount = true;
                 return;
             } else {
