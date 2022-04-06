@@ -491,44 +491,49 @@ const mixins = {
         },
         //迁移兑换 (迁移合约, 旧Token, 接收地址, 数量)
         async contractMigrate(migrateContractId, migrateTokenId, receiveId, amount) {
+            uni.showLoading({
+                title: this.i18n.mixins.readySend,
+            });
+            let client = await this.client();
+            uni.showLoading({
+                title: this.i18n.mixins.compileContract,
+            });
+            const allowanceCompiler = await client.getContractInstance(
+                { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
+            )
+            uni.showLoading({
+                title: `创建授权`,
+            });
             try {
-                uni.showLoading({
-                    title: this.i18n.mixins.readySend,
-                });
-                let client = await this.client();
-                uni.showLoading({
-                    title: this.i18n.mixins.compileContract,
-                });
-                const allowanceCompiler = await client.getContractInstance(
-                    { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
-                )
-                uni.showLoading({
-                    title: "创建合约授权",
-                });
-                await allowanceCompiler.methods.create_allowance( migrateContractId, 0)
-                uni.showLoading({
-                    title: `授权合约 ${amount} AE`,
-                });
-                await allowanceCompiler.methods.change_allowance( migrateContractId, AmountFormatter.toAettos(amount) )
-                uni.showLoading({
-                    title: `编译迁移合约`,
-                });
-                const contract = await client.getContractInstance(
-                    { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
-                )
-                uni.showLoading({
-                    title: `正在迁移...`,
-                });
-                const callResult = await contract.methods.migrate_mapping( migrateTokenId, receiveId, AmountFormatter.toAettos(amount) )
-                uni.showLoading({
-                    title: `迁移成功`,
-                });
-                uni.hideLoading();
-                console.log(callResult);
-            } catch (err) {
-                console.error(err)
-                this.uShowToast(this.i18n.mixins.fail);
+                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
+                console.log(AmountFormatter.toAettos(amount))
+                console.log(create_allowance)
             }
+            catch (err) {
+                uni.showLoading({
+                    title: `授权 ${amount} WET`,
+                });
+                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
+            }
+            uni.showLoading({
+                title: `编译合约`,
+            });
+            const migrateContract = await client.getContractInstance(
+                { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 39696}
+            )
+            uni.showLoading({
+                title: `正在迁移...`,
+            });
+            let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount)];
+            try{
+                let callresult = await migrateContract.methods.migrate_mapping(...params);
+                console.log("Transaction ID: ", callresult);
+                return true;
+              } catch (e){
+                console.log("Calling your function errored: ", e)
+                return true;
+              }
+
         },
         //苹果刘海屏顶部兼容性调整
         iphoneTop() {

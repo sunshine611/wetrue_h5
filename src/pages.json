@@ -194,6 +194,16 @@
       }
     },
     {
+      "path": "pages/my/migrateToken",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "Migrate Token",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "pages/my/mappingDig",
       "style": {
         "app-plus": {

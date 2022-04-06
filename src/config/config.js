@@ -1,4 +1,4 @@
-export const version     = '2.6.4'
+export const version     = '2.7.0'
 export const source      = 'WeTrue'
 
 export const baseUrl     = 'https://api.wetrue.io'

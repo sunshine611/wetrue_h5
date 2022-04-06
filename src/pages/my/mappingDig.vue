@@ -231,7 +231,7 @@ import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
-import { wttContract } from "@/config/config.js";
+//import { wttContract } from "@/config/config.js";
 
 export default {
     components: {
@@ -251,6 +251,7 @@ export default {
             },
             aeBalance: 0, //账户AE余额
             wttBalance: 0, //账户AE余额
+            wttContract: "", //wtt合约地址
             warning: {
                 amount: false,
             }, //警报
@@ -298,6 +299,7 @@ export default {
                 .then((res) => {
                     if (res.code === 200) {
                         this.userInfo = res.data;
+                        this.wttContract = res.data.wttContract
                     }
                 });
         },
@@ -322,7 +324,7 @@ export default {
         //开始开通
         async startOpen() {
             const result = await this.contractTransfer(
-                wttContract,
+                this.wttContract,
                 this.configInfo.openMapAddress,
                 this.configInfo.openMapAmount / Math.pow(10, 18)
             );
@@ -422,7 +424,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeMdwApiMyToken(this.token, wttContract)
+                Backend.aeMdwApiMyToken(this.token, this.wttContract)
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.amount);
             });

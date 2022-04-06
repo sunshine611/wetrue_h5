@@ -100,6 +100,19 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
+                        title="迁移Token"
+                        @click="goUrl('migrateToken')"
+                    >
+                        <fa-FontAwesome
+                            slot="icon"
+                            type="fas fa-hammer"
+                            size="32"
+                            class="mr-10"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                    </u-cell-item>
+                    <u-cell-item
                         :title="i18n.my.defi"
                         @click="goUrl('mappingDig')"
                     >
