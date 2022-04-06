@@ -100,7 +100,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        title="迁移Token"
+                        title="Migrate Token"
                         @click="goUrl('migrateToken')"
                     >
                         <fa-FontAwesome

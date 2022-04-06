@@ -140,7 +140,6 @@ export default {
         return {
             userInfo: {}, //用户信息
             btnLoading: false, //按钮状态
-
             configInfo: getStore("configInfo"), //后端配置项
             showMigrate: false, //迁移弹层
             form: {
@@ -149,9 +148,6 @@ export default {
             wetBalance: 0, //账户WET余额
             wttBalance: 0, //账户WTT余额
             migrateBalance: 0, //迁移总数
-            wttContract: "",  //WTT合约地址
-            oldWttContract: "", //WET合约地址
-            migrateContract: "", //迁移合约地址
             warning: {
                 amount: false,
             }, //警报

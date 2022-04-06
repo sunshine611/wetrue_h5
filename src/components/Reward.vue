@@ -63,7 +63,7 @@ import { mapGetters } from "vuex";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
-import { wttContract } from "@/config/config.js";
+import { getStore } from "@/util/service";
 
 export default {
     components: {
@@ -80,6 +80,7 @@ export default {
     },
     data() {
         return {
+            configInfo: getStore("configInfo"), //后端配置项
             showModal: this.value, //控制隐藏显示
             current: -1, //当前选择
             form: {
@@ -128,6 +129,9 @@ export default {
             },
         },
     },
+    onLoad() {
+        this.getConfigInfo();
+    },
     watch: {
         value(val) {
             this.showModal = val;
@@ -175,7 +179,7 @@ export default {
             }
             this.btnLoading = true;
             let result = await this.contractTransfer(
-                wttContract,
+                this.configInfo.wttContract,
                 this.postInfo.users.userAddress,
                 this.form.amount
             );
@@ -198,7 +202,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeMdwApiMyToken(this.token, wttContract)
+                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
                 //Backend.aeknowApiMyToken(this.token, wttContract)
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.amount);
