@@ -17,7 +17,9 @@ contract MigrateTokenInterface =
     //销毁合约AEX-9余额--> (目标合约地址, 数量)
     stateful entrypoint burn_token_balance: (AEX9_Interface, int) => int
     //获取全部迁移Token
-    entrypoint get_tokens: () => map(address, swap_token)
+    entrypoint get_token_all: () => map(address, swap_token)
+    //获取迁移Token信息
+    entrypoint get_token_info: (AEX9_Interface) => swap_token
     //获取全部迁移Token记录
     entrypoint get_migrates: () => map(address, account_migrates)
     //获取迁移Token记录--> (目标合约地址)
