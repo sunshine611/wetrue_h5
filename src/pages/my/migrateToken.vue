@@ -233,18 +233,18 @@ export default {
                 this.token,
                 parseFloat(this.form.amount)
             ).then((res) => {
-                    if (res) {
-                        this.uShowToast("成功,5分钟更新余额");
-                        this.showMigrate = false;
-                        this.btnLoading = false;
-                        getMigrateWttBalance()
-                        getWetBalance()
-                        getWttBalance()
-                    } else {
-                        this.uShowToast("失败");
-                        this.btnLoading = false;
-                    }
-                });
+                if (res) {
+                    this.uShowToast("成功,5分钟更新余额");
+                    this.showMigrate = false;
+                    this.btnLoading = false;
+                    getMigrateWttBalance()
+                    getWetBalance()
+                    getWttBalance()
+                } else {
+                    this.uShowToast("失败");
+                    this.btnLoading = false;
+                }
+            });
         },
     },
 };
