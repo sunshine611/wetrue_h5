@@ -505,23 +505,23 @@ const mixins = {
                 title: `授权 ${amount} WET`,
             });
             try {
-                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
+                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount + 0.00001))
                 console.log(AmountFormatter.toAettos(amount))
                 console.log(create_allowance)
             }
             catch (err) {
-                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
+                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount + 0.00001) )
             }
             uni.showLoading({
                 title: `编译迁移...`,
             });
             const migrateContract = await client.getContractInstance(
-                { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 39696}
+                { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
             )
             uni.showLoading({
                 title: `正在迁移...`,
             });
-            let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount)];
+            let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount - 0.00009)];
             try{
                 let callresult = await migrateContract.methods.migrate_mapping(...params);
                 console.log("Transaction ID: ", callresult);

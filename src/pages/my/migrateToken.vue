@@ -15,7 +15,7 @@
         <div class="start-migrate">
             <fa-FontAwesome
                 type="fas fa-retweet"
-                size="42"
+                size="36"
                 class="trophy"
                 color="#f04a82"
                 @click="retweet"
@@ -23,7 +23,7 @@
             </fa-FontAwesome>
             <div class="migrate">
                 <div class="top">
-                    <div class="desc">全网已经迁移(WTT)</div>
+                    <div class="desc">全网未迁移(WTT)</div>
                     <div class="earning">
                         <div class="amount">
                             <u-count-to
@@ -122,7 +122,7 @@
                     {{ i18n.my.balanceErr }}
                 </div>
                 <div class="clearfix">
-                    <div class="pull-right">余额：{{ balanceFormat(wetBalance, 5) }} WET</div>
+                    <div class="pull-right">余额：{{ balanceFormat(wetBalance, 4) }} WET</div>
                 </div>
                 <u-gap :height="30"></u-gap>
                 <u-button type="primary" @click="migrate" :loading="btnLoading"
@@ -210,20 +210,20 @@ export default {
             http.get(
                 Backend.aeMdwApiMyToken( "ak" + this.configInfo.migrateContract.slice(2), this.configInfo.wttContract)
             ).then((res) => {
-                this.migrateBalance = this.balanceFormat(10e26 - res.data.amount);
+                this.migrateBalance = this.balanceFormat(res.data.amount);
             });
         },
         //全部事件
         totalBalance() {
             if (parseInt(this.balanceFormat(this.wetBalance)) > 0) {
-                this.form.amount = this.balanceFormat(this.wetBalance - 1e12, 5);
+                this.form.amount = this.balanceFormat(this.wetBalance, 4);
             } else {
                 this.form.amount = 0;
             }
         },
         //迁移
         migrate() {
-            if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
+            if ( !this.form.amount || this.form.amount <= this.balanceFormat(this.wetBalance) ) {
                 this.warning.amount = true;
                 return;
             } else {
