@@ -140,11 +140,11 @@ const mixins = {
             });
         },
         //余额格式化
-        balanceFormat(balance, num) {
+        balanceFormat(balance, num, decimal=18) {
             if (isNaN(balance)) {
                 return 0;
             } else {
-                return (parseFloat(balance) / Math.pow(10, 18)).toFixed(
+                return (parseFloat(balance) / Math.pow(10, decimal)).toFixed(
                     num || 4
                 );
             }
