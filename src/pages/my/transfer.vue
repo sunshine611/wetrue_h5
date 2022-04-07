@@ -150,6 +150,7 @@ export default {
                 balance: this.balanceFormat(option.balance),
             };
             this.title = `${this.tokenInfo.tokenName + " " +this.i18n.my.transfer}`;
+            this.getWttBalance()
         } else {
             this.getAccount();
             this.title = `AE ${this.i18n.my.transfer}`;
@@ -288,6 +289,16 @@ export default {
         getAccount() {
             http.get(Backend.nodeApiAccounts(this.token)).then((res) => {
                 this.aeBalance = this.balanceFormat(res.data.balance);
+            });
+        },
+        //获取WET余额
+        getWttBalance() {
+            http.get(
+                Backend.aeMdwApiMyToken(this.token, this.tokenInfo.contractId)
+            ).then((res) => {
+                if(res.data.amount) {
+                    this.tokenInfo.balance = this.balanceFormat(res.data.amount) || 0;
+                }
             });
         },
         //查看合约调用成功后返回的交易哈希

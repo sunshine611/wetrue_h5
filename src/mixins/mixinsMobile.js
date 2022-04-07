@@ -496,7 +496,7 @@ const mixins = {
             });
             let client = await this.client();
             uni.showLoading({
-                title: `编译合约...`,
+                title: `编译授权...`,
             });
             const allowanceCompiler = await client.getContractInstance(
                 { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
@@ -513,7 +513,7 @@ const mixins = {
                 await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
             }
             uni.showLoading({
-                title: `编译合约...`,
+                title: `编译迁移...`,
             });
             const migrateContract = await client.getContractInstance(
                 { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 39696}

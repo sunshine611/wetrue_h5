@@ -11,8 +11,16 @@
                 @click="reLaunchUrl('index')"
             ></u-icon>
         </div>
-        <div class="title">迁移映射 WET<br />兑换 WTT</div>
+        <div class="title">映射迁移 WET<br />兑换 WTT</div>
         <div class="start-migrate">
+            <fa-FontAwesome
+                type="fas fa-retweet"
+                size="42"
+                class="trophy"
+                color="#f04a82"
+                @click="retweet"
+            >
+            </fa-FontAwesome>
             <div class="migrate">
                 <div class="top">
                     <div class="desc">全网已经迁移(WTT)</div>
@@ -73,7 +81,7 @@
                     迁移上线即日起不低于1年<br />
             <u-gap :height="10"></u-gap>
             补充说明: 
-                    成功WET迁移WTT,同等数量WET将被回收
+                    准确余额更新需1个链上确认数。成功迁移WTT,同等数量WET将被回收
         </div>
         <u-popup
             v-model="showMigrate"
@@ -165,17 +173,17 @@ export default {
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
+        this.getConfigInfo();
+        this.getMigrateWttBalance();
         this.getWttBalance();
         this.getWetBalance();
-        this.getMigrateWttBalance();
-        this.getConfigInfo();
     },
     activated() {},
     //下拉刷新
     onPullDownRefresh() {
+        this.getMigrateWttBalance();
         this.getWttBalance();
         this.getWetBalance();
-        this.getMigrateWttBalance();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -208,7 +216,7 @@ export default {
         //全部事件
         totalBalance() {
             if (parseInt(this.balanceFormat(this.wetBalance)) > 0) {
-                this.form.amount = this.balanceFormat(this.wetBalance, 5);
+                this.form.amount = this.balanceFormat(this.wetBalance - 1e12, 5);
             } else {
                 this.form.amount = 0;
             }
@@ -230,17 +238,28 @@ export default {
                 parseFloat(this.form.amount)
             ).then((res) => {
                 if (res) {
-                    this.uShowToast("成功,5分钟更新余额");
+                    this.uShowToast("成功,约3分钟更新余额");
                     this.showMigrate = false;
                     this.btnLoading = false;
-                    getMigrateWttBalance()
-                    getWetBalance()
-                    getWttBalance()
+                    this.getMigrateWttBalance()
+                    this.getWetBalance()
+                    this.getWttBalance()
                 } else {
                     this.uShowToast("失败");
                     this.btnLoading = false;
                 }
             });
+        },
+        //更新余额
+        retweet() {
+            this.wetBalance = 0 //账户WET余额
+            this.wttBalance = 0 //账户WTT余额
+            this.migrateBalance = 0 //迁移总数
+            this.getConfigInfo();
+            this.getMigrateWttBalance();
+            this.getWttBalance();
+            this.getWetBalance();
+            this.uShowToast("余额更新中");
         },
     },
 };
@@ -279,6 +298,11 @@ page {
         padding: 40rpx;
         box-sizing: border-box;
         position:relative;
+        .trophy {
+            position: absolute;
+            right: 30rpx;
+            top: 30rpx;
+        }
         .title {
             font-size: 36rpx;
             display: flex;

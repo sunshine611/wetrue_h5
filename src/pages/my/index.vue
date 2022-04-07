@@ -102,6 +102,7 @@
                     <u-cell-item
                         title="Migrate Token"
                         @click="goUrl('migrateToken')"
+                        v-if="!this.validThirdPartySource()"
                     >
                         <fa-FontAwesome
                             slot="icon"
