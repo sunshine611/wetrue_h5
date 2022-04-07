@@ -1,4 +1,4 @@
-export const version     = '2.7.0'
+export const version     = '2.7.1'
 export const source      = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
