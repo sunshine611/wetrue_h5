@@ -56,7 +56,8 @@ export default {
                 media: "",
             },
             btnLoading: false, //按钮加载状态
-			fileList:[],//文件列表
+			fileList:[], //文件列表
+            postShTip: false, //发布到SH
         };
     },
     onLoad(option) {
@@ -67,6 +68,8 @@ export default {
             this.form = {
                 text: option.topic + " ",
             };
+        } else if (!!option.shtip) {
+            this.postShTip = true
         }
     },
     mounted() {
@@ -104,7 +107,16 @@ export default {
                 content: this.form.text,
                 media:   media,
             };
-            let res = await this.wetrueSend("topic", payload);
+            let res;
+            if (this.postShTip) {
+                //发布到 Superhero
+                res = await this.contractShTip(
+                    payload.content + ',from WeTrue.io'
+                );
+            } else {
+                //发布到 WeTrue
+                res = await this.wetrueSend("topic", payload);
+            }
             this.releaseCallback(res);
         },
         releaseCallback(callback) {

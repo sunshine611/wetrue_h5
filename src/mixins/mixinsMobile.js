@@ -13,6 +13,7 @@ import shajs from 'sha.js'
 import Fungible_Token_Full from "@/util/contracts/fungible-token-full.aes";
 import Fungible_Token_Full_Interface from "@/util/contracts/fungible-token-full-interface.aes";
 import Migrate_Token_Interface from "@/util/contracts/MigrateTokenInterface.aes";
+import Superhero_Tipping_v3_Interface from "@/util/contracts/SuperheroTipping_v3_Interface.aes";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
@@ -140,12 +141,12 @@ const mixins = {
             });
         },
         //余额格式化
-        balanceFormat(balance, num, decimal=18) {
+        balanceFormat(balance, num=4, decimal=18) {
             if (isNaN(balance)) {
                 return 0;
             } else {
                 return (parseFloat(balance) / Math.pow(10, decimal)).toFixed(
-                    num || 4
+                    num
                 );
             }
         },
@@ -466,26 +467,31 @@ const mixins = {
             }
         },
         //合约转账
-        async contractTransfer(contractId, receiveId, amount) {
+        async contractTransfer(contractId, receiveId, amount ,payload=false) {
             try {
-                uni.showLoading({
-                    title: this.i18n.mixins.readySend,
-                });
+                this.uShowLoading(this.i18n.mixins.readySend)
                 let client = await this.client();
-                uni.showLoading({
-                    title: this.i18n.mixins.compileContract,
-                });
+                this.uShowLoading(this.i18n.mixins.compileContract)
                 const contract = await client.getContractInstance(
                     { source: Fungible_Token_Full_Interface, contractAddress: contractId }
                 )
-                uni.showLoading({
-                    title: this.i18n.mixins.executeContract,
-                });
-                const callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
-                //const callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), "Test Payload")
+                this.uShowLoading(this.i18n.mixins.executeContract)
+                let callResult;
+                if(payload) {
+                    const configInfo = getStore("configInfo");
+                    const content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: payload.type,
+                        content: payload.content,
+                    };
+                    callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), JSON.stringify(content))
+                } else {
+                    callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
+                }
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
+                console.log(err)
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },
@@ -495,42 +501,56 @@ const mixins = {
                 title: this.i18n.mixins.readySend,
             });
             let client = await this.client();
-            uni.showLoading({
-                title: `编译授权...`,
-            });
+            this.uShowLoading(`编译授权...`)
             const allowanceCompiler = await client.getContractInstance(
                 { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
             )
-            uni.showLoading({
-                title: `授权 ${amount} WET`,
-            });
+            this.uShowLoading(`授权 ${amount} WET`)
             try {
-                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount + 0.00001))
+                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
                 console.log(AmountFormatter.toAettos(amount))
                 console.log(create_allowance)
             }
             catch (err) {
-                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount + 0.00001) )
+                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
             }
-            uni.showLoading({
-                title: `编译迁移...`,
-            });
+            this.uShowLoading(`编译迁移...`)
             const migrateContract = await client.getContractInstance(
-                { source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
+                {source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
             )
-            uni.showLoading({
-                title: `正在迁移...`,
-            });
+            this.uShowLoading(`正在迁移...`)
             let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount - 0.00009)];
             try{
                 let callresult = await migrateContract.methods.migrate_mapping(...params);
                 console.log("Transaction ID: ", callresult);
                 return true;
-              } catch (e){
+            } catch (e){
                 console.log("Calling your function errored: ", e)
                 return true;
-              }
-
+            }
+        },
+        //Superhero_Tipping
+        async contractShTip(payload) {
+            uni.showLoading({
+                title: this.i18n.mixins.readySend,
+            });
+            let client = await this.client();
+            uni.showLoading({
+                title: this.i18n.mixins.compileContract,
+            });
+            const tippingCompiler = await client.getContractInstance(
+                {source: Superhero_Tipping_v3_Interface, contractAddress: 'ct_2Hyt9ZxzXra5NAzhePkRsDPDWppoatVD7CtHnUoHVbuehwR8Nb', gas: 36969}
+            )
+            this.uShowLoading(`Post Superhero...`)
+            let params = [payload, []];
+            try{
+                let callresult =  await tippingCompiler.methods.post_without_tip(...params);
+                let res = {}
+                if (callresult.hash) res.hash = callresult.hash
+                return res;
+            } catch(e) {
+                this.uShowToast(this.i18n.mixins.fail);
+            }
         },
         //苹果刘海屏顶部兼容性调整
         iphoneTop() {

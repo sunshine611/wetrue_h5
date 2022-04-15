@@ -181,7 +181,8 @@ export default {
             let result = await this.contractTransfer(
                 this.configInfo.wttContract,
                 this.postInfo.users.userAddress,
-                this.form.amount
+                this.form.amount,
+                /*{type:'reward', content: this.postInfo.hash }*/
             );
             if (result) {
                 this.rewardSubmit(result.hash);
@@ -202,11 +203,10 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
-                //Backend.aeknowApiMyToken(this.token, wttContract)
+                //Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
+                Backend.aeknowApiMyToken(this.token, this.configInfo.wttContract)
             ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.amount);
-                //this.wttBalance = this.balanceFormat(res.data.balance);
+                this.wttBalance = this.balanceFormat(res.data.amount || res.data.balance);
             });
         },
     },

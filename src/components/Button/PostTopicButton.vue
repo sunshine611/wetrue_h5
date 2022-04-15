@@ -15,7 +15,7 @@ export default {
     components: {
     },
     props: {
-        postTopicInfo: {
+        postButtonInfo: {
             type: Object,
             default: () => {
                 return {}
@@ -40,9 +40,13 @@ export default {
         //发帖
         post() {
             //WeTrue登陆发帖
-            if (this.postTopicInfo.type === 'topic') {
+            if (this.postButtonInfo.type === 'topic') {
                 this.goUrl(
-                    "editor?topic=" + this.postTopicInfo.keyword
+                    "editor?topic=" + this.postButtonInfo.keyword
+                );
+            } else if (this.postButtonInfo.type === 'shtip') {
+                this.goUrl(
+                    "editor?shtip=true"
                 );
             } else {
                 this.goUrl('editor');

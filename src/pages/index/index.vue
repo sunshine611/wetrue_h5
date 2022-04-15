@@ -27,7 +27,7 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <PostTopicButton v-show="postTopicButtonShow"></PostTopicButton>
+        <PostTopicButton v-show="!this.validThirdPartySource()" :postButtonInfo="postButtonInfo"></PostTopicButton>
     </view>
 </template>
 
@@ -67,6 +67,7 @@ export default {
             tabClick: false, //点击tab事件
             postTopicButtonShow: true, //控制发帖按钮显隐
             newCount: 0, //最新总贴数
+            postButtonInfo: {}, //发布按钮增加信息
         };
     },
     //下拉刷新
@@ -157,7 +158,7 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
             };
-            this.postTopicButtonShow = true;
+            this.postButtonInfo = {};
             if (this.current === 0) {
                 url = "/Content/list";
             } else if (this.current === 1) {
@@ -168,7 +169,7 @@ export default {
                 url = "/Content/focusList";
             } else if (this.current === 4) {
                 url = "/Content/shTipidList";
-                this.postTopicButtonShow = false;
+                this.postButtonInfo = { type: "shtip" };
             }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
