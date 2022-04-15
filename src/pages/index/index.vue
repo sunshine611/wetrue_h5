@@ -27,7 +27,7 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <PostTopicButton v-show="!this.validThirdPartySource()" :postButtonInfo="postButtonInfo"></PostTopicButton>
+        <PostTopicButton v-show="postTopicButtonShow" :postButtonInfo="postButtonInfo"></PostTopicButton>
     </view>
 </template>
 
@@ -159,6 +159,7 @@ export default {
                 size: this.pageInfo.pageSize,
             };
             this.postButtonInfo = {};
+            this.postTopicButtonShow = true;
             if (this.current === 0) {
                 url = "/Content/list";
             } else if (this.current === 1) {
@@ -170,6 +171,7 @@ export default {
             } else if (this.current === 4) {
                 url = "/Content/shTipidList";
                 this.postButtonInfo = { type: "shtip" };
+                if (this.validThirdPartySource()) this.postTopicButtonShow = false;
             }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
