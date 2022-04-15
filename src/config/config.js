@@ -1,8 +1,9 @@
-export const version     = '2.7.1'
+export const version     = '2.7.3'
 export const source      = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const net = 'cc'
+const net = 'io'
+
 if (net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
     nodeUrl     = 'https://mainnet.aeternity.io'
@@ -11,19 +12,15 @@ if (net == 'io') {
     aeMdw       = 'https://mainnet.aeternity.io/mdw'
     aeknow      = 'https://api.wetrue.io/Aeknow'
     compilerUrl = 'https://compiler.aeternity.io'
-}
-
-if (net == 'cc') {
+} else if (net == 'cc') {
     baseUrl     = 'https://api.wetrue.cc'
-    nodeUrl     = 'https://node.aechina.io'
+    nodeUrl     = 'https://mainnet.wetrue.cc'
     aeExplorer  = 'https://explorer.aeternity.io'
     chatapi     = 'https://api.wetrue.io'
-    aeMdw       = 'https://node.aechina.io/mdw'
+    aeMdw       = 'https://mainnet.wetrue.cc/mdw'
     aeknow      = 'https://api.wetrue.cc/Aeknow'
-    compilerUrl = 'https://compiler.aechina.io'
-}
-
-if(net == 'test'){
+    compilerUrl = 'https://compiler.wetrue.cc'
+} else if(net == 'test') {
     baseUrl     = 'http://192.168.1.120:1807'
     nodeUrl     = 'https://testnet.aeternity.io'
     aeExplorer  = 'https://explorer.testnet.aeternity.io'
@@ -34,4 +31,4 @@ if(net == 'test'){
 }
 
 export const chatRommKeyIv = { key: '20200425FEAACD66', iv: '66DCAAEF20200425' }
-//export const aeknow      = 'https://www.aeknow.org'
+//export const aeknow = 'https://www.aeknow.org'
