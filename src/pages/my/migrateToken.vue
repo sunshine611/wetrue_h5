@@ -42,14 +42,14 @@
                         <div class="desc">可迁移(WET)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
-                            {{ balanceFormat(wetBalance, 4) || "0.0000" }}
+                            {{ balanceFormat(wetBalance) || "0.0000" }}
                         </div>
                     </div>
                     <div class="migrate-total">
                         <div class="desc">余额(WTT)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
-                            {{ balanceFormat(wttBalance, 4) || "0.0000" }}
+                            {{ balanceFormat(wttBalance) || "0.0000" }}
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                     {{ i18n.my.balanceErr }}
                 </div>
                 <div class="clearfix">
-                    <div class="pull-right">余额：{{ balanceFormat(wetBalance, 4) }} WET</div>
+                    <div class="pull-right">余额：{{ balanceFormat(wetBalance) }} WET</div>
                 </div>
                 <u-gap :height="30"></u-gap>
                 <u-button type="primary" @click="migrate" :loading="btnLoading"
@@ -216,14 +216,14 @@ export default {
         //全部事件
         totalBalance() {
             if (parseInt(this.balanceFormat(this.wetBalance)) > 0) {
-                this.form.amount = this.balanceFormat(this.wetBalance, 4);
+                this.form.amount = this.balanceFormat(this.wetBalance);
             } else {
                 this.form.amount = 0;
             }
         },
         //迁移
         migrate() {
-            if ( !this.form.amount || this.form.amount <= this.balanceFormat(this.wetBalance) ) {
+            if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
                 this.warning.amount = true;
                 return;
             } else {

@@ -165,18 +165,19 @@ export default {
     methods: {
         //获取账户token列表
         getTokenList() {
-            /*
+            
             http.get(Backend.aeknowApiTokenList(this.token)).then((res) => {
                 if (res.data.tokens.length > 0) {
                     this.tokenList = res.data.tokens;
                 }
             });
-            */
+            /*
             http.get(Backend.aeMdwApiTokenList(this.token)).then((res) => {
                 if (res.data.length > 0) {
                     this.tokenList = res.data;
                 }
             });
+            */
         },
     },
 };
