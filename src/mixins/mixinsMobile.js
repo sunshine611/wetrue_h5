@@ -1,6 +1,10 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
-import { compilerUrl, source as WeTrueSource } from "@/config/config";
+import {
+    compilerUrl,
+    source as WeTrueSource,
+    shTipContractId
+} from "@/config/config";
 import {
     Node,
     Crypto,
@@ -10,7 +14,6 @@ import {
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
 import shajs from 'sha.js'
-import Fungible_Token_Full from "@/util/contracts/fungible-token-full.aes";
 import Fungible_Token_Full_Interface from "@/util/contracts/fungible-token-full-interface.aes";
 import Migrate_Token_Interface from "@/util/contracts/MigrateTokenInterface.aes";
 import Superhero_Tipping_v3_Interface from "@/util/contracts/SuperheroTipping_v3_Interface.aes";
@@ -472,9 +475,11 @@ const mixins = {
                 this.uShowLoading(this.i18n.mixins.readySend)
                 let client = await this.client();
                 this.uShowLoading(this.i18n.mixins.compileContract)
-                const contract = await client.getContractInstance(
-                    { source: Fungible_Token_Full_Interface, contractAddress: contractId }
-                )
+                const contract = await client.getContractInstance({
+                    source: Fungible_Token_Full_Interface,
+                    contractAddress: contractId,
+                    gas: 36969
+                })
                 this.uShowLoading(this.i18n.mixins.executeContract)
                 let callResult;
                 if(payload) {
@@ -484,7 +489,11 @@ const mixins = {
                         type: payload.type,
                         content: payload.content,
                     };
-                    callResult = await contract.methods.transfer_payload(receiveId, AmountFormatter.toAettos(amount), JSON.stringify(content))
+                    callResult = await contract.methods.transfer_payload(
+                        receiveId, 
+                        AmountFormatter.toAettos(amount), 
+                        JSON.stringify(content)
+                    )
                 } else {
                     callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
                 }
@@ -502,30 +511,29 @@ const mixins = {
             });
             let client = await this.client();
             this.uShowLoading(`编译授权...`)
-            const allowanceCompiler = await client.getContractInstance(
-                { source: Fungible_Token_Full_Interface, contractAddress: migrateTokenId }
-            )
+            const allowanceCompiler = await client.getContractInstance({
+                source: Fungible_Token_Full_Interface,
+                contractAddress: migrateTokenId
+            })
             this.uShowLoading(`授权 ${amount} WET`)
             try {
                 await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
-                console.log(AmountFormatter.toAettos(amount))
-                console.log(create_allowance)
             }
             catch (err) {
                 await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
             }
             this.uShowLoading(`编译迁移...`)
-            const migrateContract = await client.getContractInstance(
-                {source: Migrate_Token_Interface, contractAddress: migrateContractId, gas: 36969}
-            )
+            const migrateContract = await client.getContractInstance({
+                source: Migrate_Token_Interface, 
+                contractAddress: migrateContractId,
+                gas: 36969
+            })
             this.uShowLoading(`正在迁移...`)
             let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount - 0.00009)];
             try{
                 let callresult = await migrateContract.methods.migrate_mapping(...params);
-                console.log("Transaction ID: ", callresult);
                 return true;
             } catch (e){
-                console.log("Calling your function errored: ", e)
                 return true;
             }
         },
@@ -539,7 +547,7 @@ const mixins = {
                 title: this.i18n.mixins.compileContract,
             });
             const tippingCompiler = await client.getContractInstance(
-                {source: Superhero_Tipping_v3_Interface, contractAddress: 'ct_2Hyt9ZxzXra5NAzhePkRsDPDWppoatVD7CtHnUoHVbuehwR8Nb', gas: 36969}
+                {source: Superhero_Tipping_v3_Interface, contractAddress: shTipContractId, gas: 36969}
             )
             this.uShowLoading(`Post Superhero...`)
             let params = [payload, []];

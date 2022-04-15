@@ -1,8 +1,8 @@
-export const version     = '2.7.3'
-export const source      = 'WeTrue'
+export const version = '2.7.3'
+export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const net = 'io'
+const net = 'cc'
 
 if (net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
@@ -31,4 +31,5 @@ if (net == 'io') {
 }
 
 export const chatRommKeyIv = { key: '20200425FEAACD66', iv: '66DCAAEF20200425' }
+export const shTipContractId = 'ct_2Hyt9ZxzXra5NAzhePkRsDPDWppoatVD7CtHnUoHVbuehwR8Nb'
 //export const aeknow = 'https://www.aeknow.org'
