@@ -3,7 +3,6 @@ import { chatapi } from "@/config/config";
 import { getStore } from "@/util/service";
 
 const socket = io.connect(chatapi, {transports: ['websocket', 'polling']});
-
 let sendMsgData = {
     userAddress: getStore("token"),
 };
