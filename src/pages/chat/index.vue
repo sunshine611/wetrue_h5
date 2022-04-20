@@ -70,7 +70,7 @@ export default {
         },
         goChatRoom() {
             //this.getUserInfo();
-            if (!this.userInfo.isMapping) {
+            if (!this.userInfo.isVip) {
                 this.uShowToast("你没有权限进入");
                 return;
             }

@@ -12,7 +12,7 @@
             ></u-icon>
         </div>
         <div class="title">映射AE参与挖矿<br />领取WTT</div>
-        <div class="start-mapping" v-if="userInfo.isMapping">
+        <div class="start-mapping" v-if="userInfo.isVip">
             <fa-FontAwesome
                 type="fas fa-trophy"
                 size="30"
