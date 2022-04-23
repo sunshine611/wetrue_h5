@@ -321,6 +321,7 @@ const mixins = {
                 const secretKey = await this.keystoreToSecretKey(
                     store.state.user.password
                 );
+                const publicKey = await Crypto.getAddressFromPriv(secretKey);
                 const node = await Node({
                     url: store.state.user.nodeUrl,
                 });
@@ -336,11 +337,11 @@ const mixins = {
                         MemoryAccount({
                             keypair: {
                                 secretKey: secretKey,
-                                publicKey: getStore("keystore").public_key,
+                                publicKey: publicKey,
                             },
                         }),
                     ],
-                    address: getStore("keystore").public_key,
+                    address: publicKey,
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
