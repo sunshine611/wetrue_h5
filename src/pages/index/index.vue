@@ -91,7 +91,7 @@ export default {
         setThirdPartySource(option);
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
-        this.getVersionInfo();
+        this.appVersion();
         this.getUnreadMsg();
         //监听最新总贴数
 		socket.on('contentListCount', (res) => {
@@ -242,21 +242,13 @@ export default {
             }
         },
         //获取服务端版本信息
-        getVersionInfo() {
-            this.$http
-                .post(
-                    "/Config/version",
-                    { version: version },
-                    { custom: { isToast: true } }
-                )
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.versionInfo = res.data;
-                        if (this.versionInfo.mustUpdate) {
-                            this.versionShow = true;
-                        }
-                    }
-                });
+        appVersion() {
+            this.getVersionInfo().then((res) => {
+                this.versionInfo = res;
+                if (this.versionInfo.mustUpdate) {
+                    this.versionShow = true;
+                }
+            });
         },
     },
 };

@@ -19,7 +19,7 @@
 				<view id="bottom"></view>
 			</scroll-view>
 		</view>
-		<view class="foot">
+		<view class="foot safe-area-inset-bottom">
 			<chat-input @send-message="getInputMessage" ></chat-input>
 		</view>
 	</view>

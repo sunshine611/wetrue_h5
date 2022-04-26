@@ -1,6 +1,7 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
 import {
+    version,
     compilerUrl,
     source as WeTrueSource,
     shTipContractId
@@ -314,6 +315,30 @@ const mixins = {
             } else {
                 return false;
             }
+        },
+        //获取服务端版本信息
+        getVersionInfo() {
+            const userAgent = navigator.userAgent;
+            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
+            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+            let system = "Other";
+            if (isAndroid) {
+                system = "Android";
+            }
+            if (isIOS) {
+                system = "IOS";
+            }
+            return new Promise((resolve) => {
+                this.$http.post("/Config/version", {
+                    system:  system,
+                    version: version
+                    },{ custom: { isToast: true }
+                }).then(
+                    (res) => {
+                        resolve(res.data);
+                    }
+                );
+            });
         },
         //连接AE网络
         async connectAe() {

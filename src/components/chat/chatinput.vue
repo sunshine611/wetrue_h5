@@ -1,5 +1,5 @@
 <template>
-	<view class="footer">
+	<view class="footer safe-area-inset-bottom">
 		<view class="footer-left">
 			<view @tap="startRecognize">
 				<fa-FontAwesome type="fas fa-microphone"></fa-FontAwesome>

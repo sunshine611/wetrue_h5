@@ -95,8 +95,7 @@
                     </div>
                 </transition-group>
             </draggable>
-
-            <u-gap :height="120"></u-gap>
+            <u-gap height="1080"></u-gap>
         </div>
         <u-modal
             v-model="showDelete"

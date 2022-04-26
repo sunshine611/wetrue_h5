@@ -210,6 +210,7 @@
                 </div>
             </div>
         </div>
+        <u-gap height="280"></u-gap>
         <VersionTip
             v-model="versionShow"
             :versionInfo="versionInfo"
@@ -273,7 +274,7 @@ export default {
             });
             this.getUnreadMsg();
         }
-        this.getVersionInfo();
+        this.appVersion();
     },
     methods: {
         //获取用户信息
@@ -301,25 +302,17 @@ export default {
             window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
         },
         //获取服务端版本信息
-        getVersionInfo() {
-            this.$http
-                .post(
-                    "/Config/version",
-                    { version: version },
-                    { custom: { isToast: true } }
-                )
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.versionInfo = res.data;
-                        if (this.versionInfo.mustUpdate) {
-                            this.versionShow = true;
-                        }
-                    }
-                });
+        appVersion() {
+            this.getVersionInfo().then((res) => {
+                this.versionInfo = res;
+                if (this.versionInfo.mustUpdate) {
+                    this.versionShow = true;
+                }
+            });
         },
         //检查版本
         async versionCheck() {
-            await this.getVersionInfo();
+            await this.appVersion();
             if (this.versionCode < parseInt(this.versionInfo.newVer)) {
                 this.versionShow = true;
             } else {

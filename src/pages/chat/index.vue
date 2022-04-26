@@ -18,6 +18,7 @@
         >
         登陆聊天室
         </u-button>
+        <u-gap height="1280"></u-gap>
     </view>
 </template>
 
@@ -83,7 +84,7 @@ export default {
 <style lang="scss" scoped>
 .panel {
     position: absolute;
-    left:43%;
+    left:40%;
     top:40%;
 }
 </style>
