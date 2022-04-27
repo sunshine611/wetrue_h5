@@ -14,6 +14,7 @@ export default {
 		loginWeTrue:'Login WeTrue',
 		myWallet:'My Wallet',
 		transactions:'Transactions',
+		set:'seting'
 	},
 	tabBar: {
 		index: 'Home',
@@ -99,6 +100,7 @@ export default {
 		passwordErr:'Error Password',
 		connectionFail:'AE Node Connection Fail',
 		languageSwitch:'Language Switch',
+		set:'Seting'
 	},
 	index:{
 		praise:'Likes',

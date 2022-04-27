@@ -1,6 +1,9 @@
 <template>
     <div class="my">
-        <view class="top-background" :style="`padding-top:${statusBarHeight}px`"></view>
+        <view
+            class="top-background"
+            :style="`padding-top:${statusBarHeight}px`"
+        ></view>
         <div class="user-info" v-if="!!token">
             <div class="my-info">
                 <div class="block">
@@ -140,23 +143,13 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="i18n.my.languageSwitch" @click="selectLanguage" :arrow="false">
+                    <u-cell-item :title="i18n.my.set" @click="goUrl('set')">
                         <fa-FontAwesome
                             slot="icon"
-                            type="fas fa-language"
+                            type="fas fa-cog"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
-                            v-show="language === 'zh-cn'"
-                        >
-                        </fa-FontAwesome>
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-language"
-                            size="32"
-                            class="mr-10"
-                            color="#03a9f4"
-                            v-show="language === 'en'"
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
@@ -176,14 +169,23 @@
             </div>
         </div>
         <div class="login" v-else>
-            <fa-FontAwesome
-                v-if="keystoreArr.length > 0"
-                class="account"
-                type="fas fa-user-shield"
-                size="32"
-                color="#fff"
-                @click="goUrl('../login/accountManage')"
-            ></fa-FontAwesome>
+            <div class="opera-icon">
+                <fa-FontAwesome
+                    v-if="keystoreArr.length > 0"
+                    class="mr-20"
+                    type="fas fa-language"
+                    size="32"
+                    color="#fff"
+                   @click="selectLanguage"
+                ></fa-FontAwesome>
+                <fa-FontAwesome
+                    v-if="keystoreArr.length > 0"
+                    type="fas fa-user-shield"
+                    size="32"
+                    color="#fff"
+                    @click="goUrl('../login/accountManage')"
+                ></fa-FontAwesome>
+            </div>
             <div class="login-box">
                 <div class="item" @tap="goUrl('../login/login')">
                     <fa-FontAwesome
@@ -227,7 +229,6 @@ import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { getStore, setStore } from "@/util/service";
 import moment from "moment";
-
 export default {
     components: {
         HeadImg,
@@ -446,7 +447,7 @@ page {
         justify-content: center;
         align-items: center;
         position: relative;
-        .account {
+        .opera-icon {
             position: absolute;
             right: 30rpx;
             top: 30rpx;

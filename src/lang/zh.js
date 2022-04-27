@@ -14,6 +14,7 @@ export default {
 		loginWeTrue:'微触登录',
 		myWallet:'我的钱包',
 		transactions:'转账记录',
+		set:'设置'
 	},
 	tabBar: {
 		index: '首页',
@@ -99,6 +100,7 @@ export default {
 		passwordErr:'密码错误',
 		connectionFail:'AE节点连接失败',
 		languageSwitch:'Language Switch',
+		set:'设置'
 	},
 	index:{
 		praise:'赞',
