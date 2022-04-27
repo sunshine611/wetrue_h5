@@ -166,7 +166,7 @@
             :status="more"
             v-show="commentList.length > 0"
         />
-        <u-gap height="80"></u-gap>
+        <u-gap height="680"></u-gap>
         <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
@@ -288,6 +288,7 @@ export default {
         this.getCommentList();
     },
     mounted() {
+        // #ifdef H5
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
@@ -297,6 +298,7 @@ export default {
             }
             this.releaseCallback(res);
         };
+        // #endif
     },
     watch: {
         commentList: {
@@ -648,10 +650,10 @@ export default {
                         word-wrap: break-word;
                         word-break: break-all;
                         overflow: hidden;
-                        /deep/ .topic-text {
+                        ::v-deep .topic-text {
                             color: #f04a82;
                         }
-                        /deep/ .mentions-text {
+                        ::v-deep .mentions-text {
                             color: #f04a82;
                         }
                     }
@@ -680,7 +682,7 @@ export default {
                                 }
                                 .compiler {
                                     display: inline !important;
-                                    /deep/ * {
+                                    ::v-deep * {
                                         display: inline !important;
                                         word-wrap: break-word;
                                         word-break: break-all;

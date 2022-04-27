@@ -2,8 +2,8 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "fa-(.*)": "@/components/Am-$1/index.vue", // 加入此行即可
-      "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+      "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
+      "fa-(.*)": "@/components/Am-$1/index.vue" // 加入此行即可
     }
   },
   "pages": [
@@ -144,6 +144,7 @@
         "enablePullDownRefresh": true
       }
     },
+    /*
     {
       "path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
       "style": {
@@ -151,6 +152,7 @@
         "navigationBarBackgroundColor": "#000000"
       }
     },
+    */
     {
       "path": "pages/my/tokenList",
       "style": {
@@ -189,6 +191,16 @@
         },
         "navigationBarTitleText": "Receive",
         "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/migrateToken",
+      "style": {
+        "app-plus": {
+          "titleNView": false //禁用原生导航栏
+        },
+        "navigationBarTitleText": "Migrate Token",
+        "enablePullDownRefresh": true
       }
     },
     {

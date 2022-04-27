@@ -18,6 +18,7 @@
         >
         登陆聊天室
         </u-button>
+        <u-gap height="1280"></u-gap>
     </view>
 </template>
 
@@ -70,7 +71,7 @@ export default {
         },
         goChatRoom() {
             //this.getUserInfo();
-            if (!this.userInfo.isMapping) {
+            if (!this.userInfo.isVip) {
                 this.uShowToast("你没有权限进入");
                 return;
             }
@@ -83,7 +84,7 @@ export default {
 <style lang="scss" scoped>
 .panel {
     position: absolute;
-    left:43%;
+    left:40%;
     top:40%;
 }
 </style>

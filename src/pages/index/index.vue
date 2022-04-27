@@ -27,7 +27,7 @@
             v-model="versionShow"
             :versionInfo="versionInfo"
         ></VersionTip>
-        <PostTopicButton v-show="postTopicButtonShow"></PostTopicButton>
+        <PostTopicButton v-show="postTopicButtonShow" :postButtonInfo="postButtonInfo"></PostTopicButton>
     </view>
 </template>
 
@@ -67,6 +67,7 @@ export default {
             tabClick: false, //点击tab事件
             postTopicButtonShow: true, //控制发帖按钮显隐
             newCount: 0, //最新总贴数
+            postButtonInfo: {}, //发布按钮增加信息
         };
     },
     //下拉刷新
@@ -90,12 +91,18 @@ export default {
         setThirdPartySource(option);
         this.cateInfo.label = this.i18n.home.newRelease;
         this.getPostList();
-        this.getVersionInfo();
+        this.appVersion();
         this.getUnreadMsg();
         //监听最新总贴数
 		socket.on('contentListCount', (res) => {
             this.newCount = res.countSize;
             this.newContentCount();
+        })
+        //监听最新未读消息
+		socket.on('msgStateSize', (res) => {
+            if(res.msgStateSize == 'new') {
+                this.getUnreadMsg();
+            }
         })
         //监听错误
 		socket.on('error', (msg) => this.uShowToast(msg))
@@ -151,6 +158,7 @@ export default {
                 page: this.pageInfo.page,
                 size: this.pageInfo.pageSize,
             };
+            this.postButtonInfo = {};
             this.postTopicButtonShow = true;
             if (this.current === 0) {
                 url = "/Content/list";
@@ -162,7 +170,8 @@ export default {
                 url = "/Content/focusList";
             } else if (this.current === 4) {
                 url = "/Content/shTipidList";
-                this.postTopicButtonShow = false;
+                this.postButtonInfo = { type: "shtip" };
+                if (this.validThirdPartySource()) this.postTopicButtonShow = false;
             }
             this.$http
                 .post(url, params, { custom: { isToast: true } })
@@ -233,21 +242,13 @@ export default {
             }
         },
         //获取服务端版本信息
-        getVersionInfo() {
-            this.$http
-                .post(
-                    "/Config/version",
-                    { version: version },
-                    { custom: { isToast: true } }
-                )
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.versionInfo = res.data;
-                        if (this.versionInfo.mustUpdate) {
-                            this.versionShow = true;
-                        }
-                    }
-                });
+        appVersion() {
+            this.getVersionInfo().then((res) => {
+                this.versionInfo = res;
+                if (this.versionInfo.mustUpdate) {
+                    this.versionShow = true;
+                }
+            });
         },
     },
 };
@@ -256,7 +257,7 @@ export default {
 <style lang="scss" scoped>
 .index {
     .nav {
-        /deep/ .u-navbar-inner {
+        ::v-deep .u-navbar-inner {
             display: inline !important;
         }
         .nav-tab {

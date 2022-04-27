@@ -31,7 +31,7 @@
                         </div>
                         <div class="time">
                             <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ i18n.index.source + item.source }}
+                            >{{ i18n.index.source + item.source + '-' + item.chainId }}
                         </div>
                     </div>
                 </div>
@@ -152,6 +152,7 @@ export default {
         return {};
     },
     mounted() {
+        // #ifdef H5
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
@@ -160,6 +161,7 @@ export default {
                 });
             }
         };
+        // #endif
     },
     computed: {
         //国际化
@@ -173,6 +175,28 @@ export default {
         postList: {
             handler() {
                 this.$nextTick(() => {
+                    /*
+                    const queryTopicType = uni.createSelectorQuery().in(this);
+                    queryTopicType.selectAll('.topic-text').boundingClientRect(topicArr => {
+                        console.log(topicArr)
+                        if (topicArr.length > 0) {
+                            for (let i = 0; i < topicArr.length; i++) {
+                                console.log(topicArr[i])
+                                topicArr[i].addEventListener(
+                                    "click",
+                                    (e) => {
+                                        let text = topicArr[i].innerText;
+                                        this.goUrl(
+                                            "/pages/index/topic?keyword=" + text
+                                        );
+                                        e.stopPropagation();
+                                    },
+                                    true
+                                );
+                            }
+                        }
+                    }).exec();
+                   */
                     const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
@@ -207,6 +231,7 @@ export default {
                             );
                         }
                     }
+                   
                 });
             },
             deep: true,
@@ -323,7 +348,7 @@ export default {
                     word-wrap: break-word;
                     word-break: normal;
                     overflow: hidden;
-                    /deep/ ._root {
+                    ::v-deep ._root {
                         word-break: break-all;
                         text-overflow: ellipsis;
                         display: -webkit-box;
@@ -331,10 +356,10 @@ export default {
                         -webkit-line-clamp: 8;
                         overflow: hidden;
                     }
-                    /deep/ .topic-text {
+                    ::v-deep .topic-text {
                         color: #f04a82;
                     }
-                    /deep/ .mentions-text {
+                    ::v-deep .mentions-text {
                         color: #f04a82;
                     }
                 }

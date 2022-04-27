@@ -1,7 +1,11 @@
 import { getStore, setStore } from "@/util/service";
 import store from "@/store";
-import queryParams from "@/uview-ui/libs/function/queryParams";
-import { compilerUrl, source as WeTrueSource } from "@/config/config";
+import {
+    version,
+    compilerUrl,
+    source as WeTrueSource,
+    shTipContractId
+} from "@/config/config";
 import {
     Node,
     Crypto,
@@ -11,12 +15,15 @@ import {
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
 import shajs from 'sha.js'
-import { FungibleTokenFull } from "@/util/FungibleTokenFull";
+import Fungible_Token_Full_Interface from "@/util/contracts/fungible-token-full-interface.aes";
+import Migrate_Token_Interface from "@/util/contracts/MigrateTokenInterface.aes";
+import Superhero_Tipping_v3_Interface from "@/util/contracts/SuperheroTipping_v3_Interface.aes";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
 import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
+import queryParams from "uview-ui/libs/function/queryParams";
 
 const mixins = {
     data() {
@@ -138,12 +145,12 @@ const mixins = {
             });
         },
         //余额格式化
-        balanceFormat(balance, num) {
+        balanceFormat(balance, num=4, decimal=18) {
             if (isNaN(balance)) {
                 return 0;
             } else {
-                return (parseFloat(balance) / Math.pow(10, 18)).toFixed(
-                    num || 4
+                return (parseFloat(balance) / Math.pow(10, decimal)).toFixed(
+                    num
                 );
             }
         },
@@ -309,12 +316,37 @@ const mixins = {
                 return false;
             }
         },
+        //获取服务端版本信息
+        getVersionInfo() {
+            const userAgent = navigator.userAgent;
+            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
+            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+            let system = "Other";
+            if (isAndroid) {
+                system = "Android";
+            }
+            if (isIOS) {
+                system = "IOS";
+            }
+            return new Promise((resolve) => {
+                this.$http.post("/Config/version", {
+                    system:  system,
+                    version: version
+                    },{ custom: { isToast: true }
+                }).then(
+                    (res) => {
+                        resolve(res.data);
+                    }
+                );
+            });
+        },
         //连接AE网络
         async connectAe() {
             try {
                 const secretKey = await this.keystoreToSecretKey(
                     store.state.user.password
                 );
+                const publicKey = await Crypto.getAddressFromPriv(secretKey);
                 const node = await Node({
                     url: store.state.user.nodeUrl,
                 });
@@ -330,11 +362,11 @@ const mixins = {
                         MemoryAccount({
                             keypair: {
                                 secretKey: secretKey,
-                                publicKey: getStore("keystore").public_key,
+                                publicKey: publicKey,
                             },
                         }),
                     ],
-                    address: getStore("keystore").public_key,
+                    address: publicKey,
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
@@ -464,32 +496,93 @@ const mixins = {
             }
         },
         //合约转账
-        async contractTransfer(contractId, receiveId, amount) {
+        async contractTransfer(contractId, receiveId, amount ,payload=false) {
             try {
-                uni.showLoading({
-                    title: this.i18n.mixins.readySend,
-                });
+                this.uShowLoading(this.i18n.mixins.readySend)
                 let client = await this.client();
-                uni.showLoading({
-                    title: this.i18n.mixins.compileContract,
-                });
-                const callDataCall = await client.contractEncodeCall(
-                    FungibleTokenFull,
-                    "transfer",
-                    [receiveId, AmountFormatter.toAettos(amount)]
-                );
-                uni.showLoading({
-                    title: this.i18n.mixins.executeContract,
-                });
-                const callResult = await client.contractCall(
-                    FungibleTokenFull,
-                    contractId,
-                    "transfer",
-                    callDataCall
-                );
+                this.uShowLoading(this.i18n.mixins.compileContract)
+                const contract = await client.getContractInstance({
+                    source: Fungible_Token_Full_Interface,
+                    contractAddress: contractId,
+                    gas: 36969
+                })
+                this.uShowLoading(this.i18n.mixins.executeContract)
+                let callResult;
+                if(payload) {
+                    const configInfo = getStore("configInfo");
+                    const content = {
+                        WeTrue: configInfo.WeTrue,
+                        type: payload.type,
+                        content: payload.content,
+                    };
+                    callResult = await contract.methods.transfer_payload(
+                        receiveId, 
+                        AmountFormatter.toAettos(amount), 
+                        JSON.stringify(content)
+                    )
+                } else {
+                    callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
+                }
                 uni.hideLoading();
                 return callResult;
             } catch (err) {
+                console.log(err)
+                this.uShowToast(this.i18n.mixins.fail);
+            }
+        },
+        //迁移兑换 (迁移合约, 旧Token, 接收地址, 数量)
+        async contractMigrate(migrateContractId, migrateTokenId, receiveId, amount) {
+            uni.showLoading({
+                title: this.i18n.mixins.readySend,
+            });
+            let client = await this.client();
+            this.uShowLoading(`编译授权...`)
+            const allowanceCompiler = await client.getContractInstance({
+                source: Fungible_Token_Full_Interface,
+                contractAddress: migrateTokenId
+            })
+            this.uShowLoading(`授权 ${amount} WET`)
+            try {
+                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
+            }
+            catch (err) {
+                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
+            }
+            this.uShowLoading(`编译迁移...`)
+            const migrateContract = await client.getContractInstance({
+                source: Migrate_Token_Interface, 
+                contractAddress: migrateContractId,
+                gas: 36969
+            })
+            this.uShowLoading(`正在迁移...`)
+            let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount - 0.00009)];
+            try{
+                let callresult = await migrateContract.methods.migrate_mapping(...params);
+                return true;
+            } catch (e){
+                return true;
+            }
+        },
+        //Superhero_Tipping
+        async contractShTip(payload) {
+            uni.showLoading({
+                title: this.i18n.mixins.readySend,
+            });
+            let client = await this.client();
+            uni.showLoading({
+                title: this.i18n.mixins.compileContract,
+            });
+            const tippingCompiler = await client.getContractInstance(
+                {source: Superhero_Tipping_v3_Interface, contractAddress: shTipContractId, gas: 36969}
+            )
+            this.uShowLoading(`Post Superhero...`)
+            let params = [payload, []];
+            try{
+                let callresult =  await tippingCompiler.methods.post_without_tip(...params);
+                let res = {}
+                if (callresult.hash) res.hash = callresult.hash
+                return res;
+            } catch(e) {
                 this.uShowToast(this.i18n.mixins.fail);
             }
         },

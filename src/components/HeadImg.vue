@@ -5,7 +5,7 @@
             :width="width"
             :height="height"
             v-if="userInfo.portrait"
-            :src="userInfo.portrait"
+            :src="baseUrl + userInfo.portrait"
         ></u-image>
         <u-image
             shape="circle"
@@ -26,6 +26,8 @@
     </div>
 </template>
 <script>
+import { baseUrl } from "@/config/config.js";
+
 export default {
     props: {
         userInfo: {
@@ -46,7 +48,9 @@ export default {
         },
     },
     data() {
-        return {};
+        return {
+            baseUrl: baseUrl
+        };
     },
     computed: {
         //国际化

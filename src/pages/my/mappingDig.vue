@@ -12,7 +12,7 @@
             ></u-icon>
         </div>
         <div class="title">映射AE参与挖矿<br />领取WTT</div>
-        <div class="start-mapping" v-if="userInfo.isMapping">
+        <div class="start-mapping" v-if="userInfo.isVip">
             <fa-FontAwesome
                 type="fas fa-trophy"
                 size="30"
@@ -226,17 +226,16 @@
 </template>
 
 <script>
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import { mapGetters } from "vuex";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
-import { wttContract } from "@/config/config.js";
 
 export default {
-    components: { UGap, UButton },
+    components: {
+
+    },
     data() {
         return {
             userInfo: {}, //用户信息
@@ -322,7 +321,7 @@ export default {
         //开始开通
         async startOpen() {
             const result = await this.contractTransfer(
-                wttContract,
+                this.configInfo.wttContract,
                 this.configInfo.openMapAddress,
                 this.configInfo.openMapAmount / Math.pow(10, 18)
             );
@@ -422,7 +421,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeMdwApiMyToken(this.token, wttContract)
+                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
             ).then((res) => {
                 this.wttBalance = this.balanceFormat(res.data.amount);
             });

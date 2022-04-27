@@ -320,7 +320,7 @@ page {
         }
         .compiler {
             display: inline !important;
-            /deep/ * {
+            ::v-deep * {
                 display: inline !important;
                 word-wrap: break-word;
                 word-break: break-all;

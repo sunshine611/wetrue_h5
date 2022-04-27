@@ -40,6 +40,7 @@ export default {
         };
     },
     mounted() {
+        // #ifdef H5
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
@@ -48,6 +49,7 @@ export default {
                 });
             }
         };
+        // #endif
     },
     computed: {
         //国际化

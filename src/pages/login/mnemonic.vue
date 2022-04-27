@@ -29,10 +29,9 @@
 </template>
 
 <script>
-import {
-	generateMnemonic,
-	getHdWalletAccountFromMnemonic
-} from '@aeternity/aepp-sdk/es/utils/hd-wallet'
+
+import { generateMnemonic, mnemonicToSeed } from '@aeternity/bip39';
+import { getHdWalletAccountFromSeed } from '@aeternity/aepp-sdk/es/utils/hd-wallet'
 
 export default {
 	data() {
@@ -56,8 +55,9 @@ export default {
 	methods: {
 		createAccount() {
 			const mnemonic = generateMnemonic();
-			const key = getHdWalletAccountFromMnemonic(mnemonic,0);
-			this.form.address=key.publicKey;
+			const seed = mnemonicToSeed(mnemonic);
+			const keyPair = getHdWalletAccountFromSeed(seed, 0);
+			this.form.address = keyPair.publicKey;
 			this.form.mnemonic = mnemonic;
 		}
 	}

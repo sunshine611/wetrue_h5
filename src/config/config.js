@@ -1,19 +1,35 @@
+export const version = '2.7.4'
+export const source  = 'WeTrue'
+export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-export const baseUrl     = 'https://api.wetrue.io'
-export const nodeUrl     = 'https://mainnet.aeternity.io'
-export const aeMdw       = 'https://mainnet.aeternity.io/mdw'
-export const aeExplorer  = 'https://explorer.aeternity.io'
-export const chatapi     = 'https://api.wetrue.io'
-/*
-export const baseUrl     = 'https://liushao.cc:1817'
-export const nodeUrl     = 'https://testnet.aeternity.io'
-export const aeMdw       = 'https://testnet.aeternity.io/mdw'
-export const aeExplorer  = 'https://explorer.testnet.aeternity.io'
-export const chatapi     = 'http://192.168.1.1:50001'
-*/
-export const version     = '2.5.9'
-export const source      = 'WeTrue'
-export const aeknow      = 'https://www.aeknow.org'
-export const compilerUrl = 'https://compiler.aeternity.io'
-export const wttContract ='ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM'
-export const chatRommKeyIv = {key: '20200425FEAACD66',iv: '66DCAAEF20200425'}
+const env_net = 'io';
+
+if (env_net == 'io') {
+    baseUrl     = 'https://api.wetrue.io'
+    nodeUrl     = 'https://mainnet.aeternity.io'
+    aeExplorer  = 'https://explorer.aeternity.io'
+    chatapi     = 'https://api.wetrue.io'
+    aeMdw       = 'https://mainnet.aeternity.io/mdw'
+    aeknow      = 'https://api.wetrue.io/Aeknow'
+    compilerUrl = 'https://compiler.aeternity.io'
+} else if (env_net == 'cc') {
+    baseUrl     = 'https://api.wetrue.cc'
+    nodeUrl     = 'https://mainnet.wetrue.cc'
+    aeExplorer  = 'https://explorer.aeternity.io'
+    chatapi     = 'https://api.wetrue.io'
+    aeMdw       = 'https://mainnet.wetrue.cc/mdw'
+    aeknow      = 'https://api.wetrue.cc/Aeknow'
+    compilerUrl = 'https://compiler.wetrue.cc'
+} else if(env_net == 'test') {
+    baseUrl     = 'http://192.168.1.120:1807'
+    nodeUrl     = 'https://testnet.aeternity.io'
+    aeExplorer  = 'https://explorer.testnet.aeternity.io'
+    chatapi     = 'http://192.168.1.111:50001'
+    aeMdw       = 'https://explorer.testnet.aeternity.io/mdw'
+    aeknow      = 'http://192.168.1.120:1807/Aeknow'
+    compilerUrl = 'https://compiler.aechina.io'
+}
+
+export const chatRommKeyIv = { key: '20200425FEAACD66', iv: '66DCAAEF20200425' }
+export const shTipContractId = 'ct_2Hyt9ZxzXra5NAzhePkRsDPDWppoatVD7CtHnUoHVbuehwR8Nb'
+//export const aeknow = 'https://www.aeknow.org'

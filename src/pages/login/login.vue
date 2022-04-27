@@ -79,8 +79,9 @@
 </template>
 
 <script>
-import { getHdWalletAccountFromMnemonic } from "@aeternity/aepp-sdk/es/utils/hd-wallet";
-import { validateMnemonic } from '@aeternity/bip39';
+
+import { getHdWalletAccountFromSeed } from '@aeternity/aepp-sdk/es/utils/hd-wallet'
+import { validateMnemonic, mnemonicToSeed } from '@aeternity/bip39';
 import { dump } from "@aeternity/aepp-sdk/es/utils/keystore";
 import { getStore } from "@/util/service";
 
@@ -141,10 +142,8 @@ export default {
                 this.warning.password = false;
             }
             //助记词转换成钱包地址和秘钥
-            let publicKeyInsecretKey = await getHdWalletAccountFromMnemonic(
-                newMnemonic,
-                0
-            );
+            const seed = mnemonicToSeed(newMnemonic);
+			const publicKeyInsecretKey = getHdWalletAccountFromSeed(seed, 0);
             //通过密码和私钥生成keystore
             let newPassword = this.cryptoPassword(this.form.password);
             await dump(

@@ -2,7 +2,8 @@ import Request from "luch-request";
 import { baseUrl } from "@/config/config.js";
 import store from "../store/index.js";
 import { getStore } from "@/util/service";
-import queryParams from "@/uview-ui/libs/function/queryParams";
+import queryParams from "uview-ui/libs/function/queryParams";
+
 var http = new Request({
     baseURL: baseUrl,
     custom: {
@@ -13,7 +14,8 @@ var http = new Request({
 http.interceptors.request.use((config) => {
     config.header = {
         "Content-type": "application/x-www-form-urlencoded",
-        "ak-token": getStore("token"),
+        "key": getStore("token"),
+        "chain-id": 457,
     };
     if (
         !!getStore("keystore") &&

@@ -141,7 +141,6 @@
 import { version } from "@/config/config.js";
 import VersionTip from "@/components/VersionTip.vue";
 import Name from "@/components/Name.vue";
-import UGap from "@/uview-ui/components/u-gap/u-gap.vue";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import HeadImg from "@/components/HeadImg";
 
@@ -151,7 +150,6 @@ export default {
         Name,
         mpHtml,
         HeadImg,
-        UGap,
     },
     data() {
         return {
@@ -318,7 +316,7 @@ export default {
                     .content {
                         margin-top: 10rpx;
                         font-size: 24rpx;
-                        /deep/ ._root {
+                        ::v-deep ._root {
                             word-break: break-all;
                             text-overflow: ellipsis;
                             display: -webkit-box;
@@ -377,7 +375,7 @@ export default {
                         .content {
                             margin-top: 10rpx;
                             font-size: 24rpx;
-                            /deep/ ._root {
+                            ::v-deep ._root {
                                 word-break: break-all;
                                 text-overflow: ellipsis;
                                 display: -webkit-box;
@@ -391,7 +389,7 @@ export default {
             }
             .compiler {
                 display: inline !important;
-                /deep/ * {
+                ::v-deep * {
                     display: inline !important;
                     word-wrap: break-word;
                     word-break: break-all;

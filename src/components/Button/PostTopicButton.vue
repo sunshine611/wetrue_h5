@@ -1,5 +1,5 @@
 <template>
-    <view class="post safe-area-inset-bottom" v-if="validToken()">
+    <view class="post" v-if="validToken()">
         <fa-FontAwesome
             type="fas fa-plus"
             size="36"
@@ -15,7 +15,7 @@ export default {
     components: {
     },
     props: {
-        postTopicInfo: {
+        postButtonInfo: {
             type: Object,
             default: () => {
                 return {}
@@ -40,9 +40,13 @@ export default {
         //发帖
         post() {
             //WeTrue登陆发帖
-            if (this.postTopicInfo.type === 'topic') {
+            if (this.postButtonInfo.type === 'topic') {
                 this.goUrl(
-                    "editor?topic=" + this.postTopicInfo.keyword
+                    "editor?topic=" + this.postButtonInfo.keyword
+                );
+            } else if (this.postButtonInfo.type === 'shtip') {
+                this.goUrl(
+                    "editor?shtip=true"
                 );
             } else {
                 this.goUrl('editor');
@@ -56,7 +60,7 @@ export default {
         position: fixed;
         z-index: 1000;
         right: 60rpx;
-        bottom: 150rpx;
+        bottom: 200rpx;
         background: rgba(#f04a82, 0.75);
         box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#f04a82, 0.3);
         width: 80rpx;

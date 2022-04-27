@@ -28,6 +28,10 @@ export default class Backend {
 		return `${aeknow}/api/token/${token}`;
 	};
 
+	static aeMdwApiTokenList = (address) => {
+		return `${aeMdw}/aex9/balances/account/${address}`;
+	};
+
 	static nodeApiGetAddressByNames = async (names) => {
 		const http = new Request();
 		return new Promise((resolve) => {

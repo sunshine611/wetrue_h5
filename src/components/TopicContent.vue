@@ -31,7 +31,7 @@
                         <text class="mr-20">{{
                             $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
                         }}</text
-                        >{{ i18n.index.source + postInfo.source }}
+                        >{{ i18n.index.source + postInfo.source + '-' + postInfo.chainId}}
                     </div>
                 </div>
             </div>
@@ -157,7 +157,6 @@
 <script>
 import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import UGap from "../uview-ui/components/u-gap/u-gap.vue";
 import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
@@ -171,7 +170,6 @@ export default {
         RewardRecord,
         Name,
         TopicMore,
-        UGap,
     },
     props: {
         postInfo: {
@@ -188,6 +186,7 @@ export default {
         };
     },
     mounted() {
+        // #ifdef H5
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
@@ -196,6 +195,7 @@ export default {
                 });
             }
         };
+        // #endif
     },
     computed: {
         ...mapGetters(["configInfo"]),
@@ -363,10 +363,10 @@ export default {
                 word-wrap: break-word;
                 word-break: normal;
                 overflow: hidden;
-                /deep/ .topic-text {
+                ::v-deep .topic-text {
                     color: #f04a82;
                 }
-                /deep/ .mentions-text {
+                ::v-deep .mentions-text {
                     color: #f04a82;
                 }
             }

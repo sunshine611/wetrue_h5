@@ -69,21 +69,21 @@
         <u-cell-group>
             <u-cell-item
                 v-for="item in tokenList"
-                :key="item.contract"
+                :key="item.contract||item.contract_id"
                 :arrow="false"
                 @click="
                     goUrl(
-                        `tokenTransferRecode?contract=${item.contract}&tokenName=${item.tokenname}`
+                        `tokenTransferRecode?contract=${item.contract||item.contract_id}&tokenName=${item.tokenname||item.token_symbol}`
                     )
                 "
             >
              <div slot="icon">
                         <div class="token-icon">
-                            {{item.tokenname}}
+                            {{item.tokenname||item.token_symbol}}
                         </div>
                     </div>
                 <div slot="right-icon" class="amount">
-                    {{i18n.my.balance + ": " + balanceFormat(item.balance)}}
+                    {{i18n.my.balance + ": " + balanceFormat(item.balance||item.amount, 5, item.decimal)}}
                     <u-button
                         shape="square"
                         type="primary"
@@ -92,7 +92,7 @@
                         class="ml-20"
                         @click="
                             goUrl(
-                                `transfer?tokenName=${item.tokenname}&contractId=${item.contract}&balance=${item.balance}`
+                                `transfer?tokenName=${item.tokenname||item.token_symbol}&contractId=${item.contract||item.contract_id}&balance=${item.balance||item.amount}`
                             )
                         "
                         v-show="!validThirdPartySource()"
@@ -116,11 +116,11 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
-import UCellItem from "@/uview-ui/components/u-cell-item/u-cell-item.vue";
-import UButton from "@/uview-ui/components/u-button/u-button.vue";
 
 export default {
-    components: { UCellItem, UButton },
+    components: {
+
+    },
     data() {
         return {
             aeBalance: 0, //ae余额
@@ -165,12 +165,20 @@ export default {
     methods: {
         //获取账户token列表
         getTokenList() {
+            
             http.get(Backend.aeknowApiTokenList(this.token)).then((res) => {
                 if (res.data.tokens.length > 0) {
                     this.tokenList = res.data.tokens;
                 }
             });
-        }
+            /*
+            http.get(Backend.aeMdwApiTokenList(this.token)).then((res) => {
+                if (res.data.length > 0) {
+                    this.tokenList = res.data;
+                }
+            });
+            */
+        },
     },
 };
 </script>

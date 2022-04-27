@@ -41,7 +41,7 @@
             :status="more"
             v-show="postList.length > 0"
         />
-        <PostTopicButton :postTopicInfo="postTopicInfo"></PostTopicButton>
+        <PostTopicButton :postButtonInfo="postButtonInfo"></PostTopicButton>
     </view>
 </template>
 
@@ -66,7 +66,7 @@ export default {
                 totalPage: 1,
             }, //页码信息
             more: "loadmore", //加载更多
-            postTopicInfo:{},//话题信息
+            postButtonInfo: {}, //发布按钮增加信息
         };
     },
     //下拉刷新
@@ -93,7 +93,7 @@ export default {
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
-        this.postTopicInfo = {
+        this.postButtonInfo = {
             type: "topic",
             keyword: option.keyword
         };

@@ -19,7 +19,7 @@
 				<view id="bottom"></view>
 			</scroll-view>
 		</view>
-		<view class="foot">
+		<view class="foot safe-area-inset-bottom">
 			<chat-input @send-message="getInputMessage" ></chat-input>
 		</view>
 	</view>
@@ -78,7 +78,7 @@ export default {
 			this.online = `${onlineNumber.join}/${onlineNumber.online}/${onlineNumber.total}`
 		)
 		//监听断线
-		socket.on('disconnect', ()=> this.uShowToast('连接断开'))
+		socket.on('disconnect', ()=> this.uShowToast('disconnect'))
 	},
 	created() {
 		const res = uni.getSystemInfoSync();
