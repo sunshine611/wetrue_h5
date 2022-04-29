@@ -15,12 +15,6 @@
                             size="40"
                             @click="whitePaper"
                         ></u-icon>
-                        <u-icon
-                            name="edit-pen"
-                            color="#fff"
-                            size="40"
-                            @click="goUrl('infoEdit')"
-                        ></u-icon>
                     </div>
                     <div class="user-box">
                         <div class="user-top">

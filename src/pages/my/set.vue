@@ -17,6 +17,19 @@
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
+                :title="i18n.my.userInfo"
+                @click="goUrl('infoEdit')"
+            >
+            <fa-FontAwesome
+                    slot="icon"
+                    type="fas fa-user"
+                    size="32"
+                    class="mr-20"
+                    color="#f04a82"
+                >
+                </fa-FontAwesome>
+            </u-cell-item>
+            <u-cell-item
                 :title="i18n.my.languageSwitch"
                 @click="selectLanguage"
                 :arrow="false"
@@ -25,7 +38,7 @@
                     slot="icon"
                     type="fas fa-language"
                     size="32"
-                    class="mr-10"
+                    class="mr-20"
                     color="#f04a82"
                     v-show="language === 'zh-cn'"
                 >
@@ -34,7 +47,7 @@
                     slot="icon"
                     type="fas fa-language"
                     size="32"
-                    class="mr-10"
+                    class="mr-20"
                     color="#03a9f4"
                     v-show="language === 'en'"
                 >
