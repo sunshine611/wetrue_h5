@@ -14,7 +14,7 @@ export default {
 		loginWeTrue:'Login WeTrue',
 		myWallet:'My Wallet',
 		transactions:'Transactions',
-		set:'seting'
+		set:'Seting'
 	},
 	tabBar: {
 		index: 'Home',

@@ -171,15 +171,13 @@
         <div class="login" v-else>
             <div class="opera-icon">
                 <fa-FontAwesome
-                    v-if="keystoreArr.length > 0"
-                    class="mr-20"
+                    class="mr-30"
                     type="fas fa-language"
                     size="32"
                     color="#fff"
                    @click="selectLanguage"
                 ></fa-FontAwesome>
                 <fa-FontAwesome
-                    v-if="keystoreArr.length > 0"
                     type="fas fa-user-shield"
                     size="32"
                     color="#fff"
@@ -212,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <u-gap height="280"></u-gap>
+        <u-gap height="280" v-show="keystoreArr.length > 0"></u-gap>
         <VersionTip
             v-model="versionShow"
             :versionInfo="versionInfo"
@@ -350,7 +348,7 @@ page {
             .block {
                 background: #f04a82;
                 width: 100%;
-                height: 320upx;
+                height: 320rpx;
                 position: relative;
                 box-sizing: border-box;
                 color: #101010;
@@ -455,7 +453,6 @@ page {
         .login-box {
             margin: 0 10%;
             width: 90%;
-
             .item {
                 background-color: #fff;
                 height: 110rpx;
