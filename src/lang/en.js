@@ -99,7 +99,7 @@ export default {
 		backMy:'Go Back My',
 		passwordErr:'Error Password',
 		connectionFail:'AE Node Connection Fail',
-		languageSwitch:'Language Switch',
+		languageSwitch:'切换中文',
 		set:'Seting'
 	},
 	index:{

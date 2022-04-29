@@ -31,7 +31,7 @@ const mixins = {
     },
     onLoad() {
         if (!getStore("language")) {
-            setStore("language", "zh-cn");
+            setStore("language", "en");
         }
     },
     onShow() {
