@@ -13,6 +13,7 @@ const login = {
         client: {}, //主网对象
         thirdPartySource: "", //第三方来源
         language: "", //语言
+        blacklist: getStore("blacklist") || [], //黑名单
     },
     getters: {},
     mutations: {
@@ -104,6 +105,38 @@ const login = {
                     break;
                 }
             }
+        },
+        //设置添加账户到黑名单
+        setBlacklist({ state }, params) {
+            if (state.blacklist.length > 0) {
+                let isExist = false; //不存在
+                for (let i = 0; i < state.blacklist.length; i++) {
+                    if (state.blacklist[i] === params) {
+                        state.blacklist[i] = params;
+                        isExist = true; //存在
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    //不存在就加上
+                    state.blacklist.push(params);
+                }
+            } else {
+                state.blacklist.push(params);
+            }
+            setStore("blacklist", state.blacklist);
+            setStore("blacklistState", 1);
+        },
+        //删除黑名单某个账户
+        deleteBlacklist({ state }, params) {
+            for (let i = 0; i < state.blacklist.length; i++) {
+                if (state.blacklist[i] === params) {
+                    state.blacklist.splice(i, 1);
+                    break;
+                }
+            }
+            setStore("blacklist", state.blacklist);
+            setStore("blacklistState", 1);
         },
     },
 };

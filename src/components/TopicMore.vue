@@ -70,14 +70,18 @@ export default {
                     subText: this.i18n.index.complainText,
                 },
                 {
+                    text: this.i18n.index.blacklist,
+                    subText: this.i18n.index.blacklistText,
+                },
+                {
                     text: this.i18n.index.aeternal,
                     subText: this.i18n.index.aeternalText,
                 }
             ]
             if (this.validAdmin()){
                 moreList.push({
-                    text: 'testAdmin',
-                    subText: 'testAdmin',
+                    text: 'Test Admin',
+                    subText: 'Test Admin',
                 })
             }
             return moreList;
@@ -107,6 +111,8 @@ export default {
             } else if (index === 1) {
                 this.complain();
             } else if (index === 2) {
+                this.blacklist()
+            } else if (index === 3) {
                 window.open(
                     Backend.explorerViewhUrl(this.topicInfo.hash)
                 );
@@ -147,6 +153,22 @@ export default {
                     this.uShowToast(this.i18n.components.complainSuccess);
                 }
             });
+        },
+        //黑名单
+        blacklist() {
+            let params = this.topicInfo.users.userAddress;
+            this.$store.dispatch("user/setBlacklist", params);
+            if (this.postList.length > 0) {
+                for (let i = 0; i < this.postList.length; i++) {
+                    if (
+                        this.postList[i].users.userAddress ===
+                        this.topicInfo.users.userAddress
+                    ) {
+                        this.postList.splice(i,1);
+                    }
+                }
+            }
+            this.uShowToast(this.i18n.components.blacklistSuccess);
         },
     },
 };

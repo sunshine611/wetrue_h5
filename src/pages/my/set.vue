@@ -30,6 +30,18 @@
                 </fa-FontAwesome>
             </u-cell-item>
             <u-cell-item
+                :title="i18n.my.blacklistManage"
+                @click="goUrl('blacklistManage')"
+            >
+            <fa-FontAwesome
+                    slot="icon"
+                    type="fas fa-user"
+                    size="32"
+                    class="mr-20"
+                >
+                </fa-FontAwesome>
+            </u-cell-item>
+            <u-cell-item
                 :title="i18n.my.languageSwitch"
                 @click="selectLanguage"
                 :arrow="false"

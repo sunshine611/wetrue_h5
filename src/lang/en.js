@@ -100,7 +100,9 @@ export default {
 		passwordErr:'Error Password',
 		connectionFail:'AE Node Connection Fail',
 		languageSwitch:'切换中文',
-		set:'Seting'
+		set:'Seting',
+		blacklistManage:'Blacklist Manage',
+		deleteBlacklist:'Delete User From BlackList',
 	},
 	index:{
 		praise:'Likes',
@@ -135,6 +137,8 @@ export default {
 		discuss:'Discuss',
 		views:'Views',
 		thirdPartyNotOpen:'Third party sources are not open',
+		blacklist:'Blacklist',
+		blacklistText:'Move to blacklist, ignore his posts',
 	},
 	message:{
 		dynamic:'Dynamic',
@@ -162,6 +166,7 @@ export default {
 		appUpdate:'APP Update',
 		currentVersion:'Current Version',
 		newVersion:'New Version',
+		blacklistSuccess:'Add Blacklist Success',
 	},
 	mixins:{
 		inChain:'In The Chain',

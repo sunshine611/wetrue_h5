@@ -100,7 +100,9 @@ export default {
 		passwordErr:'密码错误',
 		connectionFail:'AE节点连接失败',
 		languageSwitch:'Language Switch',
-		set:'设置'
+		set:'设置',
+		blacklistManage:'黑名单管理',
+		deleteBlacklist:'将该用户移出黑名单',
 	},
 	index:{
 		praise:'赞',
@@ -135,6 +137,8 @@ export default {
 		discuss:'讨论',
 		views:'阅读',
 		thirdPartyNotOpen:'第三方来源未开放',
+		blacklist:'黑名单',
+		blacklistText:'移入黑名单,不看该用户',
 	},
 	message:{
 		dynamic:'动态',
@@ -162,7 +166,7 @@ export default {
 		appUpdate:'APP 更新',
 		currentVersion:'当前版本',
 		newVersion:'最新版本',
-		
+		blacklistSuccess:'添加黑名单成功',
 	},
 	mixins:{
 		inChain:'上链中',

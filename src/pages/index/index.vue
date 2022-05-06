@@ -38,6 +38,7 @@ import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { setThirdPartySource } from "@/util/thirdPartySource/source";
 import socket from '@/util/socketio.js';
+import { getStore, setStore } from "@/util/service";
 
 export default {
     components: {
@@ -68,6 +69,8 @@ export default {
             postTopicButtonShow: true, //控制发帖按钮显隐
             newCount: 0, //最新总贴数
             postButtonInfo: {}, //发布按钮增加信息
+            blacklist: getStore("blacklist"), //黑名单列表
+            blacklistState: getStore("blacklistState"), //黑名单列表状态
         };
     },
     //下拉刷新
@@ -182,32 +185,20 @@ export default {
                         if (this.pageInfo.page === 1) {
                             this.pageInfo.totalSize = parseInt(res.data.totalSize);
                             this.$nextTick(() => {
-                                this.postList = res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    if (this.current === 4) {
-                                        item.hash = item.shTipid;
-                                    }
-                                    return item;
+                                let itemList = res.data.data.map((item) => {
+                                    return this.itemListMap(item); //数据处理
                                 });
+                                this.postList = itemList.filter((s)=> {return s;});
                             });
                         } else {
                             if (this.pageInfo.page > this.pageInfo.totalPage) {
                                 this.pageInfo.page = this.pageInfo.totalPage;
                                 this.more = "nomore";
                             } else {
-                                this.postList = this.postList.concat(
-                                    res.data.data.map((item) => {
-                                        item.payload = this.topicHighlight(
-                                            item.payload
-                                        );
-                                        if (this.current === 4) {
-                                            item.hash = item.shTipid;
-                                        }
-                                        return item;
-                                    })
-                                );
+                                let itemList = res.data.data.map((item) => {
+                                        return this.itemListMap(item); //数据处理
+                                    });
+                                this.postList = this.postList.concat(itemList.filter((s)=> {return s;}));
                             }
                         }
                     } else {
@@ -249,6 +240,25 @@ export default {
                     this.versionShow = true;
                 }
             });
+        },
+        //帖子列表-数据前期处理
+        itemListMap(item){
+            this.blacklistState = getStore("blacklistState"); //获取黑名单状态
+            if (this.blacklistState === 1) {
+                this.blacklist = getStore("blacklist");
+                setStore("blacklistState", 0);
+            }
+
+            item.payload = this.topicHighlight(
+                item.payload
+            );
+            if (this.current === 4) { //超级英雄
+                item.hash = item.shTipid;
+            }
+            const block = this.blacklist.includes(item.users.userAddress);
+            if(!block) {
+                return item;
+            }
         },
     },
 };

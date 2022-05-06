@@ -152,10 +152,7 @@ export default {
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
-                this.$store.commit(
-                    "user/SET_PASSWORD",
-                    newPassword
-                );
+                this.$store.commit("user/SET_PASSWORD", newPassword);
                 this.$store.dispatch("user/setKeystoreArr", keystore);
             });
             this.$store.commit(
