@@ -3,7 +3,7 @@
         <view :style="`padding-top:${statusBarHeight}px`"></view>
         <u-navbar
             :is-fixed="false"
-            :title="i18n.my.set"
+            :title="$t('my.set')"
         >
             <div slot="right">
                 <u-icon
@@ -17,7 +17,7 @@
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
-                :title="i18n.my.userInfo"
+                :title="$t('my.userInfo')"
                 @click="goUrl('infoEdit')"
             >
             <fa-FontAwesome
@@ -30,7 +30,7 @@
                 </fa-FontAwesome>
             </u-cell-item>
             <u-cell-item
-                :title="i18n.my.blacklistManage"
+                :title="$t('my.blacklistManage')"
                 @click="goUrl('blacklistManage')"
             >
             <fa-FontAwesome
@@ -42,7 +42,7 @@
                 </fa-FontAwesome>
             </u-cell-item>
             <u-cell-item
-                :title="i18n.my.languageSwitch"
+                :title="$t('my.languageSwitch')"
                 @click="selectLanguage"
                 :arrow="false"
             >
@@ -86,16 +86,10 @@ export default {
     onReachBottom() {},
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.set);
+        this.uSetBarTitle(this.$t('titleBar.set'));
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //切换语言

@@ -26,7 +26,7 @@
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
                                 <div :class="[userInfo.isAuth ? 'auth' : '']">
-                                    {{ userInfo.nickname || i18n.my.cryptonym }}
+                                    {{ userInfo.nickname || $t('my.cryptonym') }}
                                 </div>
                             </div>
                             <div class="address" @tap="copy" id="copy">
@@ -41,7 +41,7 @@
                                 <div class="value">
                                     {{ userInfo.topic || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.topic }}</div>
+                                <div class="label">{{ $t('my.topic') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -50,13 +50,13 @@
                                 <div class="value">
                                     {{ userInfo.star || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.star }}</div>
+                                <div class="label">{{ $t('my.star') }}</div>
                             </div>
                             <div class="item">
                                 <div class="value">
                                     {{ userInfo.active || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.active }}</div>
+                                <div class="label">{{ $t('my.active') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -65,7 +65,7 @@
                                 <div class="value">
                                     {{ userInfo.focus || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.focus }}</div>
+                                <div class="label">{{ $t('my.focus') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -74,7 +74,7 @@
                                 <div class="value">
                                     {{ userInfo.fans || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.fans }}</div>
+                                <div class="label">{{ $t('my.fans') }}</div>
                             </div>
                         </div>
                     </div>
@@ -83,8 +83,8 @@
             <div class="menu">
                 <u-cell-group :border="false">
                     <u-cell-item
-                        :title="i18n.my.myWallet"
-                        :value="'AE：' + balance"
+                        :title="$t('my.myWallet')"
+                        :value="'AE: ' + balance"
                         @click="goUrl('tokenList')"
                     >
                         <fa-FontAwesome
@@ -111,7 +111,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        :title="i18n.my.defi"
+                        :title="$t('my.defi')"
                         @click="goUrl('mappingDig')"
                     >
                         <fa-FontAwesome
@@ -124,7 +124,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        :title="i18n.my.accountManage"
+                        :title="$t('my.accountManage')"
                         @click="goUrl('../login/accountManage')"
                         v-if="!this.validThirdPartySource()"
                     >
@@ -137,7 +137,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="i18n.my.set" @click="goUrl('set')">
+                    <u-cell-item :title="$t('my.set')" @click="goUrl('set')">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-cog"
@@ -151,7 +151,7 @@
             </div>
             <div class="version">
                 <div class="version-code" @click="versionCheck">
-                    {{ i18n.my.version }}：{{ version }}
+                    {{ $t('my.version') }}：{{ version }}
                     <u-badge
                         v-if="versionCode < parseInt(versionInfo.newVer)"
                         type="error"
@@ -188,7 +188,7 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.login.mnemonicLogin }}
+                    >{{ $t('login.mnemonicLogin') }}
                 </div>
                 <u-gap height="80"></u-gap>
                 <div class="item" @tap="goUrl('../login/mnemonic')">
@@ -200,7 +200,7 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.login.createAccount }}
+                    >{{ $t('login.createAccount') }}
                 </div>
             </div>
         </div>
@@ -241,16 +241,10 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.my);
+        this.uSetBarTitle(this.$t('titleBar.my'));
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount().then((res) => {
@@ -309,20 +303,8 @@ export default {
             if (this.versionCode < parseInt(this.versionInfo.newVer)) {
                 this.versionShow = true;
             } else {
-                this.uShowToast(this.i18n.my.versionTips);
+                this.uShowToast(this.$t('my.versionTips'));
             }
-        },
-        //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
-            }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
         },
     },
 };

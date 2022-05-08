@@ -1,7 +1,7 @@
 <template>
     <div class="user-info">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.infoEdit" v-show="!validThirdPartySource()">
+        <u-navbar :is-fixed="false" :title="$t('my.infoEdit')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -13,7 +13,7 @@
             </div>
         </u-navbar>
         <u-cell-group>
-            <u-cell-item :title="i18n.my.profile">
+            <u-cell-item :title="$t('my.profile')">
                 <image
                     :src="userInfo.portrait"
                     slot="right-icon"
@@ -21,15 +21,15 @@
                 ></image>
             </u-cell-item>
             <u-cell-item
-                :title="i18n.my.nickname"
-                :value="userInfo.nickname || i18n.my.cryptonym"
+                :title="$t('my.nickname')"
+                :value="userInfo.nickname || $t('my.cryptonym')"
                 @click="
                     nameShow = true;
                     nickname = userInfo.nickname;
                 "
             >
             </u-cell-item>
-            <u-cell-item :title="i18n.my.sex" :value="sexName" @click="sexShow = true">
+            <u-cell-item :title="$t('my.se')" :value="sexName" @click="sexShow = true">
             </u-cell-item>
         </u-cell-group>
         <u-popup
@@ -43,7 +43,7 @@
                     v-model="nickname"
                     type="text"
                     :border="true"
-                    :placeholder="i18n.my.enterNickname"
+                    :placeholder="$t('my.enterNickname')"
                     maxlength="15"
                 />
                 <u-gap :height="30"></u-gap>
@@ -51,7 +51,7 @@
                     type="primary"
                     @click="checkNickname"
                     :loading="btnLoading"
-                    >{{ i18n.my.send }}</u-button
+                    >{{ $t('my.send') }}</u-button
                 >
             </view>
         </u-popup>
@@ -71,7 +71,7 @@
                     type="primary"
                     @click="updateSex"
                     :loading="btnLoading"
-                    >{{ i18n.my.send }}</u-button
+                    >{{ $t('my.send') }}</u-button
                 >
             </view>
         </u-popup>
@@ -86,11 +86,10 @@ export default {
 
     },
     data() {
-        const { my } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             userInfo: {
                 userHead: "", //用户头像
-                nickname: my.cryptonym, //用户昵称
+                nickname: this.$t('my.cryptonym'), //用户昵称
                 sex: 2,
             },
             nameShow: false, //名字弹层
@@ -101,31 +100,25 @@ export default {
             sexList: [
                 {
                     name: 0,
-                    sexName: my.girl,
+                    sexName: this.$t('my.girl'),
                 },
                 {
                     name: 1,
-                    sexName: my.boy,
+                    sexName: this.$t('my.boy'),
                 },
                 {
                     name: 2,
-                    sexName: my.unknown,
+                    sexName: this.$t('my.unknown'),
                 },
             ],
         };
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.infoEdit);
+        this.uSetBarTitle(this.$t('titleBar.infoEdit'));
         this.getUserInfo();
     },
     mounted() {
@@ -158,11 +151,11 @@ export default {
                 if (res.code === 200) {
                     this.userInfo = res.data;
                     if (this.userInfo.sex === 0) {
-                        this.sexName = this.i18n.my.girl;
+                        this.sexName = this.$t('my.girl');
                     } else if (this.userInfo.sex === 1) {
-                        this.sexName = this.i18n.my.boy;
+                        this.sexName = this.$t('my.boy');
                     } else {
-                        this.sexName = this.i18n.my.unknown;
+                        this.sexName = this.$t('my.unknown');
                     }
                 }
                 this.loading = false;
@@ -176,7 +169,7 @@ export default {
                     if (res.code === 200) {
                         if (res.data.isNickname) {
                             uni.showToast({
-                                title: this.i18n.my.checkNickname,
+                                title: this.$t('my.checkNickname'),
                                 icon: "none",
                             });
                         } else {

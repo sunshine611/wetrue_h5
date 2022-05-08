@@ -15,7 +15,7 @@
             </u-navbar>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -90,9 +90,9 @@ export default {
     },
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.index);
+        this.uSetBarTitle(this.$t('titleBar.index'));
         setThirdPartySource(option);
-        this.cateInfo.label = this.i18n.home.newRelease;
+        this.cateInfo.label = this.$t('home.newRelease');
         this.getPostList();
         this.appVersion();
         this.getUnreadMsg();
@@ -126,29 +126,23 @@ export default {
         }, 500);
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
         //类别列表
         categoryList() {
             return [
                 {
-                    name: this.i18n.home.newRelease,
+                    name: this.$t('home.newRelease'),
                 },
                 {
-                    name: this.i18n.home.hotRecommend,
+                    name: this.$t('home.hotRecommend'),
                 },
                 {
-                    name: this.i18n.home.newPic,
+                    name: this.$t('home.newPic'),
                 },
                 {
-                    name: this.i18n.home.myFocus,
+                    name: this.$t('home.myFocus'),
                 },
                 {
-                    name: this.i18n.home.superHero,
+                    name: this.$t('home.superHero'),
                 },
             ];
         },

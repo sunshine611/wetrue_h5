@@ -52,15 +52,6 @@ export default {
             baseUrl: baseUrl
         };
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
-    watch: {},
     methods: {
         //点击头像
         handleView() {

@@ -52,30 +52,24 @@ export default {
         // #endif
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
         //显示更多操作
         moreList() {
             let moreList = [
                 {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
+                    text: this.$t('index.focus'),
+                    subText: this.$t('index.focusText'),
                 },
                 {
-                    text: this.i18n.index.complain,
-                    subText: this.i18n.index.complainText,
+                    text: this.$t('index.complain'),
+                    subText: this.$t('index.complainText'),
                 },
                 {
-                    text: this.i18n.index.blacklist,
-                    subText: this.i18n.index.blacklistText,
+                    text: this.$t('index.blacklist'),
+                    subText: this.$t('index.blacklistText'),
                 },
                 {
-                    text: this.i18n.index.aeternal,
-                    subText: this.i18n.index.aeternalText,
+                    text: this.$t('index.aeternal'),
+                    subText: this.$t('index.aeternalText'),
                 }
             ]
             if (this.validAdmin()){
@@ -94,13 +88,13 @@ export default {
             this.moreShow = true;
             if (this.topicInfo.isFocus) {
                 this.moreList[0] = {
-                    text: this.i18n.index.cancelFocus,
-                    subText: this.i18n.index.cancelFocusText,
+                    text: this.$t('index.cancelFocus'),
+                    subText: this.$t('index.cancelFocusText'),
                 };
             } else {
                 this.moreList[0] = {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
+                    text: this.$t('index.focus'),
+                    subText: this.$t('index.focusText'),
                 };
             }
         },
@@ -150,7 +144,7 @@ export default {
             let params = { hash: this.topicInfo.hash };
             this.$http.post("/Submit/complain", params).then((res) => {
                 if (res.code === 200) {
-                    this.uShowToast(this.i18n.components.complainSuccess);
+                    this.uShowToast(this.$t('components.complainSuccess'));
                 }
             });
         },
@@ -168,7 +162,7 @@ export default {
                     }
                 }
             }
-            this.uShowToast(this.i18n.components.blacklistSuccess);
+            this.uShowToast(this.$t('components.blacklistSuccess'));
         },
     },
 };

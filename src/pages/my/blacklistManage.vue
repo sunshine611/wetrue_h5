@@ -1,7 +1,7 @@
 <template>
     <div class="blacklist-manage">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.blacklistManage">
+        <u-navbar :is-fixed="false" :title="$t('my.blacklistManage')">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -49,7 +49,7 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.delete}}
+                                    {{ $t('login.delete') }}
                                 </div>
                             </div>
                         </div>
@@ -59,8 +59,9 @@
             <u-gap height="1080"></u-gap>
         </div>
         <u-modal
+            :show-title="false"
             v-model="showDelete"
-            :content="i18n.my.deleteBlacklist"
+            :content="$t('my.deleteBlacklist')"
             @confirm="deleteBlacklist"
             :show-cancel-button="true"
         ></u-modal>
@@ -95,16 +96,10 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.my.blacklistManage);
+        this.uSetBarTitle(this.$t('my.blacklistManage'));
     },
     activated() {},
     methods: {

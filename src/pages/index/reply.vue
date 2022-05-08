@@ -1,7 +1,7 @@
 <template>
     <view class="wrap">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.index.replyDetails" v-show="!validThirdPartySource()">
+        <u-navbar :is-fixed="false" :title="$t('index.replyDetails')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     class="mr-30"
@@ -66,7 +66,7 @@
         </view>
         <view class="all-reply">
             <view class="all-reply-top"
-                ><text class="mr-6">{{ i18n.index.allReply }}</text
+                ><text class="mr-6">{{ $t('index.allReply') }}</text
                 >{{ pageInfo.totalSize }}</view
             >
             <view class="item" v-for="(item, index) in replyList" :key="index">
@@ -200,18 +200,10 @@ export default {
     },
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.replyDetails);
+        this.uSetBarTitle(this.$t('titleBar.replyDetails'));
         this.hash = option.hash;
         this.getCommentInfo();
         this.getReply();
-    },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //获取评论详情

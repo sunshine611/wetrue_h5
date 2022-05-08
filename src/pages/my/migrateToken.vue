@@ -119,7 +119,7 @@
                 </div>
                 <u-gap :height="10"></u-gap>
                 <div class="warnning" v-show="warning.amount">
-                    {{ i18n.my.balanceErr }}
+                    {{ $t('my.balanceErr') }}
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">余额：{{ balanceFormat(wetBalance) }} WET</div>
@@ -164,12 +164,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度

@@ -14,7 +14,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    {{i18n.components.qrcode}}
+                    {{ $t('components.qrcode') }}
                 </div>
                 <u-gap :height="30"></u-gap>
                 <div class="qrcode">
@@ -26,7 +26,7 @@
                 <u-gap height="30"></u-gap>
                 <div class="token" @click="copy" ref="address">
                     <text>
-                        {{i18n.components.receivingAddress}}
+                        {{ $t('components.receivingAddress') }}
                     </text><u-gap :height="20"></u-gap>{{ address }}
                 </div>
             </div>
@@ -58,12 +58,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     watch: {
         value(val) {

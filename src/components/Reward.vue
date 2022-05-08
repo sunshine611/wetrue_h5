@@ -14,7 +14,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    {{i18n.components.reward}}
+                    {{ $t('components.reward') }}
                 </div>
                 <div class="tags">
                     <div
@@ -43,16 +43,16 @@
                 />
                 <u-gap height="16"></u-gap>
                 <div class="warnning" v-show="warning.amount">
-                    {{ i18n.my.balanceErr }}
+                    {{ $t('my.balanceErr') }}
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">
-                        {{ i18n.my.addressBalance + "：" + wttBalance + "WTT" }}
+                        {{ $t('my.addressBalance') + ": " + wttBalance + "WTT" }}
                     </div>
                 </div>
                 <u-gap height="50"></u-gap>
                 <u-button type="primary" @click="reward" :loading="btnLoading"
-                    >{{i18n.components.reward}}</u-button
+                    >{{ $t('components.reward') }}</u-button
                 >
             </div>
         </u-popup>
@@ -122,12 +122,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getConfigInfo();
@@ -165,7 +159,7 @@ export default {
         //打赏
         async reward() {
             if (this.token === this.postInfo.users.userAddress) {
-                this.uShowToast(this.i18n.components.rewardTips);
+                this.uShowToast(this.$t('components.rewardTips'));
                 return;
             }
             if (
@@ -190,7 +184,7 @@ export default {
                     amount: "",
                 };
                 this.showModal = false;
-                this.uShowToast(this.i18n.components.rewardSuccess);
+                this.uShowToast(this.$t('components.rewardSuccess'));
                 this.getWttBalance();
             }
             this.btnLoading = false;

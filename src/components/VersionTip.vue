@@ -15,7 +15,7 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    {{ i18n.components.wetrueUpdate }}
+                    {{ $t('components.wetrueUpdate') }}
                 </div>
                 <div class="content mb-40">
                     <mp-html :content="versionInfo.content" :selectable="true"/>
@@ -26,10 +26,10 @@
                     shape="circle"
                     @click="updateApp"
                 >
-                {{ i18n.components.appUpdate }}
+                {{ $t('components.appUpdate') }}
                 </u-button>
                 <div class="version-info">
-                    {{ i18n.components.currentVersion + ": " + version + "," + i18n.components.newVersion + ": " + versionInfo.newCode }}
+                    {{ $t('components.currentVersion') + ": " + version + "," + $t('components.newVersion') + ": " + versionInfo.newCode }}
                 </div>
             </div>
         </u-popup>
@@ -62,12 +62,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     watch: {
         value(val) {

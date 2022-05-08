@@ -3,26 +3,26 @@
 		<div class="login-box">
 			<div class="title">
 				<u-image width="92rpx" height="46rpx" src="../../static/logo.png" class="inline mr-5"></u-image>
-				{{i18n.login.createAccount}}
+				{{ $t('titleBar.createAccount') }}
 			</div>
 			<u-gap height="60"></u-gap>
 			<div class="form">
-				<div class="form-title">{{i18n.login.createAccount}}</div>
+				<div class="form-title">{{ $t('login.createAccount') }}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.address" type="textarea" class="address" :clearable="false" height="120"
 					:custom-style="{padding:'15rpx'}" disabled />
 				<u-gap height="30"></u-gap>
-				<div class="form-title">{{i18n.MnemonicTips}}</div>
+				<div class="form-title">{{ $t('MnemonicTips') }}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.mnemonic" type="textarea" class="textarea" :clearable="false" height="160" disabled
 					:custom-style="{padding:'15rpx',wordWrap:'break-word',wordBreak:'normal'}" />
 			</div>
 			<u-gap height="40"></u-gap>
-			<u-button size="default" type="primary" shape="circle" ripple @tap="createAccount" :throttle-time="200">{{i18n.login.rebuild}}</u-button>
+			<u-button size="default" type="primary" shape="circle" ripple @tap="createAccount" :throttle-time="200">{{ $t('login.rebuild') }}</u-button>
 			<u-gap height="25"></u-gap>
 			<div class="clearfix">
-				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{i18n.home.index}}</div>
-				<div class="pull-right mnemonic" @tap="goUrl('login')">{{i18n.login.mnemonicLogin}}</div>
+				<div class="pull-left mnemonic" @tap="reLaunchUrl('../index/index')">{{ $t('home.index') }}</div>
+				<div class="pull-right mnemonic" @tap="goUrl('login')">{{ $t('login.mnemonicLogin') }}</div>
 			</div>
 		</div>
 	</view>
@@ -46,11 +46,6 @@ export default {
 		this.createAccount();
 	},
 	computed: {
-		i18n: {
-			get() {
-				return this.$_i18n.messages[this.$_i18n.locale];
-			},
-		},
 	},
 	methods: {
 		createAccount() {

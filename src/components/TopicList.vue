@@ -31,7 +31,7 @@
                         </div>
                         <div class="time">
                             <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ i18n.index.source + item.source + '-' + item.chainId }}
+                            >{{ $t('index.source') + item.source + '-' + item.chainId }}
                         </div>
                     </div>
                 </div>
@@ -162,14 +162,6 @@ export default {
             }
         };
         // #endif
-    },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     watch: {
         postList: {

@@ -12,7 +12,7 @@
             </fa-FontAwesome>
         </div>
         <div :class="['name', userInfo.isAuth ? 'auth' : '']">
-            {{ userInfo.nickname || i18n.my.cryptonym }}
+            {{ userInfo.nickname || $t('my.cryptonym') }}
         </div>
         <text class="userid">ID:{{ userInfo.userAddress.slice(-4)  }}</text>
         <text class="userid" v-show="userInfo.defaultAens">AENS:{{ userInfo.defaultAens }}</text>
@@ -29,16 +29,6 @@ export default {
     data() {
         return {};
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
-    watch: {},
-    methods: {},
 };
 </script>
 <style lang="scss" scoped>

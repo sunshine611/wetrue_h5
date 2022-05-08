@@ -16,7 +16,7 @@
             class="panel"
             @click="goChatRoom"
         >
-        登陆聊天室
+        {{ $t('chat.loginChatRoom')}}
         </u-button>
         <u-gap height="1280"></u-gap>
     </view>
@@ -42,17 +42,11 @@ export default {
     },
      computed: {
          ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.chat);
-        this.tabList = [{name: "聊天室"}];
+        this.uSetBarTitle(this.$t('titleBar.chatRoom'));
+        this.tabList = [{ name: this.$t('titleBar.chatRoom') }];
         this.getUserInfo();
     },
     methods: {

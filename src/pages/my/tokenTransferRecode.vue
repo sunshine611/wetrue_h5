@@ -1,7 +1,7 @@
 <template>
     <div class="transfer-record">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.transactions" v-show="!validThirdPartySource()">
+        <u-navbar :is-fixed="false" :title="$t('my.transactions')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -115,16 +115,10 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.transactions);
+        this.uSetBarTitle(this.$t('titleBar.transactions'));
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;
         this.contract = option.contract;

@@ -35,22 +35,21 @@ const mixins = {
         }
     },
     onShow() {
-        const { tabBar } = this.$_i18n.messages[this.$_i18n.locale];
         uni.setTabBarItem({
             index: 0,
-            text: tabBar.index,
+            text: this.$t('tabBar.index'),
         });
         uni.setTabBarItem({
             index: 1,
-            text: tabBar.message,
+            text: this.$t('tabBar.message'),
         });
         uni.setTabBarItem({
             index: 2,
-            text: tabBar.chat,
+            text: this.$t('tabBar.chat'),
         });
         uni.setTabBarItem({
             index: 3,
-            text: tabBar.my,
+            text: this.$t('tabBar.my'),
         });
     },
     methods: {
@@ -267,7 +266,7 @@ const mixins = {
             let clipboard = new Clipboard(divId || "#copy", {
                 text: (trigger) => {
                     uni.showToast({
-                        title: this.i18n.my.copySuccess,
+                        title: this.$t('my.copySuccess'),
                         icon: "none",
                         duration: 600,
                     });
@@ -280,7 +279,7 @@ const mixins = {
                 data: content,
                 success: function () {
                     uni.showToast({
-                        title: this.i18n.my.copySuccess,
+                        title: this.$t('my.copySuccess'),
                         icon: "none",
                         duration: 600,
                     });
@@ -290,7 +289,7 @@ const mixins = {
         },
         //提交hash到WeTrue
         postHashToWeTrue(res, opt) {
-            this.uShowLoading(this.i18n.mixins.radio);
+            this.uShowLoading(this.$t('mixins.radio'));
             if (opt) {
                 return Promise.resolve(
                     this.$http.post(
@@ -370,7 +369,7 @@ const mixins = {
                 });
                 store.commit("user/SET_CLIENT", client);
             } catch (error) {
-                this.uShowToast(this.i18n.mixins.connectionFail);
+                this.uShowToast(this.$t('mixins.connectionFail'));
             }
         },
         //判断是否已连接AE网络
@@ -393,7 +392,7 @@ const mixins = {
                     account = res;
                 });
                 if (account < 1) {
-                    this.uShowToast(this.i18n.mixins.lowBalance);
+                    this.uShowToast(this.$t('mixins.lowBalance'));
                     return;
                 }
                 let amount, content, client, source;
@@ -465,7 +464,7 @@ const mixins = {
                     };
                 }
                 if (this.balanceFormat(amount) > 10) {
-                    this.uShowToast(this.i18n.mixins.amountsAbnormal);
+                    this.uShowToast(this.$t('mixins.amountsAbnormal'));
                     return;
                 }
                 if (thirdPartySource) {
@@ -480,7 +479,7 @@ const mixins = {
                     return thirdPartyPost(postPayload);
                 } else {
                     //WeTrue上链
-                    this.uShowLoading(this.i18n.mixins.inChain);
+                    this.uShowLoading(this.$t('mixins.inChain'));
                     client = await this.client();
                     let res = await client.spend(
                         amount,
@@ -492,21 +491,21 @@ const mixins = {
                     return await this.postHashToWeTrue(res, opt);
                 }
             } catch (err) {
-                this.uShowToast(this.i18n.mixins.fail);
+                this.uShowToast(this.$t('mixins.fail'));
             }
         },
         //合约转账
         async contractTransfer(contractId, receiveId, amount ,payload=false) {
             try {
-                this.uShowLoading(this.i18n.mixins.readySend)
+                this.uShowLoading(this.$t('mixins.readySend'))
                 let client = await this.client();
-                this.uShowLoading(this.i18n.mixins.compileContract)
+                this.uShowLoading(this.$t('mixins.compileContract'))
                 const contract = await client.getContractInstance({
                     source: Fungible_Token_Full_Interface,
                     contractAddress: contractId,
                     gas: 36969
                 })
-                this.uShowLoading(this.i18n.mixins.executeContract)
+                this.uShowLoading(this.$t('mixins.executeContract'))
                 let callResult;
                 if(payload) {
                     const configInfo = getStore("configInfo");
@@ -527,13 +526,13 @@ const mixins = {
                 return callResult;
             } catch (err) {
                 console.log(err)
-                this.uShowToast(this.i18n.mixins.fail);
+                this.uShowToast(this.$t('mixins.fail'));
             }
         },
         //迁移兑换 (迁移合约, 旧Token, 接收地址, 数量)
         async contractMigrate(migrateContractId, migrateTokenId, receiveId, amount) {
             uni.showLoading({
-                title: this.i18n.mixins.readySend,
+                title: this.$t('mixins.readySend'),
             });
             let client = await this.client();
             this.uShowLoading(`编译授权...`)
@@ -566,11 +565,11 @@ const mixins = {
         //Superhero_Tipping
         async contractShTip(payload) {
             uni.showLoading({
-                title: this.i18n.mixins.readySend,
+                title: this.$t('mixins.readySend'),
             });
             let client = await this.client();
             uni.showLoading({
-                title: this.i18n.mixins.compileContract,
+                title: this.$t('mixins.compileContract'),
             });
             const tippingCompiler = await client.getContractInstance(
                 {source: Superhero_Tipping_v3_Interface, contractAddress: shTipContractId, gas: 36969}
@@ -583,7 +582,7 @@ const mixins = {
                 if (callresult.hash) res.hash = callresult.hash
                 return res;
             } catch(e) {
-                this.uShowToast(this.i18n.mixins.fail);
+                this.uShowToast(this.$t('mixins.fail'));
             }
         },
         //苹果刘海屏顶部兼容性调整

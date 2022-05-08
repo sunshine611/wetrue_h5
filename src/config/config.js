@@ -1,8 +1,8 @@
-export const version = '2.7.5'
+export const version = '2.7.6'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const env_net = 'cc';
+const env_net = 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'

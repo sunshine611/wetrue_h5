@@ -26,14 +26,6 @@ export default {
         return {
         };
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
     watch: {
     },
     methods: {

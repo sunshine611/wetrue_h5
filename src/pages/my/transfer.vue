@@ -14,7 +14,7 @@
         </u-navbar>
         <u-gap height="20"></u-gap>
         <div class="form">
-            <div class="form-title">{{ i18n.my.recipient }}：</div>
+            <div class="form-title">{{ $t('my.recipient') }}：</div>
             <u-gap height="14"></u-gap>
             <u-input
                 v-model="form.address"
@@ -27,12 +27,12 @@
                 maxlength="100"
             />
             <div class="warnning" v-show="warning.address">
-                {{ i18n.my.addressErr }}
+                {{ $t('my.addressErr') }}
             </div>
         </div>
         <u-gap height="20"></u-gap>
         <div class="form">
-            <div class="form-title">{{ i18n.my.amount }}：</div>
+            <div class="form-title">{{ $t('my.amount') }}：</div>
             <u-gap height="14"></u-gap>
             <u-input
                 v-model="form.money"
@@ -44,33 +44,33 @@
                 maxlength="20"
             />
             <div class="warnning" v-show="warning.money">
-                {{ i18n.my.balanceErr }}
+                {{ $t('my.balanceErr') }}
             </div>
             <u-gap height="18"></u-gap>
             <div class="clearfix">
                 <div class="pull-right">
                     {{
-                        i18n.my.addressBalance +
-                            ": " +
-                            (tokenInfo.balance || aeBalance) +
-                            " " +
-                            (tokenInfo.tokenName || "AE")
+                        $t('my.addressBalance') +
+                        ": " +
+                        (tokenInfo.balance || aeBalance) +
+                        " " +
+                        (tokenInfo.tokenName || "AE")
                     }}
                 </div>
             </div>
         </div>
         <u-gap height="60"></u-gap>
         <div class="ok-btn">
-            <u-button type="primary" @click="transfer" :loading="btnLoading">{{
-                i18n.my.transfer
-            }}</u-button>
+            <u-button type="primary" @click="transfer" :loading="btnLoading">
+                {{ $t('my.transfer') }}
+            </u-button>
         </div>
         <u-modal
-            :title="i18n.my.success"
+            :title="$t('my.success')"
             v-model="hashShow"
             :show-cancel-button="true"
-            :cancel-text="i18n.my.close"
-            :confirm-text="i18n.my.check"
+            :cancel-text="$t('my.close')"
+            :confirm-text="$t('my.check')"
             @confirm="viewHash"
         >
             <view class="slot-content"> {{ result.hash }} </view>
@@ -86,14 +86,14 @@
                     v-model="form.password"
                     type="text"
                     :border="true"
-                    :placeholder="`ak_...${token.slice(-4)} ` + i18n.login.securePassword"
+                    :placeholder="`ak_...${token.slice(-4)} ` + $t('login.securePassword')"
                 />
                 <u-gap :height="30"></u-gap>
                 <u-button
                     type="primary"
                     @click="startTransfer"
                     :loading="btnLoading"
-                    >{{ i18n.my.send }}</u-button
+                    >{{ $t('my.send') }}</u-button
                 >
             </view>
         </u-popup>
@@ -133,12 +133,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
@@ -149,11 +143,11 @@ export default {
                 contractId: option.contractId,
                 balance: this.balanceFormat(option.balance),
             };
-            this.title = `${this.tokenInfo.tokenName + " " +this.i18n.my.transfer}`;
+            this.title = `${this.tokenInfo.tokenName + " " +this.$t('my.transfer')}`;
             this.getWttBalance()
         } else {
             this.getAccount();
-            this.title = `AE ${this.i18n.my.transfer}`;
+            this.title = `AE ${this.$t('my.transfer')}`;
         }
         this.uSetBarTitle(this.title);
     },
@@ -214,7 +208,7 @@ export default {
                 );
                 if (!!secretKey) {
                     uni.showLoading({
-                        title: this.i18n.my.loading,
+                        title: this.$t('my.loading'),
                     });
                     this.btnLoading = true;
                     
@@ -229,7 +223,7 @@ export default {
                             uni.hideLoading();
                             uni.showToast({
                                 icon: "success",
-                                title: this.i18n.my.success,
+                                title: this.$t('my.success'),
                             });
                             this.passwordShow = false;
                             this.btnLoading = false;
@@ -241,13 +235,13 @@ export default {
                             };
                         }
                     } catch (err) {
-                        this.uShowToast(this.i18n.my.connectionFail);
+                        this.uShowToast(this.$t('my.connectionFail'));
                         this.hideLoading = false;
                         this.btnLoading = false;
                     }
                 }
             } catch (err) {
-                this.uShowToast(this.i18n.my.passwordErr);
+                this.uShowToast(this.$t('my.passwordErr'));
                 this.form.password = "";
                 this.btnLoading = false;
             }

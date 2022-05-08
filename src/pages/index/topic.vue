@@ -24,16 +24,16 @@
                 </div>
             </div>
             <div class="topic-data">
-                <div>{{ i18n.index.views + '：' + postInfo.read_sum }}</div>
-                <div>{{ i18n.index.discuss + '：' + postInfo.total }}</div>
+                <div>{{ $t('index.views') + '：' + postInfo.read_sum }}</div>
+                <div>{{ $t('index.discuss') + '：' + postInfo.total }}</div>
                 <div 
                     @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.sender_id)"
-                >{{ i18n.index.founder + '：' + postInfo.nickname }}</div>
+                >{{ $t('index.founder') + '：' + postInfo.nickname }}</div>
             </div>
         </div>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -85,11 +85,11 @@ export default {
     },
     onLoad(option) {
         this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(
-            `${option.keyword 
+        this.uSetBarTitle(`${
+            option.keyword 
             + " "
-            + this.i18n.titleBar.topic}`
-        );
+            + this.$t('titleBar.topic')
+        }`);
         this.keyword = option.keyword;
         this.getTopicInfo();
         this.getPostList();
@@ -100,12 +100,6 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //获取话题帖子列表

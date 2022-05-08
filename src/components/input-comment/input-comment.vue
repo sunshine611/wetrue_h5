@@ -8,7 +8,7 @@
 						:maxlength="1000" />
 				</view>
 				<div class="comment-submit">
-					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">{{i18n.components.send}}</u-button>
+					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">{{ $t('components.send') }}</u-button>
 				</div>
 			</view>
 		</view>
@@ -34,18 +34,10 @@
 				btnLoading: false,
 			}
 		},
-		computed: {
-			//国际化
-			i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-		},
 		methods: {
 			submitComment() {
 				if (!this.content) {
-					this.uShowToast(this.i18n.components.enterContent);
+					this.uShowToast(this.$t('components.enterContent'));
 					return false;
 				}
 				this.btnLoading = true;

@@ -14,6 +14,7 @@ export default {
 		loginWeTrue:'Login WeTrue',
 		myWallet:'My Wallet',
 		transactions:'Transactions',
+		chatRoom:'Chat Room',
 		set:'Seting'
 	},
 	tabBar: {
@@ -35,13 +36,15 @@ export default {
 		loginSuccess:'Login Success',
 		passwordErr:'Error Password',
 		createAccount: 'Generate New Wallet',
+		importMnemonic: 'Import Mnemonic',
 		mnemonicLogin:'Retrieve Existing Account',
 		rebuild:'Rebuild',
 		mnemonicWarning:"Account not found. Please check your seed phrase.",
-		passWarning:"The secure password requires 6-20 characters",
+		passWarning:'The secure password requires {0} characters',
 		input:'Input',
 		verify:'Verify',
 		securePassword:'Secure Password',
+		setPassword:'Seting Password',
 		logoutCurrent:'Logout Current Account',
 		accountManage:'Account Manage',
 		copySuccess:'Copy Success',
@@ -126,6 +129,7 @@ export default {
 		pleaseLogin:'Please Login',
 		theReply:' The Reply',
 		wetrueTips: "Recording your willings with WeTrue...",
+		postShTips: "Post To SuperHero Tips...",
 		allReply: "All Reply",
 		send:'Send',
 		source:'Source:',
@@ -139,6 +143,10 @@ export default {
 		thirdPartyNotOpen:'Third party sources are not open',
 		blacklist:'Blacklist',
 		blacklistText:'Move to blacklist, ignore his posts',
+	},
+	chat:{
+		loginChatRoom: 'Login Chat Room',
+		send: 'Send',
 	},
 	message:{
 		dynamic:'Dynamic',

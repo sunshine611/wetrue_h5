@@ -93,12 +93,6 @@ export default {
 	},
 	computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
 	methods: {
 		//发送消息
