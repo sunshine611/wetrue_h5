@@ -1,4 +1,4 @@
-import { getStore, setStore } from "@/util/service";
+import { getStore } from "@/util/service";
 import store from "@/store";
 import {
     version,
@@ -14,7 +14,6 @@ import {
     MemoryAccount,
     AmountFormatter,
 } from "@aeternity/aepp-sdk/es/index";
-import shajs from 'sha.js'
 import Fungible_Token_Full_Interface from "@/util/contracts/fungible-token-full-interface.aes";
 import Migrate_Token_Interface from "@/util/contracts/MigrateTokenInterface.aes";
 import Superhero_Tipping_v3_Interface from "@/util/contracts/SuperheroTipping_v3_Interface.aes";
@@ -24,16 +23,10 @@ import Clipboard from "clipboard";
 import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
 import queryParams from "uview-ui/libs/function/queryParams";
-import moment from "moment";
 
 const mixins = {
     data() {
         return {};
-    },
-    onLoad() {
-        if (!getStore("language")) {
-            setStore("language", "en");
-        }
     },
     onShow() {
         uni.setTabBarItem({
@@ -54,69 +47,6 @@ const mixins = {
         });
     },
     methods: {
-        uShowToast(title, icon, time) {
-            uni.showToast({
-                icon: icon == null ? "none" : icon,
-                title: title,
-                duration: time || 2000,
-            });
-        },
-        uHideToast() {
-            uni.hideToast();
-        },
-        uShowLoading(title) {
-            uni.showLoading({
-                title: title,
-            });
-        },
-        uHideLoading() {
-            uni.hideLoading();
-        },
-        uShowModel(title, content, callback) {
-            uni.showModal({
-                title: title,
-                content: content,
-                success: function (res) {
-                    if (res.confirm) {
-                        callback();
-                        // console.log('用户点击确定');
-                    } else if (res.cancel) {
-                        // console.log('用户点击取消');
-                    }
-                },
-            });
-        },
-        uSetBarTitle(title) {
-            uni.setNavigationBarTitle({
-                title: title,
-            });
-        },
-        goUrl(url) {
-            uni.navigateTo({
-                url: url,
-            });
-        },
-        redirectUrl(url) {
-            uni.redirectTo({
-                url: url,
-            });
-        },
-        reLaunchUrl(url) {
-            uni.reLaunch({
-                url: url,
-            });
-        },
-        switchTabUrl(url) {
-            uni.switchTab({
-                url: url,
-            });
-        },
-        goBackUrl(delta) {
-            // let current = getCurrentPages();
-            uni.navigateBack({
-                delta: delta,
-            });
-        },
         //获取未读消息数
         getUnreadMsg() {
             this.$http.post("/Message/stateSize").then((res) => {
@@ -161,28 +91,6 @@ const mixins = {
                     store.commit("user/SET_CONFIGINFO", res.data);
                 }
             });
-        },
-        //加密密码
-        cryptoPassword(password) {
-            let first,
-                second,
-                third,
-                fourth,
-                fifth = "";
-            first = shajs('sha256').update("WeTrue" + password).digest('hex');
-            second = "";
-            for (let i = 0; i < first.length; i++) {
-                second += first[i];
-                i++;
-            }
-            third = shajs('sha256').update(second).digest('hex');
-            fourth = "";
-            for (let i = 0; i < third.length; i++) {
-                i++;
-                fourth += third[i];
-            }
-            fifth = new Buffer(fourth).toString("base64");
-            return fifth;
         },
         //keystore通过密码转换成私钥
         keystoreToSecretKey(password) {
@@ -586,42 +494,7 @@ const mixins = {
                 this.uShowToast(this.$t('mixins.fail'));
             }
         },
-        //苹果刘海屏顶部兼容性调整
-        iphoneTop() {
-            let iphones = ["iPhone X","iPhone Xs","iPhone XS Max","iPhone Xr","iPhone 11","iPhone 11 Pro","iPhone 11 Pro Max"];
-            let result;
-            uni.getSystemInfo({
-                success(res) {
-                    if (iphones.includes(res.model)) {
-                        result = true;
-                    } else {
-                        result = false;
-                    }
-                },
-            });
-            return result;
-        },
-        //获取状态栏高度
-        getSystemStatusBarHeight(){
-             let _that = this;
-             uni.getSystemInfo({
-                 success(e) {
-                    _that.statusBarHeight = e.statusBarHeight;
-                 }
-             })
-         },
-         //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
-            }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
-        },
+
     },
 };
 const mixinsMobile = {
