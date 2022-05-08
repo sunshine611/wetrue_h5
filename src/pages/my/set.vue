@@ -71,8 +71,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { getStore, setStore } from "@/util/service";
-import moment from "moment";
+import { getStore } from "@/util/service";
 export default {
     components: {},
     data() {
@@ -92,18 +91,7 @@ export default {
         ...mapGetters(["token"]),
     },
     methods: {
-        //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
-            }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
-        },
+
     },
 };
 </script>

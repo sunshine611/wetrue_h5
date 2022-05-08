@@ -24,6 +24,7 @@ import Clipboard from "clipboard";
 import Backend from "@/util/backend";
 import { thirdPartyPost } from "@/util/thirdPartySource/thirdPartyPost";
 import queryParams from "uview-ui/libs/function/queryParams";
+import moment from "moment";
 
 const mixins = {
     data() {
@@ -609,6 +610,18 @@ const mixins = {
                  }
              })
          },
+         //切换语言
+        selectLanguage() {
+            if (getStore("language") === "zh-cn") {
+                setStore("language", "en");
+            } else if (getStore("language") === "en") {
+                setStore("language", "zh-cn");
+            }
+            //控制语言显示
+            this.language = getStore("language");
+            moment.locale(this.language);
+            this.$_i18n.locale = this.language;
+        },
     },
 };
 const mixinsMobile = {

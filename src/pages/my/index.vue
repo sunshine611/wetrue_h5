@@ -219,8 +219,8 @@ import { version } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
-import { getStore, setStore } from "@/util/service";
-import moment from "moment";
+import { getStore } from "@/util/service";
+
 export default {
     components: {
         HeadImg,
