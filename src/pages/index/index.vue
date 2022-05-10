@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="`height:${statusBarHeight}px`"></view>
             <u-navbar class="nav" :is-fixed="false" :is-back="false">
                 <u-tabs
                     class="nav-tab"
@@ -80,7 +80,9 @@ export default {
         this.getUnreadMsg();
         setTimeout(function () {
             uni.stopPullDownRefresh();
+            this.newContentCount();
         }, 500);
+        this.getSystemStatusBarHeight(); //状态栏高度
     },
     //上拉加载
     onReachBottom() {
@@ -88,8 +90,12 @@ export default {
         this.getPostList();
         this.getUnreadMsg();
     },
+    onShow() {
+        setTimeout(() => {
+            if (this.current === 0) this.getNewCount();
+        }, 1000);
+    },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.index'));
         setThirdPartySource(option);
         this.cateInfo.label = this.$t('home.newRelease');
@@ -210,21 +216,55 @@ export default {
             }; //页码信息
             this.getPostList();
         },
-        //新未读帖
+        //未读新帖标记
         newContentCount() {
-            let oldCount = this.pageInfo.totalSize
+            const oldCount = this.pageInfo.totalSize
             if (this.current === 0) {
                 if (this.newCount > oldCount) {
+                    let size = this.newCount - oldCount;
                     uni.setTabBarBadge({
                         index: 0,
-                        text: `${this.newCount - oldCount}`,
+                        text: `${size}`,
                     });
+                    const url = "/Content/list";
+                    let params = {page: 1, size: size};
+                    this.getNewPost(url, params);
                 } else {
                     uni.hideTabBarRedDot({
                         index: 0,
                     });
                 }
             }
+        },
+        getNewCount() {
+            const url = "/Content/list";
+            const params = {page: 1, size: 1};
+            this.$http
+                .post(url, params)
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.newCount = parseInt(res.data.totalPage);
+                        this.newContentCount();
+                    }
+                });
+        },
+        getNewPost(url, params) {
+            this.$http
+                .post(url, params)
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        res.data.data.map((item) => {
+                            if (this.postList[0].hash !== item.hash ) {
+                                this.postList.unshift(this.itemListMap(item));
+                                this.postList.pop();
+                            }
+                        });
+                        uni.hideTabBarRedDot({
+                            index: 0,
+                        });
+                    }
+                });
         },
         //获取服务端版本信息
         appVersion() {

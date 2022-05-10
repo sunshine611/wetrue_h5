@@ -60,7 +60,6 @@ export default {
         this.getUserList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "focus") {
             this.type = "focus";
             this.title = this.$t('my.myFocus');

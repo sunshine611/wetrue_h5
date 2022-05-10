@@ -7,6 +7,7 @@ const mixins = {
         if (!getStore("language")) {
             setStore("language", "en");
         }
+        this.getSystemStatusBarHeight(); //状态栏高度
     },
     methods: {
         //加密密码

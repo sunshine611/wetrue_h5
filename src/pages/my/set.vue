@@ -83,8 +83,7 @@ export default {
     onPullDownRefresh() {},
     //上拉加载
     onReachBottom() {},
-    onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
+    onLoad() {
         this.uSetBarTitle(this.$t('titleBar.set'));
     },
     computed: {

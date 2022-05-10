@@ -262,7 +262,6 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.getUserInfo();
         this.getMappingInfo();
         this.getBalance();

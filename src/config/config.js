@@ -2,7 +2,7 @@ export const version = '2.7.6'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const env_net = 'cc';
+const env_net = 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
@@ -27,7 +27,7 @@ if (env_net == 'io') {
     chatapi     = 'http://192.168.1.111:50001'
     aeMdw       = 'https://explorer.testnet.aeternity.io/mdw'
     aeknow      = 'http://192.168.1.120:1807/Aeknow'
-    compilerUrl = 'https://compiler.aechina.io'
+    compilerUrl = 'https://compiler.wetrue.cc'
 }
 
 export const chatRommKeyIv = { key: '20200425FEAACD66', iv: '66DCAAEF20200425' }

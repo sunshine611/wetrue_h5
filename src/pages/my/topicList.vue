@@ -63,7 +63,6 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "myTopic") {
             this.type = "myTopic";
             this.title = this.$t('my.myTopic');

@@ -135,7 +135,6 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.isPassword();
         if (!!option.contractId) {
             this.tokenInfo = {

@@ -281,7 +281,6 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.contentDetails'));
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();

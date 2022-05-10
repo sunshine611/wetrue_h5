@@ -180,7 +180,6 @@ export default {
         this.getMsgList();
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.message'));
         this.getMsgList();
         this.getVersionInfo();

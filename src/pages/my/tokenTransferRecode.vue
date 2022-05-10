@@ -117,7 +117,6 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.transactions'));
         this.userAddress = option.userAddress;
         this.tokenName = option.tokenName;

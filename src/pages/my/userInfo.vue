@@ -159,7 +159,6 @@ export default {
         }
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.userInfo'));
         this.userAddress = option.userAddress;
         this.getUserInfo();

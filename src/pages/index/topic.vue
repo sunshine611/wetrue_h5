@@ -84,7 +84,6 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(`${
             option.keyword 
             + " "

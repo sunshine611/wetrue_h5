@@ -199,7 +199,6 @@ export default {
         this.getReply();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.replyDetails'));
         this.hash = option.hash;
         this.getCommentInfo();

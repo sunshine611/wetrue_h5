@@ -61,7 +61,6 @@ export default {
         };
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('titleBar.sendContent'));
         this.isPassword();
         if (!!option.topic) {

@@ -98,7 +98,6 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.uSetBarTitle(this.$t('my.blacklistManage'));
     },
     activated() {},

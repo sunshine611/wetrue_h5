@@ -166,7 +166,6 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.getConfigInfo();
         this.getMigrateWttBalance();
         this.getWttBalance();
