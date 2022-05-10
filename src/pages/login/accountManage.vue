@@ -175,6 +175,7 @@ export default {
         deleteAccount() {
             this.$store.dispatch("user/deleteKeystoreArr", this.currentAddress);
             this.keystoreArr = getStore("keystoreArr");
+            if (this.keystoreArr.length !== 0) this.switchAccount(this.keystoreArr[0].public_key);
             this.isLogin();
         },
         //判断账户是否为0
