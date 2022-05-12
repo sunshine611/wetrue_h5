@@ -5,7 +5,7 @@
     >
     <div class="auth-sign" v-if="userInfo.isAuth">
             <fa-FontAwesome
-                type="fas fa-user-secret"
+                type="fas fa-user-shield"
                 size="28"
                 color="#2979FF"
             >

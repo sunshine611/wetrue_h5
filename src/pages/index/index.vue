@@ -44,7 +44,7 @@ export default {
     components: {
         TopicList,
         VersionTip,
-        PostTopicButton,
+        PostTopicButton
     },
     data() {
         return {
@@ -116,8 +116,10 @@ export default {
         //监听错误
 		socket.on('error', (msg) => this.uShowToast(msg))
     },
-    activated() {
-        this.getUnreadMsg();
+    mounted() {
+        setTimeout(() => {
+            this.getSystemStatusBarHeight(); //状态栏高度
+        }, 1000);
     },
     onTabItemTap() {
         if (this.tabClick) {

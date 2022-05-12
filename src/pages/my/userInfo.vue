@@ -125,7 +125,7 @@ export default {
             current: 0, //tab当前选项
             tabList: [
                 {
-                    name: this.$t('my.my'),
+                    name: this.$t('my.topic'),
                 },
                 {
                     name: this.$t('my.star'),

@@ -8,7 +8,7 @@
                     class="mr-30"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('../index/index')"
+                    @click="reLaunchUrl('../../index/index')"
                 ></u-icon>
             </div>
         </u-navbar>

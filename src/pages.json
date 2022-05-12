@@ -105,7 +105,7 @@
       }
     },
     {
-      "path": "pages/my/infoEdit",
+      "path": "pages/my/seting/infoEdit",
       "style": {
         "app-plus": {
           "titleNView": false
@@ -115,12 +115,22 @@
       }
     },
     {
-      "path": "pages/my/blacklistManage", //黑名单管理
+      "path": "pages/my/seting/blacklistManage", //黑名单管理
       "style": {
         "app-plus": {
           "titleNView": false
         },
         "navigationBarTitleText": "Blacklist Manage",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/seting/openVip", //Vip开通
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "Open Vip",
         "enablePullDownRefresh": false
       }
     },

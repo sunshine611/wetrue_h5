@@ -190,7 +190,7 @@ export default {
                 this.wetBalance = res.data.amount;
             });
         },
-        //获取WET余额
+        //获取WTT余额
         getWttBalance() {
             http.get(
                 Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
@@ -262,7 +262,7 @@ page {
     background-color: #000;
 }
 .migrate-token {
-    background: url("@/static/migrate_bg.jpg") no-repeat;
+    background: url("@/static/migrate_bg.png") no-repeat;
     background-size: 100%;
     display: flex;
     justify-content: center;

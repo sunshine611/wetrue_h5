@@ -8,7 +8,7 @@
                     class="mr-30"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('../index/index')"
+                    @click="reLaunchUrl('../../index/index')"
                 ></u-icon>
             </div>
         </u-navbar>
@@ -29,8 +29,17 @@
                 "
             >
             </u-cell-item>
-            <u-cell-item :title="$t('my.se')" :value="sexName" @click="sexShow = true">
+            <u-cell-item 
+                :title="$t('my.sex')"
+                :value="sexName"
+                @click="sexShow = true">
             </u-cell-item>
+            <u-cell-item 
+                title="VIP"
+                :value="isVip"
+                :arrow="!userInfo.isVip"
+                @click="reLaunchUrl('./openVip')"
+            ></u-cell-item>
         </u-cell-group>
         <u-popup
             v-model="nameShow"
@@ -96,6 +105,7 @@ export default {
             sexShow: false, //性别弹层
             nickname: "", //昵称
             sexName: "", //性别
+            isVip: "", //VIP
             btnLoading: false,
             sexList: [
                 {
@@ -155,6 +165,12 @@ export default {
                         this.sexName = this.$t('my.boy');
                     } else {
                         this.sexName = this.$t('my.unknown');
+                    }
+
+                    if (this.userInfo.isVip) {
+                        this.isVip = this.$t('my.openVipTrue');
+                    } else {
+                        this.isVip = this.$t('my.openVipFalse');
                     }
                 }
                 this.loading = false;

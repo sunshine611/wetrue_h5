@@ -2,8 +2,8 @@
     "name" : "WeTrue",
     "appid" : "__UNI__BC48802",
     "description" : "A decentralized open-source microblog that includes functions of wallets",
-    "versionName" : "2.7.3",
-    "versionCode" : 273,
+    "versionName" : "2.7.6",
+    "versionCode" : 276,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

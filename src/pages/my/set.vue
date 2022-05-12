@@ -3,7 +3,7 @@
         <view :style="`padding-top:${statusBarHeight}px`"></view>
         <u-navbar
             :is-fixed="false"
-            :title="$t('my.set')"
+            :title="$t('my.seting')"
         >
             <div slot="right">
                 <u-icon
@@ -18,7 +18,7 @@
         <u-cell-group :border="false">
             <u-cell-item
                 :title="$t('my.userInfo')"
-                @click="goUrl('infoEdit')"
+                @click="goUrl('./seting/infoEdit')"
             >
             <fa-FontAwesome
                     slot="icon"
@@ -31,7 +31,7 @@
             </u-cell-item>
             <u-cell-item
                 :title="$t('my.blacklistManage')"
-                @click="goUrl('blacklistManage')"
+                @click="goUrl('./seting/blacklistManage')"
             >
             <fa-FontAwesome
                     slot="icon"

@@ -103,7 +103,7 @@
                     >
                         <fa-FontAwesome
                             slot="icon"
-                            type="fas fa-hammer"
+                            type="fas fa-exchange-alt"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
@@ -137,7 +137,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="$t('my.set')" @click="goUrl('set')">
+                    <u-cell-item :title="$t('my.seting')" @click="goUrl('set')">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-cog"

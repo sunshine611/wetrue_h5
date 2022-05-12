@@ -145,7 +145,7 @@ export default {
             default: [],
         },
         ipfsUrl: {
-            default: "https://dweb.link/ipfs/",
+            default: "/^http[s]*:\/\/ ? '' : 'https://dweb.link/ipfs/'",
         },
     },
     data() {
