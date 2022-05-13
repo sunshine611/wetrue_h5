@@ -4,6 +4,7 @@
         <u-navbar
             :is-fixed="false"
             :title="$t('my.seting')"
+            v-show="!validThirdPartySource()"
         >
             <div slot="right">
                 <u-icon

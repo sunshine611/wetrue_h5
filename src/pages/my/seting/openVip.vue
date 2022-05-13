@@ -24,7 +24,7 @@
             </div>
             <div class="content">
                 <div class="text">
-                    开通需支付 {{ configInfo.openMapAmount / Math.pow(10, 18) }} WTT。
+                    开通需支付 {{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT。
                 </div>
             </div>
             <u-checkbox-group>
@@ -33,7 +33,7 @@
                 </u-checkbox>
             </u-checkbox-group>
             <u-gap :height="30"></u-gap>
-            <u-button type="primary" @click="open" :loading="btnLoading"
+            <u-button type="primary" @click="openVip" :loading="btnLoading"
                 >开通</u-button
             >
             <u-gap :height="20"></u-gap>
@@ -50,7 +50,7 @@
         <div class="rule">
             <div class="h3">开通 WeTrue VIP 规则</div>
             <u-gap :height="10"></u-gap>
-            <b>开通费用: </b> {{ configInfo.openMapAmount / Math.pow(10, 18) }} WTT.<br />
+            <b>开通费用: </b> {{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT.<br />
             <u-gap :height="10"></u-gap>
             <b>VIP权益: </b>
             <br />WeTrue会员专属功能.如:映射挖矿、头像更换等<br />
@@ -66,7 +66,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
@@ -80,17 +79,17 @@ export default {
             userInfo: {}, //用户信息
             isAgree: false, //是否同意
             btnLoading: false, //按钮状态
-            configInfo: getStore("configInfo"), //后端配置项
+            configInfo: {}, //后端openVip配置项
             wttBalance: 0, //账户WTT余额
         };
     },
     computed: {
         ...mapGetters(["token"]),
     },
-    onLoad() {
-        this.getUserInfo();
-        this.getWttBalance();
-        this.getConfigInfo();
+    async onLoad() {
+        await this.getConfigInfo();
+        await this.getUserInfo();
+        await this.getWttBalance();
     },
     //下拉刷新
     onPullDownRefresh() {
@@ -114,16 +113,25 @@ export default {
                     }
                 });
         },
-        //开通映射挖矿
-        open() {
+        //获取开通信息
+        getConfigInfo() {
+            this.$http
+                .post("/OpenVip/configInfo").then((res) => {
+                    if (res.code === 200) {
+                        this.configInfo = res.data;
+                    }
+                });
+        },
+        //开通
+        openVip() {
             if (this.isAgree) {
                 this.btnLoading = true;
-                this.$http.post("/Mining/submitState").then((res) => {
+                this.$http.post("/OpenVip/state").then((res) => {
                     if (res.code === 200) {
                         if (res.data) {
                             this.uShowToast("开通中，请勿重复提交！");
                         } else {
-                            this.startOpen();
+                            this.openStart();
                         }
                     }
                 });
@@ -133,16 +141,16 @@ export default {
             }
         },
         //开始开通
-        async startOpen() {
+        async openStart() {
             /*
             const result = await this.contractTransfer(
-                this.configInfo.wttContract,
-                this.configInfo.openMapAddress,
-                this.configInfo.openMapAmount / Math.pow(10, 18)
+                this.configInfo.openTokenAddress,
+                this.configInfo.openVipAddress,
+                this.configInfo.openVipAmount / Math.pow(10, 18)
             );
             
             if (result) {
-                this.$http.post("/Mining/openAccount", { hash: result.hash });
+                this.$http.post("/OpenVip/openVip", { hash: result.hash });
                 this.getUserInfo();
                 this.getWttBalance();
                 this.uShowToast("执行开通中，请30秒后再来！", "none", 3000);
@@ -153,7 +161,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
+                Backend.aeMdwApiMyToken(this.token, this.configInfo.openTokenAddress)
             ).then((res) => {
                 this.wttBalance = res.data.amount || 0;
             });

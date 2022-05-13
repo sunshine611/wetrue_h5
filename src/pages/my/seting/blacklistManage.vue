@@ -1,7 +1,11 @@
 <template>
     <div class="blacklist-manage">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="$t('my.blacklistManage')">
+        <u-navbar
+            :is-fixed="false"
+            :title="$t('my.blacklistManage')"
+            v-show="!validThirdPartySource()"
+        >
             <div slot="right">
                 <u-icon
                     name="home"
