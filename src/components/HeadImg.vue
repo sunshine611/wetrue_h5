@@ -81,7 +81,7 @@ export default {
         getPortrait() {
             setTimeout(async () => {
                 this.portrait = await multiavatar(this.userInfo.userAddress);
-                if(this.userInfo.portrait) this.portraitShow = true;
+                //if(this.userInfo.portrait) this.portraitShow = true;
             }, 500);
         },
     },
