@@ -11,6 +11,14 @@
             >
             </fa-FontAwesome>
         </div>
+        <div class="open-vip" v-if="userInfo.isVip">
+            <fa-FontAwesome
+                type="fab fa-vuejs"
+                size="28"
+                color="#CD7F32"
+            >
+            </fa-FontAwesome>
+        </div>
         <div :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || $t('my.cryptonym') }}
         </div>
@@ -43,6 +51,10 @@ export default {
         }
     }
     .auth-sign {
+        margin-right: 4rpx;
+        display: inline-block;
+    }
+    .open-vip {
         margin-right: 4rpx;
         display: inline-block;
     }
