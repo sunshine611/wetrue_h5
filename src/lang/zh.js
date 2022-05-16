@@ -108,6 +108,21 @@ export default {
 		deleteBlacklist:'将该用户移出黑名单',
 		openVipTrue:'已开通',
 		openVipFalse:'未开通',
+		openVipPage:{
+			open:'开通',
+			openText:'开通需支付 {0} WTT',
+			agree:'同意',
+			determine:'确定',
+			balance:'余额: {0} WTT',
+			complete:'已开通',
+			waiting:'链上确认中,请稍候...',
+			openRule:'WeTrue VIP 开通规则',
+			ruleFeeTitle:'开通费用:',
+			ruleBenefitsTitle:'VIP权益:',
+			ruleBenefitsText:'WeTrue会员专属功能.如:映射挖矿、头像更换等',
+			ruleExplainTitle:'规则说明:',
+			ruleExplainText:'WeTrue将根据生态所需不定期开通或关闭VIP开通通道',
+		}
 	},
 	index:{
 		praise:'赞',

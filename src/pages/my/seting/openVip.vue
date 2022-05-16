@@ -1,6 +1,6 @@
 <!--质押挖矿-->
 <template>
-    <div class="mapping-dig">
+    <div class="openvip-dig">
         <div class="icon-list" v-show="!validThirdPartySource()">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
             <u-icon
@@ -11,8 +11,8 @@
                 @click="reLaunchUrl('../../index/index')"
             ></u-icon>
         </div>
-        <div class="title">开通<br />WeTrue VIP</div>
-        <div class="open-mapping" v-if="!userInfo.isVip">
+        <div class="title">{{ $t('my.openVipPage.open') }}<br />WeTrue VIP</div>
+        <div class="open-openvip" v-if="!isWaiting && !userInfo.isVip">
             <div class="title">
                 <u-image
                     width="92rpx"
@@ -20,46 +20,50 @@
                     src="@/static/logo.png"
                     class="inline mr-5"
                 ></u-image>
-                开通 WeTrue VIP
+                WeTrue VIP
             </div>
             <div class="content">
                 <div class="text">
-                    开通需支付 {{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT。
+                    {{ $t('my.openVipPage.openText', [configInfo.openVipAmount / Math.pow(10, 18)]) }}
                 </div>
             </div>
             <u-checkbox-group>
-                <u-checkbox v-model="isAgree" name="同意开通">
-                    同意
+                <u-checkbox v-model="isAgree" name="agreeOpen">
+                    {{ $t('my.openVipPage.agree') }}
                 </u-checkbox>
             </u-checkbox-group>
             <u-gap :height="30"></u-gap>
-            <u-button type="primary" @click="openVip" :loading="btnLoading"
-                >开通</u-button
+            <u-button 
+                type="primary"
+                @click="openVip"
+                :loading="btnLoading"
+            >
+            {{ $t('my.openVipPage.determine') }}
+            </u-button
             >
             <u-gap :height="20"></u-gap>
             <div class="clearfix">
-                <div class="pull-right">WTT余额: {{ wttBalance }} WTT</div>
+                <div class="pull-right">{{ $t('my.openVipPage.balance', [wttBalance]) }}</div>
             </div>
         </div>
 
-        <div class="start-mapping" v-else>
-            <div class="mapping">
-                已开通
+        <div class="start-openvip" v-else>
+            <div class="text">
+                {{ isWaiting ? $t('my.openVipPage.waiting') : $t('my.openVipPage.complete') }}
             </div>
         </div>
+
         <div class="rule">
-            <div class="h3">开通 WeTrue VIP 规则</div>
+            <div class="h3">{{ $t('my.openVipPage.openRule') }}</div>
             <u-gap :height="10"></u-gap>
-            <b>开通费用: </b> {{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT.<br />
+            <b>{{ $t('my.openVipPage.ruleFeeTitle') }}</b>
+            <br />{{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT.<br />
             <u-gap :height="10"></u-gap>
-            <b>VIP权益: </b>
-            <br />WeTrue会员专属功能.如:映射挖矿、头像更换等<br />
+            <b>{{ $t('my.openVipPage.ruleBenefitsTitle') }}</b>
+            <br />{{ $t('my.openVipPage.ruleBenefitsText') }}<br />
             <u-gap :height="10"></u-gap>
-            <b>规则说明: </b>
-            <br />WeTrue将根据生态所需不定期开通或关闭VIP开通通道<br />
-            <u-gap :height="10"></u-gap>
-            <b>消耗去哪: </b>
-            <br />所消耗WTT将划转至[AE中国社区公共账户]供后续生态发展使用.<br />
+            <b>{{ $t('my.openVipPage.ruleExplainTitle') }}</b>
+            <br />{{ $t('my.openVipPage.ruleExplainText') }}<br />
         </div>
     </div>
 </template>
@@ -81,18 +85,19 @@ export default {
             btnLoading: false, //按钮状态
             configInfo: {}, //后端openVip配置项
             wttBalance: 0, //账户WTT余额
+            isWaiting: false, //内容
         };
     },
     computed: {
         ...mapGetters(["token"]),
     },
-    async onLoad() {
-        await this.getConfigInfo();
-        await this.getUserInfo();
-        await this.getWttBalance();
+    onLoad() {
+        this.getConfigInfo();
+        this.getUserInfo();
     },
     //下拉刷新
     onPullDownRefresh() {
+        this.getConfigInfo();
         this.getUserInfo();
         this.getWttBalance();
         setTimeout(function() {
@@ -119,6 +124,7 @@ export default {
                 .post("/OpenVip/configInfo").then((res) => {
                     if (res.code === 200) {
                         this.configInfo = res.data;
+                        this.getWttBalance();
                     }
                 });
         },
@@ -126,6 +132,11 @@ export default {
         openVip() {
             if (this.isAgree) {
                 this.btnLoading = true;
+                if ( this.wttBalance <= (this.configInfo.openVipAmount / Math.pow(10, 18)) ) {
+                    this.uShowToast("余额不足!");
+                    this.btnLoading = false;
+                    return;
+                }
                 this.$http.post("/OpenVip/state").then((res) => {
                     if (res.code === 200) {
                         if (res.data) {
@@ -142,7 +153,6 @@ export default {
         },
         //开始开通
         async openStart() {
-            /*
             const result = await this.contractTransfer(
                 this.configInfo.openTokenAddress,
                 this.configInfo.openVipAddress,
@@ -153,17 +163,16 @@ export default {
                 this.$http.post("/OpenVip/openVip", { hash: result.hash });
                 this.getUserInfo();
                 this.getWttBalance();
-                this.uShowToast("执行开通中，请30秒后再来！", "none", 3000);
+                this.uShowToast("链上确认中,请过会再来!", "none", 3000);
+                this.isWaiting = true;
             }
-            */
-           this.uShowToast("开发中", "none", 3000);
         },
         //获取WTT余额
         getWttBalance() {
             http.get(
                 Backend.aeMdwApiMyToken(this.token, this.configInfo.openTokenAddress)
             ).then((res) => {
-                this.wttBalance = res.data.amount || 0;
+                this.wttBalance = (res.data.amount / Math.pow(10, 18)) || 0;
             });
         },
     },
@@ -173,7 +182,7 @@ export default {
 page {
     background-color: #beb8c8;
 }
-.mapping-dig {
+.openvip-dig {
     background: url("@/static/openvip_bg.png") no-repeat;
     background-size: 100%;
     display: flex;
@@ -194,23 +203,33 @@ page {
         color: #fff;
         line-height: 70rpx;
     }
-    .start-mapping {
+    .start-openvip {
         margin-top: 400rpx;
         background: #fff;
         width: 80%;
-        min-height: 400rpx;
+        min-height: 200rpx;
         border-radius: 30rpx;
-        padding: 40rpx;
+        padding: 80rpx;
         box-sizing: border-box;
         position:relative;
-        .title {
-            font-size: 36rpx;
+        .text {
+            font-size: 32rpx;
             display: flex;
             justify-content: center;
             align-items: center;
         }
     }
-    .open-mapping {
+    .waiting-openvip {
+        margin-top: 400rpx;
+        background: #fff;
+        width: 80%;
+        min-height: 200rpx;
+        border-radius: 30rpx;
+        padding: 80rpx;
+        box-sizing: border-box;
+        position:relative;
+    }
+    .open-openvip {
         margin-top: 400rpx;
         background: #fff;
         width: 80%;

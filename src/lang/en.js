@@ -108,6 +108,21 @@ export default {
 		deleteBlacklist:'Delete User From BlackList',
 		openVipTrue:'Activation',
 		openVipFalse:'Nonactivated',
+		openVipPage:{
+			open:'Open',
+			openText:'Activation fee is {0} WTT',
+			agree:'Agree',
+			determine:'Determine',
+			balance:'Balance: {0} WTT',
+			complete:'Has been activated',
+			waiting:'BlockChain Confirming, Please waiting...',
+			openRule:'WeTrue VIP Activation Rule',
+			ruleFeeTitle:'Activation Fee:',
+			ruleBenefitsTitle:'Benefits:',
+			ruleBenefitsText:'WeTrue members-only feature. eg: Mapping mining, head replacement and so on',
+			ruleExplainTitle:'Instructions:',
+			ruleExplainText:'WeTrue will open or close VIP open channels from time to time according to ecological needs',
+		}
 	},
 	index:{
 		praise:'Likes',
