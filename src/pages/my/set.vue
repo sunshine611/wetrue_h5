@@ -1,9 +1,9 @@
 <template>
-    <view class="seting">
+    <view class="setting">
         <view :style="`padding-top:${statusBarHeight}px`"></view>
         <u-navbar
             :is-fixed="false"
-            :title="$t('my.seting')"
+            :title="$t('my.setting')"
             v-show="!validThirdPartySource()"
         >
             <div slot="right">
@@ -19,7 +19,7 @@
         <u-cell-group :border="false">
             <u-cell-item
                 :title="$t('my.userInfo')"
-                @click="goUrl('./seting/infoEdit')"
+                @click="goUrl('./setting/infoEdit')"
             >
             <fa-FontAwesome
                     slot="icon"
@@ -32,7 +32,7 @@
             </u-cell-item>
             <u-cell-item
                 :title="$t('my.blacklistManage')"
-                @click="goUrl('./seting/blacklistManage')"
+                @click="goUrl('./setting/blacklistManage')"
             >
             <fa-FontAwesome
                     slot="icon"
@@ -42,8 +42,34 @@
                 >
                 </fa-FontAwesome>
             </u-cell-item>
+
             <u-cell-item
-                :title="$t('my.languageSwitch')"
+                :title="$t('my.switchNetwork',[network])"
+                @click="selectNetwork"
+                :arrow="false"
+            >
+                <fa-FontAwesome
+                    slot="icon"
+                    type="fab fa-skyatlas"
+                    size="32"
+                    class="mr-20"
+                    color="#f04a82"
+                    v-show="network === 'io'"
+                >
+                </fa-FontAwesome>
+                <fa-FontAwesome
+                    slot="icon"
+                    type="fab fa-skyatlas"
+                    size="32"
+                    class="mr-20"
+                    color="#03a9f4"
+                    v-show="network === 'cc'"
+                >
+                </fa-FontAwesome>
+            </u-cell-item>
+
+            <u-cell-item
+                :title="$t('my.switchLanguage')"
                 @click="selectLanguage"
                 :arrow="false"
             >
@@ -72,12 +98,13 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { getStore } from "@/util/service";
+import { getStore, setStore } from "@/util/service";
 export default {
     components: {},
     data() {
         return {
             language: getStore("language"),
+            network: getStore("networkSetting"),
         };
     },
     //下拉刷新
@@ -91,12 +118,20 @@ export default {
         ...mapGetters(["token"]),
     },
     methods: {
-
+        //切换语言
+        selectNetwork() {
+            if (getStore("networkSetting") === "io") {
+                setStore("networkSetting", "cc");
+            } else if (getStore("networkSetting") === "cc") {
+                setStore("networkSetting", "io");
+            }
+            this.network = getStore("networkSetting");
+        },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-.seting {
+.setting {
 }
 </style>

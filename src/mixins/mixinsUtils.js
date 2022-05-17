@@ -7,6 +7,9 @@ const mixins = {
         if (!getStore("language")) {
             setStore("language", "en");
         }
+        if (!getStore("networkSetting")) {
+            setStore("networkSetting", "io");
+        }
         this.getSystemStatusBarHeight(); //状态栏高度
     },
     methods: {
