@@ -219,16 +219,6 @@ page {
             align-items: center;
         }
     }
-    .waiting-openvip {
-        margin-top: 400rpx;
-        background: #fff;
-        width: 80%;
-        min-height: 200rpx;
-        border-radius: 30rpx;
-        padding: 80rpx;
-        box-sizing: border-box;
-        position:relative;
-    }
     .open-openvip {
         margin-top: 400rpx;
         background: #fff;

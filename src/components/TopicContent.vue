@@ -31,7 +31,7 @@
                         <text class="mr-20">{{
                             $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
                         }}</text
-                        >{{ $t('index.source') + postInfo.source + '-' + postInfo.chainId}}
+                        >{{ $t('index.source') + postInfo.source /*+ '-' + postInfo.chainId */ }}
                     </div>
                 </div>
             </div>

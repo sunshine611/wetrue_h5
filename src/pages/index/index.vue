@@ -220,8 +220,8 @@ export default {
         },
         //未读新帖标记
         newContentCount() {
-            const oldCount = this.pageInfo.totalSize
             if (this.current === 0) {
+                const oldCount = this.pageInfo.totalSize
                 if (this.newCount > oldCount) {
                     let size = this.newCount - oldCount;
                     uni.setTabBarBadge({
@@ -245,7 +245,7 @@ export default {
                 .post(url, params)
                 .then((res) => {
                     if (res.code === 200) {
-                        this.newCount = parseInt(res.data.totalPage);
+                        this.newCount = parseInt(res.data.totalSize);
                         this.newContentCount();
                     }
                 });
@@ -255,7 +255,7 @@ export default {
                 .post(url, params)
                 .then((res) => {
                     if (res.code === 200) {
-                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
+                        this.pageInfo.totalSize = parseInt(res.data.totalSize);
                         res.data.data.map((item) => {
                             if (this.postList[0].hash !== item.hash ) {
                                 this.postList.unshift(this.itemListMap(item));

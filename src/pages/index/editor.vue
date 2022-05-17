@@ -104,7 +104,7 @@ export default {
             if (this.postShTip) {
                 //发布到 Superhero
                 res = await this.contractShTip(
-                    payload.content + ' ,from WeTrue.io'
+                    payload.content + '[Source WeTrue.io]'
                 );
             } else {
                 //发布到 WeTrue

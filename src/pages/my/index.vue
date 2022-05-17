@@ -25,6 +25,14 @@
                                     height="120rpx"
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
+                                 <div class="open-vip" v-if="userInfo.isVip">
+                                    <fa-FontAwesome
+                                        type="fab fa-vuejs"
+                                        size="28"
+                                        color="#CD7F32"
+                                    >
+                                    </fa-FontAwesome>
+                                </div>
                                 <div :class="[userInfo.isAuth ? 'auth' : '']">
                                     {{ userInfo.nickname || $t('my.cryptonym') }}
                                 </div>
@@ -97,7 +105,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        title="Migrate Token"
+                        :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
                         v-if="!this.validThirdPartySource()"
                     >
@@ -111,7 +119,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        :title="$t('my.defi')"
+                        :title="$t('my.mappingMining')"
                         @click="goUrl('mappingDig')"
                     >
                         <fa-FontAwesome
@@ -359,6 +367,11 @@ page {
                                 font-weight: bold;
                                 display: inline-block;
                             }
+                        }
+
+                        .open-vip {
+                            margin-right: 4rpx;
+                            display: inline-block;
                         }
 
                         .address {
