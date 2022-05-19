@@ -102,7 +102,7 @@ export default {
 		backMy:'返回我的',
 		passwordErr:'密码错误',
 		connectionFail:'AE节点连接失败',
-		switchNetwork:'切换 {0} 网络',
+		switchNetwork:'已切换 {0} 网络',
 		switchLanguage:'Switch English',
 		setting:'通用设置',
 		migrateToken:'迁移Token',

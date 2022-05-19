@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-tabs
             :list="categoryList"
             :is-scroll="false"

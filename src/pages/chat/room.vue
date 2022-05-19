@@ -1,6 +1,6 @@
 <template>
 	<view class="uni-column">
-		<view :style="`padding-top:${statusBarHeight}px`"></view>
+		<view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :back-text="online" title="Chat Room">
             <div slot="right">
                 <u-icon

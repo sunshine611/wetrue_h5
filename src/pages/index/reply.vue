@@ -1,6 +1,6 @@
 <template>
     <view class="wrap">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('index.replyDetails')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
@@ -199,7 +199,7 @@ export default {
         this.getReply();
     },
     onLoad(option) {
-        this.uSetBarTitle(this.$t('titleBar.replyDetails'));
+        this.uSetBarTitle(this.$t('index.replyDetails'));
         this.hash = option.hash;
         this.getCommentInfo();
         this.getReply();

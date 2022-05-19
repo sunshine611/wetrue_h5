@@ -2,7 +2,7 @@
 <template>
     <div class="openvip-dig">
         <div class="icon-list" v-show="!validThirdPartySource()">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
             <u-icon
                 name="home"
                 class="mr-30"

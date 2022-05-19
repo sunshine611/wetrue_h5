@@ -2,7 +2,7 @@
     <div class="my">
         <view
             class="top-background"
-            :style="`padding-top:${statusBarHeight}px`"
+            :style="{height:`${statusBarHeight}px`}"
         ></view>
         <div class="user-info" v-if="!!token">
             <div class="my-info">

@@ -102,7 +102,7 @@ export default {
 		backMy:'Go Back My',
 		passwordErr:'Error Password',
 		connectionFail:'AE Node Connection Fail',
-		switchNetwork:'Switch {0} Network',
+		switchNetwork:'Current {0} Network',
 		switchLanguage:'切换中文',
 		migrateToken:'Migrate Token',
 		setting:'Setting',

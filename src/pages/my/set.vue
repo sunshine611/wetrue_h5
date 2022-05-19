@@ -1,6 +1,6 @@
 <template>
     <view class="setting">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar
             :is-fixed="false"
             :title="$t('my.setting')"
@@ -118,7 +118,7 @@ export default {
         ...mapGetters(["token"]),
     },
     methods: {
-        //切换语言
+        //切换网络
         selectNetwork() {
             if (getStore("networkSetting") === "io") {
                 setStore("networkSetting", "cc");

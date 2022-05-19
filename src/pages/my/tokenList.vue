@@ -1,6 +1,6 @@
 <template>
     <div class="token-list">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('my.myWallet')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon

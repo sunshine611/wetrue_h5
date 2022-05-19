@@ -401,6 +401,7 @@ const mixins = {
                 }
             } catch (err) {
                 this.uShowToast(this.$t('mixins.fail'));
+                console.log(err);
             }
         },
         //合约转账

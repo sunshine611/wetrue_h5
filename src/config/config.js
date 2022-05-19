@@ -8,12 +8,12 @@ const env_net = getStore("networkSetting")==='cc' ? 'cc' : 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
-    nodeUrl     = 'https://mainnet.aeternity.io'
+    nodeUrl     = 'https://node.aeasy.io'
     aeExplorer  = 'https://explorer.aeternity.io'
     chatapi     = 'https://api.wetrue.io'
     aeMdw       = 'https://mainnet.aeternity.io/mdw'
     aeknow      = 'https://api.wetrue.io/Aeknow'
-    compilerUrl = 'https://compiler.aeternity.io'
+    compilerUrl = 'https://compiler.wetrue.io'
 } else if (env_net == 'cc') {
     baseUrl     = 'https://api.wetrue.cc'
     nodeUrl     = 'https://mainnet.wetrue.cc'

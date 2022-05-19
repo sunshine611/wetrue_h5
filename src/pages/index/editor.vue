@@ -1,6 +1,6 @@
 <template>
     <view class="editor">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" back-text="" :title="$t('index.sendContent')" :border-bottom="false">
             <div slot="right" class="right-btn">
                 <u-button

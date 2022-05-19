@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <view :style="`height:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
             <u-navbar class="nav" :is-fixed="false" :is-back="false">
                 <u-tabs
                     class="nav-tab"

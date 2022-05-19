@@ -2,7 +2,7 @@
 <template>
     <div class="migrate-token">
         <div class="icon-list" v-show="!validThirdPartySource()">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`}"></view>
             <u-icon
                 name="home"
                 class="mr-30"
