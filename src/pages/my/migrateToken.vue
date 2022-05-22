@@ -139,6 +139,13 @@ import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
+//import { AE_AMOUNT_FORMATS, formatAmount, toAe, toAettos } from '../../src/utils/amount-formatter
+
+import {
+    toAe,
+    toAettos,
+    formatAmount
+} from "@aeternity/aepp-sdk/es/utils/amount-formatter";
 
 export default {
     components: {
@@ -184,27 +191,30 @@ export default {
     methods: {
         //获取WET余额
         getWetBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.oldWttContract)
+            this.getTokenBalance(
+                this.configInfo.oldWttContract,
+                this.token
             ).then((res) => {
-                this.wetBalance = res.data.amount;
-            });
+                this.wetBalance = res.toString(10) || 0;
+            });;
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                this.token
             ).then((res) => {
-                this.wttBalance = res.data.amount || 0;
-            });
+                this.wttBalance = res.toString(10) || 0;
+            });;
         },
         //获取已迁移WTT
         getMigrateWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken( "ak" + this.configInfo.migrateContract.slice(2), this.configInfo.wttContract)
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                "ak" + this.configInfo.migrateContract.slice(2)
             ).then((res) => {
-                this.migrateBalance = this.balanceFormat(res.data.amount);
-            });
+                this.migrateBalance = this.balanceFormat( res.toString(10) ) || 0;
+            });;
         },
         //全部事件
         totalBalance() {

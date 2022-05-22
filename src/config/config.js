@@ -8,7 +8,7 @@ const env_net = getStore("networkSetting")==='cc' ? 'cc' : 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
-    nodeUrl     = 'https://node.aeasy.io'
+    nodeUrl     = 'https://mainnet.aeternity.io'
     aeExplorer  = 'https://explorer.aeternity.io'
     chatapi     = 'https://api.wetrue.io'
     aeMdw       = 'https://mainnet.aeternity.io/mdw'

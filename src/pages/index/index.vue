@@ -223,7 +223,7 @@ export default {
             if (this.current === 0) {
                 const oldCount = this.pageInfo.totalSize
                 if (this.newCount > oldCount) {
-                    let size = this.newCount - oldCount;
+                    let size = parseInt(this.newCount - oldCount);
                     uni.setTabBarBadge({
                         index: 0,
                         text: `${size}`,

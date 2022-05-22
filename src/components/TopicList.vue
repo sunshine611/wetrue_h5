@@ -167,28 +167,6 @@ export default {
         postList: {
             handler() {
                 this.$nextTick(() => {
-                    /*
-                    const queryTopicType = uni.createSelectorQuery().in(this);
-                    queryTopicType.selectAll('.topic-text').boundingClientRect(topicArr => {
-                        console.log(topicArr)
-                        if (topicArr.length > 0) {
-                            for (let i = 0; i < topicArr.length; i++) {
-                                console.log(topicArr[i])
-                                topicArr[i].addEventListener(
-                                    "click",
-                                    (e) => {
-                                        let text = topicArr[i].innerText;
-                                        this.goUrl(
-                                            "/pages/index/topic?keyword=" + text
-                                        );
-                                        e.stopPropagation();
-                                    },
-                                    true
-                                );
-                            }
-                        }
-                    }).exec();
-                   */
                     const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {

@@ -1,6 +1,10 @@
 <template>
     <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
-
+        <div 
+            v-show="!portraitShow"
+            v-html="portrait"
+        ></div>
+        <!--
         <u-image
             shape="circle"
             :width="width"
@@ -8,11 +12,6 @@
             v-show="portraitShow"
             :src="userInfo.portrait ? baseUrl + userInfo.portrait : '/static/default_head.png'"
         ></u-image>
-        <div 
-            v-show="!portraitShow"
-            v-html="portrait"
-        ></div>
-        <!--
         <u-image
             shape="circle"
             :width="width"

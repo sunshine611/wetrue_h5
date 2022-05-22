@@ -74,6 +74,21 @@ const mixins = {
                 );
             });
         },
+        //获取账户Token余额
+        async getTokenBalance(contractId, address) {
+            try {
+                let client = await this.client();
+                const contract = await client.getContractInstance({
+                    source: Fungible_Token_Full_Interface,
+                    contractAddress: contractId
+                })
+                let callResult = await contract.methods.balance(address)
+                return callResult.decodedResult;
+            } catch (err) {
+                console.log(err)
+                this.uShowToast(this.$t('mixins.fail'));
+            }
+        },
         //余额格式化
         balanceFormat(balance, num=4, decimal=18) {
             if (isNaN(balance)) {
