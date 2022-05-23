@@ -60,9 +60,6 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import Request from "luch-request";
-const http = new Request();
-import Backend from "@/util/backend";
 import { getStore } from "@/util/service";
 
 export default {
@@ -176,10 +173,11 @@ export default {
                 this.configInfo.wttContract,
                 this.postInfo.users.userAddress,
                 this.form.amount,
-                /*{type:'reward', content: this.postInfo.hash }*/
+                {type:'reward', content: this.postInfo.hash }
+
             );
             if (result) {
-                this.rewardSubmit(result.hash);
+                this.postHashToWeTrue(result); //打赏提交
                 this.form = {
                     amount: "",
                 };
@@ -191,17 +189,17 @@ export default {
         },
         //打赏提交
         rewardSubmit(hash) {
-            let params = { hash: hash, toHash: this.postInfo.hash };
-            this.$http.post("/Submit/reward", params);
+            let params = { hash: hash };
+            this.$http.post("/Submit/hash", params);
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(
-                //Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
-                Backend.aeknowApiMyToken(this.token, this.configInfo.wttContract)
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                this.token
             ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.amount || res.data.balance);
-            });
+                this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
+            });;
         },
     },
 };
