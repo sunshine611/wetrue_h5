@@ -70,9 +70,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Request from "luch-request";
-const http = new Request();
-import Backend from "@/util/backend";
 
 export default {
     components: {
@@ -132,15 +129,19 @@ export default {
         openVip() {
             if (this.isAgree) {
                 this.btnLoading = true;
+                if(!this.configInfo.openVip) {
+                    this.uShowToast( this.$t('my.openVipPage.channel') );
+                    return;
+                }
                 if ( this.wttBalance <= (this.configInfo.openVipAmount / Math.pow(10, 18)) ) {
-                    this.uShowToast("余额不足!");
+                    this.uShowToast( this.$t('my.openVipPage.balanceLow') );
                     this.btnLoading = false;
                     return;
                 }
                 this.$http.post("/OpenVip/state").then((res) => {
                     if (res.code === 200) {
                         if (res.data) {
-                            this.uShowToast("开通中，请勿重复提交！");
+                            this.uShowToast( this.$t('my.openVipPage.repeatOpen') );
                         } else {
                             this.openStart();
                         }
@@ -148,7 +149,7 @@ export default {
                 });
                 this.btnLoading = false;
             } else {
-                this.uShowToast("请阅读并勾选同意开通！");
+                this.uShowToast( this.$t('my.openVipPage.clause') );
             }
         },
         //开始开通
@@ -156,11 +157,12 @@ export default {
             const result = await this.contractTransfer(
                 this.configInfo.openTokenAddress,
                 this.configInfo.openVipAddress,
-                this.configInfo.openVipAmount / Math.pow(10, 18)
+                this.configInfo.openVipAmount / Math.pow(10, 18),
+                {type:'openVip'}
             );
             
             if (result) {
-                this.$http.post("/OpenVip/openVip", { hash: result.hash });
+                this.postHashToWeTrue(result); //打赏提交
                 this.getUserInfo();
                 this.getWttBalance();
                 this.uShowToast("链上确认中,请过会再来!", "none", 3000);
@@ -169,11 +171,12 @@ export default {
         },
         //获取WTT余额
         getWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.openTokenAddress)
+            this.getTokenBalance(
+                this.configInfo.openTokenAddress,
+                this.token
             ).then((res) => {
-                this.wttBalance = (res.data.amount / Math.pow(10, 18)) || 0;
-            });
+                this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
+            });;
         },
     },
 };

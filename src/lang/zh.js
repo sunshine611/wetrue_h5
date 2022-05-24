@@ -124,6 +124,10 @@ export default {
 			ruleBenefitsText:'WeTrue会员专属功能.如:映射挖矿、头像更换等',
 			ruleExplainTitle:'规则说明:',
 			ruleExplainText:'WeTrue将根据生态所需不定期开通或关闭VIP开通通道',
+			channel:'开通VIP通道已关闭',
+			balanceLow:'余额不足',
+			repeatOpen:'开通中，请勿重复提交',
+			clause:'请阅读并勾选同意开通',
 		}
 	},
 	index:{

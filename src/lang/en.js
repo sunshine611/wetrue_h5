@@ -124,6 +124,10 @@ export default {
 			ruleBenefitsText:'WeTrue members-only feature. eg: Mapping mining, head replacement and so on',
 			ruleExplainTitle:'Instructions:',
 			ruleExplainText:'WeTrue will open or close VIP open channels from time to time according to ecological needs',
+			channel:'Open Channel Closed',
+			balanceLow:'Balance Low',
+			repeatOpen:'Repeat Submit',
+			clause:'Need to agree to Clause',
 		}
 	},
 	index:{

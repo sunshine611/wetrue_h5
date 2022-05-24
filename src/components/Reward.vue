@@ -174,7 +174,6 @@ export default {
                 this.postInfo.users.userAddress,
                 this.form.amount,
                 {type:'reward', content: this.postInfo.hash }
-
             );
             if (result) {
                 this.postHashToWeTrue(result); //打赏提交
@@ -186,11 +185,6 @@ export default {
                 this.getWttBalance();
             }
             this.btnLoading = false;
-        },
-        //打赏提交
-        rewardSubmit(hash) {
-            let params = { hash: hash };
-            this.$http.post("/Submit/hash", params);
         },
         //获取WTT余额
         getWttBalance() {
