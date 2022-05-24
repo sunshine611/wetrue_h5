@@ -1,7 +1,6 @@
 <template>
     <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
-        <div 
-            v-show="!portraitShow"
+        <div
             v-html="portrait"
         ></div>
         <!--
@@ -40,14 +39,8 @@ export default {
     data() {
         return {
             baseUrl: baseUrl,
-            portrait: this.$nextTick(() => { multiavatar(this.userInfo.userAddress) }),
-            portraitShow: false,
+            portrait: multiavatar(this.userInfo.userAddress),
         };
-    },
-    mounted() {
-        setTimeout(() => {
-            this.getPortrait();
-        }, 500);
     },
     props: {
         userInfo: {
@@ -67,6 +60,17 @@ export default {
             default: false,
         },
     },
+    watch: {
+        userInfo: {
+            handler() {
+                this.$nextTick(() => {
+                    this.portrait = multiavatar(this.userInfo.userAddress);
+                });
+            },
+            deep: true,
+        },
+    },
+
     methods: {
         //点击头像
         handleView() {
@@ -76,11 +80,6 @@ export default {
                         this.userInfo.userAddress
                 );
             }
-        },
-        async getPortrait() {
-            await this.$nextTick(() => {
-                this.portrait = multiavatar(this.userInfo.userAddress);
-            });
         },
     },
 };
