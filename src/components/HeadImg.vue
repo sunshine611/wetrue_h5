@@ -40,7 +40,7 @@ export default {
     data() {
         return {
             baseUrl: baseUrl,
-            portrait: multiavatar(this.userInfo.userAddress),
+            portrait: this.$nextTick(() => { multiavatar(this.userInfo.userAddress) }),
             portraitShow: false,
         };
     },
@@ -77,11 +77,10 @@ export default {
                 );
             }
         },
-        getPortrait() {
-            setTimeout(async () => {
-                this.portrait = await multiavatar(this.userInfo.userAddress);
-                //if(this.userInfo.portrait) this.portraitShow = true;
-            }, 500);
+        async getPortrait() {
+            await this.$nextTick(() => {
+                this.portrait = multiavatar(this.userInfo.userAddress);
+            });
         },
     },
 };
