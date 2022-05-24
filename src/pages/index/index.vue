@@ -256,13 +256,11 @@ export default {
                 .then((res) => {
                     if (res.code === 200) {
                         this.pageInfo.totalSize = parseInt(res.data.totalSize);
-                        this.$nextTick(() => {
-                            res.data.data.map((item) => {
-                                if (this.postList[0].hash !== item.hash ) {
-                                    this.postList.unshift(this.itemListMap(item));
-                                    this.postList.pop();
-                                }
-                            });
+                        res.data.data.map((item) => {
+                            if (this.postList[0].hash !== item.hash ) {
+                                this.postList.unshift(this.itemListMap(item));
+                                this.postList.pop();
+                            }
                         });
                         uni.hideTabBarRedDot({
                             index: 0,
