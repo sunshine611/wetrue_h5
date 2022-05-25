@@ -145,7 +145,7 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item :title="$t('my.setting')" @click="goUrl('set')">
+                    <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
                         <fa-FontAwesome
                             slot="icon"
                             type="fas fa-cog"

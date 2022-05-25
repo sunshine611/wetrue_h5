@@ -131,9 +131,10 @@ export default {
                 this.btnLoading = true;
                 if(!this.configInfo.openVip) {
                     this.uShowToast( this.$t('my.openVipPage.channel') );
+                    this.btnLoading = false;
                     return;
                 }
-                if ( this.wttBalance <= (this.configInfo.openVipAmount / Math.pow(10, 18)) ) {
+                if ( this.wttBalance < (this.configInfo.openVipAmount / Math.pow(10, 18)) ) {
                     this.uShowToast( this.$t('my.openVipPage.balanceLow') );
                     this.btnLoading = false;
                     return;
@@ -165,8 +166,9 @@ export default {
                 this.postHashToWeTrue(result); //打赏提交
                 this.getUserInfo();
                 this.getWttBalance();
-                this.uShowToast("链上确认中,请过会再来!", "none", 3000);
+                this.uShowToast(this.$t('my.openVipPage.waiting') , "none", 3000);
                 this.isWaiting = true;
+                uni.hideLoading();
             }
         },
         //获取WTT余额

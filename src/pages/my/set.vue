@@ -3,7 +3,7 @@
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar
             :is-fixed="false"
-            :title="$t('my.setting')"
+            :title="$t('my.setting.setting')"
             v-show="!validThirdPartySource()"
         >
             <div slot="right">
