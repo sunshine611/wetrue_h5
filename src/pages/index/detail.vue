@@ -248,7 +248,7 @@ export default {
             postInfo: {
                 rewardList: [],
                 users: {
-                    portrait: "",
+                    avatar: "",
                     userAddress: "",
                 },
             }, //主贴信息

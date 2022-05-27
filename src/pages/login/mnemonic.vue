@@ -3,16 +3,16 @@
 		<div class="login-box">
 			<div class="title">
 				<u-image width="92rpx" height="46rpx" src="../../static/logo.png" class="inline mr-5"></u-image>
-				{{ $t('titleBar.createAccount') }}
+				{{ $t('login.createMnemonic') }}
 			</div>
 			<u-gap height="60"></u-gap>
 			<div class="form">
-				<div class="form-title">{{ $t('login.createAccount') }}</div>
+				<div class="form-title">{{ $t('login.accountAddress') }}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.address" type="textarea" class="address" :clearable="false" height="120"
 					:custom-style="{padding:'15rpx'}" disabled />
 				<u-gap height="30"></u-gap>
-				<div class="form-title">{{ $t('MnemonicTips') }}</div>
+				<div class="form-title">{{ $t('login.MnemonicTips') }}</div>
 				<u-gap height="14"></u-gap>
 				<u-input v-model="form.mnemonic" type="textarea" class="textarea" :clearable="false" height="160" disabled
 					:custom-style="{padding:'15rpx',wordWrap:'break-word',wordBreak:'normal'}" />

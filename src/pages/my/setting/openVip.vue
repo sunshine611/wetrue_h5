@@ -159,7 +159,7 @@ export default {
                 this.configInfo.openTokenAddress,
                 this.configInfo.openVipAddress,
                 this.configInfo.openVipAmount / Math.pow(10, 18),
-                {type:'openVip'}
+                {type:'open_vip'}
             );
             
             if (result) {

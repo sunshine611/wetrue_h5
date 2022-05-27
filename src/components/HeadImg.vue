@@ -1,7 +1,7 @@
 <template>
     <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
         <div
-            v-html="portrait"
+            v-html="avatar"
         ></div>
         <div :class="['level',userInfo.sex === 1?'man':'',userInfo.sex === 0?'woman':'']" v-if="userInfo.userActive !== 0">
             <text class="text">V{{ userInfo.userActive }}</text>
@@ -16,8 +16,8 @@ export default {
     data() {
         return {
             baseUrl: baseUrl,
-            portrait: multiavatar(
-                this.userInfo.portrait ? this.userInfo.portrait : this.userInfo.userAddress
+            avatar: multiavatar(
+                this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
             ),
         };
     },
@@ -43,8 +43,8 @@ export default {
         userInfo: {
             handler() {
                 this.$nextTick(() => {
-                    this.portrait = multiavatar(
-                        this.userInfo.portrait ? this.userInfo.portrait : this.userInfo.userAddress
+                    this.avatar = multiavatar(
+                        this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
                     );
                 });
             },

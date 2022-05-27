@@ -14,12 +14,12 @@
         </u-navbar>
         <u-cell-group>
             <u-cell-item 
-                :title="$t('my.infoEdit.portrait') + ' ID: ' + portraitID"
-                @click="portraitShow = true"
+                :title="$t('my.infoEdit.avatar') + ' ID: ' + avatarID"
+                @click="avatarShow = true"
             >
                 <div
-                    class="user-portrait"
-                    v-html="portrait"
+                    class="user-avatar"
+                    v-html="avatar"
                 ></div>
             </u-cell-item>
             <u-cell-item
@@ -85,8 +85,8 @@
                 >
             </view>
         </u-popup>
-        <u-popup v-model="portraitShow" mode="center" border-radius="20">
-            <view class="random-portrait">
+        <u-popup v-model="avatarShow" mode="center" border-radius="20">
+            <view class="random-avatar">
                 <view class="title">
                     <u-image
                         width="92rpx"
@@ -94,18 +94,18 @@
                         src="@/static/logo.png"
                         class="inline mr-5"
                     ></u-image>
-                    Random Portrait
+                    Random Avatar
                 </view>
                 <u-gap height="30"></u-gap>
                 <view class="text">
-                    {{ $t('my.infoEdit.randomPortraitExpend', [ (portraitInfo.recAmount / Math.pow(10, 18)) ]) }}<br />
-                    {{ $t('my.infoEdit.randomPortraitText') }}<br />
-                    <div class="rule">{{ $t('my.infoEdit.portraitRule') }}</div>
+                    {{ $t('my.infoEdit.randomAvatarExpend', [ (avatarInfo.recAmount / Math.pow(10, 18)) ]) }}<br />
+                    {{ $t('my.infoEdit.randomAvatarText') }}<br />
+                    <div class="rule">{{ $t('my.infoEdit.avatarRule') }}</div>
                 </view>
                 <u-gap height="30"></u-gap>
                 <u-button
                     type="primary"
-                    @click="randomPortrait"
+                    @click="randomAvatar"
                     :loading="btnLoading"
                 >
                 {{ $t('my.infoEdit.agree') }}
@@ -134,10 +134,10 @@ export default {
                 nickname: this.$t('my.cryptonym'), //用户昵称
                 sex: 2,
             },
-            portrait: "", //头像
-            portraitID: "", //头像
-            portraitShow: false, //头像弹层
-            portraitInfo: {}, //后端配置项
+            avatar: "", //头像
+            avatarID: "", //头像
+            avatarShow: false, //头像弹层
+            avatarInfo: {}, //后端配置项
             wttBalance: 0, //账户WTT余额
             nameShow: false, //名字弹层
             sexShow: false, //性别弹层
@@ -167,7 +167,7 @@ export default {
     onLoad() {
         this.uSetBarTitle(this.$t('my.infoEdit.infoEdit'));
         this.getUserInfo();
-        this.getPortraitInfo();
+        this.getAvatarInfo();
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"
@@ -183,7 +183,7 @@ export default {
     //下拉刷新
     onPullDownRefresh() {
         this.getUserInfo();
-        this.getPortraitInfo();
+        this.getAvatarInfo();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -213,12 +213,12 @@ export default {
                         this.isVip = this.$t('my.openVipFalse');
                     }
 
-                    if (this.userInfo.portrait) {
-                        this.portrait  = multiavatar( this.userInfo.portrait );
-                        this.portraitID = this.userInfo.portrait.slice(0,4) + '...' + this.userInfo.portrait.slice(-12);
+                    if (this.userInfo.avatar) {
+                        this.avatar  = multiavatar( this.userInfo.avatar );
+                        this.avatarID = this.userInfo.avatar.slice(0,4) + '...' + this.userInfo.avatar.slice(-12);
                     } else {
-                        this.portrait = multiavatar( this.userInfo.userAddress );
-                        this.portraitID = this.userInfo.userAddress.slice(0,4) + '...' + this.userInfo.userAddress.slice(-12);
+                        this.avatar = multiavatar( this.userInfo.userAddress );
+                        this.avatarID = this.userInfo.userAddress.slice(0,4) + '...' + this.userInfo.userAddress.slice(-12);
                     }
                     
                 }
@@ -261,39 +261,39 @@ export default {
             this.releaseCallback(res);
         },
         //随机头像
-        async randomPortrait() {
+        async randomAvatar() {
             this.btnLoading = true;
             
             if(!this.userInfo.isVip) {
                 this.uShowToast( this.$t('my.infoEdit.noVip') );
                 this.btnLoading = false;
-                this.portraitShow = false;
+                this.avatarShow = false;
                 return;
             }
-            if(!this.portraitInfo.randomPortrait) {
+            if(!this.avatarInfo.randomAvatar) {
                 this.uShowToast( this.$t('my.infoEdit.channel') );
                 this.btnLoading = false;
-                this.portraitShow = false;
+                this.avatarShow = false;
                 return;
             }
-            if ( this.wttBalance < (this.portraitInfo.recAmount / Math.pow(10, 18)) ) {
+            if ( this.wttBalance < (this.avatarInfo.recAmount / Math.pow(10, 18)) ) {
                 this.uShowToast( this.$t('my.infoEdit.balanceLow') );
                 this.btnLoading = false;
                 return;
             }
             const result = await this.contractTransfer(
-                this.portraitInfo.recToken,
-                this.portraitInfo.recAddress,
-                this.portraitInfo.recAmount/ Math.pow(10, 18),
-                {type:'randomPortrait'}
+                this.avatarInfo.recToken,
+                this.avatarInfo.recAddress,
+                this.avatarInfo.recAmount/ Math.pow(10, 18),
+                {type:'random_avatar'}
             );
             if (result) {
                 this.postHashToWeTrue(result); //提交
                 setTimeout(() => {
                     uni.hideLoading();
                     this.btnLoading = false;
-                    this.portraitShow = false;
-                    this.getPortraitInfo();
+                    this.avatarShow = false;
+                    this.getAvatarInfo();
                     this.uShowToast(this.$t('my.infoEdit.waiting') , "none", 3000);
                 }, 1000);
             } else {
@@ -302,11 +302,11 @@ export default {
             }
         },
         //获取随机头像信息
-        getPortraitInfo() {
+        getAvatarInfo() {
             this.$http
-                .post("/Config/randomPortrait").then((res) => {
+                .post("/Config/randomAvatar").then((res) => {
                     if (res.code === 200) {
-                        this.portraitInfo = res.data;
+                        this.avatar = res.data;
                         this.getWttBalance();
                     }
                 });
@@ -334,7 +334,7 @@ export default {
         //获取WTT余额
         getWttBalance() {
             this.getTokenBalance(
-                this.portraitInfo.recToken,
+                this.avatarInfo.recToken,
                 this.token
             ).then((res) => {
                 this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
@@ -345,7 +345,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .user-info {
-    .user-portrait {
+    .user-avatar {
         width: 100rpx;
         height: 100rpx;
         border-radius: 10rpx;
@@ -356,7 +356,7 @@ export default {
         padding: 50rpx;
         border-radius: 20rpx;
     }
-    .random-portrait {
+    .random-avatar {
         background: #fff;
         border-radius: 30rpx;
         padding: 80rpx;

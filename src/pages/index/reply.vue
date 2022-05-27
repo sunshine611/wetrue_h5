@@ -171,7 +171,7 @@ export default {
             replyList: [], //回复评论列表
             commentInfo: {
                 users: {
-                    portrait: "",
+                    avatar: "",
                     userAddress: "",
                 },
             }, //评论信息

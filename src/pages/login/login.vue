@@ -29,7 +29,7 @@
                     trim
                     :clearable="false"
                     height="160"
-                    placeholder="one two three..."
+                    placeholder="gadget vocal excess layer topic check number exercise nurse ..."
                     maxlength="220"
                 />
                 <div class="warnning" v-show="warning.mnemonic">
@@ -43,7 +43,7 @@
                     type="text"
                     border
                     clearable
-                    placeholder="Password..."
+                    :placeholder="$t('login.passWarning', ['6-20'])"
                     maxlength="20"
                 />
                 <div class="warnning" v-show="warning.password">
@@ -71,7 +71,7 @@
                     {{ $t('home.index') }}
                 </div>
                 <div class="pull-right mnemonic" @tap="goUrl('mnemonic')">
-                    {{ $t('login.createAccount') }}
+                    {{ $t('login.createMnemonic') }}
                 </div>
             </div>
         </div>

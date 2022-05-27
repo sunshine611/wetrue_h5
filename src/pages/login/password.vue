@@ -16,7 +16,7 @@
                     src="../../static/logo.png"
                     class="inline mr-5"
                 ></u-image>
-                {{ $t('login.verify') + " " + $t('login.securePassword') }}
+                {{ $t('login.securePassword', [$t('login.verify')]) }}
             </div>
             <u-gap height="60"></u-gap>
             <div class="form">
@@ -27,7 +27,7 @@
                     type="text"
                     :focus="true"
                     border
-                    :placeholder="`ak_...${token.slice(-4)} ` + $t('login.securePassword')"
+                    :placeholder="$t('login.securePassword', ['ak_...'+token.slice(-4)])"
                 />
             </div>
             <u-gap height="40"></u-gap>
