@@ -18,32 +18,6 @@
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
-                :title="$t('my.userInfo')"
-                @click="goUrl('./setting/infoEdit')"
-            >
-            <fa-FontAwesome
-                    slot="icon"
-                    type="fas fa-user"
-                    size="32"
-                    class="mr-20"
-                    color="#f04a82"
-                >
-                </fa-FontAwesome>
-            </u-cell-item>
-            <u-cell-item
-                :title="$t('my.blacklistManage')"
-                @click="goUrl('./setting/blacklistManage')"
-            >
-            <fa-FontAwesome
-                    slot="icon"
-                    type="fas fa-user"
-                    size="32"
-                    class="mr-20"
-                >
-                </fa-FontAwesome>
-            </u-cell-item>
-
-            <u-cell-item
                 :title="$t('my.switchNetwork',[network])"
                 @click="selectNetwork"
                 :arrow="false"

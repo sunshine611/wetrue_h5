@@ -8,7 +8,7 @@
                     class="mr-30"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('../../index/index')"
+                    @click="reLaunchUrl('../../my/index')"
                 ></u-icon>
             </div>
         </u-navbar>
@@ -165,10 +165,12 @@ export default {
         ...mapGetters(["token"]),
     },
     onLoad() {
-        this.uSetBarTitle(this.$t('my.infoEdit.infoEdit'));
+    },
+    onReady() {
+		this.uSetBarTitle(this.$t('my.infoEdit.infoEdit'));
         this.getUserInfo();
         this.getAvatarInfo();
-    },
+	},
     mounted() {
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
@@ -214,10 +216,10 @@ export default {
                     }
 
                     if (this.userInfo.avatar) {
-                        this.avatar  = multiavatar( this.userInfo.avatar );
+                        this.avatar   = multiavatar( this.userInfo.avatar );
                         this.avatarID = this.userInfo.avatar.slice(0,4) + '...' + this.userInfo.avatar.slice(-12);
                     } else {
-                        this.avatar = multiavatar( this.userInfo.userAddress );
+                        this.avatar   = multiavatar( this.userInfo.userAddress );
                         this.avatarID = this.userInfo.userAddress.slice(0,4) + '...' + this.userInfo.userAddress.slice(-12);
                     }
                     
@@ -306,7 +308,7 @@ export default {
             this.$http
                 .post("/Config/randomAvatar").then((res) => {
                     if (res.code === 200) {
-                        this.avatar = res.data;
+                        this.avatarInfo = res.data;
                         this.getWttBalance();
                     }
                 });

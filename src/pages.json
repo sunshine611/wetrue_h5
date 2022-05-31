@@ -282,6 +282,26 @@
         "navigationBarTitleText": "Chat Room",
         "navigationStyle": "custom" // 隐藏系统导航栏
       }
+    },
+    {
+      "path": "pages/my/aens/index",
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "AENS",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/aens/detail",
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "AENS Detail",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {

@@ -8,8 +8,27 @@ export default class Backend {
 		return this.explorerViewhUrl(hash);
 	};
 
+	static nodeApiLastHeight = () => {
+		return `${nodeUrl}/v3/key-blocks/current/height`;
+	};
+
 	static nodeApiNames = (names) => {
 		return `${nodeUrl}/v3/names/${names}`;
+	};
+
+	static aeMdwApiNamesOwner = (address) => {
+	//所有者aens列表
+		return `${aeMdw}/names/owned_by/${address}/?direction=forward`;
+	};
+
+	static aeMdwApiNamesAuctions = () => {
+	//正在竞拍aens
+		return `${aeMdw}/names/auctions/?direction=forward&limit=100`;
+	};
+
+	static aeMdwApiNameDetails = (name) => {
+	//aens详情
+		return `${aeMdw}/name/${name}?expand`;
 	};
 
 	static nodeApiAccounts = (address) => {

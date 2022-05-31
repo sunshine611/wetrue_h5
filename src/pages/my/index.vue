@@ -26,12 +26,11 @@
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
                                  <div class="open-vip" v-if="userInfo.isVip">
-                                    <fa-FontAwesome
-                                        type="fab fa-vuejs"
-                                        size="28"
+                                    <u-icon 
+                                        name="level"
+                                        size="30"
                                         color="#CD7F32"
-                                    >
-                                    </fa-FontAwesome>
+                                    ></u-icon>
                                 </div>
                                 <div :class="[userInfo.isAuth ? 'auth' : '']">
                                     {{ userInfo.nickname || $t('my.cryptonym') }}
@@ -88,6 +87,46 @@
                     </div>
                 </div>
             </div>
+            <div class="grid">
+                <u-grid col="4" :border="false">
+                    <u-grid-item @click="goUrl('./setting/infoEdit')">
+                        <u-icon 
+                            name="account"
+                            size="46"
+                            color="#f04a82"
+                        ></u-icon>
+                        <view class="grid-text">{{ $t('my.userInfo') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goUrl('./setting/blacklistManage')">
+                        <u-icon 
+                            name="account"
+                            size="46"
+                        ></u-icon>
+                        <view class="grid-text">{{ $t('my.blacklistManage') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goAccountManage()">
+                        <u-icon 
+                            name="man-add"
+                            size="46"
+                            color="#f04a82"
+                        ></u-icon>
+                        <view class="grid-text"> {{ $t('my.accountManage') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goUrl('aens/index')">
+                        <fa-FontAwesome
+                            type="fab fa-neos"
+                            size="42"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                        <view class="grid-text">AENS</view>
+                    </u-grid-item>
+
+                </u-grid>
+            </div>
             <div class="menu">
                 <u-cell-group :border="false">
                     <u-cell-item
@@ -107,7 +146,6 @@
                     <u-cell-item
                         :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
-                        v-if="!this.validThirdPartySource()"
                     >
                         <fa-FontAwesome
                             slot="icon"
@@ -131,29 +169,14 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item
-                        :title="$t('my.accountManage')"
-                        @click="goUrl('../login/accountManage')"
-                        v-if="!this.validThirdPartySource()"
-                    >
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-user-shield"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
-                    </u-cell-item>
                     <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
-                        <fa-FontAwesome
+                        <u-icon 
                             slot="icon"
-                            type="fas fa-cog"
-                            size="32"
+                            name="setting-fill"
+                            size="40"
                             class="mr-10"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                        ></u-icon>
                     </u-cell-item>
                 </u-cell-group>
             </div>
@@ -295,6 +318,15 @@ export default {
         whitePaper() {
             window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
         },
+        //检查版本
+        async versionCheck() {
+            await this.appVersion();
+            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
+                this.versionShow = true;
+            } else {
+                this.uShowToast(this.$t('my.versionTips'));
+            }
+        },
         //获取服务端版本信息
         appVersion() {
             this.getVersionInfo().then((res) => {
@@ -304,14 +336,15 @@ export default {
                 }
             });
         },
-        //检查版本
-        async versionCheck() {
-            await this.appVersion();
-            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
-                this.versionShow = true;
-            } else {
-                this.uShowToast(this.$t('my.versionTips'));
-            }
+        //账户管理
+        goAccountManage() {
+            if (this.validThirdPartySource()) {
+                this.uShowToast(
+                    this.$t('index.thirdPartyNotOpen'),
+                );
+                return false;
+            };
+            this.goUrl('../login/accountManage');
         },
     },
 };
@@ -324,12 +357,12 @@ page {
 
 .my {
     .top-background {
-        background: #f04a82;
+        background: $u-type-aeternity;
     }
     .user-info {
         .my-info {
             .block {
-                background: #f04a82;
+                background: $u-type-aeternity;
                 width: 100%;
                 height: 320rpx;
                 position: relative;
@@ -338,14 +371,14 @@ page {
                 position: relative;
                 .icon-list {
                     position: absolute;
-                    right: 30rpx;
+                    left: 5%;
                     top: 30rpx;
                 }
                 .user-box {
                     width: 90%;
                     background-color: #fff;
                     box-shadow: 0px 2px 6px 0px
-                        rgba($color: #f04a82, $alpha: 0.3);
+                        rgba($color: $u-type-aeternity, $alpha: 0.3);
                     z-index: 100;
                     border-radius: 20upx;
                     position: absolute;
@@ -379,7 +412,7 @@ page {
                             flex-wrap: wrap;
                             align-items: center;
                             line-height: 50rpx;
-                            color: #f04a82;
+                            color: $u-type-aeternity;
                             font-size: 34rpx;
                         }
                     }
@@ -407,16 +440,27 @@ page {
             }
         }
 
+        .grid {
+            width: 95%;
+            margin: 180rpx auto 0rpx;
+            border-bottom: 2rpx solid #ececec;
+            .grid-text {
+                font-size: 24rpx;
+                margin-top:12rpx;
+                color: #999;
+            }
+        }
+
         .menu {
             width: 80%;
-            margin: 180upx auto 80upx;
+            margin: 0 auto 80rpx;
         }
 
         .version {
             color: #999;
-            font-size: 24upx;
+            font-size: 24rpx;
             position: absolute;
-            bottom: 30upx;
+            bottom: 30rpx;
             width: 100%;
             text-align: center;
             .version-code {
@@ -427,7 +471,7 @@ page {
     }
 
     .login {
-        background-color: #f04a82;
+        background-color: $u-type-aeternity;
         height: calc(100vh - 50px);
         display: flex;
         justify-content: center;

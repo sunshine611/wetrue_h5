@@ -60,16 +60,13 @@
                             :src="item.image"
                             v-if="item.image"
                         ></u-image>
-                        <a
-                            class="topic-url"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            :href="item.url"
+                        <u-link 
                             v-if="item.url"
-                        ><text>
-                                {{ item.simpleUrl }}
-                            </text>
-                        </a>
+                            :href="item.url" 
+                            color="#f04a82"
+                            >
+                        {{ item.simpleUrl }}
+                        </u-link>
                 </div>
                 <div class="operation">
                     <div
@@ -310,7 +307,7 @@ export default {
                 margin: 0 30rpx 0rpx 30rpx;
                 padding: 0 0 25rpx 0;
                 font-size: 26rpx;
-                border-bottom: 2rpx solid #e9e9e9;
+                border-bottom: 2rpx dashed #e9e9e9;
 
                 .text-content {
                     font-size: 32rpx;
@@ -332,9 +329,6 @@ export default {
                     ::v-deep .mentions-text {
                         color: #f04a82;
                     }
-                }
-                .topic-url {
-                    color: #f04a82;
                 }
             }
 

@@ -12,18 +12,16 @@
             </fa-FontAwesome>
         </div>
         <div class="open-vip" v-if="userInfo.isVip">
-            <fa-FontAwesome
-                type="fab fa-vuejs"
+            <u-icon 
+                name="level"
                 size="28"
                 color="#CD7F32"
-            >
-            </fa-FontAwesome>
+            ></u-icon>
         </div>
         <div :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || $t('my.cryptonym') }}
         </div>
-        <text class="userid">ID:{{ userInfo.userAddress.slice(-4)  }}</text>
-        <text class="userid" v-show="userInfo.defaultAens">AENS:{{ userInfo.defaultAens }}</text>
+        <text class="userid">{{ userInfo.defaultAens ? 'AENS: ' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
     </div>
 </template>
 <script>

@@ -128,6 +128,12 @@ export default {
         //开通
         openVip() {
             if (this.isAgree) {
+                if (this.validThirdPartySource()) {
+                    this.uShowToast(
+                        this.$t('index.thirdPartyNotOpen'),
+                    );
+                    return false;
+                };
                 this.btnLoading = true;
                 if(!this.configInfo.openVip) {
                     this.uShowToast( this.$t('my.openVipPage.channel') );

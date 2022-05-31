@@ -63,7 +63,6 @@ export default {
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
             postTopicButtonShow: true, //控制发帖按钮显隐
@@ -95,11 +94,11 @@ export default {
             if (this.current === 0) this.getNewCount();
         }, 1000);
     },
-    onLoad(option) {
+    async onLoad(option) {
         this.uSetBarTitle(this.$t('titleBar.index'));
         setThirdPartySource(option);
         this.cateInfo.label = this.$t('home.newRelease');
-        this.getPostList();
+        await this.getPostList();
         this.appVersion();
         this.getUnreadMsg();
         //监听最新总贴数
@@ -192,6 +191,9 @@ export default {
                                 });
                                 this.postList = itemList.filter((s)=> {return s;});
                             });
+                            if (this.current == 0) {
+                                this.newCount = this.pageInfo.totalSize;
+                            }
                         } else {
                             if (this.pageInfo.page > this.pageInfo.totalPage) {
                                 this.pageInfo.page = this.pageInfo.totalPage;

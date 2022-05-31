@@ -138,14 +138,6 @@ import { mapGetters } from "vuex";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
-import Backend from "@/util/backend";
-//import { AE_AMOUNT_FORMATS, formatAmount, toAe, toAettos } from '../../src/utils/amount-formatter
-
-import {
-    toAe,
-    toAettos,
-    formatAmount
-} from "@aeternity/aepp-sdk/es/utils/amount-formatter";
 
 export default {
     components: {
@@ -226,6 +218,12 @@ export default {
         },
         //迁移
         migrate() {
+            if (this.validThirdPartySource()) {
+                this.uShowToast(
+                    this.$t('index.thirdPartyNotOpen'),
+                );
+                return false;
+            };
             if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
                 this.warning.amount = true;
                 return;
