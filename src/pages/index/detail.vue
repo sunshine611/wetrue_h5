@@ -166,7 +166,7 @@
             :status="more"
             v-show="commentList.length > 0"
         />
-        <u-gap height="680"></u-gap>
+        <u-gap :height="680-commentHeight"></u-gap>
         <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
@@ -264,6 +264,7 @@ export default {
             commentType: "", //回复类型
             currentComment: {}, //当前回复信息
             rewardShow: false, //控制打赏弹层
+            commentHeight: 0, //评论空白高度
         };
     },
     //下拉刷新
@@ -337,6 +338,7 @@ export default {
                             );
                         }
                     }
+                    this.commentHeight = (this.commentList.length * 230)>680 ? 680 : (this.commentList.length * 230);
                 });
             },
             deep: true,
