@@ -103,8 +103,10 @@ export default {
         this.getUnreadMsg();
         //监听最新总贴数
 		socket.on('contentListCount', (res) => {
-            this.newCount = res.countSize;
-            this.newContentCount();
+            if(res.countSize > 0) {
+                this.newCount = res.countSize;
+                this.newContentCount();
+            }
         })
         //监听最新未读消息
 		socket.on('msgStateSize', (res) => {
@@ -127,9 +129,9 @@ export default {
             this.getPostList();
         }
         this.tabClick = true;
+        this.newContentCount();
         setTimeout(() => {
             this.tabClick = false;
-            this.newContentCount();
         }, 500);
     },
     computed: {
@@ -224,7 +226,7 @@ export default {
         newContentCount() {
             if (this.current === 0) {
                 const oldCount = this.pageInfo.totalSize
-                if (this.newCount > oldCount) {
+                if (oldCount > 0 && this.newCount > oldCount) {
                     let size = parseInt(this.newCount - oldCount);
                     uni.setTabBarBadge({
                         index: 0,
