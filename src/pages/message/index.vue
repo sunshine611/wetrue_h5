@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-tabs
             :list="categoryList"
             :is-scroll="false"
@@ -10,7 +10,7 @@
             style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
         <div class="empty" v-show="msgList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <div class="dynamic">
             <div
@@ -180,8 +180,7 @@ export default {
         this.getMsgList();
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.message);
+        this.uSetBarTitle(this.$t('titleBar.message'));
         this.getMsgList();
         this.getVersionInfo();
     },
@@ -191,17 +190,11 @@ export default {
         this.getUnreadMsg();
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
         //类别列表
         categoryList() {
             return [
                 {
-                    name: this.i18n.message.dynamic
+                    name: this.$t('message.dynamic')
                 },
             ];
         },

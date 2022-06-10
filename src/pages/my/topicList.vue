@@ -1,6 +1,6 @@
 <template>
     <view class="myTopic" :title="title">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
@@ -14,7 +14,7 @@
         </u-navbar>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -63,25 +63,18 @@ export default {
         this.getPostList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "myTopic") {
             this.type = "myTopic";
-            this.title = this.i18n.my.myTopic;
+            this.title = this.$t('my.myTopic');
         } else if (option.type === "myStar") {
             this.type = "myStar";
-            this.title = this.i18n.my.myStar;
+            this.title = this.$t('my.myStar');
         }
         this.uSetBarTitle(this.title);
         this.getPostList();
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //获取帖子列表

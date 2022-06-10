@@ -1,9 +1,10 @@
 <template>
-    <view class="seting">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+    <view class="setting">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar
             :is-fixed="false"
-            :title="i18n.my.set"
+            :title="$t('my.setting.setting')"
+            v-show="!validThirdPartySource()"
         >
             <div slot="right">
                 <u-icon
@@ -17,7 +18,32 @@
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
-                :title="i18n.my.languageSwitch"
+                :title="$t('my.switchNetwork',[network])"
+                @click="selectNetwork"
+                :arrow="false"
+            >
+                <fa-FontAwesome
+                    slot="icon"
+                    type="fab fa-skyatlas"
+                    size="32"
+                    class="mr-20"
+                    color="#f04a82"
+                    v-show="network === 'io'"
+                >
+                </fa-FontAwesome>
+                <fa-FontAwesome
+                    slot="icon"
+                    type="fab fa-skyatlas"
+                    size="32"
+                    class="mr-20"
+                    color="#03a9f4"
+                    v-show="network === 'cc'"
+                >
+                </fa-FontAwesome>
+            </u-cell-item>
+
+            <u-cell-item
+                :title="$t('my.switchLanguage')"
                 @click="selectLanguage"
                 :arrow="false"
             >
@@ -25,7 +51,7 @@
                     slot="icon"
                     type="fas fa-language"
                     size="32"
-                    class="mr-10"
+                    class="mr-20"
                     color="#f04a82"
                     v-show="language === 'zh-cn'"
                 >
@@ -34,7 +60,7 @@
                     slot="icon"
                     type="fas fa-language"
                     size="32"
-                    class="mr-10"
+                    class="mr-20"
                     color="#03a9f4"
                     v-show="language === 'en'"
                 >
@@ -47,49 +73,39 @@
 <script>
 import { mapGetters } from "vuex";
 import { getStore, setStore } from "@/util/service";
-import moment from "moment";
 export default {
     components: {},
     data() {
         return {
             language: getStore("language"),
+            network: getStore("networkSetting"),
         };
     },
     //下拉刷新
     onPullDownRefresh() {},
     //上拉加载
     onReachBottom() {},
-    onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.set);
+    onLoad() {
+        this.uSetBarTitle(this.$t('titleBar.set'));
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
-        //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
+        //切换网络
+        selectNetwork() {
+            if (getStore("networkSetting") === "io") {
+                setStore("networkSetting", "cc");
+            } else if (getStore("networkSetting") === "cc") {
+                setStore("networkSetting", "io");
             }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
+            this.network = getStore("networkSetting");
         },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-.seting {
+.setting {
 }
 </style>

@@ -52,7 +52,7 @@ http.interceptors.response.use((res) => {
                 url: "/pages/my/index",
             });
         }, 1000);
-    }
+    }    
     if (res.config.custom.isToast) {
         uni.hideLoading();
     }

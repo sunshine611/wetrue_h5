@@ -2,7 +2,7 @@
 <template>
     <div class="migrate-token">
         <div class="icon-list" v-show="!validThirdPartySource()">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`}"></view>
             <u-icon
                 name="home"
                 class="mr-30"
@@ -119,7 +119,7 @@
                 </div>
                 <u-gap :height="10"></u-gap>
                 <div class="warnning" v-show="warning.amount">
-                    {{ i18n.my.balanceErr }}
+                    {{ $t('my.balanceErr') }}
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">余额：{{ balanceFormat(wetBalance) }} WET</div>
@@ -138,7 +138,6 @@ import { mapGetters } from "vuex";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
-import Backend from "@/util/backend";
 
 export default {
     components: {
@@ -164,15 +163,8 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.getConfigInfo();
         this.getMigrateWttBalance();
         this.getWttBalance();
@@ -191,27 +183,30 @@ export default {
     methods: {
         //获取WET余额
         getWetBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.oldWttContract)
+            this.getTokenBalance(
+                this.configInfo.oldWttContract,
+                this.token
             ).then((res) => {
-                this.wetBalance = res.data.amount;
-            });
+                this.wetBalance = res.toString(10) || 0;
+            });;
         },
-        //获取WET余额
+        //获取WTT余额
         getWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                this.token
             ).then((res) => {
-                this.wttBalance = res.data.amount || 0;
-            });
+                this.wttBalance = res.toString(10) || 0;
+            });;
         },
         //获取已迁移WTT
         getMigrateWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken( "ak" + this.configInfo.migrateContract.slice(2), this.configInfo.wttContract)
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                "ak" + this.configInfo.migrateContract.slice(2)
             ).then((res) => {
-                this.migrateBalance = this.balanceFormat(res.data.amount);
-            });
+                this.migrateBalance = this.balanceFormat( res.toString(10) ) || 0;
+            });;
         },
         //全部事件
         totalBalance() {
@@ -223,6 +218,12 @@ export default {
         },
         //迁移
         migrate() {
+            if (this.validThirdPartySource()) {
+                this.uShowToast(
+                    this.$t('index.thirdPartyNotOpen'),
+                );
+                return false;
+            };
             if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
                 this.warning.amount = true;
                 return;
@@ -269,7 +270,7 @@ page {
     background-color: #000;
 }
 .migrate-token {
-    background: url("@/static/migrate_bg.jpg") no-repeat;
+    background: url("@/static/migrate_bg.png") no-repeat;
     background-size: 100%;
     display: flex;
     justify-content: center;

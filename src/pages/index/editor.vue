@@ -1,7 +1,7 @@
 <template>
     <view class="editor">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" back-text="" :title="i18n.index.sendContent" :border-bottom="false">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
+        <u-navbar :is-fixed="false" back-text="" :title="$t('index.sendContent')" :border-bottom="false">
             <div slot="right" class="right-btn">
                 <u-button
                     type="primary"
@@ -9,12 +9,12 @@
                     :disabled="form.text.length === 0"
                     @click="release"
                     :loading="btnLoading"
-                    >{{ i18n.index.send }}</u-button
+                    >{{ $t('index.send') }}</u-button
                 >
             </div>
         </u-navbar>
         <div class="font-24" style="color:#f04a82">
-            {{ i18n.index.sendHint }}
+            {{ $t('index.sendHint') }}
         </div>
         <u-gap height="40"></u-gap>
         <u-input
@@ -24,7 +24,7 @@
             height="300"
             :auto-height="true"
             :maxlength="50000"
-            :placeholder="i18n.index.wetrueTips"
+            :placeholder="this.postShTip ? $t('index.postShTips') : $t('index.wetrueTips')"
             :clearable="false"
         />
         <text>-------</text>
@@ -61,8 +61,7 @@ export default {
         };
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.sendContent);
+        this.uSetBarTitle(this.$t('titleBar.sendContent'));
         this.isPassword();
         if (!!option.topic) {
             this.form = {
@@ -87,12 +86,6 @@ export default {
         this.isPassword();
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //发布
@@ -111,7 +104,7 @@ export default {
             if (this.postShTip) {
                 //发布到 Superhero
                 res = await this.contractShTip(
-                    payload.content + ' ,from WeTrue.io'
+                    payload.content + '[Source WeTrue.io]'
                 );
             } else {
                 //发布到 WeTrue
@@ -121,12 +114,12 @@ export default {
         },
         releaseCallback(callback) {
             if (JSON.stringify(callback) !== "{}" && !!callback) {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.btnLoading = false;
                 this.getConfigInfo();
                 this.reLaunchUrl("index");
             } else {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.btnLoading = false;
             }
         },

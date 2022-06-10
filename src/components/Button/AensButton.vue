@@ -15,12 +15,7 @@ export default {
     components: {
     },
     props: {
-        postButtonInfo: {
-            type: Object,
-            default: () => {
-                return {}
-            },
-        },
+
     },
     data() {
         return {
@@ -29,20 +24,15 @@ export default {
     watch: {
     },
     methods: {
-        //发帖
+        //认领
         post() {
-            //WeTrue登陆发帖
-            if (this.postButtonInfo.type === 'topic') {
-                this.goUrl(
-                    "editor?topic=" + this.postButtonInfo.keyword
+            if (this.validThirdPartySource()) {
+                this.uShowToast(
+                    this.$t('index.thirdPartyNotOpen'),
                 );
-            } else if (this.postButtonInfo.type === 'shtip') {
-                this.goUrl(
-                    "editor?shtip=true"
-                );
-            } else {
-                this.goUrl('editor');
-            }
+                return false;
+            };
+            this.uShowToast('开发中');
         },
     },
 };
@@ -52,9 +42,9 @@ export default {
         position: fixed;
         z-index: 1000;
         right: 60rpx;
-        bottom: 200rpx;
+        bottom: 150rpx;
         background: rgba($u-type-aeternity, 0.75);
-        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba($u-type-aeternity, 0.3);
+        box-shadow: 0rpx 0rpx 20rpx 5rpx rgba(#033535, 0.3);
         width: 80rpx;
         height: 80rpx;
         line-height: 80rpx;

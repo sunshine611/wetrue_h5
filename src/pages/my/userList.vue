@@ -1,6 +1,6 @@
 <template>
     <view class="user-list">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
@@ -14,7 +14,7 @@
         </u-navbar>
         <User :userList="userList" class="mb-20"></User>
         <div class="empty" v-show="userList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -60,25 +60,18 @@ export default {
         this.getUserList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
         if (option.type === "focus") {
             this.type = "focus";
-            this.title = this.i18n.my.myFocus;
+            this.title = this.$t('my.myFocus');
         } else if (option.type === "fans") {
             this.type = "fans";
-            this.title = this.i18n.my.myFans;
+            this.title = this.$t('my.myFans');
         }
         this.uSetBarTitle(this.title);
         this.getUserList();
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //获取帖子列表

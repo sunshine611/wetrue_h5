@@ -1,7 +1,7 @@
 <template>
     <div class="token-list">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.myWallet" v-show="!validThirdPartySource()">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
+        <u-navbar :is-fixed="false" :title="$t('my.myWallet')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -22,7 +22,7 @@
                     class="token-logo"
                 ></u-image>
                 <text class="token-value"
-                    >{{ i18n.my.balance + "：" + aeBalance }}
+                    >{{ $t('my.balance') + "：" + aeBalance }}
                     <u-icon
                         name="arrow-right"
                         class="ml-10"
@@ -46,7 +46,7 @@
                         color="#fff"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.my.send }}</u-button
+                    >{{ $t('my.send') }}</u-button
                 >
                 <u-button
                     type="success"
@@ -61,7 +61,7 @@
                         color="#fff"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.my.receive }}</u-button
+                    >{{ $t('my.receive') }}</u-button
                 >
             </div>
         </div>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 <div slot="right-icon" class="amount">
-                    {{i18n.my.balance + ": " + balanceFormat(item.balance||item.amount, 5, item.decimal)}}
+                    {{ $t('my.balance') + ": " + balanceFormat(item.balance||item.amount, 5, item.decimal) }}
                     <u-button
                         shape="square"
                         type="primary"
@@ -103,7 +103,7 @@
                             color="#fff"
                         >
                         </fa-FontAwesome
-                        >{{ i18n.my.send }}</u-button
+                        >{{ $t('my.send') }}</u-button
                     >
                 </div>
             </u-cell-item>
@@ -129,16 +129,9 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.myWallet);
+        this.uSetBarTitle(this.$t('titleBar.myWallet'));
         this.isPassword();
         this.getAccount().then(res=>{
                 this.aeBalance = res;

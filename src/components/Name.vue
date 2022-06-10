@@ -5,17 +5,23 @@
     >
     <div class="auth-sign" v-if="userInfo.isAuth">
             <fa-FontAwesome
-                type="fas fa-user-secret"
+                type="fas fa-user-shield"
                 size="28"
                 color="#2979FF"
             >
             </fa-FontAwesome>
         </div>
-        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
-            {{ userInfo.nickname || i18n.my.cryptonym }}
+        <div class="open-vip" v-if="userInfo.isVip">
+            <u-icon 
+                name="level"
+                size="28"
+                color="#CD7F32"
+            ></u-icon>
         </div>
-        <text class="userid">ID:{{ userInfo.userAddress.slice(-4)  }}</text>
-        <text class="userid" v-show="userInfo.defaultAens">AENS:{{ userInfo.defaultAens }}</text>
+        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
+            {{ userInfo.nickname || $t('my.cryptonym') }}
+        </div>
+        <text class="userid">{{ userInfo.defaultAens ? 'AENS: ' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
     </div>
 </template>
 <script>
@@ -29,16 +35,6 @@ export default {
     data() {
         return {};
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
-    watch: {},
-    methods: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -53,6 +49,10 @@ export default {
         }
     }
     .auth-sign {
+        margin-right: 4rpx;
+        display: inline-block;
+    }
+    .open-vip {
         margin-right: 4rpx;
         display: inline-block;
     }

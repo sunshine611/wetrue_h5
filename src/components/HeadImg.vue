@@ -1,34 +1,26 @@
 <template>
     <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
-        <u-image
-            shape="circle"
-            :width="width"
-            :height="height"
-            v-if="userInfo.portrait"
-            :src="baseUrl + userInfo.portrait"
-        ></u-image>
-        <u-image
-            shape="circle"
-            :width="width"
-            :height="height"
-            v-else
-            src="@/static/default_head.png"
-        ></u-image>
+        <div
+            v-html="avatar"
+        ></div>
         <div :class="['level',userInfo.sex === 1?'man':'',userInfo.sex === 0?'woman':'']" v-if="userInfo.userActive !== 0">
             <text class="text">V{{ userInfo.userActive }}</text>
         </div>
-        <!-- <div class="sex man" v-if="userInfo.sex === 1">
-            <text class="text"><u-icon name="man" color="#fff" size="20"></u-icon></text>
-        </div>
-        <div class="sex woman" v-if="userInfo.sex === 0">
-            <text class="text"><u-icon name="woman" color="#fff" size="20"></u-icon></text>
-        </div> -->
     </div>
 </template>
 <script>
 import { baseUrl } from "@/config/config.js";
+import multiavatar from '@multiavatar/multiavatar';
 
 export default {
+    data() {
+        return {
+            baseUrl: baseUrl,
+            avatar: multiavatar(
+                this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
+            ),
+        };
+    },
     props: {
         userInfo: {
             type: Object,
@@ -47,20 +39,19 @@ export default {
             default: false,
         },
     },
-    data() {
-        return {
-            baseUrl: baseUrl
-        };
-    },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
+    watch: {
+        userInfo: {
+            handler() {
+                this.$nextTick(() => {
+                    this.avatar = multiavatar(
+                        this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
+                    );
+                });
             },
+            deep: true,
         },
     },
-    watch: {},
+
     methods: {
         //点击头像
         handleView() {

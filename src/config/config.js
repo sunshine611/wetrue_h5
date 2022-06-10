@@ -1,8 +1,10 @@
-export const version = '2.7.4'
+import { getStore } from "@/util/service";
+
+export const version = '2.7.79'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const env_net = 'io';
+const env_net = getStore("networkSetting")==='cc' ? 'cc' : 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
@@ -11,7 +13,7 @@ if (env_net == 'io') {
     chatapi     = 'https://api.wetrue.io'
     aeMdw       = 'https://mainnet.aeternity.io/mdw'
     aeknow      = 'https://api.wetrue.io/Aeknow'
-    compilerUrl = 'https://compiler.aeternity.io'
+    compilerUrl = 'https://compiler.wetrue.io'
 } else if (env_net == 'cc') {
     baseUrl     = 'https://api.wetrue.cc'
     nodeUrl     = 'https://mainnet.wetrue.cc'
@@ -21,13 +23,13 @@ if (env_net == 'io') {
     aeknow      = 'https://api.wetrue.cc/Aeknow'
     compilerUrl = 'https://compiler.wetrue.cc'
 } else if(env_net == 'test') {
-    baseUrl     = 'http://192.168.1.120:1807'
+    baseUrl     = 'https://liushao.cc:1817'
     nodeUrl     = 'https://testnet.aeternity.io'
     aeExplorer  = 'https://explorer.testnet.aeternity.io'
     chatapi     = 'http://192.168.1.111:50001'
     aeMdw       = 'https://explorer.testnet.aeternity.io/mdw'
     aeknow      = 'http://192.168.1.120:1807/Aeknow'
-    compilerUrl = 'https://compiler.aechina.io'
+    compilerUrl = 'https://compiler.wetrue.cc'
 }
 
 export const chatRommKeyIv = { key: '20200425FEAACD66', iv: '66DCAAEF20200425' }

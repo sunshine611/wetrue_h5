@@ -1,6 +1,6 @@
 <template>
     <view class="index">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
             <u-navbar class="nav" :is-fixed="false" :is-back="false">
                 <u-tabs
                     class="nav-tab"
@@ -15,7 +15,7 @@
             </u-navbar>
         <TopicList :postList="postList"></TopicList>
         <div class="empty" v-show="postList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -38,12 +38,13 @@ import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { setThirdPartySource } from "@/util/thirdPartySource/source";
 import socket from '@/util/socketio.js';
+import { getStore, setStore } from "@/util/service";
 
 export default {
     components: {
         TopicList,
         VersionTip,
-        PostTopicButton,
+        PostTopicButton
     },
     data() {
         return {
@@ -62,12 +63,13 @@ export default {
             more: "loadmore", //加载更多
             currentForum: {}, //当前选择的帖子
             versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/\./g, "")), //版本号
             versionShow: false, //版本提示弹层
             tabClick: false, //点击tab事件
             postTopicButtonShow: true, //控制发帖按钮显隐
             newCount: 0, //最新总贴数
             postButtonInfo: {}, //发布按钮增加信息
+            blacklist: getStore("blacklist"), //黑名单列表
+            blacklistState: getStore("blacklistState"), //黑名单列表状态
         };
     },
     //下拉刷新
@@ -77,7 +79,9 @@ export default {
         this.getUnreadMsg();
         setTimeout(function () {
             uni.stopPullDownRefresh();
+            this.newContentCount();
         }, 500);
+        this.getSystemStatusBarHeight(); //状态栏高度
     },
     //上拉加载
     onReachBottom() {
@@ -85,18 +89,24 @@ export default {
         this.getPostList();
         this.getUnreadMsg();
     },
-    onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.index);
+    onShow() {
+        setTimeout(() => {
+            if (this.current === 0) this.getNewCount();
+        }, 1000);
+    },
+    async onLoad(option) {
+        this.uSetBarTitle(this.$t('titleBar.index'));
         setThirdPartySource(option);
-        this.cateInfo.label = this.i18n.home.newRelease;
-        this.getPostList();
+        this.cateInfo.label = this.$t('home.newRelease');
+        await this.getPostList();
         this.appVersion();
         this.getUnreadMsg();
         //监听最新总贴数
 		socket.on('contentListCount', (res) => {
-            this.newCount = res.countSize;
-            this.newContentCount();
+            if(res.countSize > 0) {
+                this.newCount = res.countSize;
+                this.newContentCount();
+            }
         })
         //监听最新未读消息
 		socket.on('msgStateSize', (res) => {
@@ -107,8 +117,10 @@ export default {
         //监听错误
 		socket.on('error', (msg) => this.uShowToast(msg))
     },
-    activated() {
-        this.getUnreadMsg();
+    mounted() {
+        setTimeout(() => {
+            this.getSystemStatusBarHeight(); //状态栏高度
+        }, 1000);
     },
     onTabItemTap() {
         if (this.tabClick) {
@@ -117,35 +129,29 @@ export default {
             this.getPostList();
         }
         this.tabClick = true;
+        this.newContentCount();
         setTimeout(() => {
             this.tabClick = false;
-            this.newContentCount();
         }, 500);
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
         //类别列表
         categoryList() {
             return [
                 {
-                    name: this.i18n.home.newRelease,
+                    name: this.$t('home.newRelease'),
                 },
                 {
-                    name: this.i18n.home.hotRecommend,
+                    name: this.$t('home.hotRecommend'),
                 },
                 {
-                    name: this.i18n.home.newPic,
+                    name: this.$t('home.newPic'),
                 },
                 {
-                    name: this.i18n.home.myFocus,
+                    name: this.$t('home.myFocus'),
                 },
                 {
-                    name: this.i18n.home.superHero,
+                    name: this.$t('home.superHero'),
                 },
             ];
         },
@@ -182,32 +188,23 @@ export default {
                         if (this.pageInfo.page === 1) {
                             this.pageInfo.totalSize = parseInt(res.data.totalSize);
                             this.$nextTick(() => {
-                                this.postList = res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    if (this.current === 4) {
-                                        item.hash = item.shTipid;
-                                    }
-                                    return item;
+                                let itemList = res.data.data.map((item) => {
+                                    return this.itemListMap(item); //数据处理
                                 });
+                                this.postList = itemList.filter((s)=> {return s;});
                             });
+                            if (this.current == 0) {
+                                this.newCount = this.pageInfo.totalSize;
+                            }
                         } else {
                             if (this.pageInfo.page > this.pageInfo.totalPage) {
                                 this.pageInfo.page = this.pageInfo.totalPage;
                                 this.more = "nomore";
                             } else {
-                                this.postList = this.postList.concat(
-                                    res.data.data.map((item) => {
-                                        item.payload = this.topicHighlight(
-                                            item.payload
-                                        );
-                                        if (this.current === 4) {
-                                            item.hash = item.shTipid;
-                                        }
-                                        return item;
-                                    })
-                                );
+                                let itemList = res.data.data.map((item) => {
+                                        return this.itemListMap(item); //数据处理
+                                    });
+                                this.postList = this.postList.concat(itemList.filter((s)=> {return s;}));
                             }
                         }
                     } else {
@@ -225,21 +222,55 @@ export default {
             }; //页码信息
             this.getPostList();
         },
-        //新未读帖
+        //未读新帖标记
         newContentCount() {
-            let oldCount = this.pageInfo.totalSize
             if (this.current === 0) {
-                if (this.newCount > oldCount) {
+                const oldCount = this.pageInfo.totalSize
+                if (oldCount > 0 && this.newCount > oldCount) {
+                    let size = parseInt(this.newCount - oldCount);
                     uni.setTabBarBadge({
                         index: 0,
-                        text: `${this.newCount - oldCount}`,
+                        text: `${size}`,
                     });
+                    const url = "/Content/list";
+                    let params = {page: 1, size: size};
+                    this.getNewPost(url, params);
                 } else {
                     uni.hideTabBarRedDot({
                         index: 0,
                     });
                 }
             }
+        },
+        getNewCount() {
+            const url = "/Content/list";
+            const params = {page: 1, size: 1};
+            this.$http
+                .post(url, params)
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.newCount = parseInt(res.data.totalSize);
+                        this.newContentCount();
+                    }
+                });
+        },
+        getNewPost(url, params) {
+            this.$http
+                .post(url, params)
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.pageInfo.totalSize = parseInt(res.data.totalSize);
+                        res.data.data.map((item) => {
+                            if (this.postList[0].hash !== item.hash ) {
+                                this.postList.unshift(this.itemListMap(item));
+                                this.postList.pop();
+                            }
+                        });
+                        uni.hideTabBarRedDot({
+                            index: 0,
+                        });
+                    }
+                });
         },
         //获取服务端版本信息
         appVersion() {
@@ -249,6 +280,25 @@ export default {
                     this.versionShow = true;
                 }
             });
+        },
+        //帖子列表-数据前期处理
+        itemListMap(item){
+            this.blacklistState = getStore("blacklistState"); //获取黑名单状态
+            if (this.blacklistState === 1) {
+                this.blacklist = getStore("blacklist");
+                setStore("blacklistState", 0);
+            }
+
+            item.payload = this.topicHighlight(
+                item.payload
+            );
+            if (this.current === 4) { //超级英雄
+                item.hash = item.shTipid;
+            }
+            const block = this.blacklist.includes(item.users.userAddress);
+            if(!block) {
+                return item;
+            }
         },
     },
 };

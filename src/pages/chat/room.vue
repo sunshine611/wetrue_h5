@@ -1,6 +1,6 @@
 <template>
 	<view class="uni-column">
-		<view :style="`padding-top:${statusBarHeight}px`"></view>
+		<view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :back-text="online" title="Chat Room">
             <div slot="right">
                 <u-icon
@@ -93,12 +93,6 @@ export default {
 	},
 	computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
 	methods: {
 		//发送消息

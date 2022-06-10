@@ -1,7 +1,7 @@
 <template>
     <view class="detail">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.index.contentDetails" v-show="!validThirdPartySource()">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
+        <u-navbar :is-fixed="false" :title="$t('index.contentDetails')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -16,11 +16,11 @@
         <div class="comment">
             <div class="clearfix header">
                 <div class="title">
-                    <text class="mr-4">{{ i18n.index.comment }}</text
+                    <text class="mr-4">{{ $t('index.comment') }}</text
                     >{{ postInfo.commentNumber }}
                 </div>
                 <div class="praise">
-                    <text class="mr-4">{{ i18n.index.praise }}</text
+                    <text class="mr-4">{{ $t('index.praise') }}</text
                     >{{ postInfo.praise }}
                 </div>
             </div>
@@ -102,11 +102,11 @@
                                         >{{
                                             item.users.nickname ||
                                             item.users.userAddress.slice(-4)
-                                        }}</text
-                                    ><text v-if="item.replyHash">{{
-                                        i18n.index.reply
-                                    }}</text
-                                    ><text
+                                        }}</text>
+                                        <text v-if="item.replyHash">
+                                            {{ $t('index.reply') }}
+                                        </text>
+                                        <text
                                         :class="[
                                             'name',
                                             item.receiverIsAuth ? 'auth' : '',
@@ -123,7 +123,7 @@
                                             (item.receiverName ||
                                                 item.toAddress.slice(-4))
                                         }}</text
-                                    >：<mp-html
+                                    >: <mp-html
                                         class="compiler"
                                         :content="item.payload"
                                         :selectable="true"
@@ -135,11 +135,11 @@
                                 @tap="goUrl('reply?hash=' + item.hash)"
                             >
                                 {{
-                                    i18n.index.more +
+                                    $t('index.more') +
                                     " " +
                                     item.replyNumber +
                                     " " +
-                                    i18n.index.theReply
+                                    $t('index.theReply')
                                 }}
                             </view>
                         </view>
@@ -150,14 +150,14 @@
                                 )
                             }}
                             <view class="reply" @tap="comment(item)">{{
-                                i18n.index.reply
+                                $t('index.reply')
                             }}</view>
                         </view>
                     </view>
                 </view>
             </div>
             <div class="pt-100 pb-100" v-show="commentList.length === 0">
-                <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+                <u-empty :text="$t('index.noData')" mode="list"></u-empty>
             </div>
         </div>
         <u-loadmore
@@ -166,7 +166,7 @@
             :status="more"
             v-show="commentList.length > 0"
         />
-        <u-gap height="680"></u-gap>
+        <u-gap :height="680-commentHeight"></u-gap>
         <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
@@ -175,7 +175,7 @@
                     class="mr-10"
                     color="#666"
                 ></fa-FontAwesome>
-                {{ i18n.index.reward }}
+                {{ $t('index.reward') }}
             </div>
             <div class="item" @tap="comment()">
                 <fa-FontAwesome
@@ -185,7 +185,7 @@
                     color="#666"
                 >
                 </fa-FontAwesome
-                >{{ i18n.index.comment }}
+                >{{ $t('index.comment') }}
             </div>
             <div
                 class="item"
@@ -207,7 +207,7 @@
                     :size="30"
                 >
                 </u-icon
-                >{{ i18n.index.praise }}
+                >{{ $t('index.praise') }}
             </div>
         </div>
         <inputComment
@@ -248,7 +248,7 @@ export default {
             postInfo: {
                 rewardList: [],
                 users: {
-                    portrait: "",
+                    avatar: "",
                     userAddress: "",
                 },
             }, //主贴信息
@@ -264,6 +264,7 @@ export default {
             commentType: "", //回复类型
             currentComment: {}, //当前回复信息
             rewardShow: false, //控制打赏弹层
+            commentHeight: 0, //评论空白高度
         };
     },
     //下拉刷新
@@ -281,8 +282,7 @@ export default {
         this.getCommentList();
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.contentDetails);
+        this.uSetBarTitle(this.$t('titleBar.contentDetails'));
         this.hash = option.hash ?? option.shTipid;
         this.getPostInfo();
         this.getCommentList();
@@ -338,17 +338,10 @@ export default {
                             );
                         }
                     }
+                    this.commentHeight = (this.commentList.length * 210)>600 ? 600 : (this.commentList.length * 210);
                 });
             },
             deep: true,
-        },
-    },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
         },
     },
     methods: {
@@ -426,7 +419,7 @@ export default {
         comment(item) {
             if (!this.validToken()) {
                 uni.showToast({
-                    title: this.i18n.index.pleaseLogin,
+                    title: this.$t('index.pleaseLogin'),
                     icon: "none",
                 });
                 setTimeout(() => {
@@ -441,11 +434,11 @@ export default {
                 let name = !!item.users.nickname
                     ? item.users.nickname
                     : item.users.userAddress.slice(-4);
-                this.placeholder = this.i18n.index.reply + " @" + name;
+                this.placeholder = this.$t('index.reply') + " @" + name;
                 this.commentType = "reply";
                 this.currentComment = item;
             } else {
-                this.placeholder = this.i18n.index.comment + "...";
+                this.placeholder = this.$t('index.comment') + "...";
                 this.commentType = "comment";
             }
         },
@@ -453,7 +446,7 @@ export default {
         reply(item) {
             if (!this.validToken()) {
                 uni.showToast({
-                    title: this.i18n.index.pleaseLogin,
+                    title: this.$t('index.pleaseLogin'),
                     icon: "none",
                 });
                 setTimeout(() => {
@@ -467,7 +460,7 @@ export default {
             let name = !!item.users.nickname
                 ? item.users.nickname
                 : item.users.userAddress.slice(-4);
-            this.placeholder = this.i18n.index.reply + " @" + name;
+            this.placeholder = this.$t('index.reply') + " @" + name;
             this.commentType = "replyPerson";
             this.currentComment = item;
         },
@@ -508,12 +501,12 @@ export default {
                     this.commentList = [];
                     this.pageInfo.page = 1;
                     this.getCommentList();
-                    uni.hideLoading();
+                    this.uHideLoading();
                     this.$refs.inputComment.content = "";
                     this.$refs.inputComment.btnLoading = false;
                 }, 2000);
             } else {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.$refs.inputComment.btnLoading = false;
             }
         },
@@ -522,12 +515,12 @@ export default {
             if (!this.validLogin()) {
                 if (this.validThirdPartySource()) {
                     this.uShowToast(
-                        this.i18n.index.thirdPartyNotOpen,
+                        this.$t('index.thirdPartyNotOpen'),
                     );
                     return false;
                 };
                 this.uShowToast(
-                    this.i18n.index.pleaseLogin,
+                    this.$t('index.pleaseLogin'),
                 );
                 setTimeout(() => {
                     uni.reLaunch({

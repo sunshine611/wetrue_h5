@@ -33,12 +33,6 @@ export default {
 	props: ['message'],
 	computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
 	methods: {
         userType(userAddress) {

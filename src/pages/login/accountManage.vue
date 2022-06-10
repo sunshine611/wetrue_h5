@@ -1,7 +1,7 @@
 <template>
     <div class="account-manage">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.login.accountManage">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
+        <u-navbar :is-fixed="false" :title="$t('login.accountManage')">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -59,7 +59,7 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.delete}}
+                                    {{ $t('login.delete') }}
                                 </div>
                                 <div
                                     class="item"
@@ -75,7 +75,7 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.qrcode}}
+                                    {{ $t('login.qrcode') }}
                                 </div>
                                 <div
                                     class="item"
@@ -88,7 +88,7 @@
                                         color="#fff"
                                     >
                                     </fa-FontAwesome>
-                                    {{i18n.login.replace}}
+                                    {{ $t('login.replace') }}
                                 </div>
                             </div>
                         </div>
@@ -98,8 +98,9 @@
             <u-gap height="1080"></u-gap>
         </div>
         <u-modal
+            :show-title="false"
             v-model="showDelete"
-            :content="i18n.login.deleteAccount"
+            :content="$t('login.deleteAccount')"
             @confirm="deleteAccount"
             :show-cancel-button="true"
         ></u-modal>
@@ -118,7 +119,7 @@
                     color="#f04a82"
                 >
                 </fa-FontAwesome>
-                {{i18n.login.addAccount}}
+                {{ $t('login.addAccount') }}
             </u-button>
         </div>
         <Qrcode v-model="showQrcode" :address="currentAddress"></Qrcode>
@@ -156,17 +157,10 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.isLogin();
-        this.uSetBarTitle(this.i18n.titleBar.accountManage);
+        this.uSetBarTitle(this.$t('titleBar.accountManage'));
     },
     activated() {},
     methods: {
@@ -181,6 +175,7 @@ export default {
         deleteAccount() {
             this.$store.dispatch("user/deleteKeystoreArr", this.currentAddress);
             this.keystoreArr = getStore("keystoreArr");
+            if (this.keystoreArr.length !== 0) this.switchAccount(this.keystoreArr[0].public_key);
             this.isLogin();
         },
         //判断账户是否为0

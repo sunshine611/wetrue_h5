@@ -2,7 +2,7 @@
 <template>
     <div class="mapping-dig">
         <div class="icon-list" v-show="!validThirdPartySource()">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
+        <view :style="{height:`${statusBarHeight}px`}"></view>
             <u-icon
                 name="home"
                 class="mr-30"
@@ -177,7 +177,7 @@
                 </div>
                 <u-gap :height="10"></u-gap>
                 <div class="warnning" v-show="warning.amount">
-                    {{ i18n.my.balanceErr }}
+                    {{ $t('my.balanceErr') }}
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">账户余额：{{ aeBalance }}AE</div>
@@ -260,15 +260,8 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
         this.getUserInfo();
         this.getMappingInfo();
         this.getBalance();

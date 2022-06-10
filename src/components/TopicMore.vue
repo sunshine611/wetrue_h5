@@ -52,32 +52,30 @@ export default {
         // #endif
     },
     computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
         //显示更多操作
         moreList() {
             let moreList = [
                 {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
+                    text: this.$t('index.focus'),
+                    subText: this.$t('index.focusText'),
                 },
                 {
-                    text: this.i18n.index.complain,
-                    subText: this.i18n.index.complainText,
+                    text: this.$t('index.complain'),
+                    subText: this.$t('index.complainText'),
                 },
                 {
-                    text: this.i18n.index.aeternal,
-                    subText: this.i18n.index.aeternalText,
+                    text: this.$t('index.blacklist'),
+                    subText: this.$t('index.blacklistText'),
+                },
+                {
+                    text: this.$t('index.aeternal'),
+                    subText: this.$t('index.aeternalText'),
                 }
             ]
             if (this.validAdmin()){
                 moreList.push({
-                    text: 'testAdmin',
-                    subText: 'testAdmin',
+                    text: 'Test Admin',
+                    subText: 'Test Admin',
                 })
             }
             return moreList;
@@ -90,13 +88,13 @@ export default {
             this.moreShow = true;
             if (this.topicInfo.isFocus) {
                 this.moreList[0] = {
-                    text: this.i18n.index.cancelFocus,
-                    subText: this.i18n.index.cancelFocusText,
+                    text: this.$t('index.cancelFocus'),
+                    subText: this.$t('index.cancelFocusText'),
                 };
             } else {
                 this.moreList[0] = {
-                    text: this.i18n.index.focus,
-                    subText: this.i18n.index.focusText,
+                    text: this.$t('index.focus'),
+                    subText: this.$t('index.focusText'),
                 };
             }
         },
@@ -107,6 +105,8 @@ export default {
             } else if (index === 1) {
                 this.complain();
             } else if (index === 2) {
+                this.blacklist()
+            } else if (index === 3) {
                 window.open(
                     Backend.explorerViewhUrl(this.topicInfo.hash)
                 );
@@ -144,9 +144,25 @@ export default {
             let params = { hash: this.topicInfo.hash };
             this.$http.post("/Submit/complain", params).then((res) => {
                 if (res.code === 200) {
-                    this.uShowToast(this.i18n.components.complainSuccess);
+                    this.uShowToast(this.$t('components.complainSuccess'));
                 }
             });
+        },
+        //黑名单
+        blacklist() {
+            let params = this.topicInfo.users.userAddress;
+            this.$store.dispatch("user/setBlacklist", params);
+            if (this.postList.length > 0) {
+                for (let i = 0; i < this.postList.length; i++) {
+                    if (
+                        this.postList[i].users.userAddress ===
+                        this.topicInfo.users.userAddress
+                    ) {
+                        this.postList.splice(i,1);
+                    }
+                }
+            }
+            this.uShowToast(this.$t('components.blacklistSuccess'));
         },
     },
 };

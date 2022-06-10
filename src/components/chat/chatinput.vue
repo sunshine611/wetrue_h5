@@ -14,7 +14,7 @@
 			></input>
 		</view>
 		<view class="footer-right" @tap="sendMessge">
-			<view id='msg-type'>发送</view>
+			<view id='msg-type'>{{ $t('chat.send')}}</view>
 		</view>
 	</view>
 </template>
@@ -26,11 +26,6 @@ export default {
 		return {
 			inputValue: ''
 		}
-	},
-	computed: {
-		i18n: {
-			get() { return this.$_i18n.messages[this.$_i18n.locale];},
-		},
 	},
 	methods: {
 		startRecognize: function () {
@@ -48,7 +43,7 @@ export default {
 		sendMessge: function () {
 			var that = this;
 			if (that.inputValue.trim() == '') {
-				this.uShowToast(this.i18n.components.enterContent);
+				this.uShowToast(this.$t('components.enterContent'));
 				that.inputValue = '';
 			} else {
 				//点击发送按钮时，通知父组件用户输入的内容

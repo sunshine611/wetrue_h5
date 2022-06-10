@@ -31,7 +31,7 @@
                         </div>
                         <div class="time">
                             <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ i18n.index.source + item.source + '-' + item.chainId }}
+                            >{{ $t('index.source') + item.source /*+ '-' + item.chainId*/ }}
                         </div>
                     </div>
                 </div>
@@ -60,16 +60,13 @@
                             :src="item.image"
                             v-if="item.image"
                         ></u-image>
-                        <a
-                            class="topic-url"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            :href="item.url"
+                        <u-link 
                             v-if="item.url"
-                        ><text>
-                                {{ item.simpleUrl }}
-                            </text>
-                        </a>
+                            :href="item.url" 
+                            color="#f04a82"
+                            >
+                        {{ item.simpleUrl }}
+                        </u-link>
                 </div>
                 <div class="operation">
                     <div
@@ -145,7 +142,7 @@ export default {
             default: [],
         },
         ipfsUrl: {
-            default: "https://dweb.link/ipfs/",
+            default: "/^http[s]*:\/\/ ? '' : 'https://dweb.link/ipfs/'",
         },
     },
     data() {
@@ -163,40 +160,10 @@ export default {
         };
         // #endif
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
     watch: {
         postList: {
             handler() {
                 this.$nextTick(() => {
-                    /*
-                    const queryTopicType = uni.createSelectorQuery().in(this);
-                    queryTopicType.selectAll('.topic-text').boundingClientRect(topicArr => {
-                        console.log(topicArr)
-                        if (topicArr.length > 0) {
-                            for (let i = 0; i < topicArr.length; i++) {
-                                console.log(topicArr[i])
-                                topicArr[i].addEventListener(
-                                    "click",
-                                    (e) => {
-                                        let text = topicArr[i].innerText;
-                                        this.goUrl(
-                                            "/pages/index/topic?keyword=" + text
-                                        );
-                                        e.stopPropagation();
-                                    },
-                                    true
-                                );
-                            }
-                        }
-                    }).exec();
-                   */
                     const topicArr = document.getElementsByClassName("topic-text");
                     if (topicArr.length > 0) {
                         for (let i = 0; i < topicArr.length; i++) {
@@ -340,7 +307,7 @@ export default {
                 margin: 0 30rpx 0rpx 30rpx;
                 padding: 0 0 25rpx 0;
                 font-size: 26rpx;
-                border-bottom: 2rpx solid #e9e9e9;
+                border-bottom: 2rpx dashed #e9e9e9;
 
                 .text-content {
                     font-size: 32rpx;
@@ -362,9 +329,6 @@ export default {
                     ::v-deep .mentions-text {
                         color: #f04a82;
                     }
-                }
-                .topic-url {
-                    color: #f04a82;
                 }
             }
 

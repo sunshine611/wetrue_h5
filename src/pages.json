@@ -15,7 +15,7 @@
         "navigationStyle": "custom", // 隐藏系统导航栏
         // "navigationBarTextStyle": "white", // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false  //禁用原生导航栏
           // "pullToRefresh":{
           // 	"style":"circle",
           // 	"offset":"44px"
@@ -38,7 +38,7 @@
       "path": "pages/index/editor",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Send Content",
         "enablePullDownRefresh": false
@@ -48,7 +48,7 @@
       "path": "pages/index/detail",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Content Details",
         "enablePullDownRefresh": true
@@ -58,7 +58,7 @@
       "path": "pages/index/reply",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Reply",
         "enablePullDownRefresh": true
@@ -68,7 +68,7 @@
       "path": "pages/login/login",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Login",
         "enablePullDownRefresh": false
@@ -78,7 +78,7 @@
       "path": "pages/login/mnemonic",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Create Account",
         "enablePullDownRefresh": false
@@ -88,7 +88,7 @@
       "path": "pages/login/password",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Verify Password",
         "enablePullDownRefresh": false
@@ -98,27 +98,47 @@
       "path": "pages/my/index",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "My",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/my/infoEdit",
+      "path": "pages/my/setting/infoEdit",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Info Edit",
         "enablePullDownRefresh": true
       }
     },
     {
+      "path": "pages/my/setting/blacklistManage", //黑名单管理
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "Blacklist Manage",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/setting/openVip", //Vip开通
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "Open Vip",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/my/topicList",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Topic List",
         "enablePullDownRefresh": true
@@ -128,7 +148,7 @@
       "path": "pages/my/userList",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Focus/Fans",
         "enablePullDownRefresh": true
@@ -138,7 +158,7 @@
       "path": "pages/my/userInfo",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "User Info",
         "enablePullDownRefresh": true
@@ -157,7 +177,7 @@
       "path": "pages/my/tokenList",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "My Wallet",
         "enablePullDownRefresh": true
@@ -167,7 +187,7 @@
       "path": "pages/my/tokenTransferRecode",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Transactions",
         "enablePullDownRefresh": true
@@ -177,7 +197,7 @@
       "path": "pages/my/transfer",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Transfer",
         "enablePullDownRefresh": true
@@ -187,7 +207,7 @@
       "path": "pages/my/qrcode",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Receive",
         "enablePullDownRefresh": false
@@ -197,7 +217,7 @@
       "path": "pages/my/migrateToken",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Migrate Token",
         "enablePullDownRefresh": true
@@ -207,7 +227,7 @@
       "path": "pages/my/mappingDig",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Mapping Dig",
         "enablePullDownRefresh": true
@@ -217,7 +237,7 @@
       "path": "pages/login/accountManage",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Account Manage",
         "enablePullDownRefresh": false
@@ -227,7 +247,7 @@
       "path": "pages/my/set",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Setting",
         "enablePullDownRefresh": false
@@ -237,7 +257,7 @@
       "path": "pages/message/index",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Message",
         "enablePullDownRefresh": true
@@ -247,7 +267,7 @@
       "path": "pages/chat/index",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Chat",
         "enablePullDownRefresh": true
@@ -257,10 +277,30 @@
       "path": "pages/chat/room",
       "style": {
         "app-plus": {
-          "titleNView": false //禁用原生导航栏
+          "titleNView": false
         },
         "navigationBarTitleText": "Chat Room",
         "navigationStyle": "custom" // 隐藏系统导航栏
+      }
+    },
+    {
+      "path": "pages/my/aens/index",
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "AENS",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/my/aens/detail",
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        },
+        "navigationBarTitleText": "AENS Detail",
+        "enablePullDownRefresh": false
       }
     }
   ],

@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <div slot="right-icon" class="amount">
-                        {{i18n.my.balance + ': ' + balanceFormat(item.balance) }}
+                        {{ $t('my.balance') + ': ' + balanceFormat(item.balance) }}
                     </div>
                 </u-cell-item>
             </div>
@@ -32,15 +32,6 @@ export default {
     data() {
         return {};
     },
-    computed: {
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
-    },
-    watch: {},
     methods: {
         //查看用户账户转账记录
         transferRecord(item) {

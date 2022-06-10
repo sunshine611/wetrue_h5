@@ -16,11 +16,11 @@
                     src="../../static/logo.png"
                     class="inline mr-5"
                 ></u-image>
-                {{ i18n.login.mnemonicLogin }}
+                {{ $t('login.mnemonicLogin') }}
             </div>
             <u-gap height="60"></u-gap>
             <div class="form">
-                <div class="form-title">{{ i18n.ImportCreate }}</div>
+                <div class="form-title">{{ $t('login.importMnemonic') }}</div>
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.mnemonic"
@@ -29,25 +29,25 @@
                     trim
                     :clearable="false"
                     height="160"
-                    placeholder="one two three..."
+                    placeholder="gadget vocal excess layer topic check number exercise nurse ..."
                     maxlength="220"
                 />
                 <div class="warnning" v-show="warning.mnemonic">
-                    {{ i18n.login.mnemonicWarning }}
+                    {{ $t('login.mnemonicWarning') }}
                 </div>
                 <u-gap height="30"></u-gap>
-                <div class="form-title">{{ i18n.Setpassword }}</div>
+                <div class="form-title">{{ $t('login.setPassword') }}</div>
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.password"
                     type="text"
                     border
                     clearable
-                    placeholder="Password..."
+                    :placeholder="$t('login.passWarning', ['6-20'])"
                     maxlength="20"
                 />
                 <div class="warnning" v-show="warning.password">
-                    {{ i18n.login.passWarning }}
+                    {{ $t('login.passWarning', ['6-20']) }}
                 </div>
             </div>
             <u-gap height="40"></u-gap>
@@ -60,7 +60,7 @@
                 :loading="loading"
                 :throttle-time="1000"
             >
-                {{ i18n.login.login }}
+                {{ $t('login.login') }}
             </u-button>
             <u-gap height="25"></u-gap>
             <div class="clearfix">
@@ -68,10 +68,10 @@
                     class="pull-left mnemonic"
                     @tap="reLaunchUrl('../index/index')"
                 >
-                    {{ i18n.home.index }}
+                    {{ $t('home.index') }}
                 </div>
                 <div class="pull-right mnemonic" @tap="goUrl('mnemonic')">
-                    {{ i18n.login.createAccount }}
+                    {{ $t('login.createMnemonic') }}
                 </div>
             </div>
         </div>
@@ -103,14 +103,9 @@ export default {
         };
     },
     onLoad() {
-        this.uSetBarTitle(this.i18n.titleBar.loginWeTrue);
+        this.uSetBarTitle(this.$t('titleBar.loginWeTrue'));
     },
     computed: {
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //登录
@@ -152,10 +147,7 @@ export default {
                 publicKeyInsecretKey.secretKey
             ).then((keystore) => {
                 this.$store.commit("user/SET_KEYSTORE", keystore);
-                this.$store.commit(
-                    "user/SET_PASSWORD",
-                    newPassword
-                );
+                this.$store.commit("user/SET_PASSWORD", newPassword);
                 this.$store.dispatch("user/setKeystoreArr", keystore);
             });
             this.$store.commit(

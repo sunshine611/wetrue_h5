@@ -1,7 +1,7 @@
 <template>
     <view class="user-info">
-        <view :style="`padding-top:${statusBarHeight}px`"></view>
-        <u-navbar :is-fixed="false" :title="i18n.my.userInfo" v-show="!validThirdPartySource()">
+        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
+        <u-navbar :is-fixed="false" :title="$t('my.userInfo')" v-show="!validThirdPartySource()">
             <div slot="right">
                 <u-icon
                     name="home"
@@ -22,7 +22,7 @@
                     ></HeadImg>
                     <u-gap height="10"></u-gap>
                     <div :class="[userInfo.isAuth ? 'auth' : '']">
-                        {{ userInfo.nickname || i18n.my.cryptonym }}
+                        {{ userInfo.nickname || $t('my.cryptonym') }}
                     </div>
                 </div>
                 <div class="address" @tap="copy" id="copy">
@@ -34,31 +34,31 @@
                     <div class="value">
                         {{ userInfo.topic || 0 }}
                     </div>
-                    <div class="label">{{ i18n.my.topic }}</div>
+                    <div class="label">{{ $t('my.topic') }}</div>
                 </div>
                 <div class="item">
                     <div class="value">
                         {{ userInfo.star || 0 }}
                     </div>
-                    <div class="label">{{ i18n.my.star }}</div>
+                    <div class="label">{{ $t('my.star') }}</div>
                 </div>
                 <div class="item">
                     <div class="value">
                         {{ userInfo.active || 0 }}
                     </div>
-                    <div class="label">{{ i18n.my.active }}</div>
+                    <div class="label">{{ $t('my.active') }}</div>
                 </div>
                 <div class="item">
                     <div class="value">
                         {{ userInfo.focus || 0 }}
                     </div>
-                    <div class="label">{{ i18n.my.focus }}</div>
+                    <div class="label">{{ $t('my.focus') }}</div>
                 </div>
                 <div class="item">
                     <div class="value">
                         {{ userInfo.fans || 0 }}
                     </div>
-                    <div class="label">{{ i18n.my.fans }}</div>
+                    <div class="label">{{ $t('my.fans') }}</div>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
             v-if="current === 4"
         ></BalanceList>
         <div class="empty" v-show="postList.length === 0">
-            <u-empty :text="i18n.index.noData" mode="list"></u-empty>
+            <u-empty :text="$t('index.noData')" mode="list"></u-empty>
         </div>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
@@ -111,7 +111,6 @@ export default {
         BalanceList,
     },
     data() {
-        const { my } = this.$_i18n.messages[this.$_i18n.locale];
         return {
             userAddress: "", //用户地址
             postList: [], //帖子列表
@@ -126,19 +125,19 @@ export default {
             current: 0, //tab当前选项
             tabList: [
                 {
-                    name: my.topic,
+                    name: this.$t('my.topic'),
                 },
                 {
-                    name: my.star,
+                    name: this.$t('my.star'),
                 },
                 {
-                    name: my.focus,
+                    name: this.$t('my.focus'),
                 },
                 {
-                    name: my.fans,
+                    name: this.$t('my.fans'),
                 },
                 {
-                    name: my.assets,
+                    name: this.$t('my.assets'),
                 },
             ],
         };
@@ -160,20 +159,13 @@ export default {
         }
     },
     onLoad(option) {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.userInfo);
+        this.uSetBarTitle(this.$t('titleBar.userInfo'));
         this.userAddress = option.userAddress;
         this.getUserInfo();
         this.getPostList();
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         //获取用户信息
@@ -282,7 +274,7 @@ export default {
         //获取账户token列表
         getTokenList() {
             uni.showLoading({
-                title: this.i18n.my.loading,
+                title: this.$t('my.loading'),
             });
             http.get(
                     Backend.nodeApiAccounts(this.userAddress)

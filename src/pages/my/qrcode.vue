@@ -4,9 +4,9 @@
             <VueQrcode :value="token" :options="{ width: 260,margin:1 }"></VueQrcode>
             <u-gap :height="30"></u-gap>
             <div class="token" @tap="copy" id="copy">
-                <text>{{ i18n.my.recipient }}</text><u-gap :height="20"></u-gap>{{ token }}
+                <text>{{ $t('my.recipient') }}</text><u-gap :height="20"></u-gap>{{ token }}
             </div>
-            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">{{ i18n.my.backMy }}</u-button>
+            <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">{{ $t('my.backMy') }}</u-button>
             <u-gap :height="30"></u-gap>
         </div>
     </div>
@@ -25,15 +25,9 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.uSetBarTitle(this.i18n.titleBar.myWallet);
+        this.uSetBarTitle(this.$t('titleBar.myWallet'));
     },
     activated() {
     },

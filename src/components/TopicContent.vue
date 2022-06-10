@@ -31,7 +31,7 @@
                         <text class="mr-20">{{
                             $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
                         }}</text
-                        >{{ i18n.index.source + postInfo.source + '-' + postInfo.chainId}}
+                        >{{ $t('index.source') + postInfo.source /*+ '-' + postInfo.chainId */ }}
                     </div>
                 </div>
             </div>
@@ -61,16 +61,14 @@
                     :src="postInfo.image"
                     v-if="postInfo.image"
                 ></u-image>
-                <a
-                    class="topic-url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :href="postInfo.url"
+                <u-link 
                     v-if="postInfo.url"
-                    ><text>
-                        {{ postInfo.simpleUrl }}
-                    </text>
-                </a>
+                    :href="postInfo.url" 
+                    color="#f04a82"
+                >
+                {{ postInfo.simpleUrl }}
+                </u-link>
+
                 <div class="reward" v-if="postInfo.rewardList.length > 0">
                     <div
                         class="reward-list"
@@ -83,7 +81,7 @@
                             class="mr-6"
                         ></u-icon
                         >{{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
-                        {{ i18n.components.reward }}
+                        {{ $t('components.reward') }}
                         <text class="name">
                             {{ balanceFormat(item.amount, 1) }}
                         </text>
@@ -98,7 +96,7 @@
                         v-if="postInfo.rewardList.length > 6"
                         @click="rewardRecordShow = true"
                     >
-                        {{ i18n.components.viewMore }}
+                        {{ $t('components.viewMore') }}
                     </div>
                 </div>
                 <div class="more">
@@ -199,12 +197,6 @@ export default {
     },
     computed: {
         ...mapGetters(["configInfo"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     watch: {
         postInfo: {
@@ -369,9 +361,6 @@ export default {
                 ::v-deep .mentions-text {
                     color: #f04a82;
                 }
-            }
-            .topic-url {
-                color: #f04a82;
             }
             .reward {
                 background: #f1f1f1;

@@ -2,7 +2,7 @@
     <div class="my">
         <view
             class="top-background"
-            :style="`padding-top:${statusBarHeight}px`"
+            :style="{height:`${statusBarHeight}px`}"
         ></view>
         <div class="user-info" v-if="!!token">
             <div class="my-info">
@@ -15,12 +15,6 @@
                             size="40"
                             @click="whitePaper"
                         ></u-icon>
-                        <u-icon
-                            name="edit-pen"
-                            color="#fff"
-                            size="40"
-                            @click="goUrl('infoEdit')"
-                        ></u-icon>
                     </div>
                     <div class="user-box">
                         <div class="user-top">
@@ -31,8 +25,15 @@
                                     height="120rpx"
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
+                                 <div class="open-vip" v-if="userInfo.isVip">
+                                    <u-icon 
+                                        name="level"
+                                        size="30"
+                                        color="#CD7F32"
+                                    ></u-icon>
+                                </div>
                                 <div :class="[userInfo.isAuth ? 'auth' : '']">
-                                    {{ userInfo.nickname || i18n.my.cryptonym }}
+                                    {{ userInfo.nickname || $t('my.cryptonym') }}
                                 </div>
                             </div>
                             <div class="address" @tap="copy" id="copy">
@@ -47,7 +48,7 @@
                                 <div class="value">
                                     {{ userInfo.topic || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.topic }}</div>
+                                <div class="label">{{ $t('my.topic') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -56,13 +57,13 @@
                                 <div class="value">
                                     {{ userInfo.star || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.star }}</div>
+                                <div class="label">{{ $t('my.star') }}</div>
                             </div>
                             <div class="item">
                                 <div class="value">
                                     {{ userInfo.active || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.active }}</div>
+                                <div class="label">{{ $t('my.active') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -71,7 +72,7 @@
                                 <div class="value">
                                     {{ userInfo.focus || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.focus }}</div>
+                                <div class="label">{{ $t('my.focus') }}</div>
                             </div>
                             <div
                                 class="item"
@@ -80,17 +81,57 @@
                                 <div class="value">
                                     {{ userInfo.fans || 0 }}
                                 </div>
-                                <div class="label">{{ i18n.my.fans }}</div>
+                                <div class="label">{{ $t('my.fans') }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="grid">
+                <u-grid col="4" :border="false">
+                    <u-grid-item @click="goUrl('./setting/infoEdit')">
+                        <u-icon 
+                            name="account"
+                            size="46"
+                            color="#f04a82"
+                        ></u-icon>
+                        <view class="grid-text">{{ $t('my.userInfo') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goUrl('./setting/blacklistManage')">
+                        <u-icon 
+                            name="account"
+                            size="46"
+                        ></u-icon>
+                        <view class="grid-text">{{ $t('my.blacklistManage') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goAccountManage()">
+                        <u-icon 
+                            name="man-add"
+                            size="46"
+                            color="#f04a82"
+                        ></u-icon>
+                        <view class="grid-text"> {{ $t('my.accountManage') }}</view>
+                    </u-grid-item>
+
+                    <u-grid-item @click="goUrl('aens/index')">
+                        <fa-FontAwesome
+                            type="fab fa-neos"
+                            size="42"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                        <view class="grid-text">AENS</view>
+                    </u-grid-item>
+
+                </u-grid>
+            </div>
             <div class="menu">
                 <u-cell-group :border="false">
                     <u-cell-item
-                        :title="i18n.my.myWallet"
-                        :value="'AE：' + balance"
+                        :title="$t('my.myWallet')"
+                        :value="'AE: ' + balance"
                         @click="goUrl('tokenList')"
                     >
                         <fa-FontAwesome
@@ -103,13 +144,12 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        title="Migrate Token"
+                        :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
-                        v-if="!this.validThirdPartySource()"
                     >
                         <fa-FontAwesome
                             slot="icon"
-                            type="fas fa-hammer"
+                            type="fas fa-exchange-alt"
                             size="32"
                             class="mr-10"
                             color="#f04a82"
@@ -117,7 +157,7 @@
                         </fa-FontAwesome>
                     </u-cell-item>
                     <u-cell-item
-                        :title="i18n.my.defi"
+                        :title="$t('my.mappingMining')"
                         @click="goUrl('mappingDig')"
                     >
                         <fa-FontAwesome
@@ -129,35 +169,20 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
-                    <u-cell-item
-                        :title="i18n.my.accountManage"
-                        @click="goUrl('../login/accountManage')"
-                        v-if="!this.validThirdPartySource()"
-                    >
-                        <fa-FontAwesome
+                    <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
+                        <u-icon 
                             slot="icon"
-                            type="fas fa-user-shield"
-                            size="32"
+                            name="setting-fill"
+                            size="40"
                             class="mr-10"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
-                    </u-cell-item>
-                    <u-cell-item :title="i18n.my.set" @click="goUrl('set')">
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-cog"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                        ></u-icon>
                     </u-cell-item>
                 </u-cell-group>
             </div>
             <div class="version">
                 <div class="version-code" @click="versionCheck">
-                    {{ i18n.my.version }}：{{ version }}
+                    {{ $t('my.version') }}：{{ version }}
                     <u-badge
                         v-if="versionCode < parseInt(versionInfo.newVer)"
                         type="error"
@@ -171,15 +196,13 @@
         <div class="login" v-else>
             <div class="opera-icon">
                 <fa-FontAwesome
-                    v-if="keystoreArr.length > 0"
-                    class="mr-20"
+                    class="mr-30"
                     type="fas fa-language"
                     size="32"
                     color="#fff"
                    @click="selectLanguage"
                 ></fa-FontAwesome>
                 <fa-FontAwesome
-                    v-if="keystoreArr.length > 0"
                     type="fas fa-user-shield"
                     size="32"
                     color="#fff"
@@ -196,7 +219,7 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.login.mnemonicLogin }}
+                    >{{ $t('login.mnemonicLogin') }}
                 </div>
                 <u-gap height="80"></u-gap>
                 <div class="item" @tap="goUrl('../login/mnemonic')">
@@ -208,11 +231,11 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ i18n.login.createAccount }}
+                    >{{ $t('login.createAccount') }}
                 </div>
             </div>
         </div>
-        <u-gap height="280"></u-gap>
+        <u-gap height="280" v-show="keystoreArr.length > 0"></u-gap>
         <VersionTip
             v-model="versionShow"
             :versionInfo="versionInfo"
@@ -227,8 +250,8 @@ import { version } from "@/config/config.js";
 import { mapGetters } from "vuex";
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
-import { getStore, setStore } from "@/util/service";
-import moment from "moment";
+import { getStore } from "@/util/service";
+
 export default {
     components: {
         HeadImg,
@@ -249,16 +272,9 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        //国际化
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     onLoad() {
-        this.getSystemStatusBarHeight(); //状态栏高度
-        this.uSetBarTitle(this.i18n.titleBar.my);
+        this.uSetBarTitle(this.$t('titleBar.my'));
         if (!!this.token) {
             this.getUserInfo();
             this.getAccount().then((res) => {
@@ -302,6 +318,15 @@ export default {
         whitePaper() {
             window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
         },
+        //检查版本
+        async versionCheck() {
+            await this.appVersion();
+            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
+                this.versionShow = true;
+            } else {
+                this.uShowToast(this.$t('my.versionTips'));
+            }
+        },
         //获取服务端版本信息
         appVersion() {
             this.getVersionInfo().then((res) => {
@@ -311,26 +336,15 @@ export default {
                 }
             });
         },
-        //检查版本
-        async versionCheck() {
-            await this.appVersion();
-            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
-                this.versionShow = true;
-            } else {
-                this.uShowToast(this.i18n.my.versionTips);
-            }
-        },
-        //切换语言
-        selectLanguage() {
-            if (getStore("language") === "zh-cn") {
-                setStore("language", "en");
-            } else if (getStore("language") === "en") {
-                setStore("language", "zh-cn");
-            }
-            //控制语言显示
-            this.language = getStore("language");
-            moment.locale(this.language);
-            this.$_i18n.locale = this.language;
+        //账户管理
+        goAccountManage() {
+            if (this.validThirdPartySource()) {
+                this.uShowToast(
+                    this.$t('index.thirdPartyNotOpen'),
+                );
+                return false;
+            };
+            this.goUrl('../login/accountManage');
         },
     },
 };
@@ -343,28 +357,28 @@ page {
 
 .my {
     .top-background {
-        background: #f04a82;
+        background: $u-type-aeternity;
     }
     .user-info {
         .my-info {
             .block {
-                background: #f04a82;
+                background: $u-type-aeternity;
                 width: 100%;
-                height: 320upx;
+                height: 320rpx;
                 position: relative;
                 box-sizing: border-box;
                 color: #101010;
                 position: relative;
                 .icon-list {
                     position: absolute;
-                    right: 30rpx;
+                    left: 5%;
                     top: 30rpx;
                 }
                 .user-box {
                     width: 90%;
                     background-color: #fff;
                     box-shadow: 0px 2px 6px 0px
-                        rgba($color: #f04a82, $alpha: 0.3);
+                        rgba($color: $u-type-aeternity, $alpha: 0.3);
                     z-index: 100;
                     border-radius: 20upx;
                     position: absolute;
@@ -388,12 +402,17 @@ page {
                             }
                         }
 
+                        .open-vip {
+                            margin-right: 4rpx;
+                            display: inline-block;
+                        }
+
                         .address {
                             display: inline-flex;
                             flex-wrap: wrap;
                             align-items: center;
                             line-height: 50rpx;
-                            color: #f04a82;
+                            color: $u-type-aeternity;
                             font-size: 34rpx;
                         }
                     }
@@ -421,16 +440,27 @@ page {
             }
         }
 
+        .grid {
+            width: 95%;
+            margin: 180rpx auto 0rpx;
+            border-bottom: 2rpx solid #ececec;
+            .grid-text {
+                font-size: 24rpx;
+                margin-top:12rpx;
+                color: #999;
+            }
+        }
+
         .menu {
             width: 80%;
-            margin: 180upx auto 80upx;
+            margin: 0 auto 80rpx;
         }
 
         .version {
             color: #999;
-            font-size: 24upx;
+            font-size: 24rpx;
             position: absolute;
-            bottom: 30upx;
+            bottom: 30rpx;
             width: 100%;
             text-align: center;
             .version-code {
@@ -441,7 +471,7 @@ page {
     }
 
     .login {
-        background-color: #f04a82;
+        background-color: $u-type-aeternity;
         height: calc(100vh - 50px);
         display: flex;
         justify-content: center;
@@ -455,7 +485,6 @@ page {
         .login-box {
             margin: 0 10%;
             width: 90%;
-
             .item {
                 background-color: #fff;
                 height: 110rpx;

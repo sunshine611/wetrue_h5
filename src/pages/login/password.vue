@@ -16,7 +16,7 @@
                     src="../../static/logo.png"
                     class="inline mr-5"
                 ></u-image>
-                {{ i18n.login.verify + " " + i18n.login.securePassword }}
+                {{ $t('login.securePassword', [$t('login.verify')]) }}
             </div>
             <u-gap height="60"></u-gap>
             <div class="form">
@@ -27,7 +27,7 @@
                     type="text"
                     :focus="true"
                     border
-                    :placeholder="`ak_...${token.slice(-4)} ` + i18n.login.securePassword"
+                    :placeholder="$t('login.securePassword', ['ak_...'+token.slice(-4)])"
                 />
             </div>
             <u-gap height="40"></u-gap>
@@ -39,18 +39,18 @@
                 @click.native="login"
                 :throttle-time="3000"
                 :loading="btnLoading"
-                >{{ i18n.login.verify }}
+                >{{ $t('login.verify') }}
             </u-button>
             <u-gap height="25"></u-gap>
             <div class="clearfix">
                 <div class="pull-left">
                     <div class="mnemonic" @click="goUrl('login')">
-                        {{ i18n.login.mnemonicLogin }}
+                        {{ $t('login.mnemonicLogin') }}
                     </div>
                 </div>
                 <div class="pull-right">
                     <div class="mnemonic" @click="logout">
-                        {{ i18n.login.logoutCurrent }}
+                        {{ $t('login.logoutCurrent') }}
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@ export default {
         };
     },
     onLoad(option) {
-        this.uSetBarTitle(this.i18n.titleBar.verifyPassword);
+        this.uSetBarTitle(this.$t('titleBar.verifyPassword'));
         if (!!this.$store.state.user.password || !this.token) {
             setTimeout(() => {
                 uni.reLaunch({
@@ -88,17 +88,12 @@ export default {
     },
     computed: {
         ...mapGetters(["token"]),
-        i18n: {
-            get() {
-                return this.$_i18n.messages[this.$_i18n.locale];
-            },
-        },
     },
     methods: {
         login() {
             this.btnLoading = true;
             if (!this.form.password || this.form.password.length < 6) {
-                    this.uShowToast(this.i18n.login.passWarning);
+                    this.uShowToast(this.$t('login.passWarning', ['6-20']));
                     this.btnLoading = false;
                     return;
                 }
@@ -114,7 +109,7 @@ export default {
                     newPassword
                 );
                 if (!!secretKey) {
-                    this.uShowToast(this.i18n.login.loginSuccess);
+                    this.uShowToast(this.$t('login.loginSuccess'));
                     this.$store.commit(
                         "user/SET_PASSWORD",
                         newPassword
@@ -139,7 +134,7 @@ export default {
                     }
                 }
             } catch (error) {
-                this.uShowToast(this.i18n.login.passwordErr);
+                this.uShowToast( this.$t('login.passwordErr') );
                 this.form.password = "";
                 this.btnLoading = false;
             }
