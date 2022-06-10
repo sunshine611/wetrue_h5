@@ -114,12 +114,12 @@ export default {
         },
         releaseCallback(callback) {
             if (JSON.stringify(callback) !== "{}" && !!callback) {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.btnLoading = false;
                 this.getConfigInfo();
                 this.reLaunchUrl("index");
             } else {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.btnLoading = false;
             }
         },

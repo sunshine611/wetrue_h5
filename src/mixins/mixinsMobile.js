@@ -510,7 +510,22 @@ const mixins = {
                 this.uShowToast(this.$t('mixins.fail'));
             }
         },
-
+        //更新AENS
+        async aensUpdate(payload) {
+            try{
+                //WeTrue上链
+                this.uShowLoading(this.$t('mixins.inChain'));
+                let client = await this.client();
+                if ( payload.type == 'extend') {
+                    const name = payload.name;
+                    const res = await client.aensUpdate(name, {}, { nameTtl: 180000, extendPointers: true })
+                    return res;
+                }
+            } catch(err) {
+                this.uShowToast(this.$t('mixins.fail'));
+                console.log(err);
+            }
+        },
     },
 };
 const mixinsMobile = {

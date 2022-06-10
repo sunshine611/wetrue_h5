@@ -501,12 +501,12 @@ export default {
                     this.commentList = [];
                     this.pageInfo.page = 1;
                     this.getCommentList();
-                    uni.hideLoading();
+                    this.uHideLoading();
                     this.$refs.inputComment.content = "";
                     this.$refs.inputComment.btnLoading = false;
                 }, 2000);
             } else {
-                uni.hideLoading();
+                this.uHideLoading();
                 this.$refs.inputComment.btnLoading = false;
             }
         },

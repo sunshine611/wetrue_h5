@@ -69,9 +69,9 @@
                         <view class="text-right">{{  }}</view>
                         <u-gap height="60"></u-gap>
                         <view class="text-left fill">{{ (item.info.expire_height - lastHeight) + ` (≈${parseInt((item.info.expire_height - lastHeight) / 480)}D)`  }}</view>
-                        <view class="text-right fill">{{ `ak_...` + item.info.pointers.account_pubkey.slice(-6) }}</view>
+                        <view class="text-right fill">{{ `ak_...` + (item.info.pointers.account_pubkey ? item.info.pointers.account_pubkey : item.info.ownership.current).slice(-6) }}</view>
                         <u-gap height="40"></u-gap>
-                        <u-line-progress active-color="#319191" :percent="
+                        <u-line-progress active-color="#1C1C1C" :percent="
                             parseInt( (item.info.expire_height - lastHeight) / 1800 )
                         "></u-line-progress>
                     </view>
@@ -176,8 +176,11 @@ export default {
         getNameOwner() {
             http.get(
                 Backend.aeMdwApiNamesOwner(this.token)
+                //Backend.aeMdwApiNamesOwner('ak_2uYw22W3KGCCduExjzkBDNUxWt3Akdehm66CFAXDKRt9aoUofX') //测试所用，开发完成删除
+                
             ).then((res) => {
-                this.aensList = res.data.active;
+                this.aensList = res.data.top_bid;
+                this.aensList = this.aensList.concat(res.data.active);
             });
         },
         //获取竞价中
@@ -200,6 +203,9 @@ export default {
                 this.getNameOwner()
             }
         },
+        test(item){
+            console.debug(item)
+        }
     },
 };
 </script>

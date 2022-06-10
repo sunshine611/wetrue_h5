@@ -25,24 +25,24 @@
                 id="Name"
             ></u-cell-item>
             <u-cell-item
-                title="Last_bid"
+                title="Last bid"
                 :value="balanceFormat(
                     nameDetails.status=='auction' ? nameDetails.info.last_bid.tx.name_fee : nameDetails.info.claims[0].tx.name_fee
-                ,2)"
+                ,2) + ' AE'"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
-                title="Last_height"
+                title="Last height"
                 :value="lastHeight"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
-                title="End_height"
+                title="End height"
                 :value="nameDetails.end_height"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
-                title="There_time"
+                title="There time"
                 :value="nameDetails.there_time + '分钟'"
                 :arrow="false"
             ></u-cell-item>
@@ -79,12 +79,25 @@
         </u-cell-group>
         <u-gap height="80"></u-gap>
 
+         <view class="updata" v-if="nameDetails.status=='auction'">
+            <u-button
+                class="auction"
+                shape="circle"
+                type="primary"
+                :plain="true"
+                @click="auction"
+                >
+                {{ '竞价' }}
+            </u-button>
+        </view>
+
         <view class="updata" v-if="nameDetails.status=='name'">
             <u-button
                 class="add-btn"
                 shape="circle"
                 type="primary"
                 :plain="true"
+                @click="update('pointers')"
                 >
                 {{ '指向' }}
             </u-button>
@@ -93,6 +106,7 @@
                 shape="circle"
                 type="primary"
                 :plain="true"
+                @click="transfer"
                 >
                 {{ '转移' }}
             </u-button>
@@ -101,11 +115,13 @@
                 shape="circle"
                 type="primary"
                 :plain="true"
+                @click="update('extend')"
+                :loading="btnLoading"
                 >
                 {{ '更新' }}
             </u-button>
         </view>
-        <AensButton v-show="nameDetails.status=='auction'"></AensButton>
+
     </view>
 </template>
 
@@ -114,11 +130,9 @@
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
-import AensButton from "@/components/Button/AensButton.vue";
 
 export default {
     components: {
-        AensButton
     },
     data() {
         return {
@@ -131,6 +145,7 @@ export default {
                     pointers:{account_pubkey:""}
                 }
             },
+            btnLoading: false, //按钮加载状态
         };
     },
     //下拉刷新
@@ -172,6 +187,41 @@ export default {
         copy(str,divId) {
            this.copyContent(str,divId);
         },
+        //竞拍
+        async auction() {
+           this.uShowToast('竞拍开发中');
+        },
+        //更新指向
+        async update(select) {
+            this.btnLoading = true;
+            let res;
+            if (select == 'extend') {
+                let payload = {
+                    type: select,
+                    name: this.aens
+                }
+                res = await this.aensUpdate(payload);
+            } else {
+                this.uShowToast(select + '开发中');
+            }
+            this.releaseCallback(res);
+        },
+        //转移
+        async transfer() {
+           this.uShowToast('转移开发中');
+        },
+        //回调
+        releaseCallback(callback) {
+            console.log(callback)
+            if (JSON.stringify(callback) !== "{}" && !!callback) {
+                this.uHideLoading();
+                this.btnLoading = false;
+                this.uShowToast('AENS已更新');
+            } else {
+                this.uHideLoading();
+                this.btnLoading = false;
+            }
+        },
     },
 };
 </script>
@@ -191,6 +241,9 @@ export default {
         box-shadow: 0px 0px 10rpx rgba($color: #f04a82, $alpha: 0.5);
         .add-btn {
             width: 32%;
+        }
+        .auction  {
+            width: 50%;
         }
     }
     .break {
