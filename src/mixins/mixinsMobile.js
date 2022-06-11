@@ -170,7 +170,9 @@ const mixins = {
         },
         //话题及@高亮
         topicHighlight(value) {
-            let expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
+            //let expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
+            //上方为旧格式，即将放弃
+            let expt = /#([\u4e00-\u9fa5a-zA-Z0-9]+)(?!;)/gu;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
