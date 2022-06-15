@@ -243,16 +243,7 @@ const mixins = {
         },
         //获取服务端版本信息
         getVersionInfo() {
-            const userAgent = navigator.userAgent;
-            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
-            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-            let system = "Other";
-            if (isAndroid) {
-                system = "Android";
-            }
-            if (isIOS) {
-                system = "IOS";
-            }
+            let system = this.getSystem();
             return new Promise((resolve) => {
                 this.$http.post("/Config/version", {
                     system:  system,
@@ -264,6 +255,20 @@ const mixins = {
                     }
                 );
             });
+        },
+        //获取系统
+        getSystem() {
+            const userAgent = navigator.userAgent;
+            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
+            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+            let system = "Other";
+            if (isAndroid) {
+                system = "Android";
+            }
+            if (isIOS) {
+                system = "IOS";
+            }
+            return system;
         },
         //连接AE网络
         async connectAe() {
@@ -325,7 +330,7 @@ const mixins = {
 
                 const thirdPartySource = this.validThirdPartySource();
                 const configInfo = getStore("configInfo");
-                source = WeTrueSource;
+                source = await `${WeTrueSource} ${this.getSystem()}`;
                 if (thirdPartySource) source = "Box æpp";
 
                 if (type === "topic") {
