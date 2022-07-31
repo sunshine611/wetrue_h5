@@ -1,10 +1,10 @@
 import { getStore } from "@/util/service";
 
-export const version = '2.7.79'
+export const version = '2.8.00'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
-const env_net = getStore("networkSetting")==='cc' ? 'cc' : 'io';
+const env_net = getStore("networkSetting")==='io' ? 'cc' : 'io';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
@@ -23,7 +23,7 @@ if (env_net == 'io') {
     aeknow      = 'https://api.wetrue.cc/Aeknow'
     compilerUrl = 'https://compiler.wetrue.cc'
 } else if(env_net == 'test') {
-    baseUrl     = 'https://liushao.cc:1817'
+    baseUrl     = 'http://192.168.1.120:1807'
     nodeUrl     = 'https://testnet.aeternity.io'
     aeExplorer  = 'https://explorer.testnet.aeternity.io'
     chatapi     = 'http://192.168.1.111:50001'

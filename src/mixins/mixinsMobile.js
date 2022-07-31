@@ -215,6 +215,7 @@ const mixins = {
         },
         //提交hash到WeTrue
         postHashToWeTrue(res, opt) {
+            /*
             this.uShowLoading(this.$t('mixins.radio'));
             if (opt) {
                 return Promise.resolve(
@@ -230,6 +231,8 @@ const mixins = {
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
+            */
+            res.hash = 'ok';
             return res;
         },
         //验证第三方来源
