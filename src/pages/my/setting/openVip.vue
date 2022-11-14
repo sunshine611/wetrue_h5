@@ -169,7 +169,7 @@ export default {
             );
             
             if (result) {
-                this.postHashToWeTrue(result); //打赏提交
+                this.postHashToWeTrueApi(result); //打赏提交
                 this.getUserInfo();
                 this.getWttBalance();
                 this.uShowToast(this.$t('my.openVipPage.waiting') , "none", 3000);

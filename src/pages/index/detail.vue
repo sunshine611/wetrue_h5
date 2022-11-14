@@ -166,7 +166,7 @@
             :status="more"
             v-show="commentList.length > 0"
         />
-        <u-gap :height="680-commentHeight"></u-gap>
+        <u-gap :height="720-commentHeight"></u-gap>
         <div class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <div class="item" @tap="reward">
                 <fa-FontAwesome
@@ -338,7 +338,7 @@ export default {
                             );
                         }
                     }
-                    this.commentHeight = (this.commentList.length * 210)>600 ? 600 : (this.commentList.length * 210);
+                    this.commentHeight = (this.commentList.length * 150)>720 ? 720 : (this.commentList.length * 150);
                 });
             },
             deep: true,

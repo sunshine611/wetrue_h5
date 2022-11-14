@@ -213,26 +213,17 @@ const mixins = {
             });
             // #endif
         },
-        //提交hash到WeTrue
-        postHashToWeTrue(res, opt) {
-            /*
+        //处理hash
+        postHashToWeTrue(res) {
+            res.hash = 'ok';
+            return res;
+        },
+        //提交hash到WeTrueApi
+        postHashToWeTrueApi(res) {
             this.uShowLoading(this.$t('mixins.radio'));
-            if (opt) {
-                return Promise.resolve(
-                    this.$http.post(
-                        "/Submit/hash", 
-                        {
-                            hash: res.hash,
-                            await: true,
-                        }
-                    )
-                );
-            }
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
-            */
-            res.hash = 'ok';
             return res;
         },
         //验证第三方来源
@@ -321,7 +312,6 @@ const mixins = {
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
-                let opt = false;
                 await this.getAccount().then((res) => {
                     account = res;
                 });
@@ -387,7 +377,6 @@ const mixins = {
                     };
                 } else if (type === "focus" || type === "star") {
                     //关注或收藏
-                    opt = true;
                     amount = configInfo.focusAmount;
                     if(type === "star") amount = configInfo.starAmount;
                     content = {
@@ -422,7 +411,7 @@ const mixins = {
                             payload: JSON.stringify(content),
                         }
                     );
-                    return await this.postHashToWeTrue(res, opt);
+                    return await this.postHashToWeTrue(res);
                 }
             } catch (err) {
                 this.uShowToast(this.$t('mixins.fail'));
