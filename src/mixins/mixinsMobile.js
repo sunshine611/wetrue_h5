@@ -343,7 +343,7 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        toHash: payload.hash,
+                        to_hash: payload.hash,
                         content: payload.content,
                     };
                 } else if (type === "reply") {
@@ -354,7 +354,7 @@ const mixins = {
                         type: type,
                         source: source,
                         reply_type: payload.type,
-                        to_hash: payload.toHash,
+                        to_hash: payload.to_hash,
                         to_address: payload.address,
                         reply_hash: payload.replyHash,
                         content: payload.content,
@@ -433,15 +433,12 @@ const mixins = {
                 let callResult;
                 if(payload) {
                     const configInfo = getStore("configInfo");
-                    const content = {
-                        WeTrue: configInfo.WeTrue,
-                        type: payload.type,
-                        content: payload.content,
-                    };
+                    payload.WeTrue = configInfo.WeTrue; //添加 WeTrue 版本号
+
                     callResult = await contract.methods.transfer_payload(
                         receiveId, 
                         AmountFormatter.toAettos(amount), 
-                        JSON.stringify(content)
+                        JSON.stringify(payload)
                     )
                 } else {
                     callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )

@@ -476,14 +476,14 @@ export default {
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
-                    toHash: this.currentComment.hash,
+                    to_hash: this.currentComment.hash,
                     content: content,
                 };
                 res = await this.wetrueSend("reply", payload);
             } else if (this.commentType === "replyPerson") {
                 let payload = {
                     type: "reply",
-                    toHash: this.currentComment.toHash,
+                    to_hash: this.currentComment.to_hash,
                     replyHash: this.currentComment.hash,
                     address: this.currentComment.users.userAddress,
                     content: content,

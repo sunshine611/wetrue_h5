@@ -173,7 +173,11 @@ export default {
                 this.configInfo.wttContract,
                 this.postInfo.users.userAddress,
                 this.form.amount,
-                {type:'reward', content: this.postInfo.hash}
+                {
+                    type: 'reward',
+                    to_hash: this.postInfo.hash,
+                    content: this.postInfo.hash
+                }
             );
             if (result) {
                 this.postHashToWeTrueApi(result); //打赏提交
