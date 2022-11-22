@@ -43,8 +43,8 @@ export default class Backend {
 		return `${aeExplorer}/transaction/${hash}/419`;
 	};
 
-	static aeknowApiTokenList = (token) => {
-		return `${aeknow}/api/token/${token}`;
+	static aeknowApiTokenList = (address) => {
+		return `${aeknow}/api/token/${address}`;
 	};
 
 	static aeMdwApiTokenList = (address) => {

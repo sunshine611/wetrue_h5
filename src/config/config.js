@@ -1,6 +1,6 @@
 import { getStore } from "@/util/service";
 
-export const version = '2.8.02'
+export const version = '2.8.03'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 

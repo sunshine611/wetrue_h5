@@ -190,7 +190,7 @@ export default {
             }
             this.btnLoading = false;
         },
-        //获取WTT余额
+        //获取AEX9余额
         getWttBalance() {
             this.getTokenBalance(
                 this.configInfo.wttContract,

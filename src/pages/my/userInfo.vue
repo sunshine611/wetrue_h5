@@ -78,6 +78,7 @@
         <BalanceList
             :tokenList="postList"
             :userAddress="userAddress"
+            :sendClick="false"
             v-if="current === 4"
         ></BalanceList>
         <div class="empty" v-show="postList.length === 0">

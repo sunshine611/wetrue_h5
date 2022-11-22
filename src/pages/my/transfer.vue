@@ -143,7 +143,7 @@ export default {
                 balance: this.balanceFormat(option.balance),
             };
             this.title = `${this.tokenInfo.tokenName + " " +this.$t('my.transfer')}`;
-            this.getWttBalance()
+            this.getAEX9Balance()
         } else {
             this.getAccount();
             this.title = `AE ${this.$t('my.transfer')}`;
@@ -259,6 +259,7 @@ export default {
             };
             this.btnLoading = false;
             this.hashShow = true;
+            this.getAEX9Balance();
         },
         //解析域名
         async ParsingDomainName(domainName) {
@@ -284,15 +285,14 @@ export default {
                 this.aeBalance = this.balanceFormat(res.data.balance);
             });
         },
-        //获取WET余额
-        getWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.tokenInfo.contractId)
+        //获取AEX9余额
+        getAEX9Balance() {
+            this.getTokenBalance(
+                this.tokenInfo.contractId,
+                this.token
             ).then((res) => {
-                if(res.data.amount) {
-                    this.tokenInfo.balance = this.balanceFormat(res.data.amount) || 0;
-                }
-            });
+                this.tokenInfo.balance = this.balanceFormat( res.toString(10) ) || 0;
+            });;
         },
         //查看合约调用成功后返回的交易哈希
         viewHash() {
