@@ -284,8 +284,8 @@ export default {
                         balance: res.data.balance,
                         symbol: "AE",
                         decimal: 18,
-                        owner_id: "",
-                        contract: "",
+                        contract_id: "",
+                        cert: "TRUE",
                     });
                 })
                 .then(() => {
