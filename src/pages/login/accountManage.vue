@@ -95,7 +95,7 @@
                     </div>
                 </transition-group>
             </draggable>
-            <u-gap :height="1080-amHeight"></u-gap>
+            <u-gap :height="680-amHeight"></u-gap>
         </div>
         <u-modal
             :show-title="false"
@@ -151,7 +151,7 @@ export default {
             handler() {
                 this.$nextTick(() => {
                     setStore("keystoreArr", this.keystoreArr);
-                    this.amHeight = (this.keystoreArr.length * 210)>1080 ? 1080 : (this.keystoreArr.length * 210);
+                    this.amHeight = (this.keystoreArr.length * 150)>650 ? 650 : (this.keystoreArr.length * 150);
                 });
             },
             deep: true,

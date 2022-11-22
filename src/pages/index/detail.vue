@@ -338,7 +338,7 @@ export default {
                             );
                         }
                     }
-                    this.commentHeight = (this.commentList.length * 150)>720 ? 720 : (this.commentList.length * 150);
+                    this.commentHeight = (this.commentList.length * 150)>650 ? 650 : (this.commentList.length * 150);
                 });
             },
             deep: true,
