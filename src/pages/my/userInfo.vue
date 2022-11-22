@@ -281,7 +281,7 @@ export default {
                 ).then((res) => {
                     this.postList.push({
                         balance: res.data.balance,
-                        tokenname: "AE",
+                        symbol: "AE",
                         decimal: 18,
                         owner_id: "",
                         contract: "",

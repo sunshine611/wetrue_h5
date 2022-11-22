@@ -231,7 +231,7 @@
                         color="#f04a82"
                     >
                     </fa-FontAwesome
-                    >{{ $t('login.createAccount') }}
+                    >{{ $t('login.createMnemonic') }}
                 </div>
             </div>
         </div>

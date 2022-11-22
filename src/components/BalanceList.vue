@@ -5,7 +5,7 @@
                 <u-cell-item @click="transferRecord(item)">
                     <div slot="icon">
                         <div class="token-icon">
-                            {{ item.tokenname }}
+                            {{ item.symbol }}
                         </div>
                     </div>
                     <div slot="right-icon" class="amount">
@@ -35,9 +35,9 @@ export default {
     methods: {
         //查看用户账户转账记录
         transferRecord(item) {
-            if (!!item.contract) {
+            if (!!item.contract_id) {
                 this.goUrl(
-                    `tokenTransferRecode?contract=${item.contract}&tokenName=${item.tokenname}&userAddress=${this.userAddress}`
+                    `tokenTransferRecode?contract=${item.contract_id}&tokenName=${item.symbol}&userAddress=${this.userAddress}`
                 );
             } else {
                 this.goUrl(`tokenTransferRecode?userAddress=${this.userAddress}`);

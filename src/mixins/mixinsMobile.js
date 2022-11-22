@@ -170,7 +170,9 @@ const mixins = {
         },
         //话题及@高亮
         topicHighlight(value) {
-            let expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
+            //let expt = /#([x80-xff\u4e00-\u9fa5\w ,，.。!！-？·\?æÆ](?!<br>#)(?!\[ST\])){1,25}#/g;
+            //上方为旧格式，即将放弃
+            let expt = /#([\u4e00-\u9fa5a-zA-Z0-9]+)(?!;)/gu;
             value = value.replace(expt, (item) => {
                 let newVal = `<text class="topic-text">${item}</text>`;
                 return newVal;
@@ -211,20 +213,14 @@ const mixins = {
             });
             // #endif
         },
-        //提交hash到WeTrue
-        postHashToWeTrue(res, opt) {
+        //处理hash
+        postHashToWeTrue(res) {
+            res.hash = 'ok';
+            return res;
+        },
+        //提交hash到WeTrueApi
+        postHashToWeTrueApi(res) {
             this.uShowLoading(this.$t('mixins.radio'));
-            if (opt) {
-                return Promise.resolve(
-                    this.$http.post(
-                        "/Submit/hash", 
-                        {
-                            hash: res.hash,
-                            await: true,
-                        }
-                    )
-                );
-            }
             this.$http.post("/Submit/hash", {
                 hash: res.hash,
             });
@@ -241,16 +237,7 @@ const mixins = {
         },
         //获取服务端版本信息
         getVersionInfo() {
-            const userAgent = navigator.userAgent;
-            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
-            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-            let system = "Other";
-            if (isAndroid) {
-                system = "Android";
-            }
-            if (isIOS) {
-                system = "IOS";
-            }
+            let system = this.getSystem();
             return new Promise((resolve) => {
                 this.$http.post("/Config/version", {
                     system:  system,
@@ -262,6 +249,20 @@ const mixins = {
                     }
                 );
             });
+        },
+        //获取系统
+        getSystem() {
+            const userAgent = navigator.userAgent;
+            let isAndroid = userAgent.indexOf("Android") > -1 || userAgent.indexOf("Linux") > -1;
+            let isIOS  = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+            let system = "Other";
+            if (isAndroid) {
+                system = "Android";
+            }
+            if (isIOS) {
+                system = "IOS";
+            }
+            return system;
         },
         //连接AE网络
         async connectAe() {
@@ -311,7 +312,6 @@ const mixins = {
         async wetrueSend(type, payload) {
             try {
                 let account = 0;
-                let opt = false;
                 await this.getAccount().then((res) => {
                     account = res;
                 });
@@ -323,7 +323,7 @@ const mixins = {
 
                 const thirdPartySource = this.validThirdPartySource();
                 const configInfo = getStore("configInfo");
-                source = WeTrueSource;
+                source = await `${WeTrueSource} ${this.getSystem()}`;
                 if (thirdPartySource) source = "Box æpp";
 
                 if (type === "topic") {
@@ -334,7 +334,7 @@ const mixins = {
                         source: source,
                         type: type,
                         content: payload.content,
-                        media: payload.media,
+                        //media: payload.media,
                     };
                 } else if (type === "comment") {
                     //发送评论
@@ -343,7 +343,7 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        toHash: payload.hash,
+                        to_hash: payload.hash,
                         content: payload.content,
                     };
                 } else if (type === "reply") {
@@ -354,7 +354,7 @@ const mixins = {
                         type: type,
                         source: source,
                         reply_type: payload.type,
-                        to_hash: payload.toHash,
+                        to_hash: payload.to_hash,
                         to_address: payload.address,
                         reply_hash: payload.replyHash,
                         content: payload.content,
@@ -377,7 +377,6 @@ const mixins = {
                     };
                 } else if (type === "focus" || type === "star") {
                     //关注或收藏
-                    opt = true;
                     amount = configInfo.focusAmount;
                     if(type === "star") amount = configInfo.starAmount;
                     content = {
@@ -412,7 +411,7 @@ const mixins = {
                             payload: JSON.stringify(content),
                         }
                     );
-                    return await this.postHashToWeTrue(res, opt);
+                    return await this.postHashToWeTrue(res);
                 }
             } catch (err) {
                 this.uShowToast(this.$t('mixins.fail'));
@@ -434,15 +433,12 @@ const mixins = {
                 let callResult;
                 if(payload) {
                     const configInfo = getStore("configInfo");
-                    const content = {
-                        WeTrue: configInfo.WeTrue,
-                        type: payload.type,
-                        content: payload.content,
-                    };
+                    payload.WeTrue = configInfo.WeTrue; //添加 WeTrue 版本号
+
                     callResult = await contract.methods.transfer_payload(
                         receiveId, 
                         AmountFormatter.toAettos(amount), 
-                        JSON.stringify(content)
+                        JSON.stringify(payload)
                     )
                 } else {
                     callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )

@@ -73,13 +73,13 @@
                 :arrow="false"
                 @click="
                     goUrl(
-                        `tokenTransferRecode?contract=${item.contract||item.contract_id}&tokenName=${item.tokenname||item.token_symbol}`
+                        `tokenTransferRecode?contract=${item.contract||item.contract_id}&tokenName=${item.symbol||item.token_symbol}`
                     )
                 "
             >
              <div slot="icon">
                         <div class="token-icon">
-                            {{item.tokenname||item.token_symbol}}
+                            {{item.symbol||item.token_symbol}}
                         </div>
                     </div>
                 <div slot="right-icon" class="amount">
@@ -92,7 +92,7 @@
                         class="ml-20"
                         @click="
                             goUrl(
-                                `transfer?tokenName=${item.tokenname||item.token_symbol}&contractId=${item.contract||item.contract_id}&balance=${item.balance||item.amount}`
+                                `transfer?tokenName=${item.symbol||item.token_symbol}&contractId=${item.contract||item.contract_id}&balance=${item.balance||item.amount}`
                             )
                         "
                         v-show="!validThirdPartySource()"

@@ -95,7 +95,7 @@
                     </div>
                 </transition-group>
             </draggable>
-            <u-gap height="1080"></u-gap>
+            <u-gap :height="1080-amHeight"></u-gap>
         </div>
         <u-modal
             :show-title="false"
@@ -143,6 +143,7 @@ export default {
             showDelete: false, //删除弹层
             currentAddress: "", //当前选择的地址
             showQrcode: false, //二维码弹层
+            amHeight:0, //数组换算高度
         };
     },
     watch: {
@@ -150,6 +151,7 @@ export default {
             handler() {
                 this.$nextTick(() => {
                     setStore("keystoreArr", this.keystoreArr);
+                    this.amHeight = (this.keystoreArr.length * 210)>1080 ? 1080 : (this.keystoreArr.length * 210);
                 });
             },
             deep: true,

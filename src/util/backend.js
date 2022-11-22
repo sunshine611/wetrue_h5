@@ -40,7 +40,7 @@ export default class Backend {
 	};
 	
 	static explorerViewhUrl = (hash) => {
-		return `${aeExplorer}/transactions/${hash}`;
+		return `${aeExplorer}/transaction/${hash}/419`;
 	};
 
 	static aeknowApiTokenList = (token) => {

@@ -290,7 +290,7 @@ export default {
                 {type:'random_avatar'}
             );
             if (result) {
-                this.postHashToWeTrue(result); //提交
+                this.postHashToWeTrueApi(result); //提交
                 setTimeout(() => {
                     uni.hideLoading();
                     this.btnLoading = false;
