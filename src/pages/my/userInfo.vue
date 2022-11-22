@@ -299,7 +299,10 @@ export default {
                             uni.hideLoading();
                             this.more = "nomore";
                         }
-                    );
+                    ).catch(() => {
+                        uni.hideLoading();
+                        this.more = "nomore";
+                    });
                 });
         },
         //切换tab
