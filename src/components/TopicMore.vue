@@ -125,7 +125,7 @@ export default {
                             this.postList[i].users.userAddress ===
                             this.topicInfo.users.userAddress
                         ) {
-                            this.postList[i].isFocus = !this.topicInfo.isFocus;
+                            this.postList[i].isFocus = !this.postList[i].isFocus;
                         }
                     }
                 } else {

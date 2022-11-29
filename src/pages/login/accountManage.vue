@@ -143,7 +143,7 @@ export default {
             showDelete: false, //删除弹层
             currentAddress: "", //当前选择的地址
             showQrcode: false, //二维码弹层
-            amHeight:0, //数组换算高度
+            amHeight: 0, //数组换算高度
         };
     },
     watch: {
@@ -151,7 +151,7 @@ export default {
             handler() {
                 this.$nextTick(() => {
                     setStore("keystoreArr", this.keystoreArr);
-                    this.amHeight = (this.keystoreArr.length * 150)>650 ? 650 : (this.keystoreArr.length * 150);
+                    this.amHeight = (this.keystoreArr.length * 150)>680 ? 680 : (this.keystoreArr.length * 150);
                 });
             },
             deep: true,
