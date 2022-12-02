@@ -121,6 +121,12 @@ const mixins = {
             const signArray = Crypto.signMessage(signText, secretKeyHex)
             const signHex = Buffer.from(signArray).toString('hex');
             return signHex;
+            /* 基于节点方式
+            const client = await this.client();
+            const sig = await client.signMessage(signText);
+            const sigHex = Buffer.from(sig).toString('hex');
+            return sigHex;
+            */
         },
         //验证密码是否存在
         isPassword() {

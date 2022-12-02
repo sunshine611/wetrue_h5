@@ -28,7 +28,7 @@
                 <div>{{ $t('index.discuss') + '：' + postInfo.total }}</div>
                 <div 
                     @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.sender_id)"
-                >{{ $t('index.founder') + '：' + postInfo.nickname }}</div>
+                >{{ $t('index.founder') + '：' + (postInfo.nickname ? postInfo.nickname : postInfo.sender_id.slice(-4)) }}</div>
             </div>
         </div>
         <TopicList :postList="postList"></TopicList>
