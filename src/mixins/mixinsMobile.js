@@ -349,7 +349,7 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        to_hash: payload.hash,
+                        toHash: payload.hash,
                         content: payload.content,
                     };
                 } else if (type === "reply") {
@@ -359,10 +359,10 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        reply_type: payload.type,
-                        to_hash: payload.to_hash,
-                        to_address: payload.address,
-                        reply_hash: payload.replyHash,
+                        replyType: payload.type,
+                        toHash: payload.toHash,
+                        toAddress: payload.address,
+                        replyHash: payload.replyHash,
                         content: payload.content,
                     };
                 } else if (type === "nickname") {
