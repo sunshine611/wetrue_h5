@@ -175,7 +175,7 @@ export default {
                 this.form.amount,
                 {
                     type: 'reward',
-                    to_hash: this.postInfo.hash,
+                    toHash: this.postInfo.hash,
                     content: this.postInfo.hash
                 }
             );

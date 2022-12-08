@@ -405,7 +405,7 @@ const mixins = {
                         contractAddress: "",
                         payload: content,
                     };
-                    return thirdPartyPost(postPayload);
+                    return await thirdPartyPost(postPayload);
                 } else {
                     //WeTrue上链
                     this.uShowLoading(this.$t('mixins.inChain'));

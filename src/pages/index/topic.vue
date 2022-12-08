@@ -24,11 +24,11 @@
                 </div>
             </div>
             <div class="topic-data">
-                <div>{{ $t('index.views') + '：' + postInfo.read_sum }}</div>
+                <div>{{ $t('index.views') + '：' + postInfo.readSum }}</div>
                 <div>{{ $t('index.discuss') + '：' + postInfo.total }}</div>
                 <div 
-                    @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.sender_id)"
-                >{{ $t('index.founder') + '：' + (postInfo.nickname ? postInfo.nickname : postInfo.sender_id.slice(-4)) }}</div>
+                    @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.userAddress)"
+                >{{ $t('index.founder') + '：' + (postInfo.nickname ? postInfo.nickname : postInfo.userAddress.slice(-4)) }}</div>
             </div>
         </div>
         <TopicList :postList="postList"></TopicList>
