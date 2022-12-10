@@ -175,7 +175,7 @@ export default {
                 this.form.amount,
                 {
                     type: 'reward',
-                    to_hash: this.postInfo.hash,
+                    toHash: this.postInfo.hash,
                     content: this.postInfo.hash
                 }
             );
@@ -190,7 +190,7 @@ export default {
             }
             this.btnLoading = false;
         },
-        //获取WTT余额
+        //获取AEX9余额
         getWttBalance() {
             this.getTokenBalance(
                 this.configInfo.wttContract,

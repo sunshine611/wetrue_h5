@@ -229,19 +229,14 @@ export default {
         //是否收藏
         star(item) {
             let payload = {
-                action: item.isStar,
+                action: item.isStar ? 'false' : 'true',
                 content: item.hash,
             };
             this.wetrueSend("star", payload).then((res) => {
-                this.releaseCallback(res);
+                item.isStar = !item.isStar;
+                item.star = item.isStar ? item.star+1 : item.star-1;
+                this.uHideLoading();
             });
-        },
-        releaseCallback(res){
-            if (res.code == 200) {
-                item.isStar = res.data.isStar;
-                item.star = res.data.star;
-            }
-            this.uHideLoading();
         },
     },
 };

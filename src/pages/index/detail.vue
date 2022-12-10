@@ -338,7 +338,7 @@ export default {
                             );
                         }
                     }
-                    this.commentHeight = (this.commentList.length * 150)>720 ? 720 : (this.commentList.length * 150);
+                    this.commentHeight = (this.commentList.length * 150)>650 ? 650 : (this.commentList.length * 150);
                 });
             },
             deep: true,
@@ -476,14 +476,14 @@ export default {
             } else if (this.commentType === "reply") {
                 let payload = {
                     type: "comment",
-                    to_hash: this.currentComment.hash,
+                    toHash: this.currentComment.hash,
                     content: content,
                 };
                 res = await this.wetrueSend("reply", payload);
             } else if (this.commentType === "replyPerson") {
                 let payload = {
                     type: "reply",
-                    to_hash: this.currentComment.to_hash,
+                    toHash: this.currentComment.toHash,
                     replyHash: this.currentComment.hash,
                     address: this.currentComment.users.userAddress,
                     content: content,

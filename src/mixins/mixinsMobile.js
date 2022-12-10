@@ -121,6 +121,12 @@ const mixins = {
             const signArray = Crypto.signMessage(signText, secretKeyHex)
             const signHex = Buffer.from(signArray).toString('hex');
             return signHex;
+            /* 基于节点方式
+            const client = await this.client();
+            const sig = await client.signMessage(signText);
+            const sigHex = Buffer.from(sig).toString('hex');
+            return sigHex;
+            */
         },
         //验证密码是否存在
         isPassword() {
@@ -343,7 +349,7 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        to_hash: payload.hash,
+                        toHash: payload.hash,
                         content: payload.content,
                     };
                 } else if (type === "reply") {
@@ -353,10 +359,10 @@ const mixins = {
                         WeTrue: configInfo.WeTrue,
                         type: type,
                         source: source,
-                        reply_type: payload.type,
-                        to_hash: payload.to_hash,
-                        to_address: payload.address,
-                        reply_hash: payload.replyHash,
+                        replyType: payload.type,
+                        toHash: payload.toHash,
+                        toAddress: payload.address,
+                        replyHash: payload.replyHash,
                         content: payload.content,
                     };
                 } else if (type === "nickname") {
@@ -399,7 +405,7 @@ const mixins = {
                         contractAddress: "",
                         payload: content,
                     };
-                    return thirdPartyPost(postPayload);
+                    return await thirdPartyPost(postPayload);
                 } else {
                     //WeTrue上链
                     this.uShowLoading(this.$t('mixins.inChain'));

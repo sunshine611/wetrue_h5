@@ -115,29 +115,24 @@ export default {
         //是否关注
         focus() {
             let payload = {
-                action: this.topicInfo.isFocus,
+                action: this.topicInfo.isFocus ? 'false' : 'true',
                 content: this.topicInfo.users.userAddress,
             };
             this.wetrueSend("focus", payload).then((res) => {
-                this.releaseCallback(res);
-            });
-        },
-        releaseCallback(res){
-            if (res.code === 200) {
                 if (this.postList.length > 0) {
                     for (let i = 0; i < this.postList.length; i++) {
                         if (
                             this.postList[i].users.userAddress ===
                             this.topicInfo.users.userAddress
                         ) {
-                            this.postList[i].isFocus = res.data.isFocus;
+                            this.postList[i].isFocus = !this.postList[i].isFocus;
                         }
                     }
                 } else {
-                    this.topicInfo.isFocus = res.data.isFocus;
+                    this.topicInfo.isFocus = !this.topicInfo.isFocus;
                 }
-            }
-            this.uHideLoading();
+                this.uHideLoading();
+            });
         },
         //投诉
         complain() {

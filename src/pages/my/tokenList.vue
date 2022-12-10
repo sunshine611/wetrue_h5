@@ -66,48 +66,11 @@
             </div>
         </div>
         <u-gap height="20"></u-gap>
-        <u-cell-group>
-            <u-cell-item
-                v-for="item in tokenList"
-                :key="item.contract||item.contract_id"
-                :arrow="false"
-                @click="
-                    goUrl(
-                        `tokenTransferRecode?contract=${item.contract||item.contract_id}&tokenName=${item.symbol||item.token_symbol}`
-                    )
-                "
-            >
-             <div slot="icon">
-                        <div class="token-icon">
-                            {{item.symbol||item.token_symbol}}
-                        </div>
-                    </div>
-                <div slot="right-icon" class="amount">
-                    {{ $t('my.balance') + ": " + balanceFormat(item.balance||item.amount, 5, item.decimal) }}
-                    <u-button
-                        shape="square"
-                        type="primary"
-                        size="mini"
-                        :ripple="true"
-                        class="ml-20"
-                        @click="
-                            goUrl(
-                                `transfer?tokenName=${item.symbol||item.token_symbol}&contractId=${item.contract||item.contract_id}&balance=${item.balance||item.amount}`
-                            )
-                        "
-                        v-show="!validThirdPartySource()"
-                        ><fa-FontAwesome
-                            type="fas fa-exchange-alt"
-                            size="24"
-                            class="mr-10"
-                            color="#fff"
-                        >
-                        </fa-FontAwesome
-                        >{{ $t('my.send') }}</u-button
-                    >
-                </div>
-            </u-cell-item>
-        </u-cell-group>
+        <BalanceList
+                :tokenList="tokenList"
+                :userAddress="token"
+                :sendClick="true"
+            ></BalanceList>
     </div>
 </template>
 
@@ -116,10 +79,11 @@ import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
+import BalanceList from "@/components/BalanceList.vue";
 
 export default {
     components: {
-
+        BalanceList,
     },
     data() {
         return {
@@ -158,19 +122,11 @@ export default {
     methods: {
         //获取账户token列表
         getTokenList() {
-            
             http.get(Backend.aeknowApiTokenList(this.token)).then((res) => {
                 if (res.data.tokens.length > 0) {
                     this.tokenList = res.data.tokens;
                 }
             });
-            /*
-            http.get(Backend.aeMdwApiTokenList(this.token)).then((res) => {
-                if (res.data.length > 0) {
-                    this.tokenList = res.data;
-                }
-            });
-            */
         },
     },
 };
@@ -200,16 +156,6 @@ export default {
             align-items: center;
             justify-content: space-between;
         }
-    }
-    .token-icon{
-        width:80rpx;
-        height: 80rpx;
-        background: #f04a82;
-        border-radius: 50%;
-        color:#fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 }
 </style>

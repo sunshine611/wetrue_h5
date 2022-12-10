@@ -78,6 +78,7 @@
         <BalanceList
             :tokenList="postList"
             :userAddress="userAddress"
+            :sendClick="false"
             v-if="current === 4"
         ></BalanceList>
         <div class="empty" v-show="postList.length === 0">
@@ -283,8 +284,8 @@ export default {
                         balance: res.data.balance,
                         symbol: "AE",
                         decimal: 18,
-                        owner_id: "",
-                        contract: "",
+                        contract_id: "",
+                        cert: "TRUE",
                     });
                 })
                 .then(() => {
@@ -298,7 +299,10 @@ export default {
                             uni.hideLoading();
                             this.more = "nomore";
                         }
-                    );
+                    ).catch(() => {
+                        uni.hideLoading();
+                        this.more = "nomore";
+                    });
                 });
         },
         //切换tab
