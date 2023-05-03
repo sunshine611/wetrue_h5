@@ -1,6 +1,6 @@
 import { getStore } from "@/util/service";
 
-export const version = '2.8.04'
+export const version = '2.8.10'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl
 
@@ -8,7 +8,7 @@ const env_net = getStore("networkSetting")==='io' ? 'io' : 'cc';
 
 if (env_net == 'io') {
     baseUrl     = 'https://api.wetrue.io'
-    nodeUrl     = 'https://mainnet.wetrue.io'
+    nodeUrl     = 'https://mainnet.aeternity.io'
     aeExplorer  = 'https://aeknow.org/block'
     chatapi     = 'https://api.wetrue.io'
     aeMdw       = 'https://mainnet.wetrue.io/mdw'
