@@ -417,7 +417,7 @@ const mixins = {
                             payload: JSON.stringify(content),
                         }
                     );
-                    return await this.postHashToWeTrue(res);
+                    return await this.postHashToWeTrueApi(res);
                 }
             } catch (err) {
                 this.uShowToast(this.$t('mixins.fail'));
