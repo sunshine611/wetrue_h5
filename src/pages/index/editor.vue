@@ -114,7 +114,7 @@ export default {
             this.releaseCallback(res);
         },
         releaseCallback(callback) {
-            if (JSON.stringify(callback) !== "{}" && !!callback) {
+            if (callback !== {} && !!callback) {
                 this.uHideLoading();
                 this.btnLoading = false;
                 this.getConfigInfo();

@@ -42,14 +42,14 @@
                         <div class="desc">可迁移(WET)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
-                            {{ balanceFormat(wetBalance) || "0.0000" }}
+                            {{ wetBalance || "0.0000" }}
                         </div>
                     </div>
                     <div class="migrate-total">
                         <div class="desc">余额(WTT)</div>
                         <u-gap :height="10"></u-gap>
                         <div class="num">
-                            {{ balanceFormat(wttBalance) || "0.0000" }}
+                            {{ wttBalance || "0.0000" }}
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                     {{ $t('my.balanceErr') }}
                 </div>
                 <div class="clearfix">
-                    <div class="pull-right">余额：{{ balanceFormat(wetBalance) }} WET</div>
+                    <div class="pull-right">余额：{{ wetBalance }} WET</div>
                 </div>
                 <u-gap :height="30"></u-gap>
                 <u-button type="primary" @click="migrate" :loading="btnLoading"
@@ -137,6 +137,7 @@
 import { mapGetters } from "vuex";
 import { getStore } from "@/util/service";
 import Request from "luch-request";
+import { toAettos } from '@aeternity/aepp-sdk';
 const http = new Request();
 
 export default {
@@ -187,7 +188,7 @@ export default {
                 this.configInfo.oldWttContract,
                 this.token
             ).then((res) => {
-                this.wetBalance = res.toString(10) || 0;
+                this.wetBalance = this.balanceFormat(res, 5) || 0;
             });;
         },
         //获取WTT余额
@@ -196,7 +197,7 @@ export default {
                 this.configInfo.wttContract,
                 this.token
             ).then((res) => {
-                this.wttBalance = res.toString(10) || 0;
+                this.wttBalance = this.balanceFormat(res, 5) || 0;
             });;
         },
         //获取已迁移WTT
@@ -205,13 +206,13 @@ export default {
                 this.configInfo.wttContract,
                 "ak" + this.configInfo.migrateContract.slice(2)
             ).then((res) => {
-                this.migrateBalance = this.balanceFormat( res.toString(10) ) || 0;
+                this.migrateBalance = this.balanceFormat( res ) || 0;
             });;
         },
         //全部事件
         totalBalance() {
-            if (parseInt(this.balanceFormat(this.wetBalance)) > 0) {
-                this.form.amount = this.balanceFormat(this.wetBalance);
+            if (this.wetBalance > 0) {
+                this.form.amount = this.wetBalance;
             } else {
                 this.form.amount = 0;
             }
@@ -224,7 +225,7 @@ export default {
                 );
                 return false;
             };
-            if ( !this.form.amount || this.form.amount > this.balanceFormat(this.wetBalance) ) {
+            if ( !this.form.amount || this.form.amount > this.wetBalance ) {
                 this.warning.amount = true;
                 return;
             } else {

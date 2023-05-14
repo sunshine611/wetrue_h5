@@ -73,7 +73,7 @@
             :confirm-text="$t('my.check')"
             @confirm="viewHash"
         >
-            <view class="slot-content"> {{ result.hash }} </view>
+            <view class="slot-content"> {{ result ? result.hash : "noHash" }} </view>
         </u-modal>
         <u-popup
             v-model="passwordShow"
@@ -103,9 +103,10 @@
 <script>
 import Request from "luch-request";
 const http = new Request();
-import { isAddressValid } from "@aeternity/aepp-sdk/es/utils/crypto";
+//import {  } from "@aeternity/aepp-sdk/es/utils/crypto";
 import Backend from "@/util/backend";
 import { mapGetters } from "vuex";
+import { AE_AMOUNT_FORMATS, encode, Encoding, isAddressValid } from '@aeternity/aepp-sdk';
 
 export default {
     components: {
@@ -210,15 +211,19 @@ export default {
                         title: this.$t('my.loading'),
                     });
                     this.btnLoading = true;
-                    
                     try {
-                        let client = await this.client();
-                        const res = await client.spend(
-                            this.form.money * Math.pow(10, 18),
+                        const aeSdk = await this.initSdk();
+                        const option = {   
+                            denomination: AE_AMOUNT_FORMATS.AE,
+                            payload: encode(new TextEncoder().encode('WeTrue Wallet'), Encoding.Bytearray)
+                        }
+                        const res = await aeSdk.spend(
+                            this.form.money,
                             this.form.address,
-                            {payload: "WeTrue Wallet"}
+                            option
                         );
-                        if (JSON.stringify(res) !== "{}" && !!res) {
+                        const tx = res.tx;
+                        if (tx !== {} && !!tx) {
                             uni.hideLoading();
                             uni.showToast({
                                 icon: "success",

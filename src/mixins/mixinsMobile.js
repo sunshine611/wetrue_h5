@@ -6,17 +6,22 @@ import {
     source as WeTrueSource,
     shTipContractId
 } from "@/config/config";
-import {
+import { 
+    AeSdk,
     Node,
-    Crypto,
-    Universal,
-    Keystore,
     MemoryAccount,
-    AmountFormatter,
-} from "@aeternity/aepp-sdk/es/index";
-import Fungible_Token_Full_Interface from "@/util/contracts/fungible-token-full-interface.aes";
-import Migrate_Token_Interface from "@/util/contracts/MigrateTokenInterface.aes";
-import Superhero_Tipping_v3_Interface from "@/util/contracts/SuperheroTipping_v3_Interface.aes";
+    recover as KS_recover,
+    AE_AMOUNT_FORMATS,
+    toAe,
+    toAettos,
+    encode, 
+    Encoding
+} from "@aeternity/aepp-sdk";
+
+
+import Fungible_Token_Full_Aci from "@/util/contracts/FungibleTokenFull";
+import Migrate_Token_Aci from "@/util/contracts/MigrateToken";
+import Superhero_Tipping_v3_Aci from "@/util/contracts/SuperheroTipping_v3";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
@@ -75,14 +80,14 @@ const mixins = {
             });
         },
         //获取账户Token余额
-        async getTokenBalance(contractId, address) {
+        async getTokenBalance(contractId, account) {
             try {
-                let client = await this.client();
-                const contract = await client.getContractInstance({
-                    source: Fungible_Token_Full_Interface,
-                    contractAddress: contractId
-                })
-                let callResult = await contract.methods.balance(address)
+                const aeSdk = await this.initSdk();
+                const contract = await aeSdk.initializeContract({
+                    aci: Fungible_Token_Full_Aci,
+                    address: contractId
+                });
+                const callResult = await contract.balance(account);
                 return callResult.decodedResult;
             } catch (err) {
                 console.log(err)
@@ -90,14 +95,9 @@ const mixins = {
             }
         },
         //余额格式化
-        balanceFormat(balance, num=4, decimal=18) {
-            if (isNaN(balance)) {
-                return 0;
-            } else {
-                return (parseFloat(balance) / Math.pow(10, decimal)).toFixed(
-                    num
-                );
-            }
+        balanceFormat(balance, num=4) {
+            const newBalance = toAe(balance,{ denomination: AE_AMOUNT_FORMATS.AETTOS })
+            return parseFloat(newBalance).toFixed( num );
         },
         //获取后端信息
         getConfigInfo() {
@@ -108,9 +108,9 @@ const mixins = {
             });
         },
         //keystore通过密码转换成私钥
-        keystoreToSecretKey(password) {
-            const keystore = getStore("keystore");
-            return Keystore.recover(password, keystore).then((str) => {
+        async keystoreToSecretKey(password) {
+            const ks = await getStore("keystore");
+            return KS_recover(password, ks).then((str) => {
                 return str;
             });
         },
@@ -122,8 +122,8 @@ const mixins = {
             const signHex = Buffer.from(signArray).toString('hex');
             return signHex;
             /* 基于节点方式
-            const client = await this.client();
-            const sig = await client.signMessage(signText);
+            const aeSdk = await this.initSdk();
+            const sig = await aeSdk.signMessage(signText);
             const sigHex = Buffer.from(sig).toString('hex');
             return sigHex;
             */
@@ -276,36 +276,21 @@ const mixins = {
                 const secretKey = await this.keystoreToSecretKey(
                     store.state.user.password
                 );
-                const publicKey = await Crypto.getAddressFromPriv(secretKey);
-                const node = await Node({
-                    url: store.state.user.nodeUrl,
+                const senderAccount = new MemoryAccount(secretKey);
+                const node = new Node(store.state.user.nodeUrl)
+                const aeSdk = new AeSdk({
+                    nodes: [{name: "WeTrue", instance: node,}],
+                    accounts: [senderAccount],
+                    //onCompiler: new CompilerHttp(compilerUrl)
                 });
-                const client = await Universal({
-                    compilerUrl: compilerUrl,
-                    nodes: [
-                        {
-                            name: "WeTrue",
-                            instance: node,
-                        },
-                    ],
-                    accounts: [
-                        MemoryAccount({
-                            keypair: {
-                                secretKey: secretKey,
-                                publicKey: publicKey,
-                            },
-                        }),
-                    ],
-                    address: publicKey,
-                });
-                store.commit("user/SET_CLIENT", client);
+                store.commit("user/SET_CLIENT", aeSdk);
             } catch (error) {
                 this.uShowToast(this.$t('mixins.connectionFail'));
             }
         },
         //判断是否已连接AE网络
-        async client() {
-            var client;
+        async initSdk() {
+            let client;
             if (JSON.stringify(store.state.user.client) === "{}") {
                 await this.connectAe();
                 client = store.state.user.client;
@@ -325,7 +310,7 @@ const mixins = {
                     this.uShowToast(this.$t('mixins.lowBalance'));
                     return;
                 }
-                let amount, content, client, source;
+                let amount, content, aeSdk, source;
 
                 const thirdPartySource = this.validThirdPartySource();
                 const configInfo = getStore("configInfo");
@@ -409,13 +394,15 @@ const mixins = {
                 } else {
                     //WeTrue上链
                     this.uShowLoading(this.$t('mixins.inChain'));
-                    client = await this.client();
-                    let res = await client.spend(
+                    aeSdk = await this.initSdk();
+                    const option = {   
+                        denomination: AE_AMOUNT_FORMATS.AETTOS,
+                        payload: encode(new TextEncoder().encode(JSON.stringify(content)), Encoding.Bytearray)
+                    }
+                    const res = await aeSdk.spend(
                         amount,
                         configInfo.receivingAccount,
-                        {
-                            payload: JSON.stringify(content),
-                        }
+                        option
                     );
                     return await this.postHashToWeTrueApi(res);
                 }
@@ -428,12 +415,10 @@ const mixins = {
         async contractTransfer(contractId, receiveId, amount ,payload=false) {
             try {
                 this.uShowLoading(this.$t('mixins.readySend'))
-                let client = await this.client();
-                this.uShowLoading(this.$t('mixins.compileContract'))
-                const contract = await client.getContractInstance({
-                    source: Fungible_Token_Full_Interface,
-                    contractAddress: contractId,
-                    gas: 36969
+                let aeSdk = await this.initSdk();
+                const contract = await aeSdk.initializeContract({
+                    aci: Fungible_Token_Full_Aci,
+                    address: contractId
                 })
                 this.uShowLoading(this.$t('mixins.executeContract'))
                 let callResult;
@@ -441,13 +426,13 @@ const mixins = {
                     const configInfo = getStore("configInfo");
                     payload.WeTrue = configInfo.WeTrue; //添加 WeTrue 版本号
 
-                    callResult = await contract.methods.transfer_payload(
+                    callResult = await contract.transfer_payload(
                         receiveId, 
-                        AmountFormatter.toAettos(amount), 
+                        toAettos(amount), 
                         JSON.stringify(payload)
                     )
                 } else {
-                    callResult = await contract.methods.transfer( receiveId, AmountFormatter.toAettos(amount) )
+                    callResult = await contract.transfer( receiveId, toAettos(amount) )
                 }
                 uni.hideLoading();
                 return callResult;
@@ -461,29 +446,28 @@ const mixins = {
             uni.showLoading({
                 title: this.$t('mixins.readySend'),
             });
-            let client = await this.client();
+            let aeSdk = await this.initSdk();
             this.uShowLoading(`编译授权...`)
-            const allowanceCompiler = await client.getContractInstance({
-                source: Fungible_Token_Full_Interface,
-                contractAddress: migrateTokenId
+            const allowanceCompiler = await aeSdk.initializeContract({
+                aci: Fungible_Token_Full_Aci,
+                address: migrateTokenId
             })
             this.uShowLoading(`授权 ${amount} WET`)
             try {
-                await allowanceCompiler.methods.create_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount))
+                await allowanceCompiler.create_allowance( "ak" + migrateContractId.slice(2), toAettos(amount))
             }
             catch (err) {
-                await allowanceCompiler.methods.change_allowance( "ak" + migrateContractId.slice(2), AmountFormatter.toAettos(amount) )
+                await allowanceCompiler.change_allowance( "ak" + migrateContractId.slice(2), toAettos(amount) )
             }
             this.uShowLoading(`编译迁移...`)
-            const migrateContract = await client.getContractInstance({
-                source: Migrate_Token_Interface, 
-                contractAddress: migrateContractId,
-                gas: 36969
+            const migrateContract = await aeSdk.initializeContract({
+                aci: Migrate_Token_Aci, 
+                address: migrateContractId,
             })
             this.uShowLoading(`正在迁移...`)
-            let params = [migrateTokenId, receiveId, AmountFormatter.toAettos(amount - 0.00009)];
+            let params = [migrateTokenId, receiveId, toAettos(amount)];
             try{
-                let callresult = await migrateContract.methods.migrate_mapping(...params);
+                let callresult = await migrateContract.migrate_mapping(...params);
                 return true;
             } catch (e){
                 return true;
@@ -494,17 +478,16 @@ const mixins = {
             uni.showLoading({
                 title: this.$t('mixins.readySend'),
             });
-            let client = await this.client();
-            uni.showLoading({
-                title: this.$t('mixins.compileContract'),
-            });
-            const tippingCompiler = await client.getContractInstance(
-                {source: Superhero_Tipping_v3_Interface, contractAddress: shTipContractId, gas: 36969}
-            )
+            let aeSdk = await this.initSdk();
+            const tippingCompiler = await aeSdk.initializeContract(
+                {
+                    aci: Superhero_Tipping_v3_Aci, 
+                    address: shTipContractId
+                })
             this.uShowLoading(`Post Superhero...`)
             let params = [payload, []];
             try{
-                let callresult =  await tippingCompiler.methods.post_without_tip(...params);
+                let callresult =  await tippingCompiler.post_without_tip(...params);
                 let res = {}
                 if (callresult.hash) res.hash = callresult.hash
                 return res;
@@ -517,10 +500,10 @@ const mixins = {
             try{
                 //WeTrue上链
                 this.uShowLoading(this.$t('mixins.inChain'));
-                let client = await this.client();
+                let aeSdk = await this.initSdk();
                 if ( payload.type == 'extend') {
                     const name = payload.name;
-                    const res = await client.aensUpdate(name, {}, { nameTtl: 180000, extendPointers: true })
+                    const res = await aeSdk.aensUpdate(name, {}, { nameTtl: 180000, extendPointers: true })
                     return res;
                 }
             } catch(err) {
