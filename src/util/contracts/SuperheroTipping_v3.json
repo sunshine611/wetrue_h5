@@ -1,0 +1,136 @@
+[{
+  "contract": {
+    "event": {
+      "variant": [
+        {
+          "PostWithoutTipReceived": [
+            "address",
+            "string"
+          ]
+        }
+      ]
+    },
+    "functions": [
+      {
+        "arguments": [
+          {
+            "name": "_1",
+            "type": "string"
+          },
+          {
+            "name": "_2",
+            "type": {
+              "list": [
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "_3",
+            "type": "address"
+          },
+          {
+            "name": "_4",
+            "type": "signature"
+          }
+        ],
+        "name": "post_without_tip_sig",
+        "payable": false,
+        "returns": "int",
+        "stateful": true
+      },
+      {
+        "arguments": [
+          {
+            "name": "_1",
+            "type": "string"
+          },
+          {
+            "name": "_2",
+            "type": {
+              "list": [
+                "string"
+              ]
+            }
+          }
+        ],
+        "name": "post_without_tip",
+        "payable": false,
+        "returns": "int",
+        "stateful": true
+      },
+      {
+        "arguments": [],
+        "name": "get_state",
+        "payable": false,
+        "returns": "Tipping.state",
+        "stateful": false
+      }
+    ],
+    "kind": "contract_main",
+    "name": "Tipping",
+    "payable": false,
+    "state": {
+      "record": [
+        {
+          "name": "tips",
+          "type": {
+            "map": [
+              "Tipping.tip_id",
+              "Tipping.tip"
+            ]
+          }
+        },
+        {
+          "name": "version",
+          "type": "string"
+        }
+      ]
+    },
+    "type_defs": [
+      {
+        "name": "tip_id",
+        "typedef": "int",
+        "vars": []
+      },
+      {
+        "name": "tip",
+        "typedef": {
+          "variant": [
+            {
+              "PostWithoutTip": [
+                "Tipping.tip_meta",
+                {
+                  "list": [
+                    "string"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "vars": []
+      },
+      {
+        "name": "tip_meta",
+        "typedef": {
+          "record": [
+            {
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "name": "timestamp",
+              "type": "int"
+            }
+          ]
+        },
+        "vars": []
+      }
+    ]
+  }
+}]

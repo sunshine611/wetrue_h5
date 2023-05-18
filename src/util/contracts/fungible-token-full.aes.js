@@ -21,7 +21,6 @@ module.exports = `
 
 @compiler >= 5
 
-include "Option.aes"
 include "String.aes"
 
 /// @title - Fungible token with all the extensions - burn, mint, allowances
@@ -73,14 +72,20 @@ contract FungibleTokenFull =
     require(String.length(symbol) >= 1, "STRING_TOO_SHORT_SYMBOL")
     // If the provided value for \`decimals\` is negative abort the execution
     require_non_negative_value(decimals)
-    // If negative initial owner balance is passed, abort the execution
-    let initial_supply = Option.default(0, initial_owner_balance)
-    require_non_negative_value(initial_supply)
 
     let owner = Call.caller
+    let (initial_supply, initial_balances) = switch(initial_owner_balance)
+      Some(initial_balance) =>
+        // If negative initial owner balance is passed, abort the execution
+        require_non_negative_value(initial_balance)
+        // Emit Mint event to signal token supply has been created
+        Chain.event(Mint(owner, initial_balance))
+        (initial_balance, { [owner] = initial_balance })
+      None => (0, {})
+
     { owner        = owner,
       total_supply = initial_supply,
-      balances     = Option.match({}, (balance) => { [owner] = balance }, initial_owner_balance),
+      balances     = initial_balances,
       meta_info    = { name = name, symbol = symbol, decimals = decimals },
       allowances   = {},
       swapped      = {} }
@@ -172,7 +177,7 @@ contract FungibleTokenFull =
     let allowance_accounts = { from_account = Call.caller, for_account = for_account }
     internal_change_allowance(allowance_accounts, - state.allowances[allowance_accounts])
 
-  // Transfer the balance of \`value\` from \`Call.caller\` to \`to_account\` account
+  /// Transfer the balance of \`value\` from \`Call.caller\` to \`to_account\` account
   stateful entrypoint transfer(to_account: address, value: int) =
     internal_transfer(Call.caller, to_account, value)
 
@@ -245,4 +250,5 @@ contract FungibleTokenFull =
     require_non_negative_value(new_allowance)
     put(state{ allowances[allowance_accounts] = new_allowance })
     Chain.event(Allowance(allowance_accounts.from_account, allowance_accounts.for_account, new_allowance))
+
 `;

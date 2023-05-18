@@ -494,7 +494,7 @@ export default {
         },
         //发表评论回调
         releaseCallback(res) {
-            if (JSON.stringify(res) !== "{}" && !!res) {
+            if (res !== {} && !!res) {
                 setTimeout(() => {
                     this.isShowComment = false;
                     this.getPostInfo();

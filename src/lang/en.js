@@ -223,5 +223,6 @@ export default {
 		amountsAbnormal:'Amount Abnormal, Stop Execution',
 		lowBalance:'Account Balance 1AE Low, Stop Execution',
 		connectionFail:'AE Node Connection Fail',
+		connectionNode:'Node Success',
 	},
 }

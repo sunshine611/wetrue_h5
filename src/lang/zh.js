@@ -223,5 +223,6 @@ export default {
 		amountsAbnormal:'上链超过10AE，已禁止操作',
 		lowBalance:'账户余额小于1AE，已禁止操作',
 		connectionFail:'AE节点连接失败',
+		connectionNode:'AE节点已连接',
 	},
 };

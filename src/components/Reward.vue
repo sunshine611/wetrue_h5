@@ -196,7 +196,7 @@ export default {
                 this.configInfo.wttContract,
                 this.token
             ).then((res) => {
-                this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
+                this.wttBalance = this.balanceFormat( res ) || 0;
             });;
         },
     },
