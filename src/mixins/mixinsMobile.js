@@ -284,6 +284,7 @@ const mixins = {
                     //onCompiler: new CompilerHttp(compilerUrl)
                 });
                 store.commit("user/SET_CLIENT", aeSdk);
+                this.uShowToast(this.$t('mixins.connectionNode'));
             } catch (error) {
                 this.uShowToast(this.$t('mixins.connectionFail'));
             }

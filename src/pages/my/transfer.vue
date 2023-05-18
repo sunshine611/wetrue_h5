@@ -296,7 +296,7 @@ export default {
                 this.tokenInfo.contractId,
                 this.token
             ).then((res) => {
-                this.tokenInfo.balance = this.balanceFormat( res.toString(10) ) || 0;
+                this.tokenInfo.balance = this.balanceFormat( res ) || 0;
             });;
         },
         //查看合约调用成功后返回的交易哈希
