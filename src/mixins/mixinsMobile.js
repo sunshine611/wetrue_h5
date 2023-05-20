@@ -270,6 +270,19 @@ const mixins = {
             }
             return system;
         },
+        //初始化连接
+        async createNodeInstance(url) {
+            let nodeInstance;
+            try {
+                nodeInstance = new Node(url, { ignoreVersion: true });
+                await nodeInstance.getStatus();
+            } catch (error) {
+                console.log('sss')
+                this.uShowToast(this.$t('mixins.connectionFail'));
+                return null;
+            }
+            return nodeInstance;
+        },
         //连接AE网络
         async connectAe() {
             try {
@@ -277,14 +290,15 @@ const mixins = {
                     store.state.user.password
                 );
                 const senderAccount = new MemoryAccount(secretKey);
-                const node = new Node(store.state.user.nodeUrl)
+                const node = await this.createNodeInstance(store.state.user.nodeUrl)
                 const aeSdk = new AeSdk({
-                    nodes: [{name: "WeTrue", instance: node,}],
+                    nodes: [{
+                        name: "WeTrue", 
+                        instance: node,
+                    }],
                     accounts: [senderAccount],
-                    //onCompiler: new CompilerHttp(compilerUrl)
                 });
                 store.commit("user/SET_CLIENT", aeSdk);
-                this.uShowToast(this.$t('mixins.connectionNode'));
             } catch (error) {
                 this.uShowToast(this.$t('mixins.connectionFail'));
             }
@@ -292,12 +306,18 @@ const mixins = {
         //判断是否已连接AE网络
         async initSdk() {
             let client;
-            if (JSON.stringify(store.state.user.client) === "{}") {
+            /*/ 暂时没找到节点是否断开方法，先每次都连接
+            if (JSON.stringify(store.state.user.client) == "{}") {
                 await this.connectAe();
                 client = store.state.user.client;
             } else {
                 client = store.state.user.client;
-            }
+            }*/
+            await this.connectAe();
+            client = store.state.user.client;
+            //console.log(JSON.stringify(store.state.user.client))
+            //await this.connectAe();
+            //client = store.state.user.client;
             return client;
         },
         //WeTrue上链发送操作
@@ -408,7 +428,7 @@ const mixins = {
                     return await this.postHashToWeTrueApi(res);
                 }
             } catch (err) {
-                this.uShowToast(this.$t('mixins.fail'));
+                this.uShowToast(this.$t('mixins.fail')+" "+err);
                 console.log(err);
             }
         },
