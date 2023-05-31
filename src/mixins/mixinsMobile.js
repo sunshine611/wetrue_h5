@@ -2,7 +2,6 @@ import { getStore } from "@/util/service";
 import store from "@/store";
 import {
     version,
-    compilerUrl,
     source as WeTrueSource,
     shTipContractId
 } from "@/config/config";
@@ -15,7 +14,8 @@ import {
     toAe,
     toAettos,
     encode, 
-    Encoding
+    Encoding,
+    signMessage
 } from "@aeternity/aepp-sdk";
 
 
@@ -91,7 +91,7 @@ const mixins = {
                 return callResult.decodedResult;
             } catch (err) {
                 console.log(err)
-                this.uShowToast(this.$t('mixins.fail'));
+                this.uShowToast('getTokenBalance fail');
             }
         },
         //余额格式化
@@ -118,15 +118,9 @@ const mixins = {
         async signMessage(signText) {
             const secretKey = await this.keystoreToSecretKey(store.state.user.password)
             const secretKeyHex = Buffer.from(secretKey, 'hex')
-            const signArray = Crypto.signMessage(signText, secretKeyHex)
+            const signArray = signMessage(signText, secretKeyHex)
             const signHex = Buffer.from(signArray).toString('hex');
             return signHex;
-            /* 基于节点方式
-            const aeSdk = await this.initSdk();
-            const sig = await aeSdk.signMessage(signText);
-            const sigHex = Buffer.from(sig).toString('hex');
-            return sigHex;
-            */
         },
         //验证密码是否存在
         isPassword() {
@@ -277,7 +271,6 @@ const mixins = {
                 nodeInstance = new Node(url, { ignoreVersion: true });
                 await nodeInstance.getStatus();
             } catch (error) {
-                console.log('sss')
                 this.uShowToast(this.$t('mixins.connectionFail'));
                 return null;
             }
