@@ -73,6 +73,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { getStore, setStore } from "@/util/service";
+import { baseUrl, setConfigUrl } from "@/config/config.js";
 
 export default {
     components: {},
@@ -100,6 +101,8 @@ export default {
             } else if (getStore("networkSetting") === "cc") {
                 setStore("networkSetting", "io");
             }
+            setConfigUrl();            
+            this.$http.config.baseURL = baseUrl
             this.network = getStore("networkSetting");
         },
     },
