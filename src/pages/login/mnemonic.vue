@@ -31,7 +31,7 @@
 <script>
 
 import { generateMnemonic, mnemonicToSeed } from '@aeternity/bip39';
-import { getHdWalletAccountFromSeed } from '@aeternity/aepp-sdk/es/utils/hd-wallet'
+import { getHdWalletAccountFromSeed } from '@aeternity/aepp-sdk'
 
 export default {
 	data() {

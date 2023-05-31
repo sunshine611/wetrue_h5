@@ -265,7 +265,7 @@ export default {
         this.getUserInfo();
         this.getMappingInfo();
         this.getBalance();
-        this.getWttBalance();
+        this.getAEX9Balance();
         this.getConfigInfo();
         this.getTop();
     },
@@ -274,7 +274,7 @@ export default {
     onPullDownRefresh() {
         this.getUserInfo();
         this.getBalance();
-        this.getWttBalance();
+        this.getAEX9Balance();
         setTimeout(function() {
             uni.stopPullDownRefresh();
         }, 500);
@@ -321,7 +321,7 @@ export default {
             if (result) {
                 this.$http.post("/Mining/openAccount", { hash: result.hash });
                 this.getUserInfo();
-                this.getWttBalance();
+                this.getAEX9Balance();
                 this.uShowToast("执行开通中，请30秒后再来！", "none", 3000);
             }
         },
@@ -343,14 +343,14 @@ export default {
         mapping() {
             if (
                 !this.form.amount ||
-                parseFloat(this.form.amount) > parseFloat(this.aeBalance)
+                this.form.amount > this.aeBalance
             ) {
                 this.warning.amount = true;
                 return;
             } else {
                 this.warning.amount = false;
             }
-            if (parseFloat(this.aeBalance) - parseFloat(this.form.amount) < 1) {
+            if (this.aeBalance - this.form.amount < 1) {
                 this.uShowToast("映射金额请至少保留1AE");
                 return;
             }
@@ -399,8 +399,8 @@ export default {
         },
         //全部事件
         totalBalance() {
-            if (parseInt(this.aeBalance) - 1 > 0) {
-                this.form.amount = parseInt(this.aeBalance) - 1;
+            if (this.aeBalance - 1 > 0) {
+                this.form.amount = this.aeBalance - 1;
             } else {
                 this.form.amount = 0;
             }
@@ -411,12 +411,13 @@ export default {
                 this.aeBalance = res;
             });
         },
-        //获取WTT余额
-        getWttBalance() {
-            http.get(
-                Backend.aeMdwApiMyToken(this.token, this.configInfo.wttContract)
+        //获取AEX9余额
+        getAEX9Balance() {
+            this.getTokenBalance(
+                this.configInfo.wttContract,
+                this.token
             ).then((res) => {
-                this.wttBalance = this.balanceFormat(res.data.amount);
+                this.wttBalance = this.balanceFormat( res ) || 0;
             });
         },
         //获取映射榜单

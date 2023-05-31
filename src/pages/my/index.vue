@@ -146,6 +146,7 @@
                     <u-cell-item
                         :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
+                        v-if="this.validAdmin()==true"
                     >
                         <fa-FontAwesome
                             slot="icon"
@@ -159,6 +160,7 @@
                     <u-cell-item
                         :title="$t('my.mappingMining')"
                         @click="goUrl('mappingDig')"
+                        v-if="this.validAdmin()==true"
                     >
                         <fa-FontAwesome
                             slot="icon"

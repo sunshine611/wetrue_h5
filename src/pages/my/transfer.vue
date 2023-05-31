@@ -296,9 +296,6 @@ export default {
                 this.tokenInfo.contractId,
                 this.token
             ).then((res) => {
-                
-                console.log(res);
-
                 this.tokenInfo.balance = this.balanceFormat( res ) || 0;
             });
         },

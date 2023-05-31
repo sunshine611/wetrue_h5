@@ -121,7 +121,8 @@ export default class Backend {
 		http.interceptors.request.use((config) => {
 			config.header = {
 				"Content-type": "application/x-www-form-urlencoded",
-				"ak-token": address,
+				"key": address,
+        		"chain-id": 457,
 			};
 			return config;
 		});
