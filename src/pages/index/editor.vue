@@ -32,13 +32,14 @@
         
         <u-input
             v-model="form.media.ipfs"
-            type="textarea"
-            :border="false"
-            height="50"
-            :auto-height="true"
+            type="text"
+            :border="true"
+            :disabled="postIpfs"
             :maxlength="64"
-            placeholder="输入IPFS CID"
+            :placeholder="inputPlaceholder"
             :clearable="false"
+            @input="checkIpfs($event)"
+            class="input"
         />
         <!-- 
         <u-gap height="40"></u-gap>
@@ -48,6 +49,7 @@
 </template>
 
 <script>
+import { getStore } from "@/util/service";
 
 export default {
     data() {
@@ -61,7 +63,11 @@ export default {
             btnLoading: false, //按钮加载状态
 			fileList:[], //文件列表
             postShTip: false, //发布到SH
+            postIpfs: true, //发布到ipfs
+            userInfo: getStore("userInfo"),
+            inputPlaceholder: "仅限VIP使用",
         };
+        
     },
     onLoad(option) {
         this.uSetBarTitle(this.$t('titleBar.sendContent'));
@@ -73,6 +79,11 @@ export default {
         } else if (!!option.shtip) {
             this.postShTip = true
         }
+        if (this.userInfo.isVip) {
+            this.postIpfs = false
+            this.inputPlaceholder = '输入 Qm开头 IPFS CID0'
+        }
+
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"
@@ -94,10 +105,12 @@ export default {
         //发布
         async release() {
             this.btnLoading = true;
+            let ipfsUrl = this.form.media.ipfs
+            ipfsUrl = ipfsUrl.replace("ipfs://","")
             let media = [
                 {
                     image: {
-                        ipfs: `ipfs://${this.form.media.ipfs}`
+                        ipfs: `ipfs://${ipfsUrl}`
                     }
                 },
             ];
@@ -153,6 +166,21 @@ export default {
                 // console.error(err);
             }
         },
+        checkIpfs (event) {
+            this.$nextTick(() => {
+                this.checkIpfsUrl(event)
+            })
+        },
+        checkIpfsUrl(e) {
+            let val = e.replace(/(^\s*)|(\s*$)/g, "")
+            if (!val) {
+                return ''
+            }
+            let expt = /Qm([a-zA-Z0-9]+)/g;
+            val.replace(expt, (item) => {
+                this.form.media.ipfs = item
+            });
+        }
     },
 };
 </script>
@@ -168,4 +196,10 @@ page {
         padding-right: 30rpx;
     }
 }
+.input {
+		padding-left: 30rpx;
+		color: #000;
+		height: 100%;
+		flex: 1;
+	}
 </style>
