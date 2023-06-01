@@ -59,6 +59,13 @@ const mixins = {
             });
             return result;
         },
+        //ipfs转纯CID
+        ipfsUrltoCid(value) {
+            return value.replace(
+                "ipfs://",
+                "https://dweb.link/ipfs/" // use default ipfs gateway to display images
+            )
+        },
         //切换语言
         selectLanguage() {
             if (getStore("language") === "zh-cn") {

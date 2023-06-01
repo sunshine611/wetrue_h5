@@ -50,8 +50,8 @@
                         <u-image
                             width="200rpx"
                             height="200rpx"
-                            :src="ipfsUrl + items.image"
-                            v-if="items.image"
+                            :src="ipfsUrltoCid(items.image.ipfs)"
+                            v-if="items.image.ipfs"
                         ></u-image>
                     </div>
                         <u-image
@@ -140,10 +140,7 @@ export default {
         postList: {
             type: Array,
             default: [],
-        },
-        ipfsUrl: {
-            default: "/^http[s]*:\/\/ ? '' : 'https://dweb.link/ipfs/'",
-        },
+        }
     },
     data() {
         return {};

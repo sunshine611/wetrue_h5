@@ -339,7 +339,7 @@ const mixins = {
                         source: source,
                         type: type,
                         content: payload.content,
-                        //media: payload.media,
+                        media: payload.media,
                     };
                 } else if (type === "comment") {
                     //发送评论

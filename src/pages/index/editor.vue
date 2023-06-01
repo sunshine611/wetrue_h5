@@ -29,18 +29,18 @@
         />
         <text>-------</text>
         <u-gap height="40"></u-gap>
-        <!-- 
+        
         <u-input
-            v-model="form.media"
+            v-model="form.media.ipfs"
             type="textarea"
             :border="false"
             height="50"
             :auto-height="true"
-            :maxlength="100"
+            :maxlength="64"
             placeholder="输入IPFS CID"
             :clearable="false"
         />
-        
+        <!-- 
         <u-gap height="40"></u-gap>
 		<u-upload ref="wetrueImg" :auto-upload="false" :file-list="fileList" :max-count="9" del-bg-color="#f04a82" @on-choose-complete="uploadImg"></u-upload>
         -->
@@ -54,7 +54,9 @@ export default {
         return {
             form: {
                 text: "",
-                media: "",
+                media: {
+                    ipfs: ""
+                },
             },
             btnLoading: false, //按钮加载状态
 			fileList:[], //文件列表
@@ -94,7 +96,9 @@ export default {
             this.btnLoading = true;
             let media = [
                 {
-                    image: this.form.media,
+                    image: {
+                        ipfs: `ipfs://${this.form.media.ipfs}`
+                    }
                 },
             ];
             let payload = {
