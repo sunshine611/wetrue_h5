@@ -48,11 +48,15 @@
                         :key="index"
                     >
                         <u-image
-                            width="200rpx"
-                            height="200rpx"
+                            height="320rpx"
+                            mode = "heightFix"
+                            :lazy-load="true"
                             :src="ipfsUrltoCid(items.image.ipfs)"
                             v-if="items.image.ipfs"
-                        ></u-image>
+                        >
+                            <u-loading slot="loading"></u-loading>
+                            <view slot="error" style="font-size: 28rpx;">加载失败</view>
+                        </u-image>
                     </div>
                         <u-image
                             width="200rpx"

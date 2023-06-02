@@ -49,15 +49,19 @@
                     :key="index"
                 >
                     <u-image
-                        width="200rpx"
-                        height="200rpx"
+                        height="640rpx"
+                        mode = "heightFix"
+                        :lazy-load="true"
                         :src="ipfsUrltoCid(item.image.ipfs)"
                         v-if="item.image.ipfs"
-                    ></u-image>
+                    >
+                        <u-loading slot="loading"></u-loading>
+                        <view slot="error" style="font-size: 28rpx;">加载失败</view>
+                    </u-image>
                 </div>
                 <u-image
-                    width="200rpx"
-                    height="200rpx"
+                    width="300rpx"
+                    height="300rpx"
                     :src="postInfo.image"
                     v-if="postInfo.image"
                 ></u-image>

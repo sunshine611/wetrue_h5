@@ -49,29 +49,29 @@
 </template>
 
 <script>
-import { getStore } from "@/util/service";
+import { mapGetters } from "vuex";
 
 export default {
     data() {
         return {
             form: {
                 text: "",
-                media: {
-                    ipfs: ""
-                },
+                media: {},
             },
             btnLoading: false, //按钮加载状态
 			fileList:[], //文件列表
             postShTip: false, //发布到SH
             postIpfs: true, //发布到ipfs
-            userInfo: getStore("userInfo"),
+            userInfo: {}, //用户信息
             inputPlaceholder: "仅限VIP使用",
+            media: [],
         };
         
     },
     onLoad(option) {
         this.uSetBarTitle(this.$t('titleBar.sendContent'));
         this.isPassword();
+        this.getUserInfo();
         if (!!option.topic) {
             this.form = {
                 text: option.topic + " ",
@@ -79,11 +79,6 @@ export default {
         } else if (!!option.shtip) {
             this.postShTip = true
         }
-        if (this.userInfo.isVip) {
-            this.postIpfs = false
-            this.inputPlaceholder = '输入 Qm开头 IPFS CID0'
-        }
-
     },
     mounted() {
         //暴露方法名"receiveWeTrueMessage"
@@ -100,23 +95,15 @@ export default {
         this.isPassword();
     },
     computed: {
+        ...mapGetters(["token"]),
     },
     methods: {
         //发布
         async release() {
             this.btnLoading = true;
-            let ipfsUrl = this.form.media.ipfs
-            ipfsUrl = ipfsUrl.replace("ipfs://","")
-            let media = [
-                {
-                    image: {
-                        ipfs: `ipfs://${ipfsUrl}`
-                    }
-                },
-            ];
             let payload = {
                 content: this.form.text,
-                media:   media,
+                media:   this.media,
             };
             let res;
             if (this.postShTip) {
@@ -141,6 +128,7 @@ export default {
                 this.btnLoading = false;
             }
         },
+    /* 暂未启用
 		//上传图片
 		async uploadImg(file){
 			const ipfs = await this.$ipfs;
@@ -157,7 +145,7 @@ export default {
                     progress: (prog) => console.log(`received: ${prog}`),
                 });
 
-                // 获取上传文件hash值，'https://liushao.cc:15680/ipfs/'+hashCode 即为上传后的文件地址
+                // 获取上传文件hash值，'https://dweb.link/ipfs/'+hashCode 即为上传后的文件地址
                 const hashCode = added.cid.toString();
 				console.log(hashCode)
 
@@ -165,6 +153,24 @@ export default {
             } catch (err) {
                 // console.error(err);
             }
+        },
+    */
+        //获取用户信息
+        getUserInfo() {
+            let params = {
+                userAddress: this.token,
+            };
+            this.$http
+                .post("/User/info", params, { custom: { isToast: true } })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.userInfo = res.data;
+                        if (this.userInfo.isVip) {
+                        this.postIpfs = false
+                        this.inputPlaceholder = '输入 Qm开头 IPFS CID0'
+                    }
+                    }
+                });
         },
         checkIpfs (event) {
             this.$nextTick(() => {
@@ -178,7 +184,11 @@ export default {
             }
             let expt = /Qm([a-zA-Z0-9]+)/g;
             val.replace(expt, (item) => {
-                this.form.media.ipfs = item
+                this.media =  [{
+                    image: {
+                        ipfs: `ipfs://${item}`
+                    }
+                }]
             });
         }
     },
