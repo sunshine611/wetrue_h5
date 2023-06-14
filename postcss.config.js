@@ -1,6 +1,5 @@
 const path = require('path')
 module.exports = {
-  parser: require('postcss-comment'),
   plugins: [
     require('postcss-import')({
       resolve (id, basedir, importOptions) {

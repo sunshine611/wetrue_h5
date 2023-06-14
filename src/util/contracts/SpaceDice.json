@@ -1,0 +1,200 @@
+[
+  {
+    "namespace": {
+      "name": "ListInternal",
+      "typedefs": []
+    }
+  },{
+    "namespace": {
+      "name": "List",
+      "typedefs": []
+    }
+  },{
+    "namespace": {
+      "name": "String",
+      "typedefs": []
+    }
+  },{
+    "contract": {
+      "functions": [
+        {
+          "arguments": [],
+          "name": "init",
+          "payable": false,
+          "returns": "SpaceDice.state",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "bet_start",
+              "type": "int"
+            },
+            {
+              "name": "bet_end",
+              "type": "int"
+            },
+            {
+              "name": "bet_num",
+              "type": "int"
+            }
+          ],
+          "name": "bet",
+          "payable": false,
+          "returns": "SpaceDice.jackpot",
+          "stateful": true
+        },
+        {
+          "arguments": [],
+          "name": "freeze_game",
+          "payable": false,
+          "returns": "bool",
+          "stateful": true
+        },
+        {
+          "arguments": [],
+          "name": "get_game_id",
+          "payable": false,
+          "returns": "int",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "get_rp_record",
+          "payable": false,
+          "returns": "int",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "get_prize_pool",
+          "payable": false,
+          "returns": "int",
+          "stateful": false
+        },{
+          "arguments":[],
+          "name":"get_game_odds",
+          "payable":false,
+          "returns":"int",
+          "stateful":false
+      },{
+          "arguments": [
+            {
+              "name": "val",
+              "type": "int"
+            }
+          ],
+          "name": "right_prize_pool",
+          "payable": false,
+          "returns": "int",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "token",
+              "type": "AEX9_Interface"
+            },
+            {
+              "name": "balance",
+              "type": "int"
+            }
+          ],
+          "name": "transfer_token_balance",
+          "payable": false,
+          "returns": "int",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "balance",
+              "type": "int"
+            }
+          ],
+          "name": "burn_token_balance",
+          "payable": false,
+          "returns": "int",
+          "stateful": true
+        }
+      ],
+      "kind": "contract_main",
+      "name": "SpaceDice",
+      "payable": false,
+      "state": {
+        "record": [
+          {
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "name": "bet_token",
+            "type": "address"
+          },
+          {
+            "name": "game_id",
+            "type": "int"
+          },
+          {
+            "name": "game_odds",
+            "type": "int"
+          },
+          {
+            "name": "rp_record",
+            "type": "int"
+          },
+          {
+            "name": "prize_pool",
+            "type": "int"
+          },
+          {
+            "name": "freeze",
+            "type": "bool"
+          }
+        ]
+      },
+      "type_defs": [
+        {
+          "name": "jackpot",
+          "typedef": {
+            "record": [
+              {
+                "name": "game_id",
+                "type": "string"
+              },
+              {
+                "name": "bet_start",
+                "type": "string"
+              },
+              {
+                "name": "bet_end",
+                "type": "string"
+              },
+              {
+                "name": "origin",
+                "type": "string"
+              },
+              {
+                "name": "game_odds",
+                "type": "string"
+              },
+              {
+                "name": "bet_money",
+                "type": "string"
+              },
+              {
+                "name": "win_money",
+                "type": "string"
+              },
+              {
+                "name": "timestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "vars": []
+        }
+      ]
+    }
+  }
+]

@@ -3,7 +3,9 @@ import store from "@/store";
 import {
     version,
     source as WeTrueSource,
-    shTipContractId
+    shTipContractId,
+    diceContractId,
+    rptContractId
 } from "@/config/config";
 import { 
     AeSdk,
@@ -18,10 +20,10 @@ import {
     signMessage
 } from "@aeternity/aepp-sdk";
 
-
 import Fungible_Token_Full_Aci from "@/util/contracts/FungibleTokenFull";
 import Migrate_Token_Aci from "@/util/contracts/MigrateToken";
 import Superhero_Tipping_v3_Aci from "@/util/contracts/SuperheroTipping_v3";
+import SpaceDice_Aci from "@/util/contracts/SpaceDice";
 import Request from "luch-request";
 const http = new Request();
 import Clipboard from "clipboard";
@@ -525,6 +527,80 @@ const mixins = {
                 console.log(err);
             }
         },
+        //Dice 合约呼叫
+        async callDiceContract(payload=null, event) {
+            try {
+
+                let postPayload = {
+                    type: "betState",
+                    event: "Info",
+                    payload: this.$t('mixins.readySend'),
+                }
+                event.source.postMessage(JSON.stringify(postPayload), "*");
+
+                let aeSdk = await this.initSdk();
+                const contract = await aeSdk.initializeContract({
+                    aci: SpaceDice_Aci,
+                    address: diceContractId
+                })
+                postPayload.payload = this.$t('mixins.inChain')
+                event.source.postMessage(JSON.stringify(postPayload), "*");
+                let params = payload;
+                let callresult = await contract.bet(...params, { omitUnknown: true });
+                let Result = callresult.decodedResult
+                Result.type  = 'diceGame'
+                Result.event = 'betResult'
+                uni.hideLoading();
+                return Result;
+            } catch (err) {
+                console.log(err)
+                this.uShowToast(this.$t('mixins.fail'));
+                let postPayload = {
+                    type: "Error",
+                    event: "betCallError",
+                    payload: this.$t('mixins.fail'),
+                }
+                event.source.postMessage(JSON.stringify(postPayload), "*");
+            }
+        },
+        //创建授权
+        async createAllowance(payload=null, event) {
+            try {
+
+                uni.showLoading({
+                    title: this.$t('mixins.readySend'),
+                });
+                this.uShowLoading(`编译授权...`)
+                let aeSdk = await this.initSdk();
+                const contract = await aeSdk.initializeContract({
+                    aci: Fungible_Token_Full_Aci,
+                    address: rptContractId
+                })
+                this.uShowLoading(`正在授权...`)
+
+                let callResult;
+                try {
+                    callResult = await contract.create_allowance( payload.for_account, payload.amount )
+                }catch (err) {
+                    callResult = await contract.change_allowance( payload.for_account, payload.amount )
+                }
+                let Result = callresult.decodedResult
+                Result.type  = 'diceGame'
+                Result.event = 'allowanceResult'
+                uni.hideLoading();
+                return Result;
+            } catch (err) {
+                console.log(err)
+                this.uShowToast(this.$t('mixins.fail'));
+                let postPayload = {
+                    type: "Error",
+                    event: "allowanceError",
+                    payload: this.$t('mixins.fail'),
+                }
+                event.source.postMessage(JSON.stringify(postPayload), "*");
+            }
+        },
+
     },
 };
 const mixinsMobile = {

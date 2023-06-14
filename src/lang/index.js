@@ -14,9 +14,9 @@ const messages = {
 	},
 };
 //控制时间语言显示
-moment.locale(getStore('language') || 'en');
+moment.locale(getStore('language') || 'zh-cn');
 const i18n = new VueI18n({
-	locale: getStore('language') || 'en',
+	locale: getStore('language') || 'zh-cn',
 	messages,
 });
 

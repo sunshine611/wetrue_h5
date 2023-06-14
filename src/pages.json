@@ -302,6 +302,14 @@
         "navigationBarTitleText": "AENS Detail",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/games/SpaceDice",
+      "style": {
+        "navigationBarTitleText": "Space dice",
+				"navigationStyle": "custom",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {

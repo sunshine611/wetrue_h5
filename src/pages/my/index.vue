@@ -171,6 +171,20 @@
                         >
                         </fa-FontAwesome>
                     </u-cell-item>
+                    <u-cell-item
+                        title="Space dice"
+                        @click="goUrl('/pages/games/SpaceDice')"
+                        :arrow="false"
+                    >
+                        <fa-FontAwesome
+                            slot="icon"
+                            type="fas fa-gamepad"
+                            size="32"
+                            class="mr-10"
+                            color="#f04a82"
+                        >
+                        </fa-FontAwesome>
+                    </u-cell-item>
                     <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
                         <u-icon 
                             slot="icon"
