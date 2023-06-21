@@ -1,6 +1,6 @@
 import { getStore } from "@/util/service";
 
-export const version = '2.8.22'
+export const version = '2.9.01'
 export const source  = 'WeTrue'
 export let baseUrl, nodeUrl, aeExplorer, chatapi, aeMdw, aeknow, compilerUrl, diceUrl
 //备注 compilerUrl 可能可以废弃，测试后允许删除
