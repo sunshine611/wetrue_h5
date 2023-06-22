@@ -1,8 +1,81 @@
+<script setup>
+import { ref, reactive, getCurrentInstance, watch } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
+import { getStore, setStore } from "@/util/service";
+import Qrcode from "@/components/Qrcode";
+import draggable from "vuedraggable";
+const { proxy } = getCurrentInstance();
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+
+const ksData = reactive({
+    drag: false,
+    keystoreArr: getStore("keystoreArr")
+});
+
+const showQrcode = ref( false ) //二维码弹层
+const showDelete = ref( false ) //删除弹层
+const currentAddress = ref( "" ) //当前选择的地址
+const amHeight = ref( 0 ) //数组换算高度
+const token = ref( getStore("token") )
+
+onLoad ( () => {
+    isLogin();
+    proxy.uSetBarTitle(proxy.$t('titleBar.accountManage'));
+});
+
+watch(
+    () => ksData.keystoreArr,
+    (val) => {
+        setStore("keystoreArr", val);
+        amHeight.value = (val.length * 150)>680 ? 680 : (val.length * 150);
+    }
+);
+
+const openQrcode = (val) => {
+    currentAddress.value = val;
+    showQrcode.value = true;
+};
+
+//切换账户
+const switchAddress = (address) => {
+    userStore.changeAccount(address)
+    uni.reLaunch({
+        url: "/pages/my/index",
+    });
+};
+
+//删除某个账户
+const deleteAccount = async () => {
+    userStore.deleteKeystoreArr(currentAddress.value);
+    ksData.keystoreArr = await getStore("keystoreArr");
+    if (ksData.keystoreArr.length !== 0) {
+        userStore.changeAccount(ksData.keystoreArr[0].public_key);
+        proxy.getUserInfo();
+    }
+    isLogin();
+};
+
+//判断账户是否为0
+const isLogin = () => {
+    if (ksData.keystoreArr.length === 0) {
+        uni.reLaunch({
+            url: "/pages/login/login",
+        });
+    }
+};
+//复制粘贴板
+const copy = (value) => {
+    showQrcode.value = false
+    proxy.copyContent(value);
+};
+</script>
+
 <template>
-    <div class="account-manage">
+    <view class="account-manage">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('login.accountManage')">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,23 +83,19 @@
                     color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
-        <div class="account">
-            <draggable
-                v-model="keystoreArr"
-                group="keystore"
-                animation="300"
-                :preventOnFilter="false"
-                delay="100"
+        <view class="account">
+            <draggable 
+                v-model="ksData.keystoreArr" 
+                group="keystore" 
+                @start="ksData.drag=true" 
+                @end="ksData.drag=false"
+                itemKey="id"
             >
-                <transition-group>
-                    <div
-                        class="account-list"
-                        v-for="(item, index) in keystoreArr"
-                        :key="item.id"
-                    >
-                        <div class="active" v-show="item.public_key === token">
+            <template #item="{ element }">
+                <view class="account-list">
+                        <view class="active" v-show="element.public_key === token">
                             <fa-FontAwesome
                                 type="fas fa-check"
                                 size="24"
@@ -34,22 +103,22 @@
                                 color="#fff"
                             >
                             </fa-FontAwesome>
-                        </div>
-                        <div
+                        </view>
+                        <view
                             class="address"
-                            @click="copy(index)"
-                            :ref="'address' + index"
+                            @click="copy(element.public_key)"
+                            :ref="'address' + element.id"
                         >
-                            {{ item.public_key }}
-                        </div>
-                        <div class="dotted"></div>
-                        <div class="opera clearfix">
-                            <div class="pull-right">
-                                <div
+                            {{ element.public_key }}
+                        </view>
+                        <view class="dotted"></view>
+                        <view class="opera clearfix">
+                            <view class="pull-right">
+                                <view
                                     class="item"
                                     @click="
                                         showDelete = true;
-                                        currentAddress = item.public_key;
+                                        currentAddress = element.public_key;
                                     "
                                 >
                                     <fa-FontAwesome
@@ -60,13 +129,10 @@
                                     >
                                     </fa-FontAwesome>
                                     {{ $t('login.delete') }}
-                                </div>
-                                <div
+                                </view>
+                                <view
                                     class="item"
-                                    @click="
-                                        showQrcode = true;
-                                        currentAddress = item.public_key;
-                                    "
+                                    @click="openQrcode(element.public_key)"
                                 >
                                     <fa-FontAwesome
                                         type="fas fa-qrcode"
@@ -76,10 +142,10 @@
                                     >
                                     </fa-FontAwesome>
                                     {{ $t('login.qrcode') }}
-                                </div>
-                                <div
+                                </view>
+                                <view
                                     class="item"
-                                    @click="switchAccount(item.public_key)"
+                                    @click="switchAddress(element.public_key)"
                                 >
                                     <fa-FontAwesome
                                         type="fas fa-hand-point-right"
@@ -89,14 +155,15 @@
                                     >
                                     </fa-FontAwesome>
                                     {{ $t('login.replace') }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </transition-group>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </template>
             </draggable>
+        
             <u-gap :height="680-amHeight"></u-gap>
-        </div>
+        </view>
         <u-modal
             :show-title="false"
             v-model="showDelete"
@@ -104,7 +171,7 @@
             @confirm="deleteAccount"
             :show-cancel-button="true"
         ></u-modal>
-        <div class="add-area">
+        <view class="add-area">
             <u-button
                 class="add-btn"
                 shape="circle"
@@ -121,80 +188,11 @@
                 </fa-FontAwesome>
                 {{ $t('login.addAccount') }}
             </u-button>
-        </div>
+        </view>
         <Qrcode v-model="showQrcode" :address="currentAddress"></Qrcode>
-    </div>
+    </view>
 </template>
 
-<script>
-import { getStore, setStore } from "@/util/service";
-import { mapGetters } from "vuex";
-import Qrcode from "@/components/Qrcode";
-import draggable from "vuedraggable";
-
-export default {
-    components: { 
-        Qrcode,
-        draggable,
-    },
-    data() {
-        return {
-            keystoreArr: getStore("keystoreArr"),
-            showDelete: false, //删除弹层
-            currentAddress: "", //当前选择的地址
-            showQrcode: false, //二维码弹层
-            amHeight: 0, //数组换算高度
-        };
-    },
-    watch: {
-        keystoreArr: {
-            handler() {
-                this.$nextTick(() => {
-                    setStore("keystoreArr", this.keystoreArr);
-                    this.amHeight = (this.keystoreArr.length * 150)>680 ? 680 : (this.keystoreArr.length * 150);
-                });
-            },
-            deep: true,
-        },
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.isLogin();
-        this.uSetBarTitle(this.$t('titleBar.accountManage'));
-    },
-    activated() {},
-    methods: {
-        //切换账户
-        switchAccount(address) {
-            this.$store.dispatch("user/switchAccount", address);
-            uni.reLaunch({
-                url: "/pages/my/index",
-            });
-        },
-        //删除某个账户
-        deleteAccount() {
-            this.$store.dispatch("user/deleteKeystoreArr", this.currentAddress);
-            this.keystoreArr = getStore("keystoreArr");
-            if (this.keystoreArr.length !== 0) this.switchAccount(this.keystoreArr[0].public_key);
-            this.isLogin();
-        },
-        //判断账户是否为0
-        isLogin() {
-            if (this.keystoreArr.length === 0) {
-                uni.reLaunch({
-                    url: "/pages/login/login",
-                });
-            }
-        },
-        //复制粘贴板
-        copy(index) {
-           this.copyContent(this.keystoreArr[index].public_key);
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 page {
     background: #fff;

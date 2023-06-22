@@ -35,4 +35,4 @@ contract FungibleTokenFullInterface =
   stateful entrypoint swap                 : ()                      => unit
   entrypoint check_swap                    : (address)               => int
   entrypoint swapped                       : ()                      => map(address, int)
-`;
+`

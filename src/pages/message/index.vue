@@ -1,85 +1,180 @@
+<script setup>
+import { reactive, getCurrentInstance } from 'vue'
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import { version } from "@/config/config.js";
+import VersionTip from "@/components/VersionTip.vue";
+import Name from "@/components/Name.vue";
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import HeadImg from "@/components/HeadImg";
+const { proxy } = getCurrentInstance();
+
+const msgIndex = reactive({
+    current: 0, //当前tab索引
+    msgList: [], //帖子列表
+    pageInfo: {
+        page: 1,
+        pageSize: 10,
+        totalPage: 1,
+    }, //页码信息
+    more: "loadmore", //加载更多
+    versionInfo: {}, //版本信息
+    versionCode: parseInt(version.replace(/./g, )), //版本号
+    versionShow: false, //版本提示弹层
+})
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.message'));
+    getMsgList();
+    getVersion();
+    proxy.getUnreadMsg();
+})
+
+//上拉加载
+onReachBottom ( () => {
+    msgIndex.pageInfo.page++;
+    getMsgList();
+})
+//下拉刷新
+onPullDownRefresh ( () => {
+    msgIndex.pageInfo.page = 1;
+    getMsgList();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+})
+
+//类别列表
+const categoryList = [{
+    name: proxy.$t('message.dynamic')
+},]
+//获取列表
+const getMsgList = () => {
+    let url = "";
+    let params = {
+        page: msgIndex.pageInfo.page,
+        size: msgIndex.pageInfo.pageSize,
+    };
+    if (msgIndex.current === 0) {
+        url = "/Message/list";
+    }
+    proxy.$http.post(url, params, { custom: { isToast: true } }).then((res) => {
+        if (res.code === 200) {
+            msgIndex.pageInfo.totalPage = parseInt(res.data.totalPage);
+            msgIndex.more = "loadmore";
+            if (msgIndex.pageInfo.page === 1) {
+                msgIndex.msgList = res.data.data;
+            } else {
+                if (msgIndex.pageInfo.page > msgIndex.pageInfo.totalPage) {
+                    msgIndex.pageInfo.page = msgIndex.pageInfo.totalPage;
+                    msgIndex.more = "nomore";
+                } else {
+                    msgIndex.msgList = msgIndex.msgList.concat(res.data.data);
+                }
+            }
+        } else {
+            msgIndex.more = "nomore";
+        }
+    }).then(()=>{
+        proxy.getUnreadMsg();
+    })
+}
+//切换顶部tab事件
+const tabChange = (index) => {
+    msgIndex.current = index;
+}
+//获取服务端版本信息
+const getVersion = () => {
+    proxy.getVersionInfo().then((res) => {
+        msgIndex.versionInfo = res;
+        if (msgIndex.versionInfo.mustUpdate) {
+            msgIndex.versionShow = true;
+        }
+    });
+}
+</script>
+
 <template>
     <view class="index">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-tabs
             :list="categoryList"
             :is-scroll="false"
-            :current="current"
+            :current="msgIndex.current"
             @change="tabChange"
             active-color="#f04a82"
             style="border-bottom:1px solid #e4e7ed"
         ></u-tabs>
-        <div class="empty" v-show="msgList.length === 0">
+        <view class="empty" v-show="msgIndex.msgList.length === 0">
             <u-empty :text="$t('index.noData')" mode="list"></u-empty>
-        </div>
-        <div class="dynamic">
-            <div
+        </view>
+        <view class="dynamic">
+            <view
                 class="dynamic-box"
-                v-for="(item, index) in msgList"
+                v-for="(item, index) in msgIndex.msgList"
                 :key="index"
             >
-                <div class="comment" v-if="item.type === 'comment' || (item.type == 'mentions' && !item.comment.payload)">
-                    <div class="user-area">
-                        <div class="head-box">
+                <view class="comment" v-if="item.type === 'comment' || (item.type == 'mentions' && !item.comment.payload)">
+                    <view class="user-area">
+                        <view class="head-box">
                             <HeadImg
                                 :userInfo="item.comment.users"
                                 :isLink="true"
                                 width="70rpx"
                                 height="70rpx"
                             ></HeadImg>
-                        </div>
-                        <div class="user-info">
-                            <div class="user">
+                        </view>
+                        <view class="user-info">
+                            <view class="user">
                                 <Name :userInfo="item.comment.users"></Name>
-                            </div>
-                            <div class="time">
+                            </view>
+                            <view class="time">
                                 <text>{{
                                     $moment(parseInt(item.utctime)).format(
                                         "yyyy-MM-DD HH:mm"
                                     )
                                 }}</text>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="comment-content">
+                            </view>
+                        </view>
+                    </view>
+                    <view class="comment-content">
                         <mp-html :content="item.comment.payload" />
-                    </div>
-                    <div
+                    </view>
+                    <view
                         class="topic"
                         @click="
                             goUrl('/pages/index/detail?hash=' + item.topic.hash)
                         "
                     >
                         <Name :userInfo="item.topic.users"></Name>
-                        <div class="content">
+                        <view class="content">
                             <mp-html :content="item.topic.payload" />
-                        </div>
-                    </div>
-                </div>
-                <div class="reply" v-if="item.type === 'reply'  || (item.type == 'mentions' && item.comment.payload)">
-                    <div class="user-area">
-                        <div class="head-box">
+                        </view>
+                    </view>
+                </view>
+                <view class="reply" v-if="item.type === 'reply'  || (item.type == 'mentions' && item.comment.payload)">
+                    <view class="user-area">
+                        <view class="head-box">
                             <HeadImg
                                 :userInfo="item.reply.users"
                                 :isLink="true"
                                 width="70rpx"
                                 height="70rpx"
                             ></HeadImg>
-                        </div>
-                        <div class="user-info">
-                            <div class="user">
+                        </view>
+                        <view class="user-info">
+                            <view class="user">
                                 <Name :userInfo="item.reply.users"></Name>
-                            </div>
-                            <div class="time">
+                            </view>
+                            <view class="time">
                                 <text>{{
                                     $moment(item.utctime).format(
                                         "yyyy-MM-DD HH:mm"
                                     )
                                 }}</text>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="reply-content">
+                            </view>
+                        </view>
+                    </view>
+                    <view class="reply-content">
                         回复<text
                 :class="['name', item.reply.receiverIsAuth ? 'auth' : '']"
                 @click.stop="
@@ -96,16 +191,16 @@
                             :content="item.reply.payload"
                             class="compiler"
                         />
-                    </div>
-                    <div class="comment">
-                        <div class="comment-content">
+                    </view>
+                    <view class="comment">
+                        <view class="comment-content">
                             <Name :userInfo="item.comment.users"></Name>：
                             <mp-html
                                 :content="item.comment.payload"
                                 class="compiler"
                             />
-                        </div>
-                        <div
+                        </view>
+                        <view
                             class="topic"
                             @click="
                                 goUrl(
@@ -115,148 +210,27 @@
                             "
                         >
                             <Name :userInfo="item.topic.users"></Name>
-                            <div class="content">
+                            <view class="content">
                                 <mp-html :content="item.topic.payload" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
         <u-gap :height="10"></u-gap>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
-            :status="more"
-            v-show="msgList.length > 0"
+            :status="msgIndex.more"
+            v-show="msgIndex.msgList.length > 0"
         />
         <u-gap :height="20"></u-gap>
         <VersionTip
-            v-model="versionShow"
-            :versionInfo="versionInfo"
+            v-model="msgIndex.versionShow"
+            :versionInfo="msgIndex.versionInfo"
         ></VersionTip>
     </view>
 </template>
-
-<script>
-import { version } from "@/config/config.js";
-import VersionTip from "@/components/VersionTip.vue";
-import Name from "@/components/Name.vue";
-import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import HeadImg from "@/components/HeadImg";
-
-export default {
-    components: {
-        VersionTip,
-        Name,
-        mpHtml,
-        HeadImg,
-    },
-    data() {
-        return {
-            current: 0, //当前tab索引
-            msgList: [], //帖子列表
-            pageInfo: {
-                page: 1,
-                pageSize: 10,
-                totalPage: 1,
-            }, //页码信息
-            more: "loadmore", //加载更多
-            versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/./g, )), //版本号
-            versionShow: false, //版本提示弹层
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.pageInfo.page = 1;
-        this.getMsgList();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    //上拉加载
-    onReachBottom() {
-        this.pageInfo.page++;
-        this.getMsgList();
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.message'));
-        this.getMsgList();
-        this.getVersionInfo();
-    },
-    activated() {
-        this.getMsgList();
-        this.getVersionInfo();
-        this.getUnreadMsg();
-    },
-    computed: {
-        //类别列表
-        categoryList() {
-            return [
-                {
-                    name: this.$t('message.dynamic')
-                },
-            ];
-        },
-    },
-    methods: {
-        //获取帖子列表
-        getMsgList() {
-            let url = "";
-            let params = {
-                page: this.pageInfo.page,
-                size: this.pageInfo.pageSize,
-            };
-            if (this.current === 0) {
-                url = "/Message/list";
-            }
-            this.$http
-                .post(url, params, { custom: { isToast: true } })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                        this.more = "loadmore";
-                        if (this.pageInfo.page === 1) {
-                            this.msgList = res.data.data;
-                        } else {
-                            if (this.pageInfo.page > this.pageInfo.totalPage) {
-                                this.pageInfo.page = this.pageInfo.totalPage;
-                                this.more = "nomore";
-                            } else {
-                                this.msgList = this.msgList.concat(res.data.data);
-                            }
-                        }
-                    } else {
-                        this.more = "nomore";
-                    }
-                }).then(()=>{
-                    this.getUnreadMsg();
-                })
-        },
-        //切换顶部tab事件
-        tabChange(index) {
-            this.current = index;
-        },
-        //获取服务端版本信息
-        getVersionInfo() {
-            this.$http
-                .post(
-                    "/Config/version",
-                    { version: version },
-                    { custom: { isToast: true } }
-                )
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.versionInfo = res.data;
-                        if (this.versionInfo.mustUpdate) {
-                            this.versionShow = true;
-                        }
-                    }
-                });
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .index {

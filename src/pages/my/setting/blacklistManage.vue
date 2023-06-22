@@ -1,49 +1,69 @@
+<script setup>
+import { ref, getCurrentInstance } from 'vue'
+import { onLoad } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+
+import draggable from "vuedraggable";
+const { proxy } = getCurrentInstance();
+const userStore = useUserStore();
+
+const drag = ref( false )
+const showDelete = ref( false ) //删除弹层
+const currentAddress = ref( "" ) //当前选择的地址
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('my.blacklistManage'));
+})
+
+//删除某个账户
+const deleteBlack = () => {
+    userStore.deleteBlacklist(currentAddress.value);
+};
+
+</script>
+
 <template>
-    <div class="blacklist-manage">
+    <view class="blacklist-manage">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar
             :is-fixed="false"
             :title="$t('my.blacklistManage')"
             v-show="!validThirdPartySource()"
         >
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
-                    name="home"
                     class="mr-30"
+                    name="home"
                     size="34"
                     color="#f04a82"
                     @click="reLaunchUrl('../../index/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
-        <div class="account">
-            <draggable
-                v-model="blacklist"
-                group="keystore"
-                animation="300"
-                :preventOnFilter="false"
-                delay="100"
+        <view class="account">
+            <draggable 
+                v-model="userStore.blacklist" 
+                group="keystore" 
+                @start="drag=true" 
+                @end="drag=false"
+                itemKey="id"
             >
-                <transition-group>
-                    <div
-                        class="account-list"
-                        v-for="(item, index) in blacklist"
-                        :key="item"
-                    >
-                        <div
+                <template #item="{ element }">
+                    <view class="account-list">
+                        <view
                             class="address"
-                            :ref="'address' + index"
+                            :ref="'address' +  element.index"
                         >
-                            {{ item }}
-                        </div>
-                        <div class="dotted"></div>
-                        <div class="opera clearfix">
-                            <div class="pull-right">
-                                <div
+                            {{  element }}
+                        </view>
+                        <view class="dotted"></view>
+                        <view class="opera clearfix">
+                            <view class="pull-right">
+                                <view
                                     class="item"
                                     @click="
                                         showDelete = true;
-                                        currentAddress = item;
+                                        currentAddress = element;
                                     "
                                 >
                                     <fa-FontAwesome
@@ -54,66 +74,24 @@
                                     >
                                     </fa-FontAwesome>
                                     {{ $t('login.delete') }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </transition-group>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </template>
             </draggable>
             <u-gap height="1080"></u-gap>
-        </div>
+        </view>
         <u-modal
             :show-title="false"
             v-model="showDelete"
             :content="$t('my.deleteBlacklist')"
-            @confirm="deleteBlacklist"
+            @confirm="deleteBlack"
             :show-cancel-button="true"
         ></u-modal>
-    </div>
+    </view>
 </template>
 
-<script>
-import { getStore, setStore } from "@/util/service";
-import { mapGetters } from "vuex";
-import draggable from "vuedraggable";
-
-export default {
-    components: { 
-        draggable,
-    },
-    data() {
-        return {
-            blacklist: getStore("blacklist"),
-            showDelete: false, //删除弹层
-            currentAddress: "", //当前选择的地址
-        };
-    },
-    watch: {
-        blacklist: {
-            handler() {
-                this.$nextTick(() => {
-                    setStore("blacklist", this.blacklist);
-                });
-            },
-            deep: true,
-        },
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('my.blacklistManage'));
-    },
-    activated() {},
-    methods: {
-        //删除某个账户
-        deleteBlacklist() {
-            this.$store.dispatch("user/deleteBlacklist", this.currentAddress);
-            this.blacklist = getStore("blacklist");
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 page {
     background: #fff;

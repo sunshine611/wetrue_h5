@@ -1,7 +1,7 @@
 <!--迁移Token-->
 <template>
-    <div class="migrate-token">
-        <div class="icon-list" v-show="!validThirdPartySource()">
+    <view class="migrate-token">
+        <view class="icon-list" v-show="!validThirdPartySource()">
         <view :style="{height:`${statusBarHeight}px`}"></view>
             <u-icon
                 name="home"
@@ -10,9 +10,9 @@
                 color="#fff"
                 @click="reLaunchUrl('index')"
             ></u-icon>
-        </div>
-        <div class="title">映射迁移 WET<br />兑换 WTT</div>
-        <div class="start-migrate">
+        </view>
+        <view class="title">映射迁移 WET<br />兑换 WTT</view>
+        <view class="start-migrate">
             <fa-FontAwesome
                 type="fas fa-retweet"
                 size="36"
@@ -21,11 +21,11 @@
                 @click="retweet"
             >
             </fa-FontAwesome>
-            <div class="migrate">
-                <div class="top">
-                    <div class="desc">全网未迁移(WTT)</div>
-                    <div class="earning">
-                        <div class="amount">
+            <view class="migrate">
+                <view class="top">
+                    <view class="desc">全网未迁移(WTT)</view>
+                    <view class="earning">
+                        <view class="amount">
                             <u-count-to
                                 color="##f04a82"
                                 :decimals="3"
@@ -34,25 +34,25 @@
                                 :start-val="0"
                                 :end-val="migrateBalance"
                             ></u-count-to>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom">
-                    <div class="migrate-num">
-                        <div class="desc">可迁移(WET)</div>
+                        </view>
+                    </view>
+                </view>
+                <view class="bottom">
+                    <view class="migrate-num">
+                        <view class="desc">可迁移(WET)</view>
                         <u-gap :height="10"></u-gap>
-                        <div class="num">
+                        <view class="num">
                             {{ wetBalance || "0.0000" }}
-                        </div>
-                    </div>
-                    <div class="migrate-total">
-                        <div class="desc">余额(WTT)</div>
+                        </view>
+                    </view>
+                    <view class="migrate-total">
+                        <view class="desc">余额(WTT)</view>
                         <u-gap :height="10"></u-gap>
-                        <div class="num">
+                        <view class="num">
                             {{ wttBalance || "0.0000" }}
-                        </div>
-                    </div>
-                </div>
+                        </view>
+                    </view>
+                </view>
                 <u-button
                     shape="circle"
                     type="primary"
@@ -60,10 +60,10 @@
                     :loading="btnLoading"
                     >开始迁移</u-button
                 >
-            </div>
-        </div>
-        <div class="rule">
-            <div class="h3">映射迁移说明</div>
+            </view>
+        </view>
+        <view class="rule">
+            <view class="h3">映射迁移说明</view>
             <u-gap :height="10"></u-gap>
             WET是什么: 
                     为了更好区分,原WTT更名WET(以下称WET)<br />
@@ -82,7 +82,7 @@
             <u-gap :height="10"></u-gap>
             补充说明: 
                     准确余额更新需1个链上确认数。成功迁移WTT,同等数量WET将被回收
-        </div>
+        </view>
         <u-popup
             v-model="showMigrate"
             mode="center"
@@ -90,7 +90,7 @@
             border-radius="20"
         >
             <view class="form-box">
-                <div class="title">
+                <view class="title">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -98,9 +98,9 @@
                         class="inline mr-5"
                     ></u-image>
                     迁移WET到WTT
-                </div>
+                </view>
                 <u-gap :height="30"></u-gap>
-                <div class="balance-input">
+                <view class="balance-input">
                     <u-input
                         v-model="form.amount"
                         type="number"
@@ -116,25 +116,25 @@
                         @click="totalBalance"
                         >全部</u-button
                     >
-                </div>
+                </view>
                 <u-gap :height="10"></u-gap>
-                <div class="warnning" v-show="warning.amount">
+                <view class="warnning" v-show="warning.amount">
                     {{ $t('my.balanceErr') }}
-                </div>
-                <div class="clearfix">
-                    <div class="pull-right">余额：{{ wetBalance }} WET</div>
-                </div>
+                </view>
+                <view class="clearfix">
+                    <view class="pull-right">余额：{{ wetBalance }} WET</view>
+                </view>
                 <u-gap :height="30"></u-gap>
                 <u-button type="primary" @click="migrate" :loading="btnLoading"
                     >确定</u-button
                 >
             </view>
         </u-popup>
-    </div>
+    </view>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+//import { mapGetters } from "vuex"; //改pinia
 import { getStore } from "@/util/service";
 import Request from "luch-request";
 import { toAettos } from '@aeternity/aepp-sdk';
@@ -163,7 +163,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["token"]),
+        //...mapGetters(["token"]),
     },
     onLoad() {
         this.getConfigInfo();
@@ -185,7 +185,7 @@ export default {
         //获取WET余额
         getWetBalance() {
             this.getTokenBalance(
-                this.configInfo.oldWttContract,
+                'ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM',
                 this.token
             ).then((res) => {
                 this.wetBalance = this.balanceFormat(res, 5) || 0;
@@ -235,7 +235,7 @@ export default {
              //开始迁移
             this.contractMigrate(
                 this.configInfo.migrateContract,
-                this.configInfo.oldWttContract,
+                'ct_uGk1rkSdccPKXLzS259vdrJGTWAY9sfgVYspv6QYomxvWZWBM',
                 this.token,
                 parseFloat(this.form.amount)
             ).then((res) => {

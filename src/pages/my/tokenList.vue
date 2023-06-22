@@ -1,8 +1,54 @@
+<script setup>
+import { reactive, getCurrentInstance } from 'vue'
+import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+import Request from "luch-request";
+const http = new Request();
+import Backend from "@/util/backend";
+import BalanceList from "@/components/BalanceList.vue";
+const { proxy } = getCurrentInstance();
+const userStore = useUserStore();
+
+const myTokenList = reactive({
+    aeBalance: 0, //ae余额
+    tokenList: [], //token列表
+})
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.myWallet'));
+    proxy.isPassword();
+    proxy.getAeBalance().then(res=>{
+        myTokenList.aeBalance = res;
+    })
+    getTokenList();
+})
+
+//下拉刷新
+onPullDownRefresh ( () => {
+    proxy.getAeBalance().then(res=>{
+        myTokenList.aeBalance = res;
+    })
+    getTokenList();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+})
+
+//获取账户token列表
+const getTokenList = () => {
+    http.get(Backend.aeknowApiTokenList(userStore.token)).then((res) => {
+        if (res.data.tokens.length > 0) {
+            myTokenList.tokenList = res.data.tokens;
+        }
+    });
+}
+</script>
+
 <template>
-    <div class="token-list">
+    <view class="token-list">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('my.myWallet')" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,10 +56,10 @@
                     color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
-        <div class="ae-box">
-            <div class="ae-account" @click="goUrl(`tokenTransferRecode`)">
+        <view class="ae-box">
+            <view class="ae-account" @click="goUrl(`tokenTransferRecode`)">
                 <u-image
                     width="100rpx"
                     height="100rpx"
@@ -22,7 +68,7 @@
                     class="token-logo"
                 ></u-image>
                 <text class="token-value"
-                    >{{ $t('my.balance') + "：" + aeBalance }}
+                    >{{ $t('my.balance') + "：" + myTokenList.aeBalance }}
                     <u-icon
                         name="arrow-right"
                         class="ml-10"
@@ -30,8 +76,8 @@
                         size="32"
                     ></u-icon
                 ></text>
-            </div>
-            <div class="ae-opera">
+            </view>
+            <view class="ae-opera">
                 <u-button
                     type="primary"
                     size="medium"
@@ -63,74 +109,17 @@
                     </fa-FontAwesome
                     >{{ $t('my.receive') }}</u-button
                 >
-            </div>
-        </div>
+            </view>
+        </view>
         <u-gap height="20"></u-gap>
         <BalanceList
-                :tokenList="tokenList"
-                :userAddress="token"
+                :tokenList="myTokenList.tokenList"
+                :userAddress="userStore.token"
                 :sendClick="true"
             ></BalanceList>
-    </div>
+    </view>
 </template>
 
-<script>
-import Request from "luch-request";
-const http = new Request();
-import Backend from "@/util/backend";
-import { mapGetters } from "vuex";
-import BalanceList from "@/components/BalanceList.vue";
-
-export default {
-    components: {
-        BalanceList,
-    },
-    data() {
-        return {
-            aeBalance: 0, //ae余额
-            tokenList: [], //token列表
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.myWallet'));
-        this.isPassword();
-        this.getAccount().then(res=>{
-                this.aeBalance = res;
-            })
-        this.getTokenList();
-    },
-    activated() {
-        this.isPassword();
-        this.getAccount().then(res=>{
-                this.aeBalance = res;
-            })
-        this.getTokenList();
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.getAccount().then(res=>{
-                this.aeBalance = res;
-            })
-        this.getTokenList();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    methods: {
-        //获取账户token列表
-        getTokenList() {
-            http.get(Backend.aeknowApiTokenList(this.token)).then((res) => {
-                if (res.data.tokens.length > 0) {
-                    this.tokenList = res.data.tokens;
-                }
-            });
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .token-list {
     .ae-box {

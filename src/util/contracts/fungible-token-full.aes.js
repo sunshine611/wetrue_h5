@@ -251,4 +251,4 @@ contract FungibleTokenFull =
     put(state{ allowances[allowance_accounts] = new_allowance })
     Chain.event(Allowance(allowance_accounts.from_account, allowance_accounts.for_account, new_allowance))
 
-`;
+`

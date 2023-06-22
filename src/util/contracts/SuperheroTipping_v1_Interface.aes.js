@@ -35,4 +35,4 @@ main contract Tipping =
   entrypoint retips_for_tip : (tip_id) => list(retip)
   entrypoint unclaimed_for_url : (string) => int
   entrypoint check_claim : (string, address) => OracleService.success_claim
-`;
+`

@@ -9,4 +9,4 @@ contract Tipping =
   stateful entrypoint post_without_tip_sig : (string, list(string), address, signature) => int
   stateful entrypoint post_without_tip : (string, list(string)) => int
   entrypoint get_state : () => state
-`;
+`

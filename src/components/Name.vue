@@ -1,42 +1,39 @@
+<script setup>
+const props = defineProps({
+    userInfo: {
+        type: Object,
+        default: () => {},
+    },
+})
+</script>
+
 <template>
-    <div
+    <view
         class="name-area"
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
-    <div class="auth-sign" v-if="userInfo.isAuth">
+    <view class="auth-sign" v-if="userInfo.isAuth">
             <fa-FontAwesome
                 type="fas fa-user-shield"
                 size="28"
                 color="#2979FF"
             >
             </fa-FontAwesome>
-        </div>
-        <div class="open-vip" v-if="userInfo.isVip">
+        </view>
+        <view class="open-vip" v-if="userInfo.isVip">
             <u-icon 
                 name="level"
                 size="28"
                 color="#CD7F32"
             ></u-icon>
-        </div>
-        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
+        </view>
+        <view :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || $t('my.cryptonym') }}
-        </div>
+        </view>
         <text class="userid">{{ userInfo.defaultAens ? 'AENS: ' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
-    </div>
+    </view>
 </template>
-<script>
-export default {
-    props: {
-        userInfo: {
-            type: Object,
-            default: () => {},
-        },
-    },
-    data() {
-        return {};
-    },
-};
-</script>
+
 <style lang="scss" scoped>
 .name-area {
     font-size: 28rpx;

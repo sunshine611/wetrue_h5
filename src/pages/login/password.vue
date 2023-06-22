@@ -1,6 +1,103 @@
+
+<script setup>
+import { ref, reactive, getCurrentInstance } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { getStore } from "@/util/service";
+import { useUserStore } from "@/stores/userStore";
+import { mixinUtils } from'@/mixins/mixinUtils'
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const onLoadVal = ref( null )
+const form = reactive({
+	password: "",
+})
+//按钮加载状态
+const btnLoading = ref( false )
+//跳转来时的路由
+const link = ref( "" )
+const keystoreArr = reactive( getStore("keystoreArr") )
+
+onLoad ( (option) => {
+    onLoadVal.value = option.link
+    if (!!userStore.password || !userStore.token) {
+        setTimeout(() => {
+            uni.reLaunch({
+                url: "/pages/my/index",
+            });
+        }, 300);
+    };
+    if (!!onLoadVal.value) {
+        link.value = decodeURIComponent(onLoadVal.value);
+    };
+})
+
+const login = () => {
+    btnLoading.value = true;
+    if ( !form.password || form.password.length < 6 ) {
+        proxy.uShowToast(proxy.$t('login.passWarning', ['6-20']));
+        btnLoading.value = false;
+        return;
+    }
+    setTimeout(() => {
+        check();
+    }, 100);
+}
+//检查密码是否和keystore匹配
+const check = async() => {
+    const newPassword = await mixinUtils.cryptoPassword( form.password );
+    try {
+        const secretKey = await proxy.keystoreToSecretKey( newPassword );
+        if (!!secretKey) {
+            proxy.uShowToast(proxy.$t('login.loginSuccess'));
+            userStore.password = newPassword
+            mixinUtils.getConfigInfo();
+            proxy.getUnreadMsg();
+            getUserInfo();
+            proxy.connectAe();
+            btnLoading.value = false;
+            if (!!link.value) {
+                setTimeout(() => {
+                    proxy.reLaunchUrl('/'+link.value)
+                    clearTimeout();
+                }, 100);
+            } else {
+                setTimeout(() => {
+                    proxy.reLaunchUrl("/pages/index/index")
+                    clearTimeout();
+                }, 100);
+            }
+        }
+    } catch (error) {
+        proxy.uShowToast( proxy.$t('login.passwordErr') );
+        form.password = "";
+        btnLoading.value = false;
+    }
+}
+//获取用户信息
+const getUserInfo = () => {
+    let params = {
+        userAddress: userStore.token,
+        type: "login",
+    };
+    proxy.$http.post("/User/info", params).then((res) => {
+        if (res.code === 200) {
+            userStore.setUserInfo(res.data)
+        }
+    }).catch((err) => {
+        console.log("getUserInfo Error",err)
+    });
+}
+//退出登录
+const logout = () => {
+    userStore.deleteKeystoreArr(userStore.token)
+    proxy.reLaunchUrl("/pages/my/index")
+}
+</script>
+
 <template>
     <view class="check">
-        <div class="check-box">
+        <view class="check-box">
             <fa-FontAwesome
                 v-if="keystoreArr.length > 0"
                 class="account"
@@ -9,7 +106,7 @@
                 color="#f04a82"
                 @click="goUrl('accountManage')"
             ></fa-FontAwesome>
-            <div class="title">
+            <view class="title">
                 <u-image
                     width="92rpx"
                     height="46rpx"
@@ -17,9 +114,9 @@
                     class="inline mr-5"
                 ></u-image>
                 {{ $t('login.securePassword', [$t('login.verify')]) }}
-            </div>
+            </view>
             <u-gap height="60"></u-gap>
-            <div class="form">
+            <view class="form">
                 <u-gap height="14"></u-gap>
                 <u-input
                     @confirm="login"
@@ -27,9 +124,9 @@
                     type="text"
                     :focus="true"
                     border
-                    :placeholder="$t('login.securePassword', ['ak_...'+token.slice(-4)])"
+                    :placeholder="$t('login.securePassword', ['ak_...'+ userStore.token?.slice(-4)])"
                 />
-            </div>
+            </view>
             <u-gap height="40"></u-gap>
             <u-button
                 size="default"
@@ -42,125 +139,21 @@
                 >{{ $t('login.verify') }}
             </u-button>
             <u-gap height="25"></u-gap>
-            <div class="clearfix">
-                <div class="pull-left">
-                    <div class="mnemonic" @click="goUrl('login')">
+            <view class="clearfix">
+                <view class="pull-left">
+                    <view class="mnemonic" @click="goUrl('login')">
                         {{ $t('login.mnemonicLogin') }}
-                    </div>
-                </div>
-                <div class="pull-right">
-                    <div class="mnemonic" @click="logout">
+                    </view>
+                </view>
+                <view class="pull-right">
+                    <view class="mnemonic" @click="logout">
                         {{ $t('login.logoutCurrent') }}
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-import { getStore } from "@/util/service";
-
-export default {
-    data() {
-        return {
-            form: {
-                password: "",
-            },
-            btnLoading: false, //按钮加载状态
-            link: "", //跳转来时的路由
-            keystoreArr: getStore("keystoreArr"),
-        };
-    },
-    onLoad(option) {
-        this.uSetBarTitle(this.$t('titleBar.verifyPassword'));
-        if (!!this.$store.state.user.password || !this.token) {
-            setTimeout(() => {
-                uni.reLaunch({
-                    url: "/pages/my/index",
-                });
-            }, 300);
-        };
-        if (!!option.link) {
-            this.link = decodeURIComponent(option.link);
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    methods: {
-        login() {
-            this.btnLoading = true;
-            if (!this.form.password || this.form.password.length < 6) {
-                    this.uShowToast(this.$t('login.passWarning', ['6-20']));
-                    this.btnLoading = false;
-                    return;
-                }
-            setTimeout(() => {
-                this.check();
-            }, 100);
-        },
-        //检查密码是否和keystore匹配
-        async check() {
-            const newPassword = this.cryptoPassword(this.form.password);
-            try {
-                const secretKey = await this.keystoreToSecretKey(
-                    newPassword
-                );
-                if (!!secretKey) {
-                    this.uShowToast(this.$t('login.loginSuccess'));
-                    this.$store.commit(
-                        "user/SET_PASSWORD",
-                        newPassword
-                    );
-                    this.getConfigInfo();
-                    this.getUnreadMsg();
-                    this.getUserInfo();
-                    this.connectAe();
-                    this.btnLoading = false;
-                    if (!!this.link) {
-                        setTimeout(() => {
-                            uni.reLaunch({
-                                url: `/${this.link}`,
-                            });
-                        }, 1000);
-                    } else {
-                        setTimeout(() => {
-                            uni.reLaunch({
-                                url: "/pages/index/index",
-                            });
-                        }, 1000);
-                    }
-                }
-            } catch (error) {
-                this.uShowToast( this.$t('login.passwordErr') );
-                this.form.password = "";
-                this.btnLoading = false;
-            }
-        },
-        //获取用户信息
-        getUserInfo() {
-            let params = {
-                userAddress: this.token,
-                type: "login",
-            };
-            this.$http.post("/User/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.$store.commit("user/SET_USERINFO", res.data || {});
-                }
-            });
-        },
-        //退出登录
-        logout() {
-            this.$store.dispatch("user/deleteKeystoreArr", this.token);
-            uni.reLaunch({
-                url: "/pages/my/index",
-            });
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 page {

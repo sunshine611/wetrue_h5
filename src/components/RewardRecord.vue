@@ -1,5 +1,37 @@
+<script setup>
+import { ref, watch } from 'vue'
+
+const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        default: false,
+    },
+    record: {
+        type: Array,
+        default: () => [],
+    }
+})
+const emits = defineEmits(['modelValue'])
+
+const showModal = ref(props.modelValue)
+
+watch(
+	() => props.modelValue,
+	(val) => {
+        showModal.value = val;
+	}
+)
+
+watch(
+	() => showModal.value,
+	(val) => {
+        emits("modelValue", val);
+	}
+)
+</script>
+
 <template>
-    <div class="reward">
+    <view class="reward">
         <u-popup
             v-model="showModal"
             mode="center"
@@ -7,8 +39,8 @@
             height="70%"
             :border-radius="10"
         >
-            <div class="reward-content">
-                <div class="title mb-40">
+            <view class="reward-content">
+                <view class="title mb-40">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -16,7 +48,7 @@
                         class="inline mr-5"
                     ></u-image>
                     {{ $t('components.recordList') }}
-                </div>
+                </view>
                 <u-table>
                     <u-tr>
                         <u-th>{{ $t('components.recordMan') }}</u-th>
@@ -27,45 +59,11 @@
                         <u-td>{{balanceFormat(item.amount, 1)}}</u-td>
                     </u-tr>
                 </u-table>
-            </div>
+            </view>
         </u-popup>
-    </div>
+    </view>
 </template>
-<script>
-import { mapGetters } from "vuex";
 
-export default {
-    components: {
-    },
-    props: {
-        value: {
-            type: Boolean,
-            default: false,
-        },
-        record: {
-            type: Array,
-            default: () => [],
-        },
-    },
-    data() {
-        return {
-            showModal: this.value, //控制隐藏显示
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    watch: {
-        value(val) {
-            this.showModal = val;
-        },
-        showModal(val) {
-            this.$emit("input", val);
-        },
-    },
-    methods: {},
-};
-</script>
 <style lang="scss" scoped>
 .reward {
     .reward-content {

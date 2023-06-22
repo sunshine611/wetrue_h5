@@ -1,6 +1,83 @@
+<script setup>
+import { ref, reactive, getCurrentInstance } from 'vue'
+import { validateMnemonic, mnemonicToSeed } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
+import { dump as KS_dump, getHdWalletAccountFromSeed } from "@aeternity/aepp-sdk";
+import { getStore } from "@/util/service";
+import { mixinUtils } from'@/mixins/mixinUtils'
+import { useUserStore } from "@/stores/userStore";
+const { proxy } = getCurrentInstance();
+const userStore = useUserStore();
+//表单
+const form = reactive({
+    mnemonic: "",
+    password: "",
+})
+//表单验证
+const warning = reactive({
+    mnemonic: false,
+    password: false,
+})
+const loading = ref( false )
+const keystoreArr = reactive( getStore("keystoreArr") )
+
+//登录
+const login = () => {
+    loading.value = true;
+    setTimeout(() => {
+        importMnemonic();
+    }, 100);
+}
+
+//导入助记词
+const importMnemonic = async () => {
+    const newMnemonic = form.mnemonic
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z ]/g, '')
+        .trim();
+    if (!newMnemonic || validateMnemonic(newMnemonic, wordlist) == false) {
+        warning.mnemonic = true;
+        loading.value = false;
+        return;
+    } else {
+        warning.mnemonic = false;
+    }
+    if (!form.password || form.password.length < 6) {
+        warning.password = true;
+        loading.value = false;
+        return;
+    } else {
+        warning.password = false;
+    }
+    //助记词转换成钱包地址和秘钥
+    const seed = await mnemonicToSeed(newMnemonic);
+    const publicKeyInsecretKey = getHdWalletAccountFromSeed(seed, 0);
+
+    //通过密码和私钥生成keystore
+    const newPassword = await mixinUtils.cryptoPassword(form.password);
+    await KS_dump(
+        "WeTrueWallet",
+        newPassword,
+        publicKeyInsecretKey.secretKey
+    ).then((keystore) => {
+        userStore.setPassword(newPassword)
+        userStore.setKeystore(keystore)
+        userStore.setKeystoreArr(keystore)
+    });
+    userStore.setToken(publicKeyInsecretKey.publicKey)
+    proxy.getUserInfo();
+    mixinUtils.getConfigInfo();
+    proxy.connectAe();
+    uni.reLaunch({
+        url: "/pages/my/index",
+    });
+}
+</script>
+
 <template>
     <view class="login">
-        <div class="login-box">
+        <view class="login-box">
             <fa-FontAwesome
                 v-if="keystoreArr.length > 0"
                 class="account"
@@ -9,7 +86,7 @@
                 color="#f04a82"
                 @click="goUrl('accountManage')"
             ></fa-FontAwesome>
-            <div class="title">
+            <view class="title">
                 <u-image
                     width="92rpx"
                     height="46rpx"
@@ -17,10 +94,10 @@
                     class="inline mr-5"
                 ></u-image>
                 {{ $t('login.mnemonicLogin') }}
-            </div>
+            </view>
             <u-gap height="60"></u-gap>
-            <div class="form">
-                <div class="form-title">{{ $t('login.importMnemonic') }}</div>
+            <view class="form">
+                <view class="form-title">{{ $t('login.importMnemonic') }}</view>
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.mnemonic"
@@ -32,11 +109,11 @@
                     placeholder="gadget vocal excess layer topic check number exercise nurse ..."
                     maxlength="220"
                 />
-                <div class="warnning" v-show="warning.mnemonic">
+                <view class="warnning" v-show="warning.mnemonic">
                     {{ $t('login.mnemonicWarning') }}
-                </div>
+                </view>
                 <u-gap height="30"></u-gap>
-                <div class="form-title">{{ $t('login.setPassword') }}</div>
+                <view class="form-title">{{ $t('login.setPassword') }}</view>
                 <u-gap height="14"></u-gap>
                 <u-input
                     v-model="form.password"
@@ -46,10 +123,10 @@
                     :placeholder="$t('login.passWarning', ['6-20'])"
                     maxlength="20"
                 />
-                <div class="warnning" v-show="warning.password">
+                <view class="warnning" v-show="warning.password">
                     {{ $t('login.passWarning', ['6-20']) }}
-                </div>
-            </div>
+                </view>
+            </view>
             <u-gap height="40"></u-gap>
             <u-button
                 size="default"
@@ -63,116 +140,20 @@
                 {{ $t('login.login') }}
             </u-button>
             <u-gap height="25"></u-gap>
-            <div class="clearfix">
-                <div
+            <view class="clearfix">
+                <view
                     class="pull-left mnemonic"
                     @tap="reLaunchUrl('../index/index')"
                 >
                     {{ $t('home.index') }}
-                </div>
-                <div class="pull-right mnemonic" @tap="goUrl('mnemonic')">
+                </view>
+                <view class="pull-right mnemonic" @tap="goUrl('mnemonic')">
                     {{ $t('login.createMnemonic') }}
-                </div>
-            </div>
-        </div>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
-
-<script>
-import { validateMnemonic, mnemonicToSeed } from '@aeternity/bip39';
-import { dump as KS_dump, getHdWalletAccountFromSeed } from "@aeternity/aepp-sdk";
-import { getStore } from "@/util/service";
-
-export default {
-    data() {
-        return {
-            //表单
-            form: {
-                mnemonic: "",
-                password: "",
-            },
-            //表单验证
-            warning: {
-                mnemonic: false,
-                password: false,
-            },
-            loading: false, //按钮加载状态
-            keystoreArr: getStore("keystoreArr"),
-        };
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.loginWeTrue'));
-    },
-    computed: {
-    },
-    methods: {
-        //登录
-        login() {
-            this.loading = true;
-            setTimeout(() => {
-                this.importMnemonic();
-            }, 100);
-        },
-        //导入助记词
-        async importMnemonic() {
-            const newMnemonic = this.form.mnemonic
-                .toLowerCase()
-                .replace(/\s+/g, ' ')
-                .replace(/[^a-z ]/g, '')
-                .trim();
-            if (!newMnemonic || !validateMnemonic(newMnemonic)) {
-                this.warning.mnemonic = true;
-                this.loading = false;
-                return;
-            } else {
-                this.warning.mnemonic = false;
-            }
-            if (!this.form.password || this.form.password.length < 6) {
-                this.warning.password = true;
-                this.loading = false;
-                return;
-            } else {
-                this.warning.password = false;
-            }
-            //助记词转换成钱包地址和秘钥
-            const seed = mnemonicToSeed(newMnemonic);
-			const publicKeyInsecretKey = getHdWalletAccountFromSeed(seed, 0);
-            //通过密码和私钥生成keystore
-            let newPassword = this.cryptoPassword(this.form.password);
-            await KS_dump(
-                "WeTrueWallet",
-                newPassword,
-                publicKeyInsecretKey.secretKey
-            ).then((keystore) => {
-                this.$store.commit("user/SET_KEYSTORE", keystore);
-                this.$store.commit("user/SET_PASSWORD", newPassword);
-                this.$store.dispatch("user/setKeystoreArr", keystore);
-            });
-            this.$store.commit(
-                "user/SET_TOKEN",
-                publicKeyInsecretKey.publicKey
-            );
-            this.getUserInfo(publicKeyInsecretKey.publicKey);
-            this.getConfigInfo();
-            this.connectAe();
-            this.reLaunchUrl("../my/index");
-        },
-        //登陆
-        getUserInfo(address) {
-            let params = {
-                userAddress: address,
-                type: "login",
-            };
-            this.$http.post("/User/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.$store.commit("user/SET_USERINFO", res.data || {});
-                }
-                this.loading = false;
-            });
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 page {

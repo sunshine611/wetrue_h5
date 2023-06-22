@@ -110,9 +110,7 @@
 import FontAwesome from "@/components/Am-FontAwesome/index.vue";
 export default {
 	name: "FontAwesome",
-	components: {
-		FontAwesome,
-	},
+	emits: ["update:modelValue", "FontAwesome"],
 	props: {
 		type: {
 			type: String,
