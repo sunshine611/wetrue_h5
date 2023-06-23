@@ -7,13 +7,10 @@ pnpm install
 
 ### Compiles and hot-reloads for development
 ```
-vite
+uni
 ```
 
 ### Compiles and minifies for production
 ```
-vite build
+uni build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
