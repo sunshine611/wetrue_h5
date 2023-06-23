@@ -1,7 +1,9 @@
 <script setup>
-import { reactive, getCurrentInstance } from 'vue'
+import { reactive, getCurrentInstance, computed } from 'vue'
+import { Icon } from '@iconify/vue';
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import { useUserStore } from "@/stores/userStore";
+import { formatDate } from "@/util/formatDate.js";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
@@ -102,6 +104,13 @@ const getAeRecodeList = () => {
 const view = (hash) => {
     window.open(Backend.viewExplorerUrl(hash));
 }
+//时间戳
+const changeFormdate = computed(() => {
+    return (time) => {
+        let date = new Date(time);
+        return formatDate(date, "yyyy-m-d h:i:s");
+    };
+});
 </script>
 
 <template>
@@ -123,18 +132,17 @@ const view = (hash) => {
                 <u-cell-item
                     class="cell-out"
                     v-if="item.sender_id === (myTransferRecode.userAddress || userStore.token)"
-                    :label="parseInt(item?.utc)"
+                    :label="changeFormdate(parseInt(item.utc))"
                     @click="view(item.txhash)"
                 >
                     <template v-slot:icon>
                         <view class="icon">
-                            <fa-FontAwesome
-                                type="fas fa-arrow-circle-up"
-                                size="50"
+                            <Icon
+                                icon="fa:arrow-circle-up"
                                 class="mr-20"
+                                width="25"
                                 color="#f34343"
-                            >
-                            </fa-FontAwesome>
+                            />
                         </view>
                     </template>
                     <template v-slot:title>
@@ -158,18 +166,17 @@ const view = (hash) => {
                 <u-cell-item
                     class="cell-in"
                     v-else
-                    :label="parseInt(item.utc)"
+                    :label="changeFormdate(parseInt(item.utc))"
                     @click="view(item.txhash)"
                 >   
                     <template v-slot:icon>
                         <view class="icon">
-                            <fa-FontAwesome
-                                type="fas fa-arrow-circle-down"
-                                size="50"
+                            <Icon
+                                icon="fa:arrow-circle-down"
                                 class="mr-20"
+                                width="25"
                                 color="#76bf0c"
-                            >
-                            </fa-FontAwesome>
+                            />
                         </view>
                     </template>
                     <template v-slot:title>

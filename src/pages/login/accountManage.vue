@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, getCurrentInstance, watch } from 'vue';
+import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { getStore, setStore } from "@/util/service";
 import Qrcode from "@/components/Qrcode";
@@ -93,16 +94,15 @@ const copy = (value) => {
                 @end="ksData.drag=false"
                 itemKey="id"
             >
-            <template #item="{ element }">
-                <view class="account-list">
+                <template #item="{ element }">
+                    <view class="account-list">
                         <view class="active" v-show="element.public_key === token">
-                            <fa-FontAwesome
-                                type="fas fa-check"
-                                size="24"
+                            <Icon
+                                icon="fa:check"
                                 class="star"
+                                width="14"
                                 color="#fff"
-                            >
-                            </fa-FontAwesome>
+                            />
                         </view>
                         <view
                             class="address"
@@ -121,39 +121,36 @@ const copy = (value) => {
                                         currentAddress = element.public_key;
                                     "
                                 >
-                                    <fa-FontAwesome
-                                        type="fas fa-trash-alt"
-                                        size="28"
+                                    <Icon
+                                        icon="fa:trash"
+                                        width="12"
                                         class="mr-6"
                                         color="#fff"
-                                    >
-                                    </fa-FontAwesome>
+                                    />
                                     {{ $t('login.delete') }}
                                 </view>
                                 <view
                                     class="item"
                                     @click="openQrcode(element.public_key)"
                                 >
-                                    <fa-FontAwesome
-                                        type="fas fa-qrcode"
-                                        size="28"
+                                    <Icon
+                                        icon="fa:qrcode"
+                                        width="12"
                                         class="mr-6"
                                         color="#fff"
-                                    >
-                                    </fa-FontAwesome>
+                                    />
                                     {{ $t('login.qrcode') }}
                                 </view>
                                 <view
                                     class="item"
                                     @click="switchAddress(element.public_key)"
                                 >
-                                    <fa-FontAwesome
-                                        type="fas fa-hand-point-right"
-                                        size="28"
+                                    <Icon
+                                        icon="fa-solid:hand-point-right"
+                                        width="14"
                                         class="mr-6"
                                         color="#fff"
-                                    >
-                                    </fa-FontAwesome>
+                                    />
                                     {{ $t('login.replace') }}
                                 </view>
                             </view>
@@ -178,14 +175,13 @@ const copy = (value) => {
                 type="primary"
                 :plain="true"
                 @click="goUrl('login')"
-                ><fa-FontAwesome
-                    type="fas fa-user-plus
-"
-                    size="28"
+                >
+                <Icon
+                    icon="fa:user-plus"
+                    width="20"
                     class="mr-10"
                     color="#f04a82"
-                >
-                </fa-FontAwesome>
+                />
                 {{ $t('login.addAccount') }}
             </u-button>
         </view>

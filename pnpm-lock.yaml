@@ -83,6 +83,9 @@ dependencies:
   pinia:
     specifier: ^2.0.36
     version: 2.0.36(vue@3.2.47)
+  sass:
+    specifier: ^1.63.4
+    version: 1.63.4
   sha.js:
     specifier: ^2.4.11
     version: 2.4.11
@@ -115,9 +118,9 @@ devDependencies:
   '@dcloudio/vite-plugin-uni':
     specifier: 3.0.0-3080420230531001
     version: 3.0.0-3080420230531001(postcss@8.4.24)(vite@4.3.9)(vue@3.2.47)
-  sass:
-    specifier: ^1.63.4
-    version: 1.63.4
+  '@iconify/vue':
+    specifier: ^4.1.1
+    version: 4.1.1(vue@3.2.47)
   sass-loader:
     specifier: ^13.3.2
     version: 13.3.2(sass@1.63.4)(webpack@5.88.0)
@@ -2211,6 +2214,19 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@iconify/types@2.0.0:
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
+    dev: true
+
+  /@iconify/vue@4.1.1(vue@3.2.47):
+    resolution: {integrity: sha512-RL85Bm/DAe8y6rT6pux7D2FJSiUEM/TPfyK7GrbAOfTSwrhvwJW+S5yijdGcmtXouA8MtuH9C7l4hiSE4mLMjg==}
+    peerDependencies:
+      vue: '>=3'
+    dependencies:
+      '@iconify/types': 2.0.0
+      vue: 3.2.47
+    dev: true
 
   /@intlify/core-base@9.1.9:
     resolution: {integrity: sha512-x5T0p/Ja0S8hs5xs+ImKyYckVkL4CzcEXykVYYV6rcbXxJTe2o58IquSqX9bdncVKbRZP7GlBU1EcRaQEEJ+vw==}

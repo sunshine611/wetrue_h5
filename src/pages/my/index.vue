@@ -3,12 +3,14 @@
 import { reactive, getCurrentInstance } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { useUserStore } from "@/stores/userStore";
-import { version as cVersion } from "@/config/config.js";
-import { mixinUtils } from'@/mixins/mixinUtils'
+import { version as cVersion, diceUrl } from "@/config/config.js";
+import { useI18n } from "vue-i18n";
+import { Icon } from '@iconify/vue';
 import HeadImg from "@/components/HeadImg.vue";
 import VersionTip from "@/components/VersionTip.vue";
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
+const { locale } = useI18n();
 
 //表单
 const myIndex = reactive({
@@ -54,7 +56,7 @@ const copy = () => {
 }
 //打开白皮书
 const whitePaper = () => {
-    window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
+    window.open(diceUrl + "/app/Wetrue_White_Paper.pdf");
 }
 //检查版本
 const versionCheck = async () => {
@@ -86,14 +88,24 @@ const goAccountManage = () => {
     };
     proxy.goUrl('../login/accountManage');
 }
+
+//选择语言
+const changeLang = () => {
+    let lang
+    if (userStore.language == 'zh-cn') {
+        lang = 'en'
+    } else if (userStore.language == 'en') {
+        lang = 'zh-cn'
+    }
+    userStore.setLanguage(lang)
+    locale.value = lang;
+    proxy.$moment.locale(lang);
+};
 </script>
 
 <template>
     <view class="my">
-        <view
-            class="top-background"
-            :style="{height:`${statusBarHeight}px`}"
-        ></view>
+        <view class="top-background" :style="{height:`${statusBarHeight}px`}"></view>
         <view class="user-info" v-if="!!userStore.token">
             <view class="my-info">
                 <view class="block">
@@ -180,38 +192,37 @@ const goAccountManage = () => {
             <view class="grid">
                 <u-grid col="4" :border="false">
                     <u-grid-item @click="goUrl('./setting/infoEdit')">
-                        <u-icon 
-                            name="account"
-                            size="46"
+                        <Icon 
+                            icon="mdi:user-outline"
+                            width="42"
                             color="#f04a82"
-                        ></u-icon>
+                        />
                         <view class="grid-text">{{ $t('my.userInfo') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goUrl('./setting/blacklistManage')">
-                        <u-icon 
-                            name="account"
-                            size="46"
-                        ></u-icon>
+                        <Icon 
+                            icon="mdi:user-outline"
+                            width="42"
+                        />
                         <view class="grid-text">{{ $t('my.blacklistManage') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goAccountManage()">
-                        <u-icon 
-                            name="man-add"
-                            size="46"
-                            color="#f04a82"
-                        ></u-icon>
+                        <Icon 
+                            icon="mdi:user-add-outline"
+                            color ="#f04a82"
+                            width="42"
+                        />
                         <view class="grid-text"> {{ $t('my.accountManage') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goUrl('aens/index')">
-                        <fa-FontAwesome
-                            type="fab fa-neos"
-                            size="42"
+                        <Icon
+                            icon="fa-brands:neos"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                            width="40"
+                        />
                         <view class="grid-text">AENS</view>
                     </u-grid-item>
 
@@ -225,13 +236,12 @@ const goAccountManage = () => {
                         @click="goUrl('tokenList')"
                     >
                         <template v-slot:icon>
-                            <fa-FontAwesome
-                                type="fas fa-wallet"
-                                size="32"
-                                class="mr-10"
+                            <Icon 
+                                icon="ph:wallet-fill"
+                                width="32"
                                 color="#f04a82"
-                            >
-                            </fa-FontAwesome>
+                                class="mr-10"
+                            />
                         </template>
                     </u-cell-item>
                     <u-cell-item
@@ -240,13 +250,12 @@ const goAccountManage = () => {
                         v-if="validAdmin()==true"
                     >
                         <template v-slot:icon>
-                            <fa-FontAwesome
-                                type="fas fa-exchange-alt"
-                                size="32"
-                                class="mr-10"
+                            <Icon 
+                                icon="uil:exchange-alt"
+                                width="32"
                                 color="#f04a82"
-                            >
-                            </fa-FontAwesome>
+                                class="mr-10"
+                            />
                         </template>
                     </u-cell-item>
                     <u-cell-item
@@ -255,13 +264,12 @@ const goAccountManage = () => {
                         v-if="validAdmin()==true"
                     >
                         <template v-slot:icon>
-                            <fa-FontAwesome
-                                type="fas fa-hammer"
-                                size="32"
-                                class="mr-10"
+                            <Icon 
+                                icon="game-icons:mining"
+                                width="32"
                                 color="#f04a82"
-                            >
-                            </fa-FontAwesome>
+                                class="mr-10"
+                            />
                         </template>
                     </u-cell-item>
                     <u-cell-item
@@ -270,23 +278,22 @@ const goAccountManage = () => {
                         :arrow="false"
                     >
                         <template v-slot:icon>
-                            <fa-FontAwesome
-                                type="fas fa-gamepad"
-                                size="32"
-                                class="mr-10"
+                            <Icon 
+                                icon="ion:dice"
+                                width="32"
                                 color="#f04a82"
-                            >
-                            </fa-FontAwesome>
+                                class="mr-10"
+                            />
                         </template>
                     </u-cell-item>
                     <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
                         <template v-slot:icon>
-                            <u-icon 
-                                name="setting-fill"
-                                size="40"
-                                class="mr-10"
+                            <Icon 
+                                icon="uiw:setting"
+                                width="32"
                                 color="#f04a82"
-                            ></u-icon>
+                                class="mr-10"
+                            />
                         </template>
                     </u-cell-item>
                 </u-cell-group>
@@ -306,43 +313,43 @@ const goAccountManage = () => {
         </view>
         <view class="login" v-else>
             <view class="opera-icon">
-                <fa-FontAwesome
-                    class="mr-30"
-                    type="fas fa-language"
-                    size="32"
+                <Icon 
+                    icon  ="cil:language"
+                    class="mr-32"
+                    color ="#fff"
+                    width="32"
+                    height="32"
+                    @click ="changeLang"
+                />
+                <Icon 
+                    icon="fa-solid:user-shield"
                     color="#fff"
-                   @click="mixinUtils.selectLanguage"
-                ></fa-FontAwesome>
-                <fa-FontAwesome
-                    type="fas fa-user-shield"
-                    size="32"
-                    color="#fff"
+                    width="32"
+                    height="32"
                     @click="goUrl('../login/accountManage')"
-                ></fa-FontAwesome>
+                />
             </view>
             <view class="login-box">
                 <view class="item" @tap="goUrl('../login/login')">
                     <template v-slot:icon>
-                        <fa-FontAwesome
-                            type="fas fa-wallet"
-                            size="48"
-                            class="mr-20"
+                        <Icon 
+                            icon="ph:wallet-fill"
+                            width="48"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                            class="mr-20"
+                        />
                     </template>
                     {{ $t('login.mnemonicLogin') }}
                 </view>
                 <u-gap height="80"></u-gap>
                 <view class="item" @tap="goUrl('../login/mnemonic')">
                     <template v-slot:icon>
-                        <fa-FontAwesome
-                            type="fas fa-plus-circle"
-                            size="48"
-                            class="mr-20"
+                        <Icon 
+                            icon="bi:plus-circle-fill"
+                            width="48"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                            class="mr-20"
+                        />
                     </template>
                     {{ $t('login.createMnemonic') }}
                 </view>

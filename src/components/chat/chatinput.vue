@@ -1,5 +1,6 @@
 <script setup>
 import { ref,getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 const { proxy } = getCurrentInstance();
 
 const inputValue = ref("")
@@ -39,7 +40,7 @@ const sendMessge = () => {
 	<view class="footer safe-area-inset-bottom">
 		<view class="footer-left">
 			<view @tap="startRecognize">
-				<fa-FontAwesome type="fas fa-microphone"></fa-FontAwesome>
+				<Icon icon="carbon:microphone-filled" />
 			</view>
 		</view>
 		<view class="footer-center">

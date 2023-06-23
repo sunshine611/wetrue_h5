@@ -8,7 +8,7 @@ export const useUserStore = defineStore('userStore', {
     state: () => {
         return {
           token: getStore('token') || null, //钱包地址
-          password: '', //临时密码
+          password: null, //临时密码
           nodeUrl: getStore('nodeUrl') || nodeUrl, //节点地址
           configInfo: getStore('configInfo') || {}, //后端配置信息
           userInfo: getStore('userInfo') || {}, //用户信息
@@ -134,6 +134,10 @@ export const useUserStore = defineStore('userStore', {
     //设置 Password
     setPassword(params) {
       this.password = params
+    },
+    //设置 thirdPartySource
+    setThirdParty(params) {
+      this.thirdPartySource = params
     },
     //设置 client
     setClient(params) {

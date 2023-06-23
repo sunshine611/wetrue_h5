@@ -1,5 +1,6 @@
 <script setup>
 import { ref, getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { useUserStore } from "@/stores/userStore";
 
@@ -66,13 +67,12 @@ const deleteBlack = () => {
                                         currentAddress = element;
                                     "
                                 >
-                                    <fa-FontAwesome
-                                        type="fas fa-trash-alt"
-                                        size="28"
+                                    <Icon
+                                        icon="fa:check"
+                                        width="14"
                                         class="mr-6"
                                         color="#fff"
-                                    >
-                                    </fa-FontAwesome>
+                                    />
                                     {{ $t('login.delete') }}
                                 </view>
                             </view>

@@ -6,7 +6,7 @@ import HeadImg from "@/components/HeadImg";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import Reward from "@/components/Reward";
 import Name from "@/components/Name";
-
+import { Icon } from '@iconify/vue';
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import { ref, getCurrentInstance, watch } from 'vue'
 const { proxy } = getCurrentInstance();
@@ -424,17 +424,16 @@ const praise = (type, item) => {
                                             goUrl(
                                                 '/pages/my/userInfo?userAddress=' +
                                                     item.users.userAddress
-                                            )
-                                        "
-                                        ><fa-FontAwesome
+                                            )">
+                                        
+                                        <Icon
                                             v-if="item.users.isAuth"
-                                            class="mr-4"
-                                            type="fas fa-user-secret"
-                                            size="24"
+                                            icon="arcticons:2fas-auth"
+                                            width="10"
                                             color="#2979FF"
-                                        >
-                                        </fa-FontAwesome
-                                        >{{
+                                            class="mr-4"
+                                        />
+                                        {{
                                             item.users.nickname ||
                                             item.users.userAddress.slice(-4)
                                         }}</text>
@@ -504,45 +503,35 @@ const praise = (type, item) => {
         <u-gap :height="720-commentHeight"></u-gap>
         <view class="bar-opera safe-area-inset-bottom" v-show="!isShowComment">
             <view class="item" @tap="reward">
-                <fa-FontAwesome
-                    type="fas fa-coins"
-                    size="28"
+                <Icon
+                    icon="streamline:interface-favorite-give-heart-reward-social-rating-media-heart-hand"
+                    width="15"
                     class="mr-10"
                     color="#666"
-                ></fa-FontAwesome>
+                />
                 {{ $t('index.reward') }}
             </view>
             <view class="item" @tap="comment()">
-                <fa-FontAwesome
-                    type="far fa-comment-alt"
-                    size="28"
+                <Icon
+                    icon="fa-regular:comment-alt"
+                    width="15"
                     class="mr-10"
                     color="#666"
-                >
-                </fa-FontAwesome
-                >{{ $t('index.comment') }}
+                />
+                {{ $t('index.comment') }}
             </view>
             <view
                 class="item"
                 :class="{ highlight: postInfo.isPraise }"
                 @tap="praise(praiseType)"
             >
-                <u-icon
-                    v-show="!postInfo.isPraise"
+                <Icon
+                    :icon="postInfo.isPraise ? 'ri:thumb-up-fill' : 'ri:thumb-up-line'"
+                    :color="postInfo.isPraise ? '#f04a82' : '#666'"
                     class="mr-10"
-                    name="thumb-up"
-                    :size="30"
-                    color="#666"
-                ></u-icon>
-                <u-icon
-                    v-show="postInfo.isPraise"
-                    class="mr-10"
-                    name="thumb-up-fill"
-                    color="#f04a82"
-                    :size="30"
-                >
-                </u-icon
-                >{{ $t('index.praise') }}
+                    size="15"
+                />
+                {{ $t('index.praise') }}
             </view>
         </view>
         <inputComment

@@ -1,4 +1,6 @@
 <script setup>
+import { Icon } from '@iconify/vue';
+
 const props = defineProps({
     userInfo: {
         type: Object,
@@ -13,19 +15,18 @@ const props = defineProps({
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
     <view class="auth-sign" v-if="userInfo.isAuth">
-            <fa-FontAwesome
-                type="fas fa-user-shield"
-                size="28"
+            <Icon
+                icon="fa-solid:user-shield"
+                width="20"
                 color="#2979FF"
-            >
-            </fa-FontAwesome>
+            />
         </view>
         <view class="open-vip" v-if="userInfo.isVip">
-            <u-icon 
-                name="level"
-                size="28"
+            <Icon
+                icon="quill:vip"
+                width="18"
                 color="#CD7F32"
-            ></u-icon>
+            />
         </view>
         <view :class="['name', userInfo.isAuth ? 'auth' : '']">
             {{ userInfo.nickname || $t('my.cryptonym') }}

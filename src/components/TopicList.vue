@@ -3,6 +3,7 @@ import HeadImg from "@/components/HeadImg";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import { Icon } from '@iconify/vue';
 import { mixinUtils } from'@/mixins/mixinUtils'
 import { getCurrentInstance, watch } from 'vue';
 const { proxy } = getCurrentInstance();
@@ -112,13 +113,12 @@ const releaseCallback = (item) => {
                 :key="index"
             >
                 <view class="focus" v-show="item.isFocus">
-                    <fa-FontAwesome
-                        type="fas fa-heart"
-                        size="24"
+                    <Icon
+                        icon="fa:heart"
+                        width="12"
                         class="star"
                         color="#fff"
-                    >
-                    </fa-FontAwesome>
+                    />
                 </view>
                 <view class="user-area">
                     <view class="head-box">
@@ -182,49 +182,30 @@ const releaseCallback = (item) => {
                         class="item"
                         @click="goUrl('/pages/index/detail?hash=' + item.hash)"
                     >
-                        <fa-FontAwesome
-                            type="far fa-comment-alt"
-                            size="28"
+                        <Icon
+                            icon="fa-regular:comment-alt"
+                            width="15"
                             class="mr-10"
                             color="#666"
-                        ></fa-FontAwesome>
+                        />
                         {{ item.commentNumber }}
                     </view>
                     <view class="item" @tap="star(item)">
-                        <fa-FontAwesome
-                            type="fas fa-star"
-                            size="28"
+                        <Icon
+                            :icon="item.isStar ? 'ph:star-fill' : 'ph:star'"
+                            width="18"
                             class="mr-10"
-                            color="#ffc107"
-                            v-show="item.isStar"
-                        >
-                        </fa-FontAwesome>
-                        <fa-FontAwesome
-                            type="far fa-star"
-                            size="28"
-                            class="mr-10"
-                            color="#666"
-                            v-show="!item.isStar"
-                        >
-                        </fa-FontAwesome>
+                            :color="item.isStar ? '#ffc107' : '#666'"
+                        />
                         {{ item.star }}
                     </view>
                     <view class="item" @tap="praise(item)">
-                        <u-icon
-                            v-show="!item.isPraise"
+                        <Icon
+                            :icon="item.isPraise ? 'ri:thumb-up-fill' : 'ri:thumb-up-line'"
+                            :color="item.isPraise ? '#f04a82' : '#666'"
                             class="mr-10"
-                            name="thumb-up"
-                            :size="30"
-                            color="#666"
-                        ></u-icon>
-                        <u-icon
-                            v-show="item.isPraise"
-                            class="mr-10"
-                            name="thumb-up-fill"
-                            color="#f04a82"
-                            :size="30"
-                        >
-                        </u-icon>
+                            size="18"
+                        />
                         {{ item.praise }}
                     </view>
                 </view>

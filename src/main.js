@@ -4,7 +4,7 @@ import i18n from '@/lang'
 import moment from 'moment'
 import * as buffer from "buffer";
 import pinia from "@/stores/store";
-import http from '@/util/request.js'
+import http from '@/util/request'
 import uView from '@/components/vk-uview-ui'
 import { mixinGlobal } from'@/mixins/mixinGlobal'
 import { mixinMobile } from'@/mixins/mixinMobile'

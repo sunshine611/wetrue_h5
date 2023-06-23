@@ -2,8 +2,7 @@
 	"easycom": {
 	  "autoscan": true,
 	  "custom": {
-		"^u-(.*)": "@/components/vk-uview-ui/components/u-$1/u-$1.vue",
-		"fa-(.*)": "@/components/Am-$1/index.vue" // 加入此行即可
+		"^u-(.*)": "@/components/vk-uview-ui/components/u-$1/u-$1.vue"
 	  }
 	},
 	"pages": [

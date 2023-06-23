@@ -1,10 +1,8 @@
-import i18n from '@/lang'
 import shajs from 'sha.js'
 import http from '@/util/request.js'
 import pinia from "@/stores/store";
 import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore(pinia);
-//import moment from 'moment'
 
 export const mixinUtils = {
   //获取后端信息
@@ -69,17 +67,6 @@ export const mixinUtils = {
       'ipfs://',
       'https://dweb.link/ipfs/' // use default ipfs gateway to display images
     )
-  },
-  //切换语言
-  selectLanguage() {
-    if (userStore.language == 'zh-cn') {
-      userStore.setLanguage('en')
-    } else if (userStore.language == 'en') {
-      userStore.setLanguage('zh-cn')
-    }
-    //控制语言显示
-    let language = userStore.language
-    //this.$moment.locale = language 无效
-    i18n.locale = language
   }
+
 }

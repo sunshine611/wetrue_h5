@@ -1,7 +1,8 @@
 <script>
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
+import { Icon } from '@iconify/vue';
 import Backend from "@/util/backend";
 import { useUserStore } from "@/stores/userStore";
 
@@ -10,6 +11,7 @@ export default {
     components: {
         HeadImg,
         Name,
+        Icon,
     },
     props: {
         topicInfo: {
@@ -143,13 +145,12 @@ export default {
 
 <template>
     <view class="topic-more">
-        <fa-FontAwesome
-            type="fas fa-angle-down"
-            size="36"
+        <Icon
+            icon="fa:angle-down"
+            width="10"
             color="#cecece"
             @click="moreOpera"
-        >
-        </fa-FontAwesome>
+        />
         <u-action-sheet
             :list="moreList"
             v-model="moreShow"

@@ -13,14 +13,12 @@
         </view>
         <view class="title">映射迁移 WET<br />兑换 WTT</view>
         <view class="start-migrate">
-            <fa-FontAwesome
-                type="fas fa-retweet"
-                size="36"
-                class="trophy"
+            <Icon
+                icon="fa:retweet"
+                width="28"
                 color="#f04a82"
                 @click="retweet"
-            >
-            </fa-FontAwesome>
+            />
             <view class="migrate">
                 <view class="top">
                     <view class="desc">全网未迁移(WTT)</view>
@@ -137,12 +135,13 @@
 //import { mapGetters } from "vuex"; //改pinia
 import { getStore } from "@/util/service";
 import Request from "luch-request";
+import { Icon } from '@iconify/vue';
 import { toAettos } from '@aeternity/aepp-sdk';
 const http = new Request();
 
 export default {
     components: {
-
+        Icon
     },
     data() {
         return {

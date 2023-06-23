@@ -13,14 +13,13 @@
         </view>
         <view class="title">映射AE参与挖矿<br />领取WTT</view>
         <view class="start-mapping" v-if="userInfo.isVip">
-            <fa-FontAwesome
-                type="fas fa-trophy"
-                size="30"
+            <Icon
+                icon="fa:trophy"
+                width="15"
                 class="trophy"
                 color="#f04a82"
                 @click="topShow=true"
-            >
-            </fa-FontAwesome>
+            />
             <view class="mapping">
                 <view class="top">
                     <view class="desc">我的收益(WTT)</view>
@@ -87,14 +86,13 @@
             </view>
         </view>
         <view class="open-mapping" v-else>
-            <fa-FontAwesome
-                type="fas fa-trophy"
-                size="30"
+            <Icon
+                icon="fa:trophy"
+                width="15"
                 class="trophy"
                 color="#f04a82"
                 @click="topShow=true"
-            >
-            </fa-FontAwesome>
+            />
             <view class="title">
                 <u-image
                     width="92rpx"
@@ -231,10 +229,11 @@ import { getStore } from "@/util/service";
 import Request from "luch-request";
 const http = new Request();
 import Backend from "@/util/backend";
+import { Icon } from '@iconify/vue';
 
 export default {
     components: {
-
+        Icon
     },
     data() {
         return {

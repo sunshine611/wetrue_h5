@@ -1,5 +1,6 @@
 <script setup>
 import { getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
@@ -59,13 +60,13 @@ const transferRecord = (item) => {
                                 )
                             "
                             v-show="props.sendClick && !validThirdPartySource()"
-                            ><fa-FontAwesome
-                                type="fas fa-exchange-alt"
-                                size="24"
+                            >
+                            <Icon
+                                icon="la:exchange-alt"
+                                width="24"
                                 class="mr-10"
                                 color="#fff"
-                            >
-                            </fa-FontAwesome>
+                            />
                                 {{ $t('my.send') }}
                             </u-button>
                         </view>

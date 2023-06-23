@@ -1,6 +1,7 @@
 
 <script setup>
 import { ref, reactive, getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app'
 import { getStore } from "@/util/service";
 import { useUserStore } from "@/stores/userStore";
@@ -98,14 +99,15 @@ const logout = () => {
 <template>
     <view class="check">
         <view class="check-box">
-            <fa-FontAwesome
-                v-if="keystoreArr.length > 0"
-                class="account"
-                type="fas fa-user-shield"
-                size="32"
-                color="#f04a82"
-                @click="goUrl('accountManage')"
-            ></fa-FontAwesome>
+            <view class="account">
+                <Icon
+                    v-if="keystoreArr.length > 0"
+                    icon="fa-solid:user-shield"
+                    width="28"
+                    color="#f04a82"
+                    @click="goUrl('accountManage')"
+                />
+            </view>
             <view class="title">
                 <u-image
                     width="92rpx"
@@ -175,18 +177,17 @@ page {
         padding: 60rpx 30rpx;
         box-shadow: 0rpx 5rpx 18rpx rgba($color: #666, $alpha: 0.7);
         position: relative;
-        .account {
-            position: absolute;
-            right: 20rpx;
-            top: 20rpx;
-        }
         .title {
             font-size: 46rpx;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
+        .account {
+            position: absolute;
+            right: 20rpx;
+            top: 20rpx;
+        }
         .form {
             .password {
                 background-color: #fff;
@@ -194,7 +195,6 @@ page {
                 border-radius: 10rpx;
             }
         }
-
         .mnemonic {
             font-size: 24rpx;
             color: #2196f3;

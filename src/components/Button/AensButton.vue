@@ -1,4 +1,5 @@
 <script setup>
+import { Icon } from '@iconify/vue';
 import { getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance();
 
@@ -16,13 +17,11 @@ const post = () => {
 
 <template>
     <view class="post" v-if="validToken()">
-        <fa-FontAwesome
-            type="fas fa-plus"
-            size="36"
+        <Icon
+            icon="fa:plus"
             color="rgba(255,255,255,0.9)"
             @tap="post()"
-        >
-        </fa-FontAwesome>
+        />
     </view>
 </template>
 

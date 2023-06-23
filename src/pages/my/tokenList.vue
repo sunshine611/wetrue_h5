@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
 import { useUserStore } from "@/stores/userStore";
 import Request from "luch-request";
@@ -85,29 +86,29 @@ const getTokenList = () => {
                     :custom-style="{ width: '42%' }"
                     @click="goUrl(`transfer`)"
                     v-show="!validThirdPartySource()"
-                    ><fa-FontAwesome
-                        type="fas fa-exchange-alt"
-                        size="24"
+                    >
+                    <Icon
+                        icon="fa-solid:exchange-alt"
+                        width="28"
                         class="mr-10"
                         color="#fff"
-                    >
-                    </fa-FontAwesome
-                    >{{ $t('my.send') }}</u-button
-                >
+                    />
+                    {{ $t('my.send') }}
+                </u-button>
                 <u-button
                     type="success"
                     size="medium"
                     :ripple="true"
                     :custom-style="{ width: '42%' }"
                     @click="goUrl('qrcode')"
-                    ><fa-FontAwesome
-                        type="fas fa-qrcode"
-                        size="24"
+                    >
+                    <Icon
+                        icon="fa:qrcode"
+                        width="24"
                         class="mr-10"
                         color="#fff"
-                    >
-                    </fa-FontAwesome
-                    >{{ $t('my.receive') }}</u-button
+                    />
+                    {{ $t('my.receive') }}</u-button
                 >
             </view>
         </view>

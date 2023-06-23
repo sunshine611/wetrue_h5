@@ -1,15 +1,15 @@
-import { getStore, setStore } from '@/util/service'
-import moment from 'moment'
+import { getStore } from '@/util/service'
+import { useUserStore } from "@/stores/userStore";
+import momentCN from '@/util/momentCN'
+import { useI18n } from "vue-i18n";
+const userStore = useUserStore();
 
 export const mixinGlobal = {
   onLoad() {
-    if (!getStore('language')) {
-      setStore('language', 'zh-cn')
+    if (userStore.language == 'zh-cn') {
+      this.$moment.locale('zh-cn', momentCN);
+      useI18n.locale.value = 'zh-cn';
     }
-    if (!getStore('networkSetting')) {
-      setStore('networkSetting', 'io')
-    }
-    moment.locale('zh-cn') //控制时间语言显示
     this.getSystemStatusBarHeight() //状态栏高度
   },
   methods: {

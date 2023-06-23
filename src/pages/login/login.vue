@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
 import { validateMnemonic, mnemonicToSeed } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import { dump as KS_dump, getHdWalletAccountFromSeed } from "@aeternity/aepp-sdk";
@@ -78,14 +79,15 @@ const importMnemonic = async () => {
 <template>
     <view class="login">
         <view class="login-box">
-            <fa-FontAwesome
-                v-if="keystoreArr.length > 0"
-                class="account"
-                type="fas fa-user-shield"
-                size="32"
-                color="#f04a82"
-                @click="goUrl('accountManage')"
-            ></fa-FontAwesome>
+            <view class="account">
+                <Icon
+                    v-if="keystoreArr.length > 0"
+                    icon="fa-solid:user-shield"
+                    width="28"
+                    color="#f04a82"
+                    @click="goUrl('accountManage')"
+                />
+            </view>
             <view class="title">
                 <u-image
                     width="92rpx"

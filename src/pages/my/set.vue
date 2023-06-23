@@ -1,12 +1,13 @@
 <script setup>
-import { ref, getCurrentInstance } from 'vue'
+import { getCurrentInstance } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { baseUrl, setConfigUrl } from "@/config/config.js";
-import { mixinUtils } from'@/mixins/mixinUtils'
+import { useI18n } from "vue-i18n";
+import { Icon } from '@iconify/vue';
 import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
-
+const { locale } = useI18n();
 
 onLoad ( () => {
     proxy.uSetBarTitle(proxy.$t('titleBar.set'));
@@ -22,7 +23,18 @@ const selectNetwork = () => {
     setConfigUrl();            
     proxy.$http.config.baseURL = baseUrl
 }
-
+//选择语言
+const changeLang = () => {
+    let lang
+    if (userStore.language == 'zh-cn') {
+        lang = 'en'
+    } else if (userStore.language == 'en') {
+        lang = 'zh-cn'
+    }
+    userStore.setLanguage(lang)
+    locale.value = lang;
+    proxy.$moment.locale(lang);
+};
 </script>
 
 <template>
@@ -50,47 +62,28 @@ const selectNetwork = () => {
                 :arrow="false"
             >
                 <template v-slot:icon>
-                    <fa-FontAwesome
-                        type="fab fa-skyatlas"
-                        size="32"
+                    <Icon 
+                        icon="fa:skyatlas"
                         class="mr-20"
-                        color="#f04a82"
-                        v-show="userStore.networkSetting == 'io'"
-                    >
-                    </fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="fab fa-skyatlas"
-                        size="32"
-                        class="mr-20"
-                        color="#03a9f4"
-                        v-show="userStore.networkSetting == 'cc'"
-                    >
-                    </fa-FontAwesome>
+                        width="32"
+                        height="32"
+                        :color="userStore.networkSetting == 'io' ? '#f04a82' : '#03a9f4'"
+                    />
                 </template>
             </u-cell-item>
 
             <u-cell-item
                 :title="$t('my.switchLanguage')"
-                @click="mixinUtils.selectLanguage"
+                @click="changeLang"
                 :arrow="false"
-            >   
-                <template v-slot:icon>
-                    <fa-FontAwesome
-                        type="fas fa-language"
-                        size="32"
+            >   <template v-slot:icon>
+                    <Icon 
+                        icon="cil:language"
                         class="mr-20"
-                        color="#f04a82"
-                        v-show="userStore.language == 'zh-cn'"
-                    >
-                    </fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="fas fa-language"
-                        size="32"
-                        class="mr-20"
-                        color="#03a9f4"
-                        v-show="userStore.language == 'en'"
-                    >
-                    </fa-FontAwesome>
+                        width="32"
+                        height="32"
+                        :color="userStore.language == 'zh-cn' ? '#f04a82' : '#03a9f4'"
+                    />
                 </template>
             </u-cell-item>
         </u-cell-group>

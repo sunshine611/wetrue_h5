@@ -5,6 +5,7 @@ import RewardRecord from "@/components/RewardRecord";
 import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import Backend from "@/util/backend";
+import { Icon } from '@iconify/vue';
 import { ref, getCurrentInstance, watch } from 'vue';
 import { mixinUtils } from'@/mixins/mixinUtils'
 import { useRouter } from "vue-router"
@@ -123,13 +124,12 @@ const share = () => {
     <view class="forum">
         <view class="forum-item">
             <view class="focus" v-show="postInfo.isFocus">
-                <fa-FontAwesome
-                    type="fas fa-heart"
-                    size="24"
+                <Icon
+                    icon="fa:heart"
+                    width="12"
                     class="star"
                     color="#fff"
-                >
-                </fa-FontAwesome>
+                />
             </view>
             <view class="user-area">
                 <view class="head-box">
@@ -200,12 +200,12 @@ const share = () => {
                         v-for="(item, index) in postInfo.rewardList.slice(0, 6)"
                         :key="index"
                     >
-                        <u-icon
-                            name="thumb-up-fill"
+                        <Icon
+                            icon="ri:thumb-up-fill"
                             color="#f04a82"
                             class="mr-6"
-                        ></u-icon
-                        >{{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
+                        />
+                        {{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
                         {{ $t('components.reward') }}
                         <text class="name">
                             {{ balanceFormat(item.amount, 1) }}
@@ -226,48 +226,37 @@ const share = () => {
                 </view>
                 <view class="more">
                     <text class="mr-24"
-                        >{{ postInfo.read
-                        }}<fa-FontAwesome
-                            type="fas fa-eye"
-                            size="28"
+                        >{{ postInfo.read }}
+                        <Icon
+                            icon="fe:bar-chart"
+                            width="18"
                             class="ml-6"
                             color="#666"
-                        >
-                        </fa-FontAwesome
-                    ></text>
-                    <fa-FontAwesome
-                        type="fas fa-star"
-                        size="28"
+                        />
+                    </text>
+                    <Icon
+                        :icon="postInfo.isStar ? 'ph:star-fill' : 'ph:star'"
+                        width="18"
                         class="mr-24"
-                        color="#ffc107"
-                        v-show="postInfo.isStar"
+                        :color="postInfo.isStar ? '#ffc107' : '#666'"
                         @tap="star"
-                    >
-                    </fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="far fa-star"
-                        size="28"
-                        class="mr-24"
-                        color="#666"
-                        v-show="!postInfo.isStar"
-                        @tap="star"
-                    ></fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="far fa-copy"
-                        size="28"
+                    />
+                    <Icon
+                        icon="ant-design:copy-outlined"
+                        width="18"
                         class="mr-24"
                         color="#666"
                         id="copy"
                         @click="copy"
-                    ></fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="fas fa-share-alt"
-                        size="28"
+                    />
+                    <Icon
+                        icon="fa:share-alt"
+                        width="18"
                         class="mr-10"
                         color="#666"
                         id="share"
                         @click="share"
-                    ></fa-FontAwesome>
+                    />
                 </view>
             </view>
         </view>
