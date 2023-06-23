@@ -1,6 +1,6 @@
 {
   "name": "WeTrue",
-  "version": "2.9.01",
+  "version": "3.0.01",
   "scripts": {
     "dev:h5": "uni",
     "build:h5": "uni build",
