@@ -1,7 +1,6 @@
 <script setup>
 import TopicList from "@/components/TopicList.vue";
-import HeadImg from "@/components/HeadImg.vue";
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, nextTick } from 'vue'
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
@@ -66,7 +65,7 @@ const getPostList = () => {
             pageInfo.value.totalPage = parseInt(res.data.totalPage);
             more.value = "loadmore";
             if (pageInfo.value.page === 1) {
-                proxy.$nextTick(() => {
+                nextTick(() => {
                     postList.value = res.data.data.map((item) => {
                         item.payload = proxy.topicHighlight(
                             item.payload

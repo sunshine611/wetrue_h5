@@ -6,7 +6,7 @@ import Name from "@/components/Name";
 import TopicMore from "@/components/TopicMore";
 import Backend from "@/util/backend";
 import { Icon } from '@iconify/vue';
-import { ref, getCurrentInstance, watch } from 'vue';
+import { ref, getCurrentInstance, watch, nextTick } from 'vue';
 import { mixinUtils } from'@/mixins/mixinUtils'
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/userStore";
@@ -37,7 +37,7 @@ window["receiveWeTrueMessage"] = async (res) => {
 watch(
 	() => props.postInfo,
 	(val) => {
-        proxy.$nextTick(() => {
+        nextTick(() => {
             const topicArr =
                 document.getElementsByClassName("topic-text");
             if (topicArr.length > 0) {

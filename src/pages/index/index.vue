@@ -4,7 +4,7 @@ import PostTopicButton from "@/components/Button/PostTopicButton.vue";
 import VersionTip from "@/components/VersionTip.vue";
 import { setThirdPartySource } from "@/util/thirdPartySource/source";
 import socket from '@/util/socketio.js';
-import { ref,  getCurrentInstance } from 'vue';
+import { ref,  getCurrentInstance, nextTick } from 'vue';
 import { useUserStore } from "@/stores/userStore";
 import { onLoad, onShow, onPullDownRefresh, onReachBottom, onTabItemTap } from '@dcloudio/uni-app';
 const userStore = useUserStore();
@@ -75,9 +75,9 @@ onPullDownRefresh ( () => {
     pageInfo.value.page = 1;
     getPostList();
     proxy.getUnreadMsg();
+    newContentCount();
     setTimeout(function () {
         uni.stopPullDownRefresh();
-        newContentCount();
     }, 500);
     proxy.getSystemStatusBarHeight(); //状态栏高度
 });
@@ -133,7 +133,7 @@ const getPostList = () => {
             more.value = "loadmore";
             if (pageInfo.value.page === 1) {
                 pageInfo.value.totalSize = parseInt(res.data.totalSize);
-                proxy.$nextTick(() => {
+                nextTick(() => {
                     let itemList = res.data.data.map((item) => {
                         return itemListMap(item); //数据处理
                     });

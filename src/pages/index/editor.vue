@@ -1,5 +1,5 @@
 <script setup>
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, nextTick } from 'vue'
 import { onLoad } from '@dcloudio/uni-app';
 import { mixinUtils } from'@/mixins/mixinUtils'
 import { useUserStore } from "@/stores/userStore";
@@ -25,7 +25,7 @@ onLoad ( (option) => {
         form.value = {
             text: option.topic + " ",
         };
-    } else if (!!option.shtip) {
+    } else if (option.shtip == 'true') {
         postShTip.value = true
     }
 });
@@ -107,7 +107,7 @@ const upUserInfo = () => {
 }
 
 const checkIpfs = (event) => {
-    proxy.$nextTick(() => {
+    nextTick(() => {
         checkIpfsUrl(event)
     })
 }
@@ -155,7 +155,7 @@ const checkIpfsUrl = (e) => {
             height="300"
             :auto-height="true"
             :maxlength="50000"
-            :placeholder="postShTip.value ? $t('index.postShTips') : $t('index.wetrueTips')"
+            :placeholder="postShTip ? $t('index.postShTips') : $t('index.wetrueTips')"
             :clearable="false"
         />
         <text>-------</text>

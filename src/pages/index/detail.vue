@@ -8,7 +8,7 @@ import Reward from "@/components/Reward";
 import Name from "@/components/Name";
 import { Icon } from '@iconify/vue';
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, nextTick } from 'vue'
 const { proxy } = getCurrentInstance();
 
 const hash = ref(null) //哈希值
@@ -71,7 +71,7 @@ window["receiveWeTrueMessage"] = async (res) => {
 watch(
     () => commentList.value,
     (val) => {
-        proxy.$nextTick(() => {
+        nextTick(() => {
             const topicArr = document.getElementsByClassName("topic-text");
             if (topicArr.length > 0) {
                 for (let i = 0; i < topicArr.length; i++) {

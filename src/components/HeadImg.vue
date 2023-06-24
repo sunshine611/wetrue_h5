@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, nextTick } from 'vue'
 import multiavatar from '@multiavatar/multiavatar';
 const { proxy } = getCurrentInstance();
 
@@ -30,7 +30,7 @@ const avatar = ref(multiavatar(
 watch(
 	() => props.userInfo,
 	(val) => {
-		proxy.$nextTick(() => {
+		nextTick(() => {
             avatar.value = multiavatar(
                 props.userInfo.avatar ? props.userInfo.avatar : props.userInfo.userAddress
             );

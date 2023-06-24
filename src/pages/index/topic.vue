@@ -1,8 +1,7 @@
 <script setup>
 import TopicList from "@/components/TopicList.vue";
 import PostTopicButton from "@/components/Button/PostTopicButton.vue";
-
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, nextTick } from 'vue'
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 const { proxy } = getCurrentInstance();
 
@@ -58,7 +57,7 @@ const getPostList = () => {
             pageInfo.value.totalPage = parseInt(res.data.totalPage);
             more.value = "loadmore";
             if (pageInfo.value.page === 1) {
-                proxy.$nextTick(() => {
+                nextTick(() => {
                     postList.value = res.data.data.map((item) => {
                         item.payload = proxy.topicHighlight(
                             item.payload

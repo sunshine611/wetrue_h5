@@ -6,7 +6,7 @@ import HeadImg from "@/components/HeadImg.vue";
 import User from "@/components/User.vue";
 import BalanceList from "@/components/BalanceList.vue";
 import Backend from "@/util/backend";
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, nextTick } from 'vue'
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 const { proxy } = getCurrentInstance();
 
@@ -117,7 +117,7 @@ const getPostList = () => {
             pageInfo.value.totalPage = parseInt(res.data.totalPage);
             more.value = "loadmore";
             if (pageInfo.value.page === 1) {
-                proxy.$nextTick(() => {
+                nextTick(() => {
                     if (current.value === 0 || current.value === 1) {
                         postList.value = res.data.data.map(
                             (item) => {

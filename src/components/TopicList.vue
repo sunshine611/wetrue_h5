@@ -5,7 +5,7 @@ import TopicMore from "@/components/TopicMore";
 import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 import { Icon } from '@iconify/vue';
 import { mixinUtils } from'@/mixins/mixinUtils'
-import { getCurrentInstance, watch } from 'vue';
+import { getCurrentInstance, watch, nextTick } from 'vue';
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
@@ -27,7 +27,7 @@ window["receiveWeTrueMessage"] = async (res) => {
 watch(
 	() => props.postList,
 	(val) => {
-        proxy.$nextTick(() => {
+        nextTick(() => {
             const topicArr = document.getElementsByClassName("topic-text");
             if (topicArr.length > 0) {
                 for (let i = 0; i < topicArr.length; i++) {
