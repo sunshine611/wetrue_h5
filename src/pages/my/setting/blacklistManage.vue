@@ -48,6 +48,8 @@ const deleteBlack = () => {
                 @start="drag=true" 
                 @end="drag=false"
                 itemKey="id"
+                animation="300"
+                delay="100"
             >
                 <template #item="{ element }">
                     <view class="account-list">
