@@ -1,5 +1,5 @@
 <script setup>
-import { ref, getCurrentInstance, watch } from 'vue';
+import { ref, getCurrentInstance, watch, nextTick } from 'vue';
 import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app';
 import Qrcode from "@/components/Qrcode";
@@ -22,8 +22,10 @@ onLoad ( () => {
 watch(
     () => userStore.keystoreArr,
     (val) => {
-        userStore.upKeystoreArr()
-        amHeight.value = (val.length * 150)>680 ? 680 : (val.length * 150);
+        nextTick(() => {
+            userStore.upKeystoreArr()
+            amHeight.value = (val.length * 150)>680 ? 680 : (val.length * 150);
+        })
     }
 );
 

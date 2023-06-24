@@ -224,7 +224,7 @@ export const mixinMobile = {
       let postInfo = { system: system, version: version, }
       let custom = { system: system, version: version, }
       return new Promise((resolve) => {
-        this.$http.post('/Config/version',postInfo,custom).then((res) => {
+        this.$http.post('/Config/version',postInfo, custom).then((res) => {
             resolve(res.data)
         })
       })
@@ -392,7 +392,8 @@ export const mixinMobile = {
             option
           )
           this.uHideLoading();
-          return await this.postHashToWeTrueApi(res)
+          const postRes = await this.postHashToWeTrueApi(res)
+          return postRes;
         }
       } catch (err) {
         this.uShowToast(this.$t('mixins.fail') + ' ' + err)

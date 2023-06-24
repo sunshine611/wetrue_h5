@@ -21,11 +21,12 @@ app
 .mixin(mixinMobile)
 
 //解决vite global is not defined
-if (typeof window.global === "undefined"){  
+if (typeof window.global == "undefined" || typeof window.global == undefined){  
     window.global = window;
 }
 //解决vite Buffer is not defined
-if (typeof window.Buffer === "undefined"){  
+if (typeof window.Buffer == "undefined" || typeof window.Buffer == undefined){  
     window.Buffer = buffer.Buffer;
 }
+
 app.mount('#app')

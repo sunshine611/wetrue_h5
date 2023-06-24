@@ -22,11 +22,7 @@ export const useUserStore = defineStore('userStore', {
           blacklistState: getStore('blacklistState') || 0, //黑名单状态
         }
     },
-    getters: {
-      //token:state=>state.user.token,
-      //userInfo:state=>state.user.userInfo,
-      //configInfo:state=>state.user.configInfo
-    },
+    getters: {},
     actions: {
       //设置多账户
       setKeystoreArr (params) {

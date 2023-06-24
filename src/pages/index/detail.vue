@@ -60,12 +60,13 @@ onReachBottom ( () => {
 
 //暴露方法名"receiveWeTrueMessage"
 window["receiveWeTrueMessage"] = async (res) => {
-    if (res.code == 200) {
-        proxy.postHashToWeTrue(res);
+    let pres
+    if (!!res.hash) {
+        pres = proxy.postHashToWeTrue(res);
     } else {
-        res = null;
+        pres = null;
     }
-    releaseCallback(res);
+    releaseCallback(pres);
 };
 
 watch(
@@ -108,9 +109,9 @@ watch(
             }
             commentHeight.value = (commentList.value.length * 150)>650 ? 650 : (commentList.value.length * 150);
         });
-    }
+    },
+    { deep: true }
 );
-
 
 //获取主贴详情
 const getPostInfo = () => {
@@ -119,13 +120,13 @@ const getPostInfo = () => {
     if (hash.value.slice(0, 2) === "th") {
         url = "/Content/tx";
         params = {
-            hash:hash.value,
+            hash: hash.value,
         };
         praiseType.value = "topic";
     } else {
         url = "/Content/shTipid";
         params = {
-            shTipid:hash.value,
+            shTipid: hash.value,
         };
         praiseType.value = "shTipid";
     }
@@ -144,7 +145,7 @@ const getPostInfo = () => {
 //获取一级评论列表
 const getCommentList = () => {
     let params = {
-        hash:hash.value,
+        hash: hash.value,
         page: pageInfo.value.page,
         size: pageInfo.value.pageSize,
         replyLimit: 3,
@@ -262,10 +263,10 @@ const submitComment = async (content) => {
 const releaseCallback = (res) => {
     if (res !== {} && !!res) {
         setTimeout(() => {
+            commentList.value = null;
+            pageInfo.value.page = 1;
             isShowComment.value = false;
             getPostInfo();
-            commentList.value = [];
-            pageInfo.value.page = 1;
             getCommentList();
             stopLoading.value = true;
         }, 2000);

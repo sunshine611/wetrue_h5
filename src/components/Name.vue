@@ -14,22 +14,22 @@ const props = defineProps({
         class="name-area"
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
-    <view class="auth-sign" v-if="userInfo.isAuth">
+    <view class="name">
+        {{ userInfo.nickname || $t('my.cryptonym') }}
+    </view>
+    <view class="auth-sign" v-show="userInfo.isAuth">
             <Icon
-                icon="fa-solid:user-shield"
-                width="20"
+                icon="arcticons:2fas-auth"
+                width="16"
                 color="#2979FF"
             />
         </view>
-        <view class="open-vip" v-if="userInfo.isVip">
+        <view class="open-vip" v-show="userInfo.isVip">
             <Icon
                 icon="quill:vip"
-                width="18"
+                width="16"
                 color="#CD7F32"
             />
-        </view>
-        <view :class="['name', userInfo.isAuth ? 'auth' : '']">
-            {{ userInfo.nickname || $t('my.cryptonym') }}
         </view>
         <text class="userid">{{ userInfo.defaultAens ? 'AENS: ' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
     </view>

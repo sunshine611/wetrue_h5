@@ -1,4 +1,3 @@
-
 <script setup>
 import { reactive, getCurrentInstance } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
@@ -106,7 +105,7 @@ const changeLang = () => {
 <template>
     <view class="my">
         <view class="top-background" :style="{height:`${statusBarHeight}px`}"></view>
-        <view class="user-info" v-if="!!userStore.token">
+        <view class="user-info" v-if="userStore.token">
             <view class="my-info">
                 <view class="block">
                     <view class="icon-list">
@@ -127,7 +126,7 @@ const changeLang = () => {
                                     height="120rpx"
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
-                                 <view class="open-vip" v-if="userStore.userInfo?.isVip">
+                                 <view class="open-vip" v-show="userStore.userInfo?.isVip">
                                     <u-icon 
                                         name="level"
                                         size="30"
@@ -225,7 +224,6 @@ const changeLang = () => {
                         />
                         <view class="grid-text">AENS</view>
                     </u-grid-item>
-
                 </u-grid>
             </view>
             <view class="menu">
@@ -247,7 +245,7 @@ const changeLang = () => {
                     <u-cell-item
                         :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
-                        v-if="validAdmin()==true"
+                        v-show="validAdmin()==true"
                     >
                         <template v-slot:icon>
                             <Icon 
@@ -261,7 +259,7 @@ const changeLang = () => {
                     <u-cell-item
                         :title="$t('my.mappingMining')"
                         @click="goUrl('mappingDig')"
-                        v-if="validAdmin()==true"
+                        v-show="validAdmin()==true"
                     >
                         <template v-slot:icon>
                             <Icon 
@@ -302,7 +300,7 @@ const changeLang = () => {
                 <view class="version-code" @click="versionCheck">
                     {{ $t('my.version') }}：{{ myIndex.version }}
                     <u-badge
-                        v-if="myIndex.versionCode < parseInt(myIndex?.versionInfo?.newVer)"
+                        v-show="myIndex.versionCode < parseInt(myIndex?.versionInfo?.newVer)"
                         type="error"
                         count="1"
                         :is-dot="true"
@@ -311,7 +309,7 @@ const changeLang = () => {
                 </view>
             </view>
         </view>
-        <view class="login" v-else>
+        <view v-else class="login">
             <view class="opera-icon">
                 <Icon 
                     icon  ="cil:language"
@@ -331,32 +329,26 @@ const changeLang = () => {
             </view>
             <view class="login-box">
                 <view class="item" @tap="goUrl('../login/login')">
-                    <template v-slot:icon>
                         <Icon 
                             icon="ph:wallet-fill"
                             width="48"
                             color="#f04a82"
                             class="mr-20"
                         />
-                    </template>
                     {{ $t('login.mnemonicLogin') }}
                 </view>
                 <u-gap height="80"></u-gap>
                 <view class="item" @tap="goUrl('../login/mnemonic')">
-                    <template v-slot:icon>
                         <Icon 
                             icon="bi:plus-circle-fill"
                             width="48"
                             color="#f04a82"
                             class="mr-20"
                         />
-                    </template>
                     {{ $t('login.createMnemonic') }}
                 </view>
             </view>
-            <view class="version">
-                    {{ $t('my.version') }}：{{ myIndex.version }}
-            </view>
+            <view class="version"> {{ $t('my.version') }}：{{ myIndex.version }}</view>
         </view>
         <VersionTip
             v-model="myIndex.versionShow"
