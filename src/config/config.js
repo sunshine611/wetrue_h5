@@ -1,6 +1,6 @@
 import { getStore } from '@/util/service'
 
-export const version = '3.0.02'
+export const version = '3.0.03'
 export const source = 'WeTrue'
 export let baseUrl,
   nodeUrl,
