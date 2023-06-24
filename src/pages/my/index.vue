@@ -194,7 +194,7 @@ const changeLang = () => {
                     <u-grid-item @click="goUrl('./setting/infoEdit')">
                         <Icon 
                             icon="mdi:user-outline"
-                            width="42"
+                            width="30"
                             color="#f04a82"
                         />
                         <view class="grid-text">{{ $t('my.userInfo') }}</view>
@@ -203,7 +203,7 @@ const changeLang = () => {
                     <u-grid-item @click="goUrl('./setting/blacklistManage')">
                         <Icon 
                             icon="mdi:user-outline"
-                            width="42"
+                            width="30"
                         />
                         <view class="grid-text">{{ $t('my.blacklistManage') }}</view>
                     </u-grid-item>
@@ -212,7 +212,7 @@ const changeLang = () => {
                         <Icon 
                             icon="mdi:user-add-outline"
                             color ="#f04a82"
-                            width="42"
+                            width="30"
                         />
                         <view class="grid-text"> {{ $t('my.accountManage') }}</view>
                     </u-grid-item>
@@ -221,7 +221,7 @@ const changeLang = () => {
                         <Icon
                             icon="fa-brands:neos"
                             color="#f04a82"
-                            width="40"
+                            width="30"
                         />
                         <view class="grid-text">AENS</view>
                     </u-grid-item>
@@ -238,7 +238,7 @@ const changeLang = () => {
                         <template v-slot:icon>
                             <Icon 
                                 icon="ph:wallet-fill"
-                                width="32"
+                                width="28"
                                 color="#f04a82"
                                 class="mr-10"
                             />
@@ -252,7 +252,7 @@ const changeLang = () => {
                         <template v-slot:icon>
                             <Icon 
                                 icon="uil:exchange-alt"
-                                width="32"
+                                width="28"
                                 color="#f04a82"
                                 class="mr-10"
                             />
@@ -266,7 +266,7 @@ const changeLang = () => {
                         <template v-slot:icon>
                             <Icon 
                                 icon="game-icons:mining"
-                                width="32"
+                                width="28"
                                 color="#f04a82"
                                 class="mr-10"
                             />
@@ -280,7 +280,7 @@ const changeLang = () => {
                         <template v-slot:icon>
                             <Icon 
                                 icon="ion:dice"
-                                width="32"
+                                width="28"
                                 color="#f04a82"
                                 class="mr-10"
                             />
@@ -290,7 +290,7 @@ const changeLang = () => {
                         <template v-slot:icon>
                             <Icon 
                                 icon="uiw:setting"
-                                width="32"
+                                width="28"
                                 color="#f04a82"
                                 class="mr-10"
                             />
@@ -354,8 +354,10 @@ const changeLang = () => {
                     {{ $t('login.createMnemonic') }}
                 </view>
             </view>
+            <view class="version">
+                    {{ $t('my.version') }}：{{ myIndex.version }}
+            </view>
         </view>
-        <u-gap height="280" v-show="userStore.keystoreArr.length > 0"></u-gap>
         <VersionTip
             v-model="myIndex.versionShow"
             :versionInfo="myIndex.versionInfo"
@@ -468,19 +470,6 @@ page {
             width: 80%;
             margin: 0 auto 80rpx;
         }
-
-        .version {
-            color: #999;
-            font-size: 24rpx;
-            position: absolute;
-            bottom: 30rpx;
-            width: 100%;
-            text-align: center;
-            .version-code {
-                position: relative;
-                display: inline-block;
-            }
-        }
     }
 
     .login {
@@ -514,6 +503,20 @@ page {
                     transform: scale(1.1);
                 }
             }
+        }
+    }
+    .version {
+        font-size: 24rpx;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        bottom: 30rpx;
+        width: 100%;
+        text-align: center;
+        .version-code {
+            color: #999;
+            position: relative;
+            display: inline-block;
         }
     }
 }

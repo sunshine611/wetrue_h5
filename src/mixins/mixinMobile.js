@@ -215,6 +215,7 @@ export const mixinMobile = {
       this.$http.post('/Submit/hash', {
         hash: res.hash,
       })
+      this.uHideLoading();
       return res
     },
     //获取服务端版本信息

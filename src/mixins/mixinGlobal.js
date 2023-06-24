@@ -8,7 +8,7 @@ export const mixinGlobal = {
   onLoad() {
     if (userStore.language == 'zh-cn') {
       this.$moment.locale('zh-cn', momentCN);
-      useI18n.locale.value = 'zh-cn';
+      useI18n.locale = 'zh-cn';
     }
     this.getSystemStatusBarHeight() //状态栏高度
   },
