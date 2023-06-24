@@ -1,24 +1,18 @@
 <script setup>
-import { ref, reactive, getCurrentInstance, watch } from 'vue';
+import { ref, getCurrentInstance, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app';
-import { getStore, setStore } from "@/util/service";
 import Qrcode from "@/components/Qrcode";
 import draggable from "vuedraggable";
 const { proxy } = getCurrentInstance();
 import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
 
-const ksData = reactive({
-    drag: false,
-    keystoreArr: getStore("keystoreArr")
-});
-
+const drag = ref( false ) //控制
 const showQrcode = ref( false ) //二维码弹层
 const showDelete = ref( false ) //删除弹层
 const currentAddress = ref( "" ) //当前选择的地址
 const amHeight = ref( 0 ) //数组换算高度
-const token = ref( getStore("token") )
 
 onLoad ( () => {
     isLogin();
@@ -26,9 +20,9 @@ onLoad ( () => {
 });
 
 watch(
-    () => ksData.keystoreArr,
+    () => userStore.keystoreArr,
     (val) => {
-        setStore("keystoreArr", val);
+        userStore.upKeystoreArr()
         amHeight.value = (val.length * 150)>680 ? 680 : (val.length * 150);
     }
 );
@@ -49,8 +43,7 @@ const switchAddress = (address) => {
 //删除某个账户
 const deleteAccount = async () => {
     userStore.deleteKeystoreArr(currentAddress.value);
-    ksData.keystoreArr = await getStore("keystoreArr");
-    if (ksData.keystoreArr.length !== 0) {
+    if (userStore.keystoreArr.length !== 0) {
         userStore.changeAccount(ksData.keystoreArr[0].public_key);
         proxy.getUserInfo();
     }
@@ -59,7 +52,7 @@ const deleteAccount = async () => {
 
 //判断账户是否为0
 const isLogin = () => {
-    if (ksData.keystoreArr.length === 0) {
+    if (userStore.keystoreArr.length === 0) {
         uni.reLaunch({
             url: "/pages/login/login",
         });
@@ -88,15 +81,17 @@ const copy = (value) => {
         </u-navbar>
         <view class="account">
             <draggable 
-                v-model="ksData.keystoreArr" 
+                v-model="userStore.keystoreArr" 
                 group="keystore" 
-                @start="ksData.drag=true" 
-                @end="ksData.drag=false"
+                @start="drag=true" 
+                @end="drag=false"
                 itemKey="id"
+                animation="300"
+                delay="100"
             >
                 <template #item="{ element }">
                     <view class="account-list">
-                        <view class="active" v-show="element.public_key === token">
+                        <view class="active" v-show="element.public_key === userStore.token">
                             <Icon
                                 icon="fa:check"
                                 class="star"

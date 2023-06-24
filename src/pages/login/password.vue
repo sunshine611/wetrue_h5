@@ -3,7 +3,6 @@
 import { ref, reactive, getCurrentInstance } from 'vue'
 import { Icon } from '@iconify/vue';
 import { onLoad } from '@dcloudio/uni-app'
-import { getStore } from "@/util/service";
 import { useUserStore } from "@/stores/userStore";
 import { mixinUtils } from'@/mixins/mixinUtils'
 const userStore = useUserStore();
@@ -17,7 +16,6 @@ const form = reactive({
 const btnLoading = ref( false )
 //跳转来时的路由
 const link = ref( "" )
-const keystoreArr = reactive( getStore("keystoreArr") )
 
 onLoad ( (option) => {
     onLoadVal.value = option.link
@@ -101,7 +99,7 @@ const logout = () => {
         <view class="check-box">
             <view class="account">
                 <Icon
-                    v-if="keystoreArr.length > 0"
+                    v-if="userStore.keystoreArr.length > 0"
                     icon="fa-solid:user-shield"
                     width="28"
                     color="#f04a82"
