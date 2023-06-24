@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, reactive, watch, getCurrentInstance } from 'vue'
+import { ref, watch, getCurrentInstance } from 'vue'
 import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
@@ -15,16 +15,16 @@ const props = defineProps({
         default: {},
     }
 })
-const emits = defineEmits(['modelValue'])
+const emits = defineEmits(['update:modelValue'])
 
 const showModal = ref(props.modelValue) //控制隐藏显示
 const current = ref(-1) //当前选择
 const wttBalance = ref(0) //WTT余额
 const btnLoading = ref(false) //按钮加载状态
-const form = reactive({
+const form = ref({
     amount: "",
 })
-const warning = reactive({
+const warning = ref({
     amount: false,
 })
 
@@ -60,11 +60,11 @@ watch(
 watch(
 	() => showModal.value,
 	(val) => {
-        emits("modelValue", val);
+        emits("update:modelValue", val);
 	}
 )
 watch(
-	() => form.amount,
+	() => form.value.amount,
 	(val) => {
         for (let i = 0; i < tagList.length; i++) {
             if (parseFloat(val) === tagList[i].value) {
@@ -80,7 +80,7 @@ watch(
 //选择打赏金额
 const handleSelect = (item, index) => {
     current.value = index;
-    form.amount = item.value;
+    form.value.amount = item.value;
 }
 //打赏
 const reward = async() => {
@@ -89,19 +89,19 @@ const reward = async() => {
         return;
     }
     if (
-        !form.amount ||
-        parseFloat(form.amount) > parseFloat(wttBalance.value)
+        !form.value.amount ||
+        parseFloat(form.value.amount) > parseFloat(wttBalance.value)
     ) {
-        warning.amount = true;
+        warning.value.amount = true;
         return;
     } else {
-        warning.amount = false;
+        warning.value.amount = false;
     }
     btnLoading.value = true;
     let result = await proxy.contractTransfer(
         userStore.configInfo.wttContract,
         props.postInfo.users.userAddress,
-        form.amount,
+        form.value.amount,
         {
             type: 'reward',
             toHash: props.postInfo.hash,
@@ -110,9 +110,7 @@ const reward = async() => {
     );
     if (result) {
         proxy.postHashToWeTrueApi(result); //打赏提交
-        form = {
-            amount: "",
-        };
+        form.value.amount = ""
         showModal.value = false;
         proxy.uShowToast(proxy.$t('components.rewardSuccess'));
         getWttBalance();
