@@ -1,8 +1,213 @@
+<script setup>
+import Request from "luch-request";
+const http = new Request();
+import TopicList from "@/components/TopicList.vue";
+import HeadImg from "@/components/HeadImg.vue";
+import User from "@/components/User.vue";
+import BalanceList from "@/components/BalanceList.vue";
+import Backend from "@/util/backend";
+import { ref, getCurrentInstance, nextTick } from 'vue'
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+const { proxy } = getCurrentInstance();
+
+const more = ref("loadmore") //加载更多
+const current = ref(0) //tab当前选项
+const address = ref("") //用户格式化地址
+const userInfo = ref({}) //用户信息
+const userAddress = ref("") //用户地址
+const postList = ref([]) //帖子列表
+
+const pageInfo = ref({ //页码信息
+    page: 1,
+    pageSize: 10,
+    totalPage: 1,
+})
+
+const tabList = [{
+        name: proxy.$t('my.topic'),
+    },{
+        name: proxy.$t('my.star'),
+    },{
+        name: proxy.$t('my.focus'),
+    },{
+        name: proxy.$t('my.fans'),
+    },{
+        name: proxy.$t('my.assets'),
+}]
+
+onLoad ( (option) => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.userInfo'));
+    userAddress.value = option.userAddress;
+    getUserInfo();
+    getPostList();
+});
+//下拉刷新
+onPullDownRefresh ( () => {
+    pageInfo.value.page = 1;
+    getUserInfo();
+    getPostList();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+//上拉加载
+onReachBottom ( () => {
+    if ([0, 1, 2, 3].includes(current.value)) {
+        pageInfo.value.page++;
+        getPostList();
+    }
+});
+
+//获取用户信息
+const getUserInfo = () => {
+    let params = {
+        userAddress: userAddress.value,
+    };
+    proxy.$http.post("/User/info", params).then((res) => {
+        if (res.code === 200) {
+            userInfo.value = res.data;
+            address.value = "";
+            for (
+                let i = 0, len = userAddress.value.length;
+                i < len;
+                i++
+            ) {
+                address.value += userAddress.value[i];
+                if (i % 3 === 2) address.value += " ";
+            }
+        }
+    });
+}
+//获取帖子列表
+const getPostList = () => {
+    let params, url;
+    if (current.value === 0) {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            userAddress: userAddress.value,
+        };
+        url = "/User/contentList";
+    } else if (current.value === 1) {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            userAddress: userAddress.value,
+        };
+        url = "/Content/starList";
+    } else if (current.value === 2) {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            focus: "myFocus",
+            userAddress: userAddress.value,
+        };
+        url = "/User/focusList";
+    } else if (current.value === 3) {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            focus: "focusMy",
+            userAddress: userAddress.value,
+        };
+        url = "/User/focusList";
+    }
+    proxy.$http.post(url, params, {custom: { isToast: true } }).then((res) => {
+        if (res.code === 200) {
+            pageInfo.value.totalPage = parseInt(res.data.totalPage);
+            more.value = "loadmore";
+            if (pageInfo.value.page === 1) {
+                nextTick(() => {
+                    if (current.value === 0 || current.value === 1) {
+                        postList.value = res.data.data.map(
+                            (item) => {
+                                item.payload = proxy.topicHighlight(
+                                    item.payload
+                                );
+                                return item;
+                            }
+                        );
+                    } else {
+                        postList.value = res.data.data;
+                    }
+                });
+            } else {
+                if (pageInfo.value.page > pageInfo.value.totalPage) {
+                    pageInfo.value.page = pageInfo.value.totalPage;
+                    more.value = "nomore";
+                } else {
+                    if (current.value === 0 || current.value === 1) {
+                        postList.value = postList.value.concat(
+                            res.data.data.map((item) => {
+                                item.payload = this.topicHighlight(
+                                    item.payload
+                                );
+                                return item;
+                            })
+                        );
+                    } else {
+                        postList.value = postList.value.concat(
+                            res.data.data
+                        );
+                    }
+                }
+            }
+        } else {
+            more.value = "nomore";
+        }
+    });
+}
+//获取账户token列表
+const getTokenList = () => {
+    uni.showLoading({
+        title: proxy.$t('my.loading'),
+    });
+    http.get( Backend.nodeApiAccounts(userAddress.value) ).then((res) => {
+        postList.value.push({
+            balance: res.data.balance,
+            symbol: "AE",
+            decimal: 18,
+            contract_id: "",
+            cert: "TRUE",
+        });
+    }).then(() => {
+        http.get(Backend.aeknowApiTokenList(userAddress.value)).then(
+            (res) => {
+                if (res.data.tokens.length > 0) {
+                    postList.value = postList.value.concat(
+                        res.data.tokens
+                    );
+                }
+                uni.hideLoading();
+                more.value = "nomore";
+            }
+        ).catch(() => {
+            uni.hideLoading();
+            more.value = "nomore";
+        });
+    });
+}
+//切换tab
+const tabChange = (index) => {
+    current.value = index;
+    postList.value = [];
+    if ([0, 1, 2, 3].includes(index)) {
+        pageInfo.value.page = 1;
+        getPostList();
+    } else if (index === 4) {
+        getTokenList();
+    }
+}
+//复制粘贴板
+const copy = () => {
+    proxy.copyContent(userInfo.value.userAddress);
+}
+</script>
+
 <template>
     <view class="user-info">
-        <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('my.userInfo')" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,58 +215,58 @@
                     color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
-        <div class="user-box">
-            <div class="user-top">
-                <div class="head">
+        <view class="user-box">
+            <view class="user-top">
+                <view class="head">
                     <HeadImg
                         :userInfo="userInfo"
                         width="120rpx"
                         height="120rpx"
                     ></HeadImg>
                     <u-gap height="10"></u-gap>
-                    <div :class="[userInfo.isAuth ? 'auth' : '']">
+                    <view :class="[userInfo.isAuth ? 'auth' : '']">
                         {{ userInfo.nickname || $t('my.cryptonym') }}
-                    </div>
-                </div>
-                <div class="address" @tap="copy" id="copy">
+                    </view>
+                </view>
+                <view class="address" @tap="copy" id="copy">
                     {{ address }}
-                </div>
-            </div>
-            <div class="user-bottom">
-                <div class="item">
-                    <div class="value">
+                </view>
+            </view>
+            <view class="user-bottom">
+                <view class="item">
+                    <view class="value">
                         {{ userInfo.topic || 0 }}
-                    </div>
-                    <div class="label">{{ $t('my.topic') }}</div>
-                </div>
-                <div class="item">
-                    <div class="value">
+                    </view>
+                    <view class="label">{{ $t('my.topic') }}</view>
+                </view>
+                <view class="item">
+                    <view class="value">
                         {{ userInfo.star || 0 }}
-                    </div>
-                    <div class="label">{{ $t('my.star') }}</div>
-                </div>
-                <div class="item">
-                    <div class="value">
+                    </view>
+                    <view class="label">{{ $t('my.star') }}</view>
+                </view>
+                <view class="item">
+                    <view class="value">
                         {{ userInfo.active || 0 }}
-                    </div>
-                    <div class="label">{{ $t('my.active') }}</div>
-                </div>
-                <div class="item">
-                    <div class="value">
+                    </view>
+                    <view class="label">{{ $t('my.active') }}</view>
+                </view>
+                <view class="item">
+                    <view class="value">
                         {{ userInfo.focus || 0 }}
-                    </div>
-                    <div class="label">{{ $t('my.focus') }}</div>
-                </div>
-                <div class="item">
-                    <div class="value">
+                    </view>
+                    <view class="label">{{ $t('my.focus') }}</view>
+                </view>
+                <view class="item">
+                    <view class="value">
                         {{ userInfo.fans || 0 }}
-                    </div>
-                    <div class="label">{{ $t('my.fans') }}</div>
-                </div>
-            </div>
-        </div>
+                    </view>
+                    <view class="label">{{ $t('my.fans') }}</view>
+                </view>
+            </view>
+        </view>
         <u-tabs
             :list="tabList"
             :is-scroll="false"
@@ -81,9 +286,9 @@
             :sendClick="false"
             v-if="current === 4"
         ></BalanceList>
-        <div class="empty" v-show="postList.length === 0">
+        <view class="empty" v-show="postList.length === 0">
             <u-empty :text="$t('index.noData')" mode="list"></u-empty>
-        </div>
+        </view>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
             class="mb-20 mt-20"
@@ -93,236 +298,6 @@
         <u-gap :height="10"></u-gap>
     </view>
 </template>
-
-<script>
-import Request from "luch-request";
-const http = new Request();
-import { mapGetters } from "vuex";
-import TopicList from "@/components/TopicList.vue";
-import HeadImg from "@/components/HeadImg.vue";
-import User from "@/components/User.vue";
-import BalanceList from "@/components/BalanceList.vue";
-import Backend from "@/util/backend";
-
-export default {
-    components: {
-        TopicList,
-        HeadImg,
-        User,
-        BalanceList,
-    },
-    data() {
-        return {
-            userAddress: "", //用户地址
-            postList: [], //帖子列表
-            pageInfo: {
-                page: 1,
-                pageSize: 10,
-                totalPage: 1,
-            }, //页码信息
-            more: "loadmore", //加载更多
-            userInfo: {}, //用户信息
-            address: "", //用户格式化地址
-            current: 0, //tab当前选项
-            tabList: [
-                {
-                    name: this.$t('my.topic'),
-                },
-                {
-                    name: this.$t('my.star'),
-                },
-                {
-                    name: this.$t('my.focus'),
-                },
-                {
-                    name: this.$t('my.fans'),
-                },
-                {
-                    name: this.$t('my.assets'),
-                },
-            ],
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.pageInfo.page = 1;
-        this.getUserInfo();
-        this.getPostList();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    //上拉加载
-    onReachBottom() {
-        if ([0, 1, 2, 3].includes(this.current)) {
-            this.pageInfo.page++;
-            this.getPostList();
-        }
-    },
-    onLoad(option) {
-        this.uSetBarTitle(this.$t('titleBar.userInfo'));
-        this.userAddress = option.userAddress;
-        this.getUserInfo();
-        this.getPostList();
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    methods: {
-        //获取用户信息
-        getUserInfo() {
-            let params = {
-                userAddress: this.userAddress,
-            };
-            this.$http.post("/User/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.userInfo = res.data;
-                    this.address = "";
-                    for (
-                        let i = 0, len = this.userAddress.length;
-                        i < len;
-                        i++
-                    ) {
-                        this.address += this.userAddress[i];
-                        if (i % 3 === 2) this.address += " ";
-                    }
-                }
-            });
-        },
-        //获取帖子列表
-        getPostList() {
-            let params, url;
-            if (this.current === 0) {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    userAddress: this.userAddress,
-                };
-                url = "/User/contentList";
-            } else if (this.current === 1) {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    userAddress: this.userAddress,
-                };
-                url = "/Content/starList";
-            } else if (this.current === 2) {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    focus: "myFocus",
-                    userAddress: this.userAddress,
-                };
-                url = "/User/focusList";
-            } else if (this.current === 3) {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    focus: "focusMy",
-                    userAddress: this.userAddress,
-                };
-                url = "/User/focusList";
-            }
-            this.$http
-                .post(url, params, {
-                    custom: { isToast: true },
-                })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                        this.more = "loadmore";
-                        if (this.pageInfo.page === 1) {
-                            this.$nextTick(() => {
-                                if (this.current === 0 || this.current === 1) {
-                                    this.postList = res.data.data.map(
-                                        (item) => {
-                                            item.payload = this.topicHighlight(
-                                                item.payload
-                                            );
-                                            return item;
-                                        }
-                                    );
-                                } else {
-                                    this.postList = res.data.data;
-                                }
-                            });
-                        } else {
-                            if (this.pageInfo.page > this.pageInfo.totalPage) {
-                                this.pageInfo.page = this.pageInfo.totalPage;
-                                this.more = "nomore";
-                            } else {
-                                if (this.current === 0 || this.current === 1) {
-                                    this.postList = this.postList.concat(
-                                        res.data.data.map((item) => {
-                                            item.payload = this.topicHighlight(
-                                                item.payload
-                                            );
-                                            return item;
-                                        })
-                                    );
-                                } else {
-                                    this.postList = this.postList.concat(
-                                        res.data.data
-                                    );
-                                }
-                            }
-                        }
-                    } else {
-                        this.more = "nomore";
-                    }
-                });
-        },
-        //获取账户token列表
-        getTokenList() {
-            uni.showLoading({
-                title: this.$t('my.loading'),
-            });
-            http.get(
-                    Backend.nodeApiAccounts(this.userAddress)
-                ).then((res) => {
-                    this.postList.push({
-                        balance: res.data.balance,
-                        symbol: "AE",
-                        decimal: 18,
-                        contract_id: "",
-                        cert: "TRUE",
-                    });
-                })
-                .then(() => {
-                    http.get(Backend.aeknowApiTokenList(this.userAddress)).then(
-                        (res) => {
-                            if (res.data.tokens.length > 0) {
-                                this.postList = this.postList.concat(
-                                    res.data.tokens
-                                );
-                            }
-                            uni.hideLoading();
-                            this.more = "nomore";
-                        }
-                    ).catch(() => {
-                        uni.hideLoading();
-                        this.more = "nomore";
-                    });
-                });
-        },
-        //切换tab
-        tabChange(index) {
-            this.current = index;
-            this.postList = [];
-            if ([0, 1, 2, 3].includes(index)) {
-                this.pageInfo.page = 1;
-                this.getPostList();
-            } else if (index === 4) {
-                this.getTokenList();
-            }
-        },
-        //复制粘贴板
-        copy() {
-            this.copyContent(this.userInfo.userAddress);
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .user-info {

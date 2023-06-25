@@ -1,13 +1,143 @@
+
+<script setup>
+import { ref, watch, getCurrentInstance } from 'vue'
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        default: false,
+    },
+    postInfo: {
+        type: Object,
+        default: {},
+    }
+})
+const emits = defineEmits(['update:modelValue'])
+
+const showModal = ref(props.modelValue) //控制隐藏显示
+const current = ref(-1) //当前选择
+const wttBalance = ref(0) //WTT余额
+const btnLoading = ref(false) //按钮加载状态
+const form = ref({
+    amount: "",
+})
+const warning = ref({
+    amount: false,
+})
+
+const tagList = [{
+        text: "1WTT",
+        value: 1,
+    },{
+        text: "6WTT",
+        value: 6,
+    },{
+        text: "18WTT",
+        value: 18,
+    },{
+        text: "66WTT",
+        value: 66,
+    },{
+        text: "520WTT",
+        value: 520,
+    },{
+        text: "680WTT",
+        value: 680,
+}]
+
+watch(
+	() => props.modelValue,
+	(val) => {
+        showModal.value = val;
+        if (val) {
+            getWttBalance();
+        }
+	}
+)
+watch(
+	() => showModal.value,
+	(val) => {
+        emits("update:modelValue", val);
+	}
+)
+watch(
+	() => form.value.amount,
+	(val) => {
+        for (let i = 0; i < tagList.length; i++) {
+            if (parseFloat(val) === tagList[i].value) {
+                current.value = i;
+                break;
+            } else {
+                current.value = -1;
+            }
+        }
+	}
+)
+
+//选择打赏金额
+const handleSelect = (item, index) => {
+    current.value = index;
+    form.value.amount = item.value;
+}
+//打赏
+const reward = async() => {
+    if (userStore.token === props.postInfo.users.userAddress) {
+        proxy.uShowToast(proxy.$t('components.rewardTips'));
+        return;
+    }
+    if (
+        !form.value.amount ||
+        parseFloat(form.value.amount) > parseFloat(wttBalance.value)
+    ) {
+        warning.value.amount = true;
+        return;
+    } else {
+        warning.value.amount = false;
+    }
+    btnLoading.value = true;
+    let result = await proxy.contractTransfer(
+        userStore.configInfo.wttContract,
+        props.postInfo.users.userAddress,
+        form.value.amount,
+        {
+            type: 'reward',
+            toHash: props.postInfo.hash,
+            content: props.postInfo.hash
+        }
+    );
+    if (result) {
+        proxy.postHashToWeTrueApi(result); //打赏提交
+        form.value.amount = ""
+        showModal.value = false;
+        proxy.uShowToast(proxy.$t('components.rewardSuccess'));
+        getWttBalance();
+    }
+    btnLoading.value = false;
+}
+//获取AEX9余额
+const getWttBalance = () => {
+    proxy.getTokenBalance(
+        userStore.configInfo.wttContract,
+        userStore.token
+    ).then((res) => {
+        wttBalance.value = proxy.balanceFormat( res ?? 0 );
+    });;
+}
+</script>
+
 <template>
-    <div class="reward">
+    <view class="reward">
         <u-popup
             v-model="showModal"
             mode="center"
             width="80%"
             :border-radius="10"
         >
-            <div class="reward-content">
-                <div class="title">
+            <view class="reward-content">
+                <view class="title">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -15,9 +145,9 @@
                         class="inline mr-5"
                     ></u-image>
                     {{ $t('components.reward') }}
-                </div>
-                <div class="tags">
-                    <div
+                </view>
+                <view class="tags">
+                    <view
                         class="tag"
                         v-for="(item, index) in tagList"
                         :key="index"
@@ -28,8 +158,8 @@
                             @click="handleSelect(item, index)"
                             style="width:160rpx;"
                         ></u-tag>
-                    </div>
-                </div>
+                    </view>
+                </view>
                 <u-input
                     v-model="form.amount"
                     size="mini"
@@ -42,166 +172,23 @@
                     maxlength="20"
                 />
                 <u-gap height="16"></u-gap>
-                <div class="warnning" v-show="warning.amount">
+                <view class="warnning" v-show="warning.amount">
                     {{ $t('my.balanceErr') }}
-                </div>
-                <div class="clearfix">
-                    <div class="pull-right">
+                </view>
+                <view class="clearfix">
+                    <view class="pull-right">
                         {{ $t('my.addressBalance') + ": " + wttBalance + "WTT" }}
-                    </div>
-                </div>
+                    </view>
+                </view>
                 <u-gap height="50"></u-gap>
                 <u-button type="primary" @click="reward" :loading="btnLoading"
                     >{{ $t('components.reward') }}</u-button
                 >
-            </div>
+            </view>
         </u-popup>
-    </div>
+    </view>
 </template>
-<script>
-import { mapGetters } from "vuex";
-import { getStore } from "@/util/service";
 
-export default {
-    components: {
-    },
-    props: {
-        value: {
-            type: Boolean,
-            default: false,
-        },
-        postInfo: {
-            type: Object,
-            default: {},
-        },
-    },
-    data() {
-        return {
-            configInfo: getStore("configInfo"), //后端配置项
-            showModal: this.value, //控制隐藏显示
-            current: -1, //当前选择
-            form: {
-                amount: "",
-            },
-            //标签列表
-            tagList: [
-                {
-                    text: "1WTT",
-                    value: 1,
-                },
-                {
-                    text: "6WTT",
-                    value: 6,
-                },
-                {
-                    text: "18WTT",
-                    value: 18,
-                },
-                {
-                    text: "66WTT",
-                    value: 66,
-                },
-                {
-                    text: "520WTT",
-                    value: 520,
-                },
-                {
-                    text: "680WTT",
-                    value: 680,
-                },
-            ],
-            warning: {
-                amount: false,
-            },
-            wttBalance: 0, //WTT余额
-            btnLoading: false, //按钮加载状态
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.getConfigInfo();
-    },
-    watch: {
-        value(val) {
-            this.showModal = val;
-            if (val) {
-                this.getWttBalance();
-            }
-        },
-        showModal(val) {
-            this.$emit("input", val);
-        },
-        "form.amount": {
-            handler(val) {
-                for (let i = 0; i < this.tagList.length; i++) {
-                    if (parseFloat(val) === this.tagList[i].value) {
-                        this.current = i;
-                        break;
-                    } else {
-                        this.current = -1;
-                    }
-                }
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        //选择打赏金额
-        handleSelect(item, index) {
-            this.current = index;
-            this.form.amount = item.value;
-        },
-        //打赏
-        async reward() {
-            if (this.token === this.postInfo.users.userAddress) {
-                this.uShowToast(this.$t('components.rewardTips'));
-                return;
-            }
-            if (
-                !this.form.amount ||
-                parseFloat(this.form.amount) > parseFloat(this.wttBalance)
-            ) {
-                this.warning.amount = true;
-                return;
-            } else {
-                this.warning.amount = false;
-            }
-            this.btnLoading = true;
-            let result = await this.contractTransfer(
-                this.configInfo.wttContract,
-                this.postInfo.users.userAddress,
-                this.form.amount,
-                {
-                    type: 'reward',
-                    toHash: this.postInfo.hash,
-                    content: this.postInfo.hash
-                }
-            );
-            if (result) {
-                this.postHashToWeTrueApi(result); //打赏提交
-                this.form = {
-                    amount: "",
-                };
-                this.showModal = false;
-                this.uShowToast(this.$t('components.rewardSuccess'));
-                this.getWttBalance();
-            }
-            this.btnLoading = false;
-        },
-        //获取AEX9余额
-        getWttBalance() {
-            this.getTokenBalance(
-                this.configInfo.wttContract,
-                this.token
-            ).then((res) => {
-                this.wttBalance = this.balanceFormat( res ) || 0;
-            });;
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .reward {
     .reward-content {

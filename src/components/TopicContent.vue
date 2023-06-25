@@ -1,63 +1,191 @@
+<script setup>
+import HeadImg from "@/components/HeadImg";
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import RewardRecord from "@/components/RewardRecord";
+import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
+import Backend from "@/util/backend";
+import { Icon } from '@iconify/vue';
+import { ref, getCurrentInstance, watch, nextTick } from 'vue';
+import { mixinUtils } from'@/mixins/mixinUtils'
+import { useRouter } from "vue-router"
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const router = useRouter()
+
+const props = defineProps({
+    postInfo: {
+        type: Object,
+        default: () => {},
+    },
+})
+const root = ref(null) //控制打赏记录弹层
+const rewardRecordShow = ref(false) //控制打赏记录弹层
+
+//暴露方法名"receiveWeTrueMessage"
+window["receiveWeTrueMessage"] = async (res) => {
+    if (res.code == 200) {
+        proxy.postHashToWeTrue(res, true).then((res) => {
+            releaseCallback(res);
+        });
+    }
+};
+
+
+watch(
+	() => props.postInfo,
+	(val) => {
+        nextTick(() => {
+            const topicArr =
+                document.getElementsByClassName("topic-text");
+            if (topicArr.length > 0) {
+                for (let i = 0; i < topicArr.length; i++) {
+                    topicArr[i].addEventListener(
+                        "click",
+                        (e) => {
+                            let text = topicArr[i].innerText;
+                            proxy.goUrl(
+                                "/pages/index/topic?keyword=" + text
+                            );
+                            e.stopPropagation();
+                        },
+                        true
+                    );
+                }
+            }
+            const mentionsArr =
+                document.getElementsByClassName("mentions-text");
+            if (mentionsArr.length > 0) {
+                for (let i = 0; i < mentionsArr.length; i++) {
+                    mentionsArr[i].addEventListener(
+                        "click",
+                        (e) => {
+                            let text = mentionsArr[i].innerText;
+                            Backend.nodeApiGetAddressByNames(
+                                text.slice(1)
+                            ).then((res) => {
+                                proxy.goUrl(
+                                    "/pages/my/userInfo?userAddress=" +
+                                        res
+                                );
+                            });
+                            e.stopPropagation();
+                        },
+                        true
+                    );
+                }
+            }
+        });
+	}
+)
+
+//是否收藏
+const star = () => {
+    let payload = {
+        action: props.postInfo.isStar,
+        content: props.postInfo.hash,
+    };
+    proxy.wetrueSend("star", payload).then((res) => {
+        releaseCallback(res);
+    });
+}
+const releaseCallback = (res) => {
+    if (res.code == 200) {
+        props.postInfo.isStar = res.data.isStar;
+        props.postInfo.star = res.data.star;
+    }
+    proxy.uHideLoading();
+}
+const copy = () => {
+    let text = root.value.getText();
+    proxy.copyContent(text);
+}
+//分享
+const share = () => {
+    let shareUrl = userStore.configInfo.frontEndUrl + router.currentRoute.value.fullPath
+    let text = root.value.getText();
+    let shareTextLength = "";
+    if (text.length > 100) {
+        shareTextLength = "...";
+    }
+    let shareText =
+        "WeTrue:\n" +
+        shareUrl +
+        "\n" +
+        text.slice(0, 100) +
+        shareTextLength;
+        proxy.copyContent(shareText, "#share");
+}
+</script>
+
 <template>
-    <div class="forum">
-        <div class="forum-item">
-            <div class="focus" v-show="postInfo.isFocus">
-                <fa-FontAwesome
-                    type="fas fa-heart"
-                    size="24"
+    <view class="forum">
+        <view class="forum-item">
+            <view class="focus" v-show="postInfo.isFocus">
+                <Icon
+                    icon="fa:heart"
+                    width="12"
                     class="star"
                     color="#fff"
-                >
-                </fa-FontAwesome>
-            </div>
-            <div class="user-area">
-                <div class="head-box">
+                />
+            </view>
+            <view class="user-area">
+                <view class="head-box">
                     <HeadImg
                         :userInfo="postInfo.users"
                         :isLink="true"
                         width="70rpx"
                         height="70rpx"
                     ></HeadImg>
-                </div>
-                <div class="user-info">
-                    <div class="user">
+                </view>
+                <view class="user-info">
+                    <view class="user">
                         <Name :userInfo="postInfo.users"></Name>
                         <TopicMore
                             :topicInfo="postInfo"
                             class="mr-10"
                         ></TopicMore>
-                    </div>
-                    <div class="time">
-                        <text class="mr-20">{{
-                            $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
-                        }}</text
-                        >{{ $t('index.source') + postInfo.source /*+ '-' + postInfo.chainId */ }}
-                    </div>
-                </div>
-            </div>
-            <div class="main-content">
-                <div class="text-content">
+                    </view>
+                    <view class="time">
+                        <text class="mr-20">
+                            {{ $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm") }}
+                        </text>
+                        <text class="mr-20">
+                            {{ $t('index.source') + postInfo.source }}
+                        </text>
+                        
+                    </view>
+                </view>
+            </view>
+            <view class="main-content">
+                <view class="text-content">
                     <mp-html
                         :content="postInfo.payload"
                         :selectable="true"
-                        ref="mpHtml"
+                        ref="root"
                     />
-                </div>
-                <div
+                </view>
+                <view
                     class="img-list"
                     v-for="(item, index) in postInfo.mediaList"
                     :key="index"
                 >
                     <u-image
-                        width="200rpx"
-                        height="200rpx"
-                        :src="ipfsUrl + item.image"
-                        v-if="item.image"
-                    ></u-image>
-                </div>
+                        height="640rpx"
+                        mode = "heightFix"
+                        :lazy-load="true"
+                        :src="mixinUtils.ipfsUrltoCid(item.image.ipfs)"
+                        v-if="item.image.ipfs"
+                    >   
+                    <template v-slot:loading><u-loading ></u-loading></template>
+                    <template v-slot:error><view style="font-size: 28rpx;">加载失败</view></template>
+                    </u-image>
+                </view>
                 <u-image
-                    width="200rpx"
-                    height="200rpx"
+                    width="300rpx"
+                    height="300rpx"
                     :src="postInfo.image"
                     v-if="postInfo.image"
                 ></u-image>
@@ -69,224 +197,80 @@
                 {{ postInfo.simpleUrl }}
                 </u-link>
 
-                <div class="reward" v-if="postInfo.rewardList.length > 0">
-                    <div
+                <view class="reward" v-if="postInfo.rewardList.length > 0">
+                    <view
                         class="reward-list"
                         v-for="(item, index) in postInfo.rewardList.slice(0, 6)"
                         :key="index"
                     >
-                        <u-icon
-                            name="thumb-up-fill"
+                        <Icon
+                            icon="ri:thumb-up-fill"
                             color="#f04a82"
                             class="mr-6"
-                        ></u-icon
-                        >{{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
+                        />
+                        {{ item.nickname }} [ {{ item.sender_id.slice(-4) }} ]
                         {{ $t('components.reward') }}
                         <text class="name">
                             {{ balanceFormat(item.amount, 1) }}
                         </text>
                         WTT
-                    </div>
+                    </view>
                     <u-gap
                         height="5"
                         v-if="postInfo.rewardList.length > 6"
                     ></u-gap>
-                    <div
+                    <view
                         class="more"
                         v-if="postInfo.rewardList.length > 6"
                         @click="rewardRecordShow = true"
                     >
                         {{ $t('components.viewMore') }}
-                    </div>
-                </div>
-                <div class="more">
-                    <text class="mr-24"
-                        >{{ postInfo.read
-                        }}<fa-FontAwesome
-                            type="fas fa-eye"
-                            size="28"
-                            class="ml-6"
-                            color="#666"
-                        >
-                        </fa-FontAwesome
-                    ></text>
-                    <fa-FontAwesome
-                        type="fas fa-star"
-                        size="28"
+                    </view>
+                </view>
+                <view class="more">
+                    
+                    <Icon
+                        :icon="postInfo.isStar ? 'ph:star-fill' : 'ph:star'"
+                        width="18"
                         class="mr-24"
-                        color="#ffc107"
-                        v-show="postInfo.isStar"
+                        :color="postInfo.isStar ? '#ffc107' : '#666'"
                         @tap="star"
-                    >
-                    </fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="far fa-star"
-                        size="28"
-                        class="mr-24"
-                        color="#666"
-                        v-show="!postInfo.isStar"
-                        @tap="star"
-                    ></fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="far fa-copy"
-                        size="28"
+                    />
+                    <Icon
+                        icon="ant-design:copy-outlined"
+                        width="18"
                         class="mr-24"
                         color="#666"
                         id="copy"
                         @click="copy"
-                    ></fa-FontAwesome>
-                    <fa-FontAwesome
-                        type="fas fa-share-alt"
-                        size="28"
-                        class="mr-10"
+                    />
+                    <Icon
+                        icon="ri:share-line"
+                        width="18"
+                        class="mr-24"
                         color="#666"
                         id="share"
                         @click="share"
-                    ></fa-FontAwesome>
-                </div>
-            </div>
-        </div>
+                    />
+                    <text class="mr-10">
+                        <Icon
+                            icon="fe:bar-chart"
+                            width="18"
+                            class="ml-6"
+                            color="#666"
+                        />
+                        {{ postInfo.read }}
+                    </text>
+                </view>
+            </view>
+        </view>
         <RewardRecord
             v-model="rewardRecordShow"
             :record="postInfo.rewardList"
         ></RewardRecord>
-    </div>
+    </view>
 </template>
-<script>
-import HeadImg from "@/components/HeadImg";
-import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import RewardRecord from "@/components/RewardRecord";
-import Name from "@/components/Name";
-import TopicMore from "@/components/TopicMore";
-import { mapGetters } from "vuex";
-import Backend from "@/util/backend";
 
-export default {
-    components: {
-        HeadImg,
-        mpHtml,
-        RewardRecord,
-        Name,
-        TopicMore,
-    },
-    props: {
-        postInfo: {
-            type: Object,
-            default: () => {},
-        },
-        ipfsUrl: {
-            default: "https://dweb.link/ipfs/",
-        },
-    },
-    data() {
-        return {
-            rewardRecordShow: false, //控制打赏记录弹层
-        };
-    },
-    mounted() {
-        // #ifdef H5
-        //暴露方法名"receiveWeTrueMessage"
-        window["receiveWeTrueMessage"] = async (res) => {
-            if (res.code == 200) {
-                this.postHashToWeTrue(res, true).then((res) => {
-                    this.releaseCallback(res);
-                });
-            }
-        };
-        // #endif
-    },
-    computed: {
-        ...mapGetters(["configInfo"]),
-    },
-    watch: {
-        postInfo: {
-            handler() {
-                this.$nextTick(() => {
-                    const topicArr =
-                        document.getElementsByClassName("topic-text");
-                    if (topicArr.length > 0) {
-                        for (let i = 0; i < topicArr.length; i++) {
-                            topicArr[i].addEventListener(
-                                "click",
-                                (e) => {
-                                    let text = topicArr[i].innerText;
-                                    this.goUrl(
-                                        "/pages/index/topic?keyword=" + text
-                                    );
-                                    e.stopPropagation();
-                                },
-                                true
-                            );
-                        }
-                    }
-                    const mentionsArr =
-                        document.getElementsByClassName("mentions-text");
-                    if (mentionsArr.length > 0) {
-                        for (let i = 0; i < mentionsArr.length; i++) {
-                            mentionsArr[i].addEventListener(
-                                "click",
-                                (e) => {
-                                    let text = mentionsArr[i].innerText;
-                                    Backend.nodeApiGetAddressByNames(
-                                        text.slice(1)
-                                    ).then((res) => {
-                                        this.goUrl(
-                                            "/pages/my/userInfo?userAddress=" +
-                                                res
-                                        );
-                                    });
-                                    e.stopPropagation();
-                                },
-                                true
-                            );
-                        }
-                    }
-                });
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        //是否收藏
-        star() {
-            let payload = {
-                action: this.postInfo.isStar,
-                content: this.postInfo.hash,
-            };
-            this.wetrueSend("star", payload).then((res) => {
-                this.releaseCallback(res);
-            });
-        },
-        releaseCallback(res) {
-            if (res.code == 200) {
-                this.postInfo.isStar = res.data.isStar;
-                this.postInfo.star = res.data.star;
-            }
-            this.uHideLoading();
-        },
-        copy() {
-            let text = this.$refs.mpHtml.getText();
-            this.copyContent(text);
-        },
-        //分享
-        share() {
-            let shareUrl = this.configInfo.frontEndUrl + this.__page__.fullPath;
-            let text = this.$refs.mpHtml.getText();
-            let shareTextLength = "";
-            if (text.length > 100) {
-                shareTextLength = "...";
-            }
-            let shareText =
-                "WeTrue:\n" +
-                shareUrl +
-                "\n" +
-                text.slice(0, 100) +
-                shareTextLength;
-            this.copyContent(shareText, "#share");
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .forum {
     &-item {
@@ -376,7 +360,7 @@ export default {
                 padding: 20rpx 0 0 0;
                 border-top: 2rpx solid #e5e5e5;
                 color: #666;
-                text-align: right;
+                text-align: right;              
             }
         }
     }

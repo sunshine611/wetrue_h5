@@ -1,13 +1,59 @@
+<script>
+
+import { ref, getCurrentInstance, watch } from 'vue'
+import VueQrcode from "@chenfengyuan/vue-qrcode";
+
+export default {
+    name: 'Qrcode',
+    components: { VueQrcode },
+    props: {
+        modelValue: {
+            type: Boolean, 
+            default: false
+        },
+        address: {
+            type: String,
+            default: "",
+        },
+    },
+    emits: ['update:modelValue'],
+    setup(props, { emit }) {
+        const showQrcode = ref(props.modelValue) //二维码弹层
+        const { proxy } = getCurrentInstance();
+        watch(
+            () => props.modelValue,
+            (data) => {
+                showQrcode.value = data
+            }
+        )
+        watch(
+            () => showQrcode.value,
+            (data) => {
+                emit('update:modelValue', data)
+            }
+        )
+        //复制粘贴板
+        const copy = () => {
+            proxy.copyContent(props.address);            
+        }
+        return {
+            copy,
+            showQrcode,
+        }
+    },
+}
+</script>
+
 <template>
-    <div class="qrcode">
+    <view class="qrcode">
         <u-popup
-            v-model="showModal"
+            v-model="showQrcode"
             mode="center"
             width="80%"
             :border-radius="10"
         >
-            <div class="reward-content">
-                <div class="title">
+            <view class="reward-content">
+                <view class="title">
                     <u-image
                         width="92rpx"
                         height="46rpx"
@@ -15,66 +61,26 @@
                         class="inline mr-5"
                     ></u-image>
                     {{ $t('components.qrcode') }}
-                </div>
+                </view>
                 <u-gap :height="30"></u-gap>
-                <div class="qrcode">
+                <view class="qrcode">
                     <VueQrcode
                         :value="address"
                         :options="{ width: 220, margin: 2 }"
                     ></VueQrcode>
-                </div>
+                </view>
                 <u-gap height="30"></u-gap>
-                <div class="token" @click="copy" ref="address">
+                <view class="token" @click="copy" ref="address">
                     <text>
                         {{ $t('components.receivingAddress') }}
                     </text><u-gap :height="20"></u-gap>{{ address }}
-                </div>
-            </div>
+                </view>
+            </view>
         </u-popup>
-    </div>
+    </view>
+    
 </template>
-<script>
-import { mapGetters } from "vuex";
-import VueQrcode from "@chenfengyuan/vue-qrcode";
 
-export default {
-    components: {
-        VueQrcode,
-    },
-    props: {
-        value: {
-            type: Boolean,
-            default: false,
-        },
-        address: {
-            type: String,
-            default: "",
-        },
-    },
-    data() {
-        return {
-            showModal: this.value, //控制隐藏显示
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    watch: {
-        value(val) {
-            this.showModal = val;
-        },
-        showModal(val) {
-            this.$emit("input", val);
-        },
-    },
-    methods: {
-        //复制粘贴板
-        copy() {
-            this.copyContent(this.address);            
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .qrcode {
     .reward-content {

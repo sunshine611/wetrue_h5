@@ -1,44 +1,35 @@
+<script setup>
+import { getCurrentInstance } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
+import VueQrcode from '@chenfengyuan/vue-qrcode';
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.myWallet'));
+})
+
+//复制粘贴板
+const copy = () => {
+    proxy.copyContent(userStore.token);
+}
+</script>
+
 <template>
-    <div class="qrcode">
-        <div class="card">
-            <VueQrcode :value="token" :options="{ width: 260,margin:1 }"></VueQrcode>
+    <view class="qrcode">
+        <view class="card">
+            <VueQrcode :value="userStore.token" :options="{ width: 260,margin:1 }"></VueQrcode>
             <u-gap :height="30"></u-gap>
-            <div class="token" @tap="copy" id="copy">
-                <text>{{ $t('my.recipient') }}</text><u-gap :height="20"></u-gap>{{ token }}
-            </div>
+            <view class="token" @tap="copy" id="copy">
+                <text>{{ $t('my.recipient') }}</text><u-gap :height="20"></u-gap>{{ userStore.token }}
+            </view>
             <u-button type="primary" class="mt-50" @click="reLaunchUrl('/pages/my/index')">{{ $t('my.backMy') }}</u-button>
             <u-gap :height="30"></u-gap>
-        </div>
-    </div>
+        </view>
+    </view>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-import VueQrcode from '@chenfengyuan/vue-qrcode';
-
-export default {
-    components: { 
-        VueQrcode,
-    },
-    data() {
-        return {};
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.myWallet'));
-    },
-    activated() {
-    },
-    methods: {
-        //复制粘贴板
-        copy() {
-           this.copyContent(this.token);
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 page {
     background-color: #f04a82;

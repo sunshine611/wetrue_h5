@@ -1,13 +1,114 @@
+<script setup>
+import { reactive, getCurrentInstance } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+import { version as cVersion, diceUrl } from "@/config/config.js";
+import { useI18n } from "vue-i18n";
+import { Icon } from '@iconify/vue';
+import HeadImg from "@/components/HeadImg.vue";
+import VersionTip from "@/components/VersionTip.vue";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+const { locale } = useI18n();
+
+//表单
+const myIndex = reactive({
+    version: cVersion, //应用版本号
+    addressShow: "", //ae地址
+    versionInfo: {}, //版本信息
+    versionCode: parseInt(cVersion.replace(/\./g, "")), //版本号
+    versionShow: false, //版本提示弹层
+})
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.my'));
+    if (!!userStore.token) {
+        getUserInfo();
+        proxy.getAeBalance().then((res) => {
+            myIndex.balance = res;
+        });
+        proxy.getUnreadMsg();
+    }
+});
+
+//获取用户信息
+const getUserInfo = () => {
+    let params = {
+        userAddress: userStore.token,
+    };
+    myIndex.addressShow = "";
+    for (let i = 0, len = userStore.token.length; i < len; i++) {
+        myIndex.addressShow += userStore.token[i];
+        if (i % 3 === 2) myIndex.addressShow += " ";
+    }
+    proxy.$http.post("/User/info", params).then((res) => {
+        if (res.code === 200) {
+            userStore.setUserInfo(res.data)
+        }
+    }).catch((err) => {
+        console.log("getUserInfo Error",err)
+    });
+}
+//复制粘贴板
+const copy = () => {
+    proxy.copyContent(userStore.userInfo.userAddress);
+}
+//打开白皮书
+const whitePaper = () => {
+    window.open(diceUrl + "/app/Wetrue_White_Paper.pdf");
+}
+//检查版本
+const versionCheck = async () => {
+    await appVersion();
+    if (myIndex.versionCode < parseInt(myIndex.versionInfo.newVer)) {
+        myIndex.versionShow = true;
+    } else {
+        proxy.uShowToast(proxy.$t('my.versionTips'));
+    }
+}
+//获取服务端版本信息
+const appVersion = () => {
+    proxy.getVersionInfo().then((res) => {
+        myIndex.versionInfo = res;
+        if (myIndex.versionInfo.mustUpdate) {
+            myIndex.versionShow = true;
+        }
+    }).catch((err) => {
+        console.log("getVersionInfo",err)
+    });;
+}
+//账户管理
+const goAccountManage = () => {
+    if (proxy.validThirdPartySource()) {
+        proxy.uShowToast(
+            proxy.$t('index.thirdPartyNotOpen'),
+        );
+        return false;
+    };
+    proxy.goUrl('../login/accountManage');
+}
+
+//选择语言
+const changeLang = () => {
+    let lang
+    if (userStore.language == 'zh-cn') {
+        lang = 'en'
+    } else if (userStore.language == 'en') {
+        lang = 'zh-cn'
+    }
+    userStore.setLanguage(lang)
+    locale.value = lang;
+    proxy.$moment.locale(lang);
+};
+</script>
+
 <template>
-    <div class="my">
-        <view
-            class="top-background"
-            :style="{height:`${statusBarHeight}px`}"
-        ></view>
-        <div class="user-info" v-if="!!token">
-            <div class="my-info">
-                <div class="block">
-                    <div class="icon-list">
+    <view class="my">
+        <view class="top-background" :style="{height:`${statusBarHeight}px`}"></view>
+        <view class="user-info" v-if="userStore.token">
+            <view class="my-info">
+                <view class="block">
+                    <view class="icon-list">
                         <u-icon
                             class="mr-15"
                             name="bookmark"
@@ -15,340 +116,246 @@
                             size="40"
                             @click="whitePaper"
                         ></u-icon>
-                    </div>
-                    <div class="user-box">
-                        <div class="user-top">
-                            <div class="head">
+                    </view>
+                    <view class="user-box">
+                        <view class="user-top">
+                            <view class="head">
                                 <HeadImg
-                                    :userInfo="userInfo"
+                                    :userInfo="userStore.userInfo"
                                     width="120rpx"
                                     height="120rpx"
                                 ></HeadImg>
                                 <u-gap height="10"></u-gap>
-                                 <div class="open-vip" v-if="userInfo.isVip">
+                                 <view class="open-vip" v-show="userStore.userInfo?.isVip">
                                     <u-icon 
                                         name="level"
                                         size="30"
                                         color="#CD7F32"
                                     ></u-icon>
-                                </div>
-                                <div :class="[userInfo.isAuth ? 'auth' : '']">
-                                    {{ userInfo.nickname || $t('my.cryptonym') }}
-                                </div>
-                            </div>
-                            <div class="address" @tap="copy" id="copy">
-                                {{ address }}
-                            </div>
-                        </div>
-                        <div class="user-bottom">
-                            <div
+                                </view>
+                                <view :class="[userStore.userInfo?.isAuth ? 'auth' : '']">
+                                    {{ userStore.userInfo?.nickname || $t('my.cryptonym') }}
+                                </view>
+                            </view>
+                            <view class="address" @tap="copy" id="copy">
+                                {{ myIndex.addressShow }}
+                            </view>
+                        </view>
+                        <view class="user-bottom">
+                            <view
                                 class="item"
                                 @click="goUrl('topicList?type=myTopic')"
                             >
-                                <div class="value">
-                                    {{ userInfo.topic || 0 }}
-                                </div>
-                                <div class="label">{{ $t('my.topic') }}</div>
-                            </div>
-                            <div
+                                <view class="value">
+                                    {{ userStore.userInfo.topic || 0}}
+                                </view>
+                                <view class="label">{{ $t('my.topic') }}</view>
+                            </view>
+                            <view
                                 class="item"
                                 @click="goUrl('topicList?type=myStar')"
                             >
-                                <div class="value">
-                                    {{ userInfo.star || 0 }}
-                                </div>
-                                <div class="label">{{ $t('my.star') }}</div>
-                            </div>
-                            <div class="item">
-                                <div class="value">
-                                    {{ userInfo.active || 0 }}
-                                </div>
-                                <div class="label">{{ $t('my.active') }}</div>
-                            </div>
-                            <div
+                                <view class="value">
+                                    {{ userStore.userInfo.star }}
+                                </view>
+                                <view class="label">{{ $t('my.star') }}</view>
+                            </view>
+                            <view class="item">
+                                <view class="value">
+                                    {{ userStore.userInfo.active || 0 }}
+                                </view>
+                                <view class="label">{{ $t('my.active') }}</view>
+                            </view>
+                            <view
                                 class="item"
                                 @click="goUrl('userList?type=focus')"
                             >
-                                <div class="value">
-                                    {{ userInfo.focus || 0 }}
-                                </div>
-                                <div class="label">{{ $t('my.focus') }}</div>
-                            </div>
-                            <div
+                                <view class="value">
+                                    {{ userStore.userInfo.focus || 0 }}
+                                </view>
+                                <view class="label">{{ $t('my.focus') }}</view>
+                            </view>
+                            <view
                                 class="item"
                                 @click="goUrl('userList?type=fans')"
                             >
-                                <div class="value">
-                                    {{ userInfo.fans || 0 }}
-                                </div>
-                                <div class="label">{{ $t('my.fans') }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid">
+                                <view class="value">
+                                    {{ userStore.userInfo.fans || 0 }}
+                                </view>
+                                <view class="label">{{ $t('my.fans') }}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="grid">
                 <u-grid col="4" :border="false">
                     <u-grid-item @click="goUrl('./setting/infoEdit')">
-                        <u-icon 
-                            name="account"
-                            size="46"
+                        <Icon 
+                            icon="mdi:user-outline"
+                            width="30"
                             color="#f04a82"
-                        ></u-icon>
+                        />
                         <view class="grid-text">{{ $t('my.userInfo') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goUrl('./setting/blacklistManage')">
-                        <u-icon 
-                            name="account"
-                            size="46"
-                        ></u-icon>
+                        <Icon 
+                            icon="mdi:user-outline"
+                            width="30"
+                        />
                         <view class="grid-text">{{ $t('my.blacklistManage') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goAccountManage()">
-                        <u-icon 
-                            name="man-add"
-                            size="46"
-                            color="#f04a82"
-                        ></u-icon>
+                        <Icon 
+                            icon="mdi:user-add-outline"
+                            color ="#f04a82"
+                            width="30"
+                        />
                         <view class="grid-text"> {{ $t('my.accountManage') }}</view>
                     </u-grid-item>
 
                     <u-grid-item @click="goUrl('aens/index')">
-                        <fa-FontAwesome
-                            type="fab fa-neos"
-                            size="42"
+                        <Icon
+                            icon="fa-brands:neos"
                             color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                            width="30"
+                        />
                         <view class="grid-text">AENS</view>
                     </u-grid-item>
-
                 </u-grid>
-            </div>
-            <div class="menu">
+            </view>
+            <view class="menu">
                 <u-cell-group :border="false">
                     <u-cell-item
                         :title="$t('my.myWallet')"
-                        :value="'AE: ' + balance"
+                        :value="'AE: ' + myIndex.balance"
                         @click="goUrl('tokenList')"
                     >
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-wallet"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                        <template v-slot:icon>
+                            <Icon 
+                                icon="ph:wallet-fill"
+                                width="28"
+                                color="#f04a82"
+                                class="mr-10"
+                            />
+                        </template>
                     </u-cell-item>
                     <u-cell-item
                         :title="$t('my.migrateToken')"
                         @click="goUrl('migrateToken')"
+                        v-show="validAdmin()==true"
                     >
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-exchange-alt"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                        <template v-slot:icon>
+                            <Icon 
+                                icon="uil:exchange-alt"
+                                width="28"
+                                color="#f04a82"
+                                class="mr-10"
+                            />
+                        </template>
                     </u-cell-item>
                     <u-cell-item
                         :title="$t('my.mappingMining')"
                         @click="goUrl('mappingDig')"
+                        v-show="validAdmin()==true"
                     >
-                        <fa-FontAwesome
-                            slot="icon"
-                            type="fas fa-hammer"
-                            size="32"
-                            class="mr-10"
-                            color="#f04a82"
-                        >
-                        </fa-FontAwesome>
+                        <template v-slot:icon>
+                            <Icon 
+                                icon="game-icons:mining"
+                                width="28"
+                                color="#f04a82"
+                                class="mr-10"
+                            />
+                        </template>
+                    </u-cell-item>
+                    <u-cell-item
+                        title="Space dice"
+                        @click="goUrl('/pages/games/SpaceDice')"
+                        :arrow="false"
+                    >
+                        <template v-slot:icon>
+                            <Icon 
+                                icon="ion:dice"
+                                width="28"
+                                color="#f04a82"
+                                class="mr-10"
+                            />
+                        </template>
                     </u-cell-item>
                     <u-cell-item :title="$t('my.setting.setting')" @click="goUrl('set')">
-                        <u-icon 
-                            slot="icon"
-                            name="setting-fill"
-                            size="40"
-                            class="mr-10"
-                            color="#f04a82"
-                        ></u-icon>
+                        <template v-slot:icon>
+                            <Icon 
+                                icon="uiw:setting"
+                                width="28"
+                                color="#f04a82"
+                                class="mr-10"
+                            />
+                        </template>
                     </u-cell-item>
                 </u-cell-group>
-            </div>
-            <div class="version">
-                <div class="version-code" @click="versionCheck">
-                    {{ $t('my.version') }}：{{ version }}
+            </view>
+            <view class="version">
+                <view class="version-code" @click="versionCheck">
+                    {{ $t('my.version') }}：{{ myIndex.version }}
                     <u-badge
-                        v-if="versionCode < parseInt(versionInfo.newVer)"
+                        v-show="myIndex.versionCode < parseInt(myIndex?.versionInfo?.newVer)"
                         type="error"
                         count="1"
                         :is-dot="true"
                         :offset="[0, -12]"
                     ></u-badge>
-                </div>
-            </div>
-        </div>
-        <div class="login" v-else>
-            <div class="opera-icon">
-                <fa-FontAwesome
-                    class="mr-30"
-                    type="fas fa-language"
-                    size="32"
+                </view>
+            </view>
+        </view>
+        <view v-else class="login">
+            <view class="opera-icon">
+                <Icon 
+                    icon  ="cil:language"
+                    class="mr-32"
+                    color ="#fff"
+                    width="32"
+                    height="32"
+                    @click ="changeLang"
+                />
+                <Icon 
+                    icon="fa-solid:user-shield"
                     color="#fff"
-                   @click="selectLanguage"
-                ></fa-FontAwesome>
-                <fa-FontAwesome
-                    type="fas fa-user-shield"
-                    size="32"
-                    color="#fff"
+                    width="32"
+                    height="32"
                     @click="goUrl('../login/accountManage')"
-                ></fa-FontAwesome>
-            </div>
-            <div class="login-box">
-                <div class="item" @tap="goUrl('../login/login')">
-                    <fa-FontAwesome
-                        slot="icon"
-                        type="fas fa-wallet"
-                        size="48"
-                        class="mr-20"
-                        color="#f04a82"
-                    >
-                    </fa-FontAwesome
-                    >{{ $t('login.mnemonicLogin') }}
-                </div>
+                />
+            </view>
+            <view class="login-box">
+                <view class="item" @tap="goUrl('../login/login')">
+                        <Icon 
+                            icon="ph:wallet-fill"
+                            width="48"
+                            color="#f04a82"
+                            class="mr-20"
+                        />
+                    {{ $t('login.mnemonicLogin') }}
+                </view>
                 <u-gap height="80"></u-gap>
-                <div class="item" @tap="goUrl('../login/mnemonic')">
-                    <fa-FontAwesome
-                        slot="icon"
-                        type="fas fa-plus-circle"
-                        size="48"
-                        class="mr-20"
-                        color="#f04a82"
-                    >
-                    </fa-FontAwesome
-                    >{{ $t('login.createMnemonic') }}
-                </div>
-            </div>
-        </div>
-        <u-gap height="280" v-show="keystoreArr.length > 0"></u-gap>
+                <view class="item" @tap="goUrl('../login/mnemonic')">
+                        <Icon 
+                            icon="bi:plus-circle-fill"
+                            width="48"
+                            color="#f04a82"
+                            class="mr-20"
+                        />
+                    {{ $t('login.createMnemonic') }}
+                </view>
+            </view>
+            <view class="version"> {{ $t('my.version') }}：{{ myIndex.version }}</view>
+        </view>
         <VersionTip
-            v-model="versionShow"
-            :versionInfo="versionInfo"
+            v-model="myIndex.versionShow"
+            :versionInfo="myIndex.versionInfo"
         ></VersionTip>
-    </div>
+    </view>
 </template>
-
-<script>
-import Request from "luch-request";
-const http = new Request();
-import { version } from "@/config/config.js";
-import { mapGetters } from "vuex";
-import HeadImg from "@/components/HeadImg.vue";
-import VersionTip from "@/components/VersionTip.vue";
-import { getStore } from "@/util/service";
-
-export default {
-    components: {
-        HeadImg,
-        VersionTip,
-    },
-    data() {
-        return {
-            userInfo: {}, //用户信息
-            version: version, //应用版本号
-            address: "", //ae地址
-            balance: 0, //余额
-            versionInfo: {}, //版本信息
-            versionCode: parseInt(version.replace(/\./g, "")), //版本号
-            versionShow: false, //版本提示弹层
-            keystoreArr: getStore("keystoreArr"),
-            language: getStore("language"),
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.my'));
-        if (!!this.token) {
-            this.getUserInfo();
-            this.getAccount().then((res) => {
-                this.balance = res;
-            });
-            this.getUnreadMsg();
-        }
-    },
-    activated() {
-        if (!!this.token) {
-            this.getUserInfo();
-            this.getAccount().then((res) => {
-                this.balance = res;
-            });
-            this.getUnreadMsg();
-        }
-        this.appVersion();
-    },
-    methods: {
-        //获取用户信息
-        getUserInfo() {
-            let params = {
-                userAddress: this.token,
-            };
-            this.address = "";
-            for (let i = 0, len = this.token.length; i < len; i++) {
-                this.address += this.token[i];
-                if (i % 3 === 2) this.address += " ";
-            }
-            this.$http.post("/User/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.userInfo = res.data;
-                }
-            });
-        },
-        //复制粘贴板
-        copy() {
-            this.copyContent(this.userInfo.userAddress);
-        },
-        //打开白皮书
-        whitePaper() {
-            window.open("https://wetrue.io/assets/Wetrue_White_Paper.pdf");
-        },
-        //检查版本
-        async versionCheck() {
-            await this.appVersion();
-            if (this.versionCode < parseInt(this.versionInfo.newVer)) {
-                this.versionShow = true;
-            } else {
-                this.uShowToast(this.$t('my.versionTips'));
-            }
-        },
-        //获取服务端版本信息
-        appVersion() {
-            this.getVersionInfo().then((res) => {
-                this.versionInfo = res;
-                if (this.versionInfo.mustUpdate) {
-                    this.versionShow = true;
-                }
-            });
-        },
-        //账户管理
-        goAccountManage() {
-            if (this.validThirdPartySource()) {
-                this.uShowToast(
-                    this.$t('index.thirdPartyNotOpen'),
-                );
-                return false;
-            };
-            this.goUrl('../login/accountManage');
-        },
-    },
-};
-</script>
 
 <style lang="scss">
 page {
@@ -455,19 +462,6 @@ page {
             width: 80%;
             margin: 0 auto 80rpx;
         }
-
-        .version {
-            color: #999;
-            font-size: 24rpx;
-            position: absolute;
-            bottom: 30rpx;
-            width: 100%;
-            text-align: center;
-            .version-code {
-                position: relative;
-                display: inline-block;
-            }
-        }
     }
 
     .login {
@@ -501,6 +495,20 @@ page {
                     transform: scale(1.1);
                 }
             }
+        }
+    }
+    .version {
+        font-size: 24rpx;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        bottom: 30rpx;
+        width: 100%;
+        text-align: center;
+        .version-code {
+            color: #999;
+            position: relative;
+            display: inline-block;
         }
     }
 }

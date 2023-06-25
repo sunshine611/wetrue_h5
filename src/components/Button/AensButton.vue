@@ -1,42 +1,30 @@
+<script setup>
+import { Icon } from '@iconify/vue';
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance();
+
+//认领
+const post = () => {
+    if (proxy.validThirdPartySource()) {
+        proxy.uShowToast(
+            proxy.$t('index.thirdPartyNotOpen'),
+        );
+        return false;
+    };
+    proxy.uShowToast('开发中');
+}
+</script>
+
 <template>
     <view class="post" v-if="validToken()">
-        <fa-FontAwesome
-            type="fas fa-plus"
-            size="36"
+        <Icon
+            icon="fa:plus"
             color="rgba(255,255,255,0.9)"
             @tap="post()"
-        >
-        </fa-FontAwesome>
+        />
     </view>
 </template>
-<script>
 
-export default {
-    components: {
-    },
-    props: {
-
-    },
-    data() {
-        return {
-        };
-    },
-    watch: {
-    },
-    methods: {
-        //认领
-        post() {
-            if (this.validThirdPartySource()) {
-                this.uShowToast(
-                    this.$t('index.thirdPartyNotOpen'),
-                );
-                return false;
-            };
-            this.uShowToast('开发中');
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .post {
         position: fixed;

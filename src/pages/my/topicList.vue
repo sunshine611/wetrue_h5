@@ -1,8 +1,106 @@
+<script setup>
+import TopicList from "@/components/TopicList.vue";
+import { ref, getCurrentInstance, nextTick } from 'vue'
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const type = ref("") //类型
+const title = ref("") //标题
+const more = ref("loadmore") //加载更多
+const postList = ref([]) //帖子列表
+const pageInfo = ref({ //页码信息
+    page: 1,
+    pageSize: 10,
+    totalPage: 1,
+})
+
+onLoad ( (option) => {
+    if (option.type === "myTopic") {
+        type.value  = "myTopic";
+        title.value = proxy.$t('my.myTopic');
+    } else if (option.type === "myStar") {
+        type.value  = "myStar";
+        title.value = proxy.$t('my.myStar');
+    }
+    proxy.uSetBarTitle(title.value);
+    getPostList();
+    proxy.getUserInfo();
+});
+//下拉刷新
+onPullDownRefresh ( () => {
+    pageInfo.value.page = 1;
+    getPostList();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+//上拉加载
+onReachBottom ( () => {
+    pageInfo.value.page++;
+    getPostList();
+});
+
+//获取帖子列表
+const getPostList = () => {
+    var params, url;
+    if (type.value === "myTopic") {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            userAddress: userStore.token,
+        };
+        url = "/User/contentList";
+    } else if (type.value === "myStar") {
+        params = {
+            page: pageInfo.value.page,
+            size: pageInfo.value.pageSize,
+            userAddress: userStore.token,
+        };
+        url = "/Content/starList";
+    }
+    proxy.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
+        if (res.code === 200) {
+            pageInfo.value.totalPage = parseInt(res.data.totalPage);
+            more.value = "loadmore";
+            if (pageInfo.value.page === 1) {
+                nextTick(() => {
+                    postList.value = res.data.data.map((item) => {
+                        item.payload = proxy.topicHighlight(
+                            item.payload
+                        );
+                        return item;
+                    });
+                });
+            } else {
+                if (pageInfo.value.page > pageInfo.value.totalPage) {
+                    pageInfo.value.page = pageInfo.value.totalPage;
+                    more.value = "nomore";
+                } else {
+                    postList.value  = postList.value.concat(
+                        res.data.data.map((item) => {
+                            item.payload = proxy.topicHighlight(
+                                item.payload
+                            );
+                            return item;
+                        })
+                    );
+                }
+            }
+        } else {
+            more.value = "nomore";
+        }
+    });
+}
+
+</script>
+
 <template>
     <view class="myTopic" :title="title">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="title" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -10,12 +108,12 @@
                     color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
         <TopicList :postList="postList"></TopicList>
-        <div class="empty" v-show="postList.length === 0">
+        <view class="empty" v-show="postList.length === 0">
             <u-empty :text="$t('index.noData')" mode="list"></u-empty>
-        </div>
+        </view>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
             class="mb-20"
@@ -24,113 +122,6 @@
         />
     </view>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-import TopicList from "@/components/TopicList.vue";
-import HeadImg from "@/components/HeadImg.vue";
-
-export default {
-    components: {
-        TopicList,
-        HeadImg
-    },
-    data() {
-        return {
-            type: "", //类型
-            title: "", //标题
-            userAddress: "", //用户地址
-            postList: [], //帖子列表
-            pageInfo: {
-                page: 1,
-                pageSize: 10,
-                totalPage: 1,
-            }, //页码信息
-            more: "loadmore", //加载更多
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.pageInfo.page = 1;
-        this.getPostList();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    //上拉加载
-    onReachBottom() {
-        this.pageInfo.page++;
-        this.getPostList();
-    },
-    onLoad(option) {
-        if (option.type === "myTopic") {
-            this.type = "myTopic";
-            this.title = this.$t('my.myTopic');
-        } else if (option.type === "myStar") {
-            this.type = "myStar";
-            this.title = this.$t('my.myStar');
-        }
-        this.uSetBarTitle(this.title);
-        this.getPostList();
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    methods: {
-        //获取帖子列表
-        getPostList() {
-            var params, url;
-            if (this.type === "myTopic") {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    userAddress: this.token,
-                };
-                url = "/User/contentList";
-            } else if (this.type === "myStar") {
-                params = {
-                    page: this.pageInfo.page,
-                    size: this.pageInfo.pageSize,
-                    userAddress: this.token,
-                };
-                url = "/Content/starList";
-            }
-            this.$http.post(url, params,{ custom: { isToast: true } }).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        });
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
-                        } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    return item;
-                                })
-                            );
-                        }
-                    }
-                } else {
-                    this.more = "nomore";
-                }
-            });
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .myTopic {

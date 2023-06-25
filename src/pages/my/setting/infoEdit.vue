@@ -1,56 +1,259 @@
+<script setup>
+import multiavatar from '@multiavatar/multiavatar';
+import { reactive, getCurrentInstance } from 'vue'
+import { onReady, onPullDownRefresh } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const userInfoEdit = reactive({
+    nickname: userStore.userInfo.nickname, //用户昵称
+    sex: userStore.userInfo.sex,
+    avatar: "", //头像
+    avatarID: "", //头像
+    sexName: "", //性别
+    isVip: "", //VIP
+    avatarInfo: {}, //后端配置项
+    wttBalance: 0, //账户WTT余额
+})
+
+const boolInfo = reactive({
+    avatarShow: false, //头像弹层
+    nameShow: false, //名字弹层
+    sexShow: false, //性别弹层
+    btnLoading: false,
+})
+
+const sexList = reactive([{
+        name: 0,
+        sexName: proxy.$t('my.girl'),
+    },{
+        name: 1,
+        sexName: proxy.$t('my.boy'),
+    },{
+        name: 2,
+        sexName: proxy.$t('my.unknown'),
+}])
+
+
+onReady ( () => {
+    proxy.uSetBarTitle(proxy.$t('my.infoEdit.infoEdit'));
+    upUserInfo();
+    getAvatarInfo();
+});
+
+//下拉刷新
+onPullDownRefresh ( () => {
+    proxy.getUserInfo();
+    getAvatarInfo();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+
+//暴露方法名"receiveWeTrueMessage"
+window["receiveWeTrueMessage"] = async (res) => {
+    if (res.code == 200) {
+        proxy.postHashToWeTrue(res);
+    } else {
+        res = null;
+    }
+    releaseCallback(res);
+};
+
+//更新用户信息
+const upUserInfo = () => {
+    if (userStore.userInfo.sex === 0) {
+        userInfoEdit.sexName = proxy.$t('my.girl');
+    } else if (userStore.userInfo.sex === 1) {
+        userInfoEdit.sexName = proxy.$t('my.boy');
+    } else {
+        userInfoEdit.sexName = proxy.$t('my.unknown');
+    }
+
+    if (userStore.userInfo.isVip) {
+        userInfoEdit.isVip = proxy.$t('my.openVipTrue');
+    } else {
+        userInfoEdit.isVip = proxy.$t('my.openVipFalse');
+    }
+
+    if (userStore.userInfo.avatar) {
+        userInfoEdit.avatar   = multiavatar( userStore.userInfo.avatar );
+        userInfoEdit.avatarID = userStore.userInfo.avatar.slice(0,4) + '...' + userStore.userInfo.avatar.slice(-12);
+    } else {
+        userInfoEdit.avatar   = multiavatar( userStore.userInfo.userAddress );
+        userInfoEdit.avatarID = userStore.userInfo.userAddress.slice(0,4) + '...' + userStore.userInfo.userAddress.slice(-12);
+    }  
+}
+//验证昵称
+const checkNickname = () => {
+    proxy.$http.post("/User/isNickname", { nickname: userInfoEdit.nickname }).then((res) => {
+        if (res.code === 200) {
+            if (res.data.isNickname) {
+                uni.showToast({
+                    title: proxy.$t('my.checkNickname'),
+                    icon: "none",
+                });
+            } else {
+                updateNickname();
+            }
+        }
+    });
+}
+//更新昵称
+const updateNickname = async () => {
+    boolInfo.btnLoading = true;
+    let payload = {
+        content: userInfoEdit.nickname,
+    };
+    let res = await proxy.wetrueSend("nickname", payload);
+    releaseCallback(res);
+}
+//更新性别
+const updateSex = async () => {
+    boolInfo.btnLoading = true;
+    let payload = {
+        content: userInfoEdit.userInfo.sex,
+    };
+    let res = await proxy.wetrueSend('sex',payload);
+    releaseCallback(res);
+}
+//随机头像
+const randomAvatar = async () => {
+    boolInfo.btnLoading = true;
+
+    if(!userStore.userInfo.isVip) {
+        proxy.uShowToast( proxy.$t('my.infoEdit.noVip') );
+        boolInfo.btnLoading = false;
+        boolInfo.avatarShow = false;
+        return;
+    }
+    if(!userInfoEdit.avatarInfo.randomAvatar) {
+        proxy.uShowToast( proxy.$t('my.infoEdit.channel') );
+        boolInfo.btnLoading = false;
+        boolInfo.avatarShow = false;
+        return;
+    }
+    if ( boolInfo.wttBalance < (userInfoEdit.avatarInfo.recAmount / Math.pow(10, 18)) ) {
+        proxy.uShowToast( proxy.$t('my.infoEdit.balanceLow') );
+        boolInfo.btnLoading = false;
+        return;
+    }
+    const result = await proxy.contractTransfer(
+        userInfoEdit.avatarInfo.recToken,
+        userInfoEdit.avatarInfo.recAddress,
+        userInfoEdit.avatarInfo.recAmount/ Math.pow(10, 18),
+        {type:'random_avatar'}
+    );
+    if (result) {
+        proxy.postHashToWeTrueApi(result); //提交
+        setTimeout(() => {
+            uni.hideLoading();
+            boolInfo.btnLoading = false;
+            boolInfo.avatarShow = false;
+            getAvatarInfo();
+            proxy.uShowToast(proxy.$t('my.infoEdit.waiting') , "none", 3000);
+        }, 1000);
+    } else {
+        boolInfo.btnLoading = false;
+        uni.hideLoading();
+    }
+}
+//获取随机头像信息
+const getAvatarInfo = () => {
+    proxy.$http.post("/Config/randomAvatar").then((res) => {
+        if (res.code === 200) {
+            userInfoEdit.avatarInfo = res.data;
+            getWttBalance();
+        }
+    });
+}
+//上链回调
+const releaseCallback = (res) => {
+    if (JSON.stringify(res) !== "{}" && !!res) {
+        setTimeout(() => {
+            boolInfo.nameShow = false;
+            boolInfo.btnLoading = false;
+            uni.hideLoading();
+            proxy.getUserInfo();
+            upUserInfo();
+        }, 2000);
+        setTimeout(() => {
+            boolInfo.sexShow = false;
+            boolInfo.btnLoading = false;
+            uni.hideLoading();
+            proxy.getUserInfo();
+            upUserInfo();
+        }, 2000);
+    } else {
+        boolInfo.btnLoading = false;
+        uni.hideLoading();
+    }
+}
+//获取WTT余额
+const getWttBalance = () => {
+    proxy.getTokenBalance(
+        userInfoEdit.avatarInfo.recToken,
+        userStore.token
+    ).then((res) => {
+        userInfoEdit.wttBalance = proxy.balanceFormat( res ) || 0;
+    });;
+}
+</script>
+
 <template>
-    <div class="user-info">
+    <view class="user-info">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('my.infoEdit.infoEdit')" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
-                    name="home"
                     class="mr-30"
+                    name="home"
                     size="34"
                     color="#f04a82"
                     @click="reLaunchUrl('../../my/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
         <u-cell-group>
             <u-cell-item 
-                :title="$t('my.infoEdit.avatar') + ' ID: ' + avatarID"
-                @click="avatarShow = true"
+                :title="$t('my.infoEdit.avatar') + ' ID: ' + userInfoEdit.avatarID"
+                @click="boolInfo.avatarShow = true"
             >
-                <div
+                <view
                     class="user-avatar"
-                    v-html="avatar"
-                ></div>
+                    v-html="userInfoEdit.avatar"
+                ></view>
             </u-cell-item>
             <u-cell-item
                 :title="$t('my.nickname')"
-                :value="userInfo.nickname || $t('my.cryptonym')"
+                :value="userInfoEdit.nickname || $t('my.cryptonym')"
                 @click="
-                    nameShow = true;
-                    nickname = userInfo.nickname;
+                    boolInfo.nameShow = true;
+                    nickname = userInfoEdit.nickname;
                 "
             >
             </u-cell-item>
             <u-cell-item 
                 :title="$t('my.sex')"
-                :value="sexName"
-                @click="sexShow = true">
+                :value="userInfoEdit.sexName"
+                @click="boolInfo.sexShow = true">
             </u-cell-item>
             <u-cell-item 
                 title="VIP"
-                :value="isVip"
-                :arrow="!userInfo.isVip"
+                :value="userInfoEdit.isVip"
+                :arrow="!userInfoEdit.isVip"
                 @click="reLaunchUrl('./openVip')"
             ></u-cell-item>
         </u-cell-group>
         <u-popup
-            v-model="nameShow"
+            v-model="boolInfo.nameShow"
             mode="center"
             border-radius="20"
         >
             <view class="name-box">
                 <u-input
-                    v-model="nickname"
+                    v-model="userInfoEdit.nickname"
                     type="text"
                     :border="true"
                     :placeholder="$t('my.enterNickname')"
@@ -60,14 +263,14 @@
                 <u-button
                     type="primary"
                     @click="checkNickname"
-                    :loading="btnLoading"
+                    :loading="boolInfo.btnLoading"
                     >{{ $t('my.send') }}</u-button
                 >
             </view>
         </u-popup>
-        <u-popup v-model="sexShow" mode="center" border-radius="20">
+        <u-popup v-model="boolInfo.sexShow" mode="center" border-radius="20">
             <view class="name-box">
-                <u-radio-group v-model="userInfo.sex">
+                <u-radio-group v-model="userInfoEdit.sex">
                     <u-radio
                         v-for="(item, index) in sexList"
                         :key="index"
@@ -80,12 +283,12 @@
                 <u-button
                     type="primary"
                     @click="updateSex"
-                    :loading="btnLoading"
+                    :loading="boolInfo.btnLoading"
                     >{{ $t('my.send') }}</u-button
                 >
             </view>
         </u-popup>
-        <u-popup v-model="avatarShow" mode="center" border-radius="20">
+        <u-popup v-model="boolInfo.avatarShow" mode="center" border-radius="20">
             <view class="random-avatar">
                 <view class="title">
                     <u-image
@@ -98,253 +301,28 @@
                 </view>
                 <u-gap height="30"></u-gap>
                 <view class="text">
-                    {{ $t('my.infoEdit.randomAvatarExpend', [ (avatarInfo.recAmount / Math.pow(10, 18)) ]) }}<br />
+                    {{ $t('my.infoEdit.randomAvatarExpend', [ (userInfoEdit.avatarInfo.recAmount / Math.pow(10, 18)) ]) }}<br />
                     {{ $t('my.infoEdit.randomAvatarText') }}<br />
-                    <div class="rule">{{ $t('my.infoEdit.avatarRule') }}</div>
+                    <view class="rule">{{ $t('my.infoEdit.avatarRule') }}</view>
                 </view>
                 <u-gap height="30"></u-gap>
                 <u-button
                     type="primary"
                     @click="randomAvatar"
-                    :loading="btnLoading"
+                    :loading="boolInfo.btnLoading"
                 >
                 {{ $t('my.infoEdit.agree') }}
                 </u-button>
                 <u-gap :height="20"></u-gap>
                 <view>
-                    <view class="pull-right">{{ $t('my.infoEdit.balance', [wttBalance]) }}</view>
+                    <view class="pull-right">{{ $t('my.infoEdit.balance', [userInfoEdit.wttBalance]) }}</view>
                 </view>
             </view>
         </u-popup>
 
-    </div>
+    </view>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-import multiavatar from '@multiavatar/multiavatar';
-
-export default {
-    components: {
-
-    },
-    data() {
-        return {
-            userInfo: {
-                nickname: this.$t('my.cryptonym'), //用户昵称
-                sex: 2,
-            },
-            avatar: "", //头像
-            avatarID: "", //头像
-            avatarShow: false, //头像弹层
-            avatarInfo: {}, //后端配置项
-            wttBalance: 0, //账户WTT余额
-            nameShow: false, //名字弹层
-            sexShow: false, //性别弹层
-            nickname: "", //昵称
-            sexName: "", //性别
-            isVip: "", //VIP
-            btnLoading: false,
-            sexList: [
-                {
-                    name: 0,
-                    sexName: this.$t('my.girl'),
-                },
-                {
-                    name: 1,
-                    sexName: this.$t('my.boy'),
-                },
-                {
-                    name: 2,
-                    sexName: this.$t('my.unknown'),
-                },
-            ],
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-    },
-    onReady() {
-		this.uSetBarTitle(this.$t('my.infoEdit.infoEdit'));
-        this.getUserInfo();
-        this.getAvatarInfo();
-	},
-    mounted() {
-        //暴露方法名"receiveWeTrueMessage"
-        window["receiveWeTrueMessage"] = async (res) => {
-            if (res.code == 200) {
-                this.postHashToWeTrue(res);
-            } else {
-                res = null;
-            }
-            this.releaseCallback(res);
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.getUserInfo();
-        this.getAvatarInfo();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    activated() {},
-    methods: {
-        //获取用户信息
-        getUserInfo() {
-            let params = {
-                userAddress: this.token,
-                type: "login",
-            };
-            this.$http.post("/User/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.userInfo = res.data;
-                    if (this.userInfo.sex === 0) {
-                        this.sexName = this.$t('my.girl');
-                    } else if (this.userInfo.sex === 1) {
-                        this.sexName = this.$t('my.boy');
-                    } else {
-                        this.sexName = this.$t('my.unknown');
-                    }
-
-                    if (this.userInfo.isVip) {
-                        this.isVip = this.$t('my.openVipTrue');
-                    } else {
-                        this.isVip = this.$t('my.openVipFalse');
-                    }
-
-                    if (this.userInfo.avatar) {
-                        this.avatar   = multiavatar( this.userInfo.avatar );
-                        this.avatarID = this.userInfo.avatar.slice(0,4) + '...' + this.userInfo.avatar.slice(-12);
-                    } else {
-                        this.avatar   = multiavatar( this.userInfo.userAddress );
-                        this.avatarID = this.userInfo.userAddress.slice(0,4) + '...' + this.userInfo.userAddress.slice(-12);
-                    }
-                    
-                }
-                this.loading = false;
-            });
-        },
-        //验证昵称
-        checkNickname() {
-            this.$http
-                .post("/User/isNickname", { nickname: this.nickname })
-                .then((res) => {
-                    if (res.code === 200) {
-                        if (res.data.isNickname) {
-                            uni.showToast({
-                                title: this.$t('my.checkNickname'),
-                                icon: "none",
-                            });
-                        } else {
-                            this.updateNickname();
-                        }
-                    }
-                });
-        },
-        //更新昵称
-        async updateNickname() {
-            this.btnLoading = true;
-            let payload = {
-                content: this.nickname,
-            };
-            let res = await this.wetrueSend("nickname", payload);
-            this.releaseCallback(res);
-        },
-        //更新性别
-        async updateSex() {
-            this.btnLoading = true;
-            let payload = {
-                content: this.userInfo.sex,
-            };
-            let res = await this.wetrueSend('sex',payload);
-            this.releaseCallback(res);
-        },
-        //随机头像
-        async randomAvatar() {
-            this.btnLoading = true;
-            
-            if(!this.userInfo.isVip) {
-                this.uShowToast( this.$t('my.infoEdit.noVip') );
-                this.btnLoading = false;
-                this.avatarShow = false;
-                return;
-            }
-            if(!this.avatarInfo.randomAvatar) {
-                this.uShowToast( this.$t('my.infoEdit.channel') );
-                this.btnLoading = false;
-                this.avatarShow = false;
-                return;
-            }
-            if ( this.wttBalance < (this.avatarInfo.recAmount / Math.pow(10, 18)) ) {
-                this.uShowToast( this.$t('my.infoEdit.balanceLow') );
-                this.btnLoading = false;
-                return;
-            }
-            const result = await this.contractTransfer(
-                this.avatarInfo.recToken,
-                this.avatarInfo.recAddress,
-                this.avatarInfo.recAmount/ Math.pow(10, 18),
-                {type:'random_avatar'}
-            );
-            if (result) {
-                this.postHashToWeTrueApi(result); //提交
-                setTimeout(() => {
-                    uni.hideLoading();
-                    this.btnLoading = false;
-                    this.avatarShow = false;
-                    this.getAvatarInfo();
-                    this.uShowToast(this.$t('my.infoEdit.waiting') , "none", 3000);
-                }, 1000);
-            } else {
-                this.btnLoading = false;
-                uni.hideLoading();
-            }
-        },
-        //获取随机头像信息
-        getAvatarInfo() {
-            this.$http
-                .post("/Config/randomAvatar").then((res) => {
-                    if (res.code === 200) {
-                        this.avatarInfo = res.data;
-                        this.getWttBalance();
-                    }
-                });
-        },
-        //上链回调
-        releaseCallback(res) {
-            if (JSON.stringify(res) !== "{}" && !!res) {
-                setTimeout(() => {
-                    this.nameShow = false;
-                    this.btnLoading = false;
-                    uni.hideLoading();
-                    this.getUserInfo();
-                }, 2000);
-                setTimeout(() => {
-                    this.sexShow = false;
-                    this.btnLoading = false;
-                    uni.hideLoading();
-                    this.getUserInfo();
-                }, 2000);
-            } else {
-                this.btnLoading = false;
-                uni.hideLoading();
-            }
-        },
-        //获取WTT余额
-        getWttBalance() {
-            this.getTokenBalance(
-                this.avatarInfo.recToken,
-                this.token
-            ).then((res) => {
-                this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
-            });;
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .user-info {
     .user-avatar {

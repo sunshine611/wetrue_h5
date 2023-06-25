@@ -1,59 +1,168 @@
+<script setup>
+import HeadImg from "@/components/HeadImg";
+import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import { Icon } from '@iconify/vue';
+import { mixinUtils } from'@/mixins/mixinUtils'
+import { getCurrentInstance, watch, nextTick } from 'vue';
+const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    postList: {
+        type: Array,
+        default: [],
+    }
+})
+
+//暴露方法名"receiveWeTrueMessage"
+window["receiveWeTrueMessage"] = async (res) => {
+    if (res.code == 200) {
+        proxy.postHashToWeTrue(res,true).then((res) => {
+            releaseCallback(res);
+        });
+    }
+};
+
+watch(
+	() => props.postList,
+	(val) => {
+        nextTick(() => {
+            const topicArr = document.getElementsByClassName("topic-text");
+            if (topicArr.length > 0) {
+                for (let i = 0; i < topicArr.length; i++) {
+                    topicArr[i].addEventListener(
+                        "click",
+                        (e) => {
+                            let text = topicArr[i].innerText;
+                            proxy.goUrl(
+                                "/pages/index/topic?keyword=" + text
+                            );
+                            e.stopPropagation();
+                        },
+                        true
+                    );
+                }
+            }
+            const mentionsArr = document.getElementsByClassName("mentions-text");
+            if (mentionsArr.length > 0) {
+                for (let i = 0; i < mentionsArr.length; i++) {
+                    mentionsArr[i].addEventListener(
+                        "click",
+                        (e) => {
+                            let text = mentionsArr[i].innerText;
+                            Backend.nodeApiGetAddressByNames(text.slice(1)).then((res) => {
+                                proxy.goUrl(
+                                    "/pages/my/userInfo?userAddress=" + res
+                                );
+                            });
+                            e.stopPropagation();
+                        },
+                        true
+                    );
+                }
+            }
+        });
+})
+
+//是否点赞
+const praise = (item) => {
+    let params = {};
+    if (item.hash.slice(0,3) === "th_") {
+        params = {
+            hash: item.hash,
+            type: "topic",
+        };
+    } else {
+        params = {
+            hash: item.shTipid,
+            type: "shTipid",
+        };
+    }
+    proxy.$http.post("/Submit/praise", params).then((res) => {
+        if (res.code === 200) {
+            item.isPraise = res.data.isPraise;
+            item.praise = res.data.praise;
+        }
+    });
+}
+//是否收藏
+const star = (item) => {
+    let payload = {
+        action: item.isStar ? 'false' : 'true',
+        content: item.hash,
+    };
+    proxy.wetrueSend("star", payload).then((res) => {
+        releaseCallback(item);
+    });
+}
+
+const releaseCallback = (item) => {
+    item.isStar = !item.isStar;
+    item.star = item.isStar ? item.star+1 : item.star-1;
+    proxy.uHideLoading();
+}
+</script>
+
 <template>
-    <div class="topic">
-        <div class="forum">
-            <div
+    <view class="topic">
+        <view class="forum">
+            <view
                 class="forum-item"
                 v-for="(item, index) in postList"
                 :key="index"
             >
-                <div class="focus" v-show="item.isFocus">
-                    <fa-FontAwesome
-                        type="fas fa-heart"
-                        size="24"
+                <view class="focus" v-show="item.isFocus">
+                    <Icon
+                        icon="fa:heart"
+                        width="12"
                         class="star"
                         color="#fff"
-                    >
-                    </fa-FontAwesome>
-                </div>
-                <div class="user-area">
-                    <div class="head-box">
+                    />
+                </view>
+                <view class="user-area">
+                    <view class="head-box">
                         <HeadImg
                             :userInfo="item.users"
                             :isLink="true"
                             width="70rpx"
                             height="70rpx"
                         ></HeadImg>
-                    </div>
-                    <div class="user-info">
-                        <div class="user">
+                    </view>
+                    <view class="user-info">
+                        <view class="user">
                             <Name :userInfo="item.users"></Name>
                             <TopicMore :topicInfo="item" :postList="postList" class="mr-10"></TopicMore>
-                        </div>
-                        <div class="time">
-                            <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ $t('index.source') + item.source /*+ '-' + item.chainId*/ }}
-                        </div>
-                    </div>
-                </div>
-                <div
+                        </view>
+                        <view class="time">
+                            <text>{{ $moment(item.utcTime).fromNow() }}</text>
+                            <text>{{ $t('index.source') + item.source }}</text>
+                        </view>
+                    </view>
+                </view>
+                <view
                     class="main-content"
                     @tap="goUrl('/pages/index/detail?hash=' + item.hash)"
                 >
-                    <div class="text-content">
+                    <view class="text-content">
                         <mp-html :content="item.payload"/>
-                    </div>
-                    <div
+                    </view>
+                    <view
                         class="img-list"
                         v-for="(items, index) in item.mediaList"
                         :key="index"
                     >
                         <u-image
-                            width="200rpx"
-                            height="200rpx"
-                            :src="ipfsUrl + items.image"
-                            v-if="items.image"
-                        ></u-image>
-                    </div>
+                            height="320rpx"
+                            mode = "heightFix"
+                            :lazy-load="true"
+                            :src="mixinUtils.ipfsUrltoCid(items.image.ipfs)"
+                            v-if="items.image.ipfs"
+                        >
+                            <template v-slot:loading><u-loading ></u-loading></template>
+                            <template v-slot:error><view style="font-size: 28rpx;">加载失败</view></template>
+                        </u-image>
+                    </view>
                         <u-image
                             width="200rpx"
                             height="200rpx"
@@ -67,180 +176,41 @@
                             >
                         {{ item.simpleUrl }}
                         </u-link>
-                </div>
-                <div class="operation">
-                    <div
+                </view>
+                <view class="operation">
+                    <view
                         class="item"
                         @click="goUrl('/pages/index/detail?hash=' + item.hash)"
                     >
-                        <fa-FontAwesome
-                            type="far fa-comment-alt"
-                            size="28"
-                            class="mr-10"
+                        <Icon
+                            icon="fa-regular:comment-alt"
+                            width="14"
                             color="#666"
-                        ></fa-FontAwesome>
+                        />
                         {{ item.commentNumber }}
-                    </div>
-                    <div class="item" @tap="star(item)">
-                        <fa-FontAwesome
-                            type="fas fa-star"
-                            size="28"
-                            class="mr-10"
-                            color="#ffc107"
-                            v-show="item.isStar"
-                        >
-                        </fa-FontAwesome>
-                        <fa-FontAwesome
-                            type="far fa-star"
-                            size="28"
-                            class="mr-10"
-                            color="#666"
-                            v-show="!item.isStar"
-                        >
-                        </fa-FontAwesome>
+                    </view>
+                    <view class="item" @tap="star(item)">
+                        <Icon
+                            :icon="item.isStar ? 'ph:star-fill' : 'ph:star'"
+                            width="16"
+                            :color="item.isStar ? '#ffc107' : '#666'"
+                        />
                         {{ item.star }}
-                    </div>
-                    <div class="item" @tap="praise(item)">
-                        <u-icon
-                            v-show="!item.isPraise"
-                            class="mr-10"
-                            name="thumb-up"
-                            :size="30"
-                            color="#666"
-                        ></u-icon>
-                        <u-icon
-                            v-show="item.isPraise"
-                            class="mr-10"
-                            name="thumb-up-fill"
-                            color="#f04a82"
-                            :size="30"
-                        >
-                        </u-icon>
+                    </view>
+                    <view class="item" @tap="praise(item)">
+                        <Icon
+                            :icon="item.isPraise ? 'ri:thumb-up-fill' : 'ri:thumb-up-line'"
+                            :color="item.isPraise ? '#f04a82' : '#666'"
+                            width="16"
+                        />
                         {{ item.praise }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
 </template>
-<script>
-import HeadImg from "@/components/HeadImg";
-import Name from "@/components/Name";
-import TopicMore from "@/components/TopicMore";
-import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
 
-export default {
-    components: {
-        HeadImg,
-        mpHtml,
-        Name,
-        TopicMore,
-    },
-    props: {
-        postList: {
-            type: Array,
-            default: [],
-        },
-        ipfsUrl: {
-            default: "/^http[s]*:\/\/ ? '' : 'https://dweb.link/ipfs/'",
-        },
-    },
-    data() {
-        return {};
-    },
-    mounted() {
-        // #ifdef H5
-        //暴露方法名"receiveWeTrueMessage"
-        window["receiveWeTrueMessage"] = async (res) => {
-            if (res.code == 200) {
-                this.postHashToWeTrue(res,true).then((res) => {
-                    this.releaseCallback(res);
-                });
-            }
-        };
-        // #endif
-    },
-    watch: {
-        postList: {
-            handler() {
-                this.$nextTick(() => {
-                    const topicArr = document.getElementsByClassName("topic-text");
-                    if (topicArr.length > 0) {
-                        for (let i = 0; i < topicArr.length; i++) {
-                            topicArr[i].addEventListener(
-                                "click",
-                                (e) => {
-                                    let text = topicArr[i].innerText;
-                                    this.goUrl(
-                                        "/pages/index/topic?keyword=" + text
-                                    );
-                                    e.stopPropagation();
-                                },
-                                true
-                            );
-                        }
-                    }
-                    const mentionsArr = document.getElementsByClassName("mentions-text");
-                    if (mentionsArr.length > 0) {
-                        for (let i = 0; i < mentionsArr.length; i++) {
-                            mentionsArr[i].addEventListener(
-                                "click",
-                                (e) => {
-                                    let text = mentionsArr[i].innerText;
-                                    Backend.nodeApiGetAddressByNames(text.slice(1)).then((res) => {
-                                        this.goUrl(
-                                            "/pages/my/userInfo?userAddress=" + res
-                                        );
-                                    });
-                                    e.stopPropagation();
-                                },
-                                true
-                            );
-                        }
-                    }
-                   
-                });
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        //是否点赞
-        praise(item) {
-            let params = {};
-            if (item.hash.slice(0,3) === "th_") {
-                params = {
-                    hash: item.hash,
-                    type: "topic",
-                };
-            } else {
-                params = {
-                    hash: item.shTipid,
-                    type: "shTipid",
-                };
-            }
-            this.$http.post("/Submit/praise", params).then((res) => {
-                if (res.code === 200) {
-                    item.isPraise = res.data.isPraise;
-                    item.praise = res.data.praise;
-                }
-            });
-        },
-        //是否收藏
-        star(item) {
-            let payload = {
-                action: item.isStar ? 'false' : 'true',
-                content: item.hash,
-            };
-            this.wetrueSend("star", payload).then((res) => {
-                item.isStar = !item.isStar;
-                item.star = item.isStar ? item.star+1 : item.star-1;
-                this.uHideLoading();
-            });
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .topic {
     .forum {

@@ -1,70 +1,62 @@
-<template>
-    <div class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
-        <div
-            v-html="avatar"
-        ></div>
-        <div :class="['level',userInfo.sex === 1?'man':'',userInfo.sex === 0?'woman':'']" v-if="userInfo.userActive !== 0">
-            <text class="text">V{{ userInfo.userActive }}</text>
-        </div>
-    </div>
-</template>
-<script>
-import { baseUrl } from "@/config/config.js";
+
+<script setup>
+import { ref, getCurrentInstance, watch, nextTick } from 'vue'
 import multiavatar from '@multiavatar/multiavatar';
+const { proxy } = getCurrentInstance();
 
-export default {
-    data() {
-        return {
-            baseUrl: baseUrl,
-            avatar: multiavatar(
-                this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
-            ),
-        };
+const props = defineProps({
+    userInfo: {
+        type: Object,
+        default: {},
     },
-    props: {
-        userInfo: {
-            type: Object,
-            default: {},
-        },
-        width: {
-            type: String,
-            default: "60rpx",
-        },
-        height: {
-            type: String,
-            default: "60rpx",
-        },
-        isLink: {
-            type: Boolean,
-            default: false,
-        },
+    width: {
+        type: String,
+        default: "60rpx",
     },
-    watch: {
-        userInfo: {
-            handler() {
-                this.$nextTick(() => {
-                    this.avatar = multiavatar(
-                        this.userInfo.avatar ? this.userInfo.avatar : this.userInfo.userAddress
-                    );
-                });
-            },
-            deep: true,
-        },
+    height: {
+        type: String,
+        default: "60rpx",
     },
+    isLink: {
+        type: Boolean,
+        default: false,
+    }
+})
 
-    methods: {
-        //点击头像
-        handleView() {
-            if (this.isLink) {
-                this.goUrl(
-                    "/pages/my/userInfo?userAddress=" +
-                        this.userInfo.userAddress
-                );
-            }
-        },
-    },
-};
+const avatar = ref(multiavatar(
+    props.userInfo?.avatar ? props.userInfo?.avatar : props.userInfo?.userAddress
+))
+
+watch(
+	() => props.userInfo,
+	(val) => {
+		nextTick(() => {
+            avatar.value = multiavatar(
+                props.userInfo.avatar ? props.userInfo.avatar : props.userInfo.userAddress
+            );
+        });
+	}
+)
+//点击头像
+const handleView = () => {
+    if (props.isLink) {
+        proxy.goUrl(
+            "/pages/my/userInfo?userAddress=" +
+                props.userInfo.userAddress
+        );
+    }
+}
 </script>
+
+<template>
+    <view class="head-img" @click="handleView" :style="`width:${width};height:${height}`">
+        <view v-html="avatar"></view>
+        <view :class="['level',userInfo?.sex === 1?'man':'',userInfo?.sex === 0?'woman':'']" v-if="userInfo?.userActive !== 0">
+            <text class="text">V{{ userInfo?.userActive }}</text>
+        </view>
+    </view>
+</template>
+
 <style lang="scss" scoped>
 .head-img {
     position: relative;

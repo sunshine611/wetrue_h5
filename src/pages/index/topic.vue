@@ -1,40 +1,148 @@
+<script setup>
+import TopicList from "@/components/TopicList.vue";
+import PostTopicButton from "@/components/Button/PostTopicButton.vue";
+import { ref, getCurrentInstance, nextTick } from 'vue'
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+const { proxy } = getCurrentInstance();
+
+const keyword = ref("") //话题关键字
+const more = ref("loadmore") //加载更多
+const postList = ref([]) //帖子列表
+const postInfo = ref([]) //帖子信息
+const pageInfo = ref({ //页码信息
+    page: 1,
+    pageSize: 10,
+    totalPage: 1,
+})
+const postButtonInfo = ref({}) //发布按钮增加信息
+
+onLoad ( (option) => {
+    proxy.uSetBarTitle(`${
+        option.keyword 
+        + " "
+        + proxy.$t('titleBar.topic')
+    }`);
+    keyword.value = option.keyword;
+    getTopicInfo();
+    getPostList();
+    postButtonInfo.value = {
+        type: "topic",
+        keyword: option.keyword
+    };
+});
+//下拉刷新
+onPullDownRefresh ( () => {
+    pageInfo.page = 1;
+    getPostList();
+    getTopicInfo();
+    setTimeout(function () {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+//上拉加载
+onReachBottom ( () => {
+    pageInfo.value.page++;
+    getPostList();
+});
+
+//获取话题帖子列表
+const getPostList = () => {
+    let params = {
+        page: pageInfo.value.page,
+        size: pageInfo.value.pageSize,
+        keyword: keyword.value,
+    };
+    proxy.$http.post("/Topic/contentList", params).then((res) => {
+        if (res.code === 200) {
+            pageInfo.value.totalPage = parseInt(res.data.totalPage);
+            more.value = "loadmore";
+            if (pageInfo.value.page === 1) {
+                nextTick(() => {
+                    postList.value = res.data.data.map((item) => {
+                        item.payload = proxy.topicHighlight(
+                            item.payload
+                        );
+                        return item;
+                    });
+                });
+            } else {
+                if (pageInfo.value.page > pageInfo.value.totalPage) {
+                    pageInfo.value.page = pageInfo.value.totalPage;
+                    more.value = "nomore";
+                } else {
+                    postList.value = postList.value.concat(
+                        res.data.data.map((item) => {
+                            item.payload = proxy.topicHighlight(
+                                item.payload
+                            );
+                            return item;
+                        })
+                    );
+                }
+            }
+        } else {
+            more.value = "nomore";
+        }
+    });
+}
+//获取帖子信息
+const getTopicInfo = () => {
+    let params = {
+        keyword: keyword.value,
+    };
+    proxy.$http.post("/Topic/info", params).then((res) => {
+        if (res.code === 200) {
+            postInfo.value = res.data;
+        }
+    });
+}
+</script>
+
 <template>
     <view class="topic">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="keyword" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     class="mr-30"
                     name="home"
                     size="34"
                     color="#f04a82"
-                    @click="reLaunchUrl('../index/index')"
+                    @click="reLaunchUrl('index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
-        <div class="tipic-info">
-            <div class="topic-box">
-                <u-image v-if="postInfo.imgIcon" class="topic-img" width="100rpx" height="100rpx" :src="postInfo.imgIcon" border-radius="10" bg-color="#f04a82"></u-image>
-                <u-image v-else class="topic-img" width="100rpx" height="100rpx" src="../../static/logo_1.png" border-radius="10" bg-color="#f04a82"></u-image>
-                <div class="topic-title">
+        <view class="tipic-info">
+            <view class="topic-box">
+                <u-image 
+                    class="topic-img" 
+                    width="100rpx" 
+                    height="100rpx" 
+                    border-radius="10" 
+                    bg-color="#f04a82"
+                    :src="postInfo.imgIcon || '../../static/logo_1.png'"
+                ></u-image>
+                <view class="topic-title">
                     <u-gap height="10"></u-gap>
-                    <b>{{postInfo.keyword}}</b>
+                    <b>{{ postInfo.keyword || '#' }}</b>
                     <u-gap height="10"></u-gap>
-                    <div class="font-26">{{postInfo.describe}}</div>
-                </div>
-            </div>
-            <div class="topic-data">
-                <div>{{ $t('index.views') + '：' + postInfo.readSum }}</div>
-                <div>{{ $t('index.discuss') + '：' + postInfo.total }}</div>
-                <div 
+                    <view class="font-26">{{ postInfo.describe }}</view>
+                </view>
+            </view>
+            <view class="topic-data">
+                <view>{{ $t('index.views') + '：' + (postInfo.readSum || 0) }}</view>
+                <view>{{ $t('index.discuss') + '：' + (postInfo.total || 0) }}</view>
+                <view 
                     @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.userAddress)"
-                >{{ $t('index.founder') + '：' + (postInfo.nickname ? postInfo.nickname : postInfo.userAddress.slice(-4)) }}</div>
-            </div>
-        </div>
+                >{{ $t('index.founder') + '：' + ( 
+                    postInfo.nickname ? postInfo.nickname : postInfo.userAddress?.slice(-4) || "..." 
+                    )}}</view>
+            </view>
+        </view>
         <TopicList :postList="postList"></TopicList>
-        <div class="empty" v-show="postList.length === 0">
+        <view class="empty" v-show="postList.length === 0">
             <u-empty :text="$t('index.noData')" mode="list"></u-empty>
-        </div>
+        </view>
         <u-loadmore
             bg-color="rgba(0,0,0,0)"
             margin-bottom="20"
@@ -44,117 +152,6 @@
         <PostTopicButton :postButtonInfo="postButtonInfo"></PostTopicButton>
     </view>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-import TopicList from "@/components/TopicList.vue";
-import PostTopicButton from "@/components/Button/PostTopicButton.vue";
-
-export default {
-    components: {
-        TopicList,
-        PostTopicButton,
-    },
-    data() {
-        return {
-            keyword: "", //话题关键字
-            postList: [], //帖子列表
-            postInfo: [], //帖子信息
-            pageInfo: {
-                page: 1,
-                pageSize: 10,
-                totalPage: 1,
-            }, //页码信息
-            more: "loadmore", //加载更多
-            postButtonInfo: {}, //发布按钮增加信息
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.pageInfo.page = 1;
-        this.getPostList();
-        this.getTopicInfo();
-        setTimeout(function () {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    //上拉加载
-    onReachBottom() {
-        this.pageInfo.page++;
-        this.getPostList();
-    },
-    onLoad(option) {
-        this.uSetBarTitle(`${
-            option.keyword 
-            + " "
-            + this.$t('titleBar.topic')
-        }`);
-        this.keyword = option.keyword;
-        this.getTopicInfo();
-        this.getPostList();
-        this.postButtonInfo = {
-            type: "topic",
-            keyword: option.keyword
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    methods: {
-        //获取话题帖子列表
-        getPostList() {
-            let params = {
-                page: this.pageInfo.page,
-                size: this.pageInfo.pageSize,
-                keyword: this.keyword,
-            };
-            this.$http.post("/Topic/contentList", params).then((res) => {
-                if (res.code === 200) {
-                    this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                    this.more = "loadmore";
-                    if (this.pageInfo.page === 1) {
-                        this.$nextTick(() => {
-                            this.postList = res.data.data.map((item) => {
-                                item.payload = this.topicHighlight(
-                                    item.payload
-                                );
-                                return item;
-                            });
-                        });
-                    } else {
-                        if (this.pageInfo.page > this.pageInfo.totalPage) {
-                            this.pageInfo.page = this.pageInfo.totalPage;
-                            this.more = "nomore";
-                        } else {
-                            this.postList = this.postList.concat(
-                                res.data.data.map((item) => {
-                                    item.payload = this.topicHighlight(
-                                        item.payload
-                                    );
-                                    return item;
-                                })
-                            );
-                        }
-                    }
-                } else {
-                    this.more = "nomore";
-                }
-            });
-        },
-        //获取帖子信息
-        getTopicInfo() {
-            let params = {
-                keyword: this.keyword,
-            };
-            this.$http.post("/Topic/info", params).then((res) => {
-                if (res.code === 200) {
-                    this.postInfo = res.data;
-                }
-            });
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .topic {

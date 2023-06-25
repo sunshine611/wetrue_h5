@@ -1,3 +1,42 @@
+<script setup>
+import { getCurrentInstance } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { baseUrl, setConfigUrl } from "@/config/config.js";
+import { useI18n } from "vue-i18n";
+import { Icon } from '@iconify/vue';
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+const { locale } = useI18n();
+
+onLoad ( () => {
+    proxy.uSetBarTitle(proxy.$t('titleBar.set'));
+})
+
+//切换网络
+const selectNetwork = () => {
+    if (userStore.networkSetting == "io") {
+        userStore.setNetwork('cc')
+    } else if (userStore.networkSetting == "cc") {
+        userStore.setNetwork('io')
+    }
+    setConfigUrl();            
+    proxy.$http.config.baseURL = baseUrl
+}
+//选择语言
+const changeLang = () => {
+    let lang
+    if (userStore.language == 'zh-cn') {
+        lang = 'en'
+    } else if (userStore.language == 'en') {
+        lang = 'zh-cn'
+    }
+    userStore.setLanguage(lang)
+    locale.value = lang;
+    proxy.$moment.locale(lang);
+};
+</script>
+
 <template>
     <view class="setting">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
@@ -6,7 +45,7 @@
             :title="$t('my.setting.setting')"
             v-show="!validThirdPartySource()"
         >
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     name="home"
                     class="mr-30"
@@ -14,97 +53,42 @@
                     color="#f04a82"
                     @click="reLaunchUrl('../index/index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
-                :title="$t('my.switchNetwork',[network])"
+                :title="$t('my.switchNetwork',[userStore.networkSetting])"
                 @click="selectNetwork"
                 :arrow="false"
             >
-                <fa-FontAwesome
-                    slot="icon"
-                    type="fab fa-skyatlas"
-                    size="32"
-                    class="mr-20"
-                    color="#f04a82"
-                    v-show="network === 'io'"
-                >
-                </fa-FontAwesome>
-                <fa-FontAwesome
-                    slot="icon"
-                    type="fab fa-skyatlas"
-                    size="32"
-                    class="mr-20"
-                    color="#03a9f4"
-                    v-show="network === 'cc'"
-                >
-                </fa-FontAwesome>
+                <template v-slot:icon>
+                    <Icon 
+                        icon="fa:skyatlas"
+                        class="mr-20"
+                        width="32"
+                        height="32"
+                        :color="userStore.networkSetting == 'io' ? '#f04a82' : '#03a9f4'"
+                    />
+                </template>
             </u-cell-item>
 
             <u-cell-item
                 :title="$t('my.switchLanguage')"
-                @click="selectLanguage"
+                @click="changeLang"
                 :arrow="false"
-            >
-                <fa-FontAwesome
-                    slot="icon"
-                    type="fas fa-language"
-                    size="32"
-                    class="mr-20"
-                    color="#f04a82"
-                    v-show="language === 'zh-cn'"
-                >
-                </fa-FontAwesome>
-                <fa-FontAwesome
-                    slot="icon"
-                    type="fas fa-language"
-                    size="32"
-                    class="mr-20"
-                    color="#03a9f4"
-                    v-show="language === 'en'"
-                >
-                </fa-FontAwesome>
+            >   <template v-slot:icon>
+                    <Icon 
+                        icon="cil:language"
+                        class="mr-20"
+                        width="32"
+                        height="32"
+                        :color="userStore.language == 'zh-cn' ? '#f04a82' : '#03a9f4'"
+                    />
+                </template>
             </u-cell-item>
         </u-cell-group>
     </view>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-import { getStore, setStore } from "@/util/service";
-
-export default {
-    components: {},
-    data() {
-        return {
-            language: getStore("language"),
-            network: getStore("networkSetting"),
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {},
-    //上拉加载
-    onReachBottom() {},
-    onLoad() {
-        this.uSetBarTitle(this.$t('titleBar.set'));
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    methods: {
-        //切换网络
-        selectNetwork() {
-            if (getStore("networkSetting") === "io") {
-                setStore("networkSetting", "cc");
-            } else if (getStore("networkSetting") === "cc") {
-                setStore("networkSetting", "io");
-            }
-            this.network = getStore("networkSetting");
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .setting {

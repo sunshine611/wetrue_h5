@@ -1,11 +1,69 @@
+<script setup>
+import { ref, getCurrentInstance, watch } from 'vue'
+const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    placeholder: {
+		type: String,
+		default: '写评论...'
+	},
+	isShow: {
+		type: Boolean,
+		default: false
+	},
+	stopLoading: {
+		type: Boolean,
+		default: false
+	}
+})
+
+const emits = defineEmits(["submitComment","clickOther"])
+
+const screenHeight = ref(0)
+const content = ref('')
+const btnLoading = ref(false)
+const submitColor = ref(false)
+
+watch(
+	() => content.value,
+	(val) => {
+		if (!!content.value) {
+			submitColor.value = '#fb5f5f';
+		} else {
+			submitColor.value = "#b0b0b0";
+		}
+	}
+)
+
+watch(
+	() => props.stopLoading,
+	(val) => {
+		btnLoading.value = !val;
+	}
+)
+
+const submitComment = () => {
+	if (!content.value) {
+		proxy.uShowToast(proxy.$t('components.enterContent'));
+		return false;
+	}
+	btnLoading.value = true;
+	emits('submitComment', content.value);
+}
+const clickOther = () => {
+	btnLoading.value = false;
+	emits('clickOther');
+}
+</script>
+
 <template>
-	<view :style="{'display':isShow?'inline-block':'none'}">
+	<view :style="{'display':isShow ? 'inline-block' : 'none'}">
 		<view @click="clickOther" class="comment-other"></view>
 		<view class="comment">
 			<view class="comment-info">
 				<view class="comment-input">
 					<textarea class="content" v-model="content" :placeholder="placeholder" :focus="isShow"
-						:maxlength="1000" />
+						:maxlength="1000" ></textarea>
 				</view>
 				<div class="comment-submit">
 					<u-button size="mini" @click.stop="submitComment" :loading="btnLoading" type="primary">{{ $t('components.send') }}</u-button>
@@ -14,53 +72,7 @@
 		</view>
 	</view>
 </template>
-<script>
-	export default {
-		props: {
-			placeholder: {
-				type: String,
-				default: '写评论...'
-			},
-			isShow: {
-				type: Boolean,
-				default: false
-			}
-		},
-		components: {},
-		data() {
-			return {
-				screenHeight: 0,
-				content: '',
-				btnLoading: false,
-			}
-		},
-		methods: {
-			submitComment() {
-				if (!this.content) {
-					this.uShowToast(this.$t('components.enterContent'));
-					return false;
-				}
-				this.btnLoading = true;
-				this.$emit('submitComment', this.content);
-			},
-			clickOther() {
-				this.$emit('clickOther');
-			}
-		},
-		watch: {
-			content: function(val, oldVal) {
-				if (!!this.content) {
-					this.submitColor = '#fb5f5f';
-				} else {
-					this.submitColor = "#b0b0b0";
-				}
-			},
-			isShow: function(val, oldVal) {
 
-			},
-		}
-	}
-</script>
 <style lang="scss" scoped>
 .comment-other {
 	position: fixed;

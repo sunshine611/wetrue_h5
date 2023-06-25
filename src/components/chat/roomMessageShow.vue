@@ -1,50 +1,42 @@
+<script setup>
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+
+const props = defineProps({
+    message:{}
+})
+
+const userType = (userAddress) => {
+	if (userAddress == userStore.token) {
+		return 'customer'
+	} else {
+		return 'home'
+	}
+}
+</script>
+
 <template>
 	<view class="m-item">
-		<view class="m-left" v-if="userType(message.userAddress)=='home'">
-			<view class="head-name" :class="[message.isAuth ? 'head-name-auth' : '']">
-				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
+		<view class="m-left" v-if="userType(props.message.userAddress)=='home'">
+			<view class="head-name" :class="[props.message.isAuth ? 'head-name-auth' : '']">
+				{{ props.message.nickname ? props.message.nickname : 'ak_' + props.message.userAddress.slice(-4) }}
 			</view>
 		</view>
 		<view class="m-content">
-			<view class="m-content-head" :class="{'m-content-head-right':userType(message.userAddress)=='customer'}">
-				{{ $moment(message.msgUtcTime).format(" MM/DD HH:mm:ss") }}
+			<view class="m-content-head" :class="{'m-content-head-right':userType(props.message.userAddress)=='customer'}">
+				{{ $moment(props.message.msgUtcTime).format(" MM/DD HH:mm:ss") }}
 			</view>
-			<view class="m-content-head" :class="{'m-content-head-right':userType(message.userAddress)=='customer'}">
-				<view :class="'m-content-head-'+userType(message.userAddress)">{{message.msgContent}} </view>
+			<view class="m-content-head" :class="{'m-content-head-right':userType(props.message.userAddress)=='customer'}">
+				<view :class="'m-content-head-'+userType(props.message.userAddress)">{{props.message.msgContent}} </view>
 			</view>
 		</view>
-		<view class="m-right" v-if="userType(message.userAddress)=='customer'">
-			<view class="head-name" :class="[message.isAuth ? 'head-name-auth' : '']">
-				{{ message.nickname ? message.nickname : 'ak_' + message.userAddress.slice(-4) }}
+		<view class="m-right" v-if="userType(props.message.userAddress)=='customer'">
+			<view class="head-name" :class="[props.message.isAuth ? 'head-name-auth' : '']">
+				{{ props.message.nickname ? props.message.nickname : 'ak_' + props.message.userAddress.slice(-4) }}
 			</view>
 		</view>
 	</view>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-
-export default {
-	data() {
-		return {
-
-		}
-	},
-	props: ['message'],
-	computed: {
-        ...mapGetters(["token"]),
-    },
-	methods: {
-        userType(userAddress) {
-			if (userAddress==this.token) {
-				return 'customer'
-			} else {
-				return 'home'
-			}
-        },
-	},
-}
-</script>
 
 <style>
 	.m-item {

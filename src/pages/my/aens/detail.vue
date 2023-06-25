@@ -1,3 +1,102 @@
+
+<script setup>
+import { reactive, getCurrentInstance } from 'vue'
+import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import Request from "luch-request";
+const http = new Request();
+import Backend from "@/util/backend";
+const { proxy } = getCurrentInstance();
+
+const myAensDetail = reactive({
+    aens: "", //AENS
+    lastHeight: 0, //最新高度
+    nameDetails: { //AENS详情
+        info:{
+            claims:[{tx:{name_fee:0}}],
+            ownership:{current:""},
+            pointers:{account_pubkey:""}
+        }
+    },
+    btnLoading: false, //按钮加载状态
+})
+
+onLoad ( async(option) => {
+    proxy.uSetBarTitle('AENS详情');
+    myAensDetail.aens = option.name;
+    await getLastHeight();
+    await getNameDetails();
+})
+
+//下拉刷新
+onPullDownRefresh ( () => {
+    setTimeout(function () {
+        uni.stopPullDownRefresh();
+    }, 500);
+})
+
+//获取aens详情
+const getNameDetails = () => {
+    http.get(
+        Backend.aeMdwApiNameDetails(myAensDetail.aens)
+    ).then((res) => {
+        myAensDetail.nameDetails = res.data;
+        myAensDetail.nameDetails.account = myAensDetail.nameDetails.status=='auction' 
+                                            ? myAensDetail.nameDetails.info.bids[0].tx.account_id 
+                                            : myAensDetail.nameDetails.info.ownership.current
+        myAensDetail.nameDetails.end_height = myAensDetail.nameDetails.status=='auction' 
+                                                ? myAensDetail.nameDetails.info.auction_end 
+                                                : myAensDetail.nameDetails.info.expire_height
+        myAensDetail.nameDetails.there_time = (myAensDetail.nameDetails.end_height - myAensDetail.lastHeight) * 3
+    });
+}
+//获取最新高度
+const getLastHeight = () => {
+    http.get(
+        Backend.nodeApiLastHeight()
+    ).then((res) => {
+        myAensDetail.lastHeight = res.data.height;
+    });
+}
+//复制粘贴板
+const copy = (str,viewId) => {
+    proxy.copyContent(str,viewId);
+}
+//竞拍
+const auction = async() => {
+    proxy.uShowToast('竞拍开发中');
+}
+//更新指向
+const update = async(select) => {
+    myAensDetail.btnLoading = true;
+    let res;
+    if (select == 'extend') {
+        let payload = {
+            type: select,
+            name: myAensDetail.aens
+        }
+        res = await aensUpdate(payload);
+    } else {
+        proxy.uShowToast(select + '开发中');
+    }
+    releaseCallback(res);
+}
+//转移
+const transfer = async() => {
+    proxy.uShowToast('转移开发中');
+}
+//回调
+const releaseCallback = (callback) => {
+    if (JSON.stringify(callback) !== "{}" && !!callback) {
+        proxy.uHideLoading();
+        myAensDetail.btnLoading = false;
+        proxy.uShowToast('AENS已更新');
+    } else {
+        this.uHideLoading();
+        myAensDetail.btnLoading = false;
+    }
+}
+</script>
+
 <template>
     <view class="detail">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
@@ -6,80 +105,82 @@
             title="AENS Detail"
             v-show="!validThirdPartySource()"
         >
-            <view slot="right">
+            <template v-slot:right>
                 <u-icon
-                    name="home"
                     class="mr-30"
+                    name="home"
                     size="34"
                     color="#f04a82"
                     @click="reLaunchUrl('../../my/index')"
                 ></u-icon>
-            </view>
+            </template>
         </u-navbar>
         <u-cell-group :border="false">
             <u-cell-item
                 title="Name"
-                :value="nameDetails.name"
+                :value="myAensDetail.nameDetails.name"
                 :arrow="false"
-                @click="copy(nameDetails.name,'#Name')"
+                @click="copy(myAensDetail.nameDetails.name,'#Name')"
                 id="Name"
             ></u-cell-item>
             <u-cell-item
                 title="Last bid"
                 :value="balanceFormat(
-                    nameDetails.status=='auction' ? nameDetails.info.last_bid.tx.name_fee : nameDetails.info.claims[0].tx.name_fee
+                    myAensDetail.nameDetails.status=='auction' 
+                    ? myAensDetail.nameDetails.info.last_bid.tx.name_fee 
+                    : myAensDetail.nameDetails.info.claims[0].tx.name_fee
                 ,2) + ' AE'"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
                 title="Last height"
-                :value="lastHeight"
+                :value="myAensDetail.lastHeight"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
                 title="End height"
-                :value="nameDetails.end_height"
+                :value="myAensDetail.nameDetails.end_height"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
                 title="There time"
-                :value="nameDetails.there_time + '分钟'"
+                :value="myAensDetail.nameDetails.there_time + '分钟'"
                 :arrow="false"
             ></u-cell-item>
             <u-cell-item
-                v-if="nameDetails.status=='name'"
+                v-if="myAensDetail.nameDetails.status=='name'"
                 class="break"
                 :title-style="{'width': '30%'}"
                 title="Hash"
-                :value="nameDetails.hash"
+                :value="myAensDetail.nameDetails.hash"
                 :arrow="false"
-                @click="copy(nameDetails.hash,'#Hash')"
+                @click="copy(myAensDetail.nameDetails.hash,'#Hash')"
                 id="Hash"
             ></u-cell-item>
             <u-cell-item
                 class="break"
                 :title-style="{'width': '30%'}"
                 title="Account"
-                :value="nameDetails.account"
+                :value="myAensDetail.nameDetails.account"
                 :arrow="false"
-                @click="copy(nameDetails.account,'#Account')"
+                @click="copy(myAensDetail.nameDetails.account,'#Account')"
                 id="Account"
             ></u-cell-item>
             <u-cell-item
-                v-if="nameDetails.status=='name'"
+                v-if="myAensDetail.nameDetails.status=='name'"
                 class="break"
                 :title-style="{'width': '30%'}"
                 title="Pointers"
                 label="account_pubkey"
-                :value="nameDetails.info.pointers.account_pubkey"
+                :value="myAensDetail.nameDetails.info.pointers.account_pubkey"
                 :arrow="false"
-                @click="copy(nameDetails.info.pointers.account_pubkey,'#Pointers')"
+                @click="copy(myAensDetail.nameDetails.info.pointers.account_pubkey,'#Pointers')"
                 id="Pointers"
             ></u-cell-item>
         </u-cell-group>
         <u-gap height="80"></u-gap>
 
-         <view class="updata" v-if="nameDetails.status=='auction'">
+         <view class="updata" v-if="myAensDetail.nameDetails.status=='auction'">
             <u-button
                 class="auction"
                 shape="circle"
@@ -91,7 +192,7 @@
             </u-button>
         </view>
 
-        <view class="updata" v-if="nameDetails.status=='name'">
+        <view class="updata" v-if="myAensDetail.nameDetails.status=='name'">
             <u-button
                 class="add-btn"
                 shape="circle"
@@ -116,7 +217,7 @@
                 type="primary"
                 :plain="true"
                 @click="update('extend')"
-                :loading="btnLoading"
+                :loading="myAensDetail.btnLoading"
                 >
                 {{ '更新' }}
             </u-button>
@@ -124,107 +225,6 @@
 
     </view>
 </template>
-
-<script>
-
-import Request from "luch-request";
-const http = new Request();
-import Backend from "@/util/backend";
-
-export default {
-    components: {
-    },
-    data() {
-        return {
-            aens: "", //AENS
-            lastHeight: 0, //最新高度
-            nameDetails: { //AENS详情
-                info:{
-                    claims:[{tx:{name_fee:0}}],
-                    ownership:{current:""},
-                    pointers:{account_pubkey:""}
-                }
-            },
-            btnLoading: false, //按钮加载状态
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        setTimeout(function () {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    async onLoad(option) {
-        this.uSetBarTitle('AENS详情');
-        this.aens = option.name;
-        await this.getLastHeight();
-        await this.getNameDetails();
-    },
-    watch: {
-
-    },
-    methods: {
-        //获取aens详情
-        getNameDetails() {
-            http.get(
-                Backend.aeMdwApiNameDetails(this.aens)
-            ).then((res) => {
-                this.nameDetails = res.data;
-                this.nameDetails.account = this.nameDetails.status=='auction' ? this.nameDetails.info.bids[0].tx.account_id : this.nameDetails.info.ownership.current
-                this.nameDetails.end_height = this.nameDetails.status=='auction' ? this.nameDetails.info.auction_end : this.nameDetails.info.expire_height
-                this.nameDetails.there_time = (this.nameDetails.end_height - this.lastHeight) * 3
-            });
-        },
-        //获取最新高度
-        getLastHeight() {
-            http.get(
-                Backend.nodeApiLastHeight()
-            ).then((res) => {
-                this.lastHeight = res.data.height;
-            });
-        },
-        //复制粘贴板
-        copy(str,divId) {
-           this.copyContent(str,divId);
-        },
-        //竞拍
-        async auction() {
-           this.uShowToast('竞拍开发中');
-        },
-        //更新指向
-        async update(select) {
-            this.btnLoading = true;
-            let res;
-            if (select == 'extend') {
-                let payload = {
-                    type: select,
-                    name: this.aens
-                }
-                res = await this.aensUpdate(payload);
-            } else {
-                this.uShowToast(select + '开发中');
-            }
-            this.releaseCallback(res);
-        },
-        //转移
-        async transfer() {
-           this.uShowToast('转移开发中');
-        },
-        //回调
-        releaseCallback(callback) {
-            console.log(callback)
-            if (JSON.stringify(callback) !== "{}" && !!callback) {
-                this.uHideLoading();
-                this.btnLoading = false;
-                this.uShowToast('AENS已更新');
-            } else {
-                this.uHideLoading();
-                this.btnLoading = false;
-            }
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 .detail {

@@ -1,8 +1,129 @@
+<script setup>
+import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+import HeadImg from "@/components/HeadImg";
+import Name from "@/components/Name";
+import TopicMore from "@/components/TopicMore";
+
+import { ref, getCurrentInstance } from 'vue'
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+const { proxy } = getCurrentInstance();
+
+const hash = ref(null) //回复hash
+const replyList = ref([]) //回复评论列表
+const more = ref('loadmore') //加载更多
+const commentInfo = ref({ //评论信息
+    users: {
+        avatar: "",
+        userAddress: "",
+    },
+})
+const pageInfo = ref({ //页码信息
+    page: 1,
+    pageSize: 10,
+    totalPage: 1,
+    totalSize: 0,
+})
+
+onLoad ( (option) => {
+    proxy.uSetBarTitle(proxy.$t('index.replyDetails'));
+    hash.value = option.hash;
+    getCommentInfo();
+    getReply();
+});
+//下拉刷新
+onPullDownRefresh ( () => {
+    getCommentInfo();
+    pageInfo.value.page = 1;
+    getReply();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+//上拉加载
+onReachBottom ( () => {
+    pageInfo.value.page++;
+    getReply();
+});
+
+//获取评论详情
+const getCommentInfo = () => {
+    let params = {
+        hash: hash.value,
+    };
+    proxy.$http.post("/Comment/tx", params).then((res) => {
+        if (res.code === 200) {
+            commentInfo.value = res.data;
+        }
+    });
+}
+// 回复列表
+const getReply = () => {
+    let params = {
+        hash: hash.value,
+        page: pageInfo.value.page,
+        size: pageInfo.value.pageSize,
+    };
+    proxy.$http
+        .post("/Reply/list", params, { custom: { isToast: true } })
+        .then((res) => {
+            if (res.code === 200) {
+                pageInfo.value.totalPage = parseInt(res.data.totalPage);
+                pageInfo.value.totalSize = parseInt(res.data.totalSize);
+                more.value = "loadmore";
+                if (pageInfo.value.page === 1) {
+                    replyList.value = res.data.data;
+                } else {
+                    if (pageInfo.value.page > pageInfo.value.totalPage) {
+                        pageInfo.value.page = pageInfo.value.totalPage;
+                        more.value = "nomore";
+                    } else {
+                        replyList.value = replyList.value.concat(
+                            res.data.data
+                        );
+                    }
+                }
+                if (status == "pullDown") {
+                    uni.stopPullDownRefresh();
+                    replyList.value = res.data.data;
+                }
+            } else {
+                more.value = "nomore";
+            }
+        });
+}
+//是否点赞
+const praise = (type, item) => {
+    if (type === "comment") {
+        let params = {
+            hash: hash.value,
+            type: type,
+        };
+        proxy.$http.post("/Submit/praise", params).then((res) => {
+            if (res.code === 200) {
+                commentInfo.value.isPraise = res.data.isPraise;
+                commentInfo.value.praise = res.data.praise;
+            }
+        });
+    } else if (type === "reply") {
+        let params = {
+            hash: item.hash,
+            type: type,
+        };
+        proxy.$http.post("/Submit/praise", params).then((res) => {
+            if (res.code === 200) {
+                item.isPraise = res.data.isPraise;
+                item.praise = res.data.praise;
+            }
+        });
+    }
+}
+</script>
+
 <template>
     <view class="wrap">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('index.replyDetails')" v-show="!validThirdPartySource()">
-            <div slot="right">
+            <template v-slot:right>
                 <u-icon
                     class="mr-30"
                     name="home"
@@ -10,19 +131,19 @@
                     color="#f04a82"
                     @click="reLaunchUrl('index')"
                 ></u-icon>
-            </div>
+            </template>
         </u-navbar>
         <view class="comment">
             <view class="top">
                 <view class="left">
-                    <div class="head-box">
+                    <view class="head-box">
                         <HeadImg
                             :userInfo="commentInfo.users"
                             :isLink="true"
                             width="70rpx"
                             height="70rpx"
                         ></HeadImg>
-                    </div>
+                    </view>
                     <view class="user-info">
                         <Name :userInfo="commentInfo.users"></Name>
                         <view class="date"
@@ -73,14 +194,14 @@
                 <view class="comment">
                     <view class="top">
                         <view class="left">
-                            <div class="head-box">
+                            <view class="head-box">
                                 <HeadImg
                                     :userInfo="item.users"
                                     :isLink="true"
                                     width="70rpx"
                                     height="70rpx"
                                 ></HeadImg>
-                            </div>
+                            </view>
                             <view class="user-info">
                                 <Name :userInfo="item.users"></Name>
                                 <view class="date"
@@ -152,134 +273,6 @@
         <u-gap height="20"></u-gap>
     </view>
 </template>
-
-<script>
-import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
-import HeadImg from "@/components/HeadImg";
-import Name from "@/components/Name";
-import TopicMore from "@/components/TopicMore";
-
-export default {
-    components: {
-        mpHtml,
-        HeadImg,
-        Name,
-        TopicMore,
-    },
-    data() {
-        return {
-            replyList: [], //回复评论列表
-            commentInfo: {
-                users: {
-                    avatar: "",
-                    userAddress: "",
-                },
-            }, //评论信息
-            pageInfo: {
-                page: 1,
-                pageSize: 10,
-                totalPage: 1,
-                totalSize: 0,
-            }, //页码信息
-            more: "loadmore", //加载更多
-        };
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.getCommentInfo();
-        this.pageInfo.page = 1;
-        this.getReply();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    //上拉加载
-    onReachBottom() {
-        this.pageInfo.page++;
-        this.getReply();
-    },
-    onLoad(option) {
-        this.uSetBarTitle(this.$t('index.replyDetails'));
-        this.hash = option.hash;
-        this.getCommentInfo();
-        this.getReply();
-    },
-    methods: {
-        //获取评论详情
-        getCommentInfo() {
-            let params = {
-                hash: this.hash,
-            };
-            this.$http.post("/Comment/tx", params).then((res) => {
-                if (res.code === 200) {
-                    this.commentInfo = res.data;
-                }
-            });
-        },
-        // 回复列表
-        getReply() {
-            let params = {
-                hash: this.hash,
-                page: this.pageInfo.page,
-                size: this.pageInfo.pageSize,
-            };
-            this.$http
-                .post("/Reply/list", params, { custom: { isToast: true } })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.pageInfo.totalPage = parseInt(res.data.totalPage);
-                        this.pageInfo.totalSize = parseInt(res.data.totalSize);
-                        this.more = "loadmore";
-                        if (this.pageInfo.page === 1) {
-                            this.replyList = res.data.data;
-                        } else {
-                            if (this.pageInfo.page > this.pageInfo.totalPage) {
-                                this.pageInfo.page = this.pageInfo.totalPage;
-                                this.more = "nomore";
-                            } else {
-                                this.replyList = this.replyList.concat(
-                                    res.data.data
-                                );
-                            }
-                        }
-                        if (status == "pullDown") {
-                            uni.stopPullDownRefresh();
-                            this.replyList = res.data.data;
-                        }
-                    } else {
-                        this.more = "nomore";
-                    }
-                });
-        },
-        //是否点赞
-        praise(type, item) {
-            if (type === "comment") {
-                let params = {
-                    hash: this.hash,
-                    type: type,
-                };
-                this.$http.post("/Submit/praise", params).then((res) => {
-                    if (res.code === 200) {
-                        this.commentInfo.isPraise = res.data.isPraise;
-                        this.commentInfo.praise = res.data.praise;
-                    }
-                });
-            } else if (type === "reply") {
-                let params = {
-                    hash: item.hash,
-                    type: type,
-                };
-                this.$http.post("/Submit/praise", params).then((res) => {
-                    if (res.code === 200) {
-                        item.isPraise = res.data.isPraise;
-                        item.praise = res.data.praise;
-                    }
-                });
-            }
-        },
-    },
-};
-</script>
 
 <style lang="scss" scoped>
 page {

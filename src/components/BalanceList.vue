@@ -1,82 +1,82 @@
+<script setup>
+import { getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
+const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    tokenList: {
+        type: Array,
+        default: () => [],
+    },
+    userAddress: {
+        type: String,
+        default: "",
+    },
+    sendClick: {
+        type: Boolean,
+        default: false,
+    },
+})
+//Token列表查看用户账户转账记录
+const transferRecord = (item) => {
+    if (!!item.contract_id) {
+        proxy.goUrl(
+            `tokenTransferRecode?contract=${item.contract_id}&tokenName=${item.symbol}&userAddress=${proxy.userAddress}`
+        );
+    } else {
+        proxy.goUrl(`tokenTransferRecode?userAddress=${proxy.userAddress}`);
+    }
+}
+</script>
+
 <template>
-    <div class="balance-list">
+    <view class="balance-list">
         <u-cell-group :border="false">
-            <div v-for="(item, index) in tokenList" :key="index">
+            <view v-for="(item, index) in props.tokenList" :key="index">
                 <u-cell-item 
                     @click="transferRecord(item)" 
-                    :arrow="!sendClick"
+                    :arrow="!props.sendClick"
                 >
-                    <div slot="icon">
-                        <div class="token-icon">
+                    <template v-slot:icon>
+                        <view class="token-icon">
                             {{ item.symbol }}
-                            <div class='level' v-if="item.cert == 'TRUE'">
+                            <view class='level' v-if="item.cert == 'TRUE'">
                                 <text class="text">V</text>
-                            </div>
-                        </div>
-                    </div>
-                    <div slot="right-icon" class="amount">
-                        {{ $t('my.balance') + ': ' + balanceFormat(item.balance) }}
-                        <u-button
-                        shape="square"
-                        type="primary"
-                        size="mini"
-                        :ripple="true"
-                        class="ml-20"
-                        @click="
-                            goUrl(
-                                `transfer?tokenName=${item.symbol}&contractId=${item.contract_id}&balance=${item.balance}`
-                            )
-                        "
-                        v-show="sendClick && !validThirdPartySource()"
-                        ><fa-FontAwesome
-                            type="fas fa-exchange-alt"
-                            size="24"
-                            class="mr-10"
-                            color="#fff"
-                        >
-                        </fa-FontAwesome>
-                            {{ $t('my.send') }}
-                        </u-button>
-                    </div>
+                            </view>
+                        </view>
+                    </template>
+                    <template v-slot:right-icon>
+                        <view class="amount">
+                            {{ $t('my.balance') + ': ' + balanceFormat(item.balance) }}
+                            <u-button
+                            shape="square"
+                            type="primary"
+                            size="mini"
+                            :ripple="true"
+                            class="ml-20"
+                            @click="
+                                goUrl(
+                                    `transfer?tokenName=${item.symbol}&contractId=${item.contract_id}&balance=${item.balance}`
+                                )
+                            "
+                            v-show="props.sendClick && !validThirdPartySource()"
+                            >
+                            <Icon
+                                icon="la:exchange-alt"
+                                width="24"
+                                class="mr-10"
+                                color="#fff"
+                            />
+                                {{ $t('my.send') }}
+                            </u-button>
+                        </view>
+                    </template>
                 </u-cell-item>
-            </div>
+            </view>
         </u-cell-group>
-    </div>
+    </view>
 </template>
-<script>
-export default {
-    components: {},
-    props: {
-        tokenList: {
-            type: Array,
-            default: () => [],
-        },
-        userAddress: {
-            type: String,
-            default: "",
-        },
-        sendClick: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    data() {
-        return {};
-    },
-    methods: {
-        //查看用户账户转账记录
-        transferRecord(item) {
-            if (!!item.contract_id) {
-                this.goUrl(
-                    `tokenTransferRecode?contract=${item.contract_id}&tokenName=${item.symbol}&userAddress=${this.userAddress}`
-                );
-            } else {
-                this.goUrl(`tokenTransferRecode?userAddress=${this.userAddress}`);
-            }
-        },
-    },
-};
-</script>
+
 <style lang="scss" scoped>
 .balance-list {
     .token-icon {

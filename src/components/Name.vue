@@ -1,51 +1,57 @@
+<script setup>
+import { Icon } from '@iconify/vue';
+
+const props = defineProps({
+    userInfo: {
+        type: Object,
+        default: () => {},
+    },
+})
+</script>
+
 <template>
-    <div
+    <view
         class="name-area"
         @click="goUrl('/pages/my/userInfo?userAddress=' + userInfo.userAddress)"
     >
-    <div class="auth-sign" v-if="userInfo.isAuth">
-            <fa-FontAwesome
-                type="fas fa-user-shield"
-                size="28"
+    <view class="name">
+        {{ userInfo.nickname || $t('my.cryptonym') }}
+    </view>
+    <view class="auth-sign" v-show="userInfo.isAuth">
+            <Icon
+                icon="line-md:moon-to-sunny-outline-loop-transition"
+                width="16"
                 color="#2979FF"
-            >
-            </fa-FontAwesome>
-        </div>
-        <div class="open-vip" v-if="userInfo.isVip">
-            <u-icon 
-                name="level"
-                size="28"
+            />
+        </view>
+        <view class="open-vip" v-show="userInfo.isVip">
+            <Icon
+                icon="ri:vip-line"
+                width="16"
                 color="#CD7F32"
-            ></u-icon>
-        </div>
-        <div :class="['name', userInfo.isAuth ? 'auth' : '']">
-            {{ userInfo.nickname || $t('my.cryptonym') }}
-        </div>
-        <text class="userid">{{ userInfo.defaultAens ? 'AENS: ' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
-    </div>
+            />
+        </view>
+        <text class="userid">{{ userInfo.defaultAens ? '@' + userInfo.defaultAens : 'ID: ' + userInfo.userAddress.slice(-4) }}</text>
+    </view>
 </template>
-<script>
-export default {
-    props: {
-        userInfo: {
-            type: Object,
-            default: () => {},
-        },
-    },
-    data() {
-        return {};
-    },
-};
-</script>
+
 <style lang="scss" scoped>
 .name-area {
     font-size: 28rpx;
     display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 80%;
     .name {
         display: inline-block;
+        font-weight: bold;
+        max-width: 50%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         &.auth {
             color: #2979ff;
-            font-weight: bold;
         }
     }
     .auth-sign {
@@ -57,10 +63,12 @@ export default {
         display: inline-block;
     }
     .userid {
-        margin-left: 20rpx;
-        font-size: 24rpx;
-        color: #91908e;
-        width: 100%;
+        margin-left: 5rpx;
+        color: #999;
+        font-size: 26rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 </style>

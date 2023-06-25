@@ -1,19 +1,16 @@
-# wetrue
+# WeTrue V3
 
 ## Project setup
 ```
-npm install
+pnpm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+uni
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+uni build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

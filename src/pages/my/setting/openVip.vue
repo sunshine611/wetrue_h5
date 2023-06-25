@@ -1,7 +1,106 @@
-<!--质押挖矿-->
+<script setup>
+import { reactive, getCurrentInstance } from 'vue'
+import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+
+const vipConfig = reactive({
+    isAgree: false, //是否同意
+    btnLoading: false, //按钮状态
+    configInfo: {}, //后端openVip配置项
+    wttBalance: 0, //账户WTT余额
+    isWaiting: false, //内容
+})
+
+onLoad ( () => {
+    getVipConfig();
+    proxy.getUserInfo();
+});
+//下拉刷新
+onPullDownRefresh ( () => {
+    getVipConfig();
+    proxy.getUserInfo();
+    getWttBalance();
+    setTimeout(function() {
+        uni.stopPullDownRefresh();
+    }, 500);
+});
+//获取开通信息
+const getVipConfig = () => {
+    proxy.$http.post("/OpenVip/configInfo").then((res) => {
+        if (res.code === 200) {
+            vipConfig.configInfo = res.data;
+            getWttBalance();
+        }
+    });
+}
+//开通
+const openVip = () => {
+    if (vipConfig.isAgree) {
+        if (proxy.validThirdPartySource()) {
+            proxy.uShowToast(
+                proxy.$t('index.thirdPartyNotOpen'),
+            );
+            return false;
+        };
+        vipConfig.btnLoading = true;
+        if(!vipConfig.configInfo.openVip) {
+            proxy.uShowToast( proxy.$t('my.openVipPage.channel') );
+            vipConfig.btnLoading = false;
+            return;
+        }
+        if ( vipConfig.wttBalance < (vipConfig.configInfo.openVipAmount / Math.pow(10, 18)) ) {
+            proxy.uShowToast( proxy.$t('my.openVipPage.balanceLow') );
+            vipConfig.btnLoading = false;
+            return;
+        }
+        proxy.$http.post("/OpenVip/state").then((res) => {
+            if (res.code === 200) {
+                if (res.data) {
+                    proxy.uShowToast( proxy.$t('my.openVipPage.repeatOpen') );
+                } else {
+                    openStart();
+                }
+            }
+        });
+        vipConfig.btnLoading = false;
+    } else {
+        proxy.uShowToast( proxy.$t('my.openVipPage.clause') );
+    }
+}
+//开始开通
+const openStart = async () => {
+    const result = await proxy.contractTransfer(
+        vipConfig.configInfo.openTokenAddress,
+        vipConfig.configInfo.openVipAddress,
+        vipConfig.configInfo.openVipAmount / Math.pow(10, 18),
+        {type:'open_vip'}
+    );
+    
+    if (result) {
+        proxy.postHashToWeTrueApi(result); //提交
+        proxy.getUserInfo();
+        getWttBalance();
+        proxy.uShowToast(proxy.$t('my.openVipPage.waiting') , "none", 3000);
+        vipConfig.isWaiting = true;
+        uni.hideLoading();
+    }
+}
+//获取WTT余额
+const getWttBalance = () => {
+    proxy.getTokenBalance(
+        vipConfig.configInfo.openTokenAddress,
+        userStore.token
+    ).then((res) => {
+        vipConfig.wttBalance = proxy.balanceFormat( res.toString(10) ) || 0;
+    });;
+}
+</script>
+
 <template>
-    <div class="openvip-dig">
-        <div class="icon-list" v-show="!validThirdPartySource()">
+    <view class="openvip-dig">
+        <view class="icon-list" v-show="!validThirdPartySource()">
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
             <u-icon
                 name="home"
@@ -10,10 +109,10 @@
                 color="#fff"
                 @click="reLaunchUrl('../../index/index')"
             ></u-icon>
-        </div>
-        <div class="title">{{ $t('my.openVipPage.open') }}<br />WeTrue VIP</div>
-        <div class="open-openvip" v-if="!isWaiting && !userInfo.isVip">
-            <div class="title">
+        </view>
+        <view class="title">{{ $t('my.openVipPage.open') }}<br />WeTrue VIP</view>
+        <view class="open-openvip" v-if="!vipConfig.isWaiting && !userStore.userInfo.isVip">
+            <view class="title">
                 <u-image
                     width="92rpx"
                     height="46rpx"
@@ -21,14 +120,14 @@
                     class="inline mr-5"
                 ></u-image>
                 WeTrue VIP
-            </div>
-            <div class="content">
-                <div class="text">
-                    {{ $t('my.openVipPage.openText', [configInfo.openVipAmount / Math.pow(10, 18)]) }}
-                </div>
-            </div>
+            </view>
+            <view class="content">
+                <view class="text">
+                    {{ $t('my.openVipPage.openText', [vipConfig.configInfo.openVipAmount / Math.pow(10, 18)]) }}
+                </view>
+            </view>
             <u-checkbox-group>
-                <u-checkbox v-model="isAgree" name="agreeOpen">
+                <u-checkbox v-model="vipConfig.isAgree" name="agreeOpen">
                     {{ $t('my.openVipPage.agree') }}
                 </u-checkbox>
             </u-checkbox-group>
@@ -36,159 +135,38 @@
             <u-button 
                 type="primary"
                 @click="openVip"
-                :loading="btnLoading"
+                :loading="vipConfig.btnLoading"
             >
             {{ $t('my.openVipPage.determine') }}
             </u-button
             >
             <u-gap :height="20"></u-gap>
-            <div class="clearfix">
-                <div class="pull-right">{{ $t('my.openVipPage.balance', [wttBalance]) }}</div>
-            </div>
-        </div>
+            <view class="clearfix">
+                <view class="pull-right">{{ $t('my.openVipPage.balance', [vipConfig.wttBalance]) }}</view>
+            </view>
+        </view>
 
-        <div class="start-openvip" v-else>
-            <div class="text">
-                {{ isWaiting ? $t('my.openVipPage.waiting') : $t('my.openVipPage.complete') }}
-            </div>
-        </div>
+        <view class="start-openvip" v-else>
+            <view class="text">
+                {{ vipConfig.isWaiting ? $t('my.openVipPage.waiting') : $t('my.openVipPage.complete') }}
+            </view>
+        </view>
 
-        <div class="rule">
-            <div class="h3">{{ $t('my.openVipPage.openRule') }}</div>
+        <view class="rule">
+            <view class="h3">{{ $t('my.openVipPage.openRule') }}</view>
             <u-gap :height="10"></u-gap>
             <b>{{ $t('my.openVipPage.ruleFeeTitle') }}</b>
-            <br />{{ configInfo.openVipAmount / Math.pow(10, 18) }} WTT.<br />
+            <br />{{ vipConfig.configInfo.openVipAmount / Math.pow(10, 18) }} WTT.<br />
             <u-gap :height="10"></u-gap>
             <b>{{ $t('my.openVipPage.ruleBenefitsTitle') }}</b>
             <br />{{ $t('my.openVipPage.ruleBenefitsText') }}<br />
             <u-gap :height="10"></u-gap>
             <b>{{ $t('my.openVipPage.ruleExplainTitle') }}</b>
             <br />{{ $t('my.openVipPage.ruleExplainText') }}<br />
-        </div>
-    </div>
+        </view>
+    </view>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-
-export default {
-    components: {
-
-    },
-    data() {
-        return {
-            userInfo: {}, //用户信息
-            isAgree: false, //是否同意
-            btnLoading: false, //按钮状态
-            configInfo: {}, //后端openVip配置项
-            wttBalance: 0, //账户WTT余额
-            isWaiting: false, //内容
-        };
-    },
-    computed: {
-        ...mapGetters(["token"]),
-    },
-    onLoad() {
-        this.getConfigInfo();
-        this.getUserInfo();
-    },
-    //下拉刷新
-    onPullDownRefresh() {
-        this.getConfigInfo();
-        this.getUserInfo();
-        this.getWttBalance();
-        setTimeout(function() {
-            uni.stopPullDownRefresh();
-        }, 500);
-    },
-    methods: {
-        //获取用户信息
-        getUserInfo() {
-            let params = {
-                userAddress: this.token,
-            };
-            this.$http
-                .post("/User/info", params, { custom: { isToast: true } })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.userInfo = res.data;
-                    }
-                });
-        },
-        //获取开通信息
-        getConfigInfo() {
-            this.$http
-                .post("/OpenVip/configInfo").then((res) => {
-                    if (res.code === 200) {
-                        this.configInfo = res.data;
-                        this.getWttBalance();
-                    }
-                });
-        },
-        //开通
-        openVip() {
-            if (this.isAgree) {
-                if (this.validThirdPartySource()) {
-                    this.uShowToast(
-                        this.$t('index.thirdPartyNotOpen'),
-                    );
-                    return false;
-                };
-                this.btnLoading = true;
-                if(!this.configInfo.openVip) {
-                    this.uShowToast( this.$t('my.openVipPage.channel') );
-                    this.btnLoading = false;
-                    return;
-                }
-                if ( this.wttBalance < (this.configInfo.openVipAmount / Math.pow(10, 18)) ) {
-                    this.uShowToast( this.$t('my.openVipPage.balanceLow') );
-                    this.btnLoading = false;
-                    return;
-                }
-                this.$http.post("/OpenVip/state").then((res) => {
-                    if (res.code === 200) {
-                        if (res.data) {
-                            this.uShowToast( this.$t('my.openVipPage.repeatOpen') );
-                        } else {
-                            this.openStart();
-                        }
-                    }
-                });
-                this.btnLoading = false;
-            } else {
-                this.uShowToast( this.$t('my.openVipPage.clause') );
-            }
-        },
-        //开始开通
-        async openStart() {
-            const result = await this.contractTransfer(
-                this.configInfo.openTokenAddress,
-                this.configInfo.openVipAddress,
-                this.configInfo.openVipAmount / Math.pow(10, 18),
-                {type:'open_vip'}
-            );
-            
-            if (result) {
-                this.postHashToWeTrueApi(result); //提交
-                this.getUserInfo();
-                this.getWttBalance();
-                this.uShowToast(this.$t('my.openVipPage.waiting') , "none", 3000);
-                this.isWaiting = true;
-                uni.hideLoading();
-            }
-        },
-        //获取WTT余额
-        getWttBalance() {
-            this.getTokenBalance(
-                this.configInfo.openTokenAddress,
-                this.token
-            ).then((res) => {
-                this.wttBalance = this.balanceFormat( res.toString(10) ) || 0;
-            });;
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 page {
     background-color: #beb8c8;

@@ -1,52 +1,45 @@
+<script setup>
+import { getCurrentInstance } from 'vue'
+import { Icon } from '@iconify/vue';
+const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    postButtonInfo: {
+        type: Object,
+        default: () => {
+            return {}
+        },
+    },
+})
+
+//发帖
+const post = () => {
+    //WeTrue登陆发帖
+    if (props.postButtonInfo.type == 'topic') {
+        proxy.goUrl(
+            "editor?topic=" + props.postButtonInfo.keyword
+        );
+    } else if (props.postButtonInfo.type == 'shtip') {
+        proxy.goUrl(
+            "editor?shtip=true"
+        );
+    } else {
+        proxy.goUrl('editor');
+    }
+}
+
+</script>
+
 <template>
     <view class="post" v-if="validToken()">
-        <fa-FontAwesome
-            type="fas fa-plus"
-            size="36"
+        <Icon
+            icon="fa:plus"
             color="rgba(255,255,255,0.9)"
             @tap="post()"
-        >
-        </fa-FontAwesome>
+        />
     </view>
 </template>
-<script>
 
-export default {
-    components: {
-    },
-    props: {
-        postButtonInfo: {
-            type: Object,
-            default: () => {
-                return {}
-            },
-        },
-    },
-    data() {
-        return {
-        };
-    },
-    watch: {
-    },
-    methods: {
-        //发帖
-        post() {
-            //WeTrue登陆发帖
-            if (this.postButtonInfo.type === 'topic') {
-                this.goUrl(
-                    "editor?topic=" + this.postButtonInfo.keyword
-                );
-            } else if (this.postButtonInfo.type === 'shtip') {
-                this.goUrl(
-                    "editor?shtip=true"
-                );
-            } else {
-                this.goUrl('editor');
-            }
-        },
-    },
-};
-</script>
 <style lang="scss" scoped>
 .post {
         position: fixed;

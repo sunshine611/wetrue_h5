@@ -30,4 +30,4 @@ contract MigrateTokenInterface =
     stateful entrypoint burn_token_balance: (AEX9_Interface, int) => int
     //获取合约所有者地址
     entrypoint owner: () => address
-`;
+`

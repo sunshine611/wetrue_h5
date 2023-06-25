@@ -1,28 +1,17 @@
-<template>
-    <div class="topic-more">
-        <fa-FontAwesome
-            type="fas fa-angle-down"
-            size="36"
-            color="#cecece"
-            @click="moreOpera"
-        >
-        </fa-FontAwesome>
-        <u-action-sheet
-            :list="moreList"
-            v-model="moreShow"
-            @click="handleOpera"
-        ></u-action-sheet>
-    </div>
-</template>
 <script>
+import { ref, getCurrentInstance } from 'vue'
 import HeadImg from "@/components/HeadImg.vue";
 import Name from "@/components/Name";
+import { Icon } from '@iconify/vue';
 import Backend from "@/util/backend";
+import { useUserStore } from "@/stores/userStore";
 
 export default {
+    name: 'TopicMore',
     components: {
         HeadImg,
         Name,
+        Icon,
     },
     props: {
         topicInfo: {
@@ -34,131 +23,138 @@ export default {
             default: () => [],
         },
     },
-    data() {
-        return {
-            moreShow: false, //下箭头控制显示更多操作
-        };
-    },
-    mounted() {
-        // #ifdef H5
+    setup(props, { }) {
+        const { proxy } = getCurrentInstance();
+        const userStore = useUserStore();
+        const moreShow = ref(false) //二维码弹层
+
         //暴露方法名"receiveWeTrueMessage"
         window["receiveWeTrueMessage"] = async (res) => {
             if (res.code == 200) {
-                this.postHashToWeTrue(res,true).then((res) => {
-                    this.releaseCallback(res);
+                proxy.postHashToWeTrue(res,true).then((res) => {
+                    proxy.releaseCallback(res);
                 });
             }
         };
-        // #endif
-    },
-    computed: {
-        //显示更多操作
-        moreList() {
-            let moreList = [
-                {
-                    text: this.$t('index.focus'),
-                    subText: this.$t('index.focusText'),
-                },
-                {
-                    text: this.$t('index.complain'),
-                    subText: this.$t('index.complainText'),
-                },
-                {
-                    text: this.$t('index.blacklist'),
-                    subText: this.$t('index.blacklistText'),
-                },
-                {
-                    text: this.$t('index.aeternal'),
-                    subText: this.$t('index.aeternalText'),
-                }
-            ]
-            if (this.validAdmin()){
-                moreList.push({
-                    text: 'Test Admin',
-                    subText: 'Test Admin',
-                })
+
+        let moreList = [
+            {
+                text: proxy.$t('index.focus'),
+                subText: proxy.$t('index.focusText'),
+            },
+            {
+                text: proxy.$t('index.complain'),
+                subText: proxy.$t('index.complainText'),
+            },
+            {
+                text: proxy.$t('index.blacklist'),
+                subText: proxy.$t('index.blacklistText'),
+            },
+            {
+                text: proxy.$t('index.aeternal'),
+                subText: proxy.$t('index.aeternalText'),
             }
-            return moreList;
-        },
-    },
-    watch: {},
-    methods: {
+        ]
         //更多操作
-        moreOpera() {
-            this.moreShow = true;
-            if (this.topicInfo.isFocus) {
-                this.moreList[0] = {
-                    text: this.$t('index.cancelFocus'),
-                    subText: this.$t('index.cancelFocusText'),
+        const moreOpera = () => {
+            moreShow.value = true;
+            if (props.topicInfo.isFocus) {
+                moreList[0] = {
+                    text: proxy.$t('index.cancelFocus'),
+                    subText: proxy.$t('index.cancelFocusText'),
                 };
             } else {
-                this.moreList[0] = {
-                    text: this.$t('index.focus'),
-                    subText: this.$t('index.focusText'),
+                moreList[0] = {
+                    text: proxy.$t('index.focus'),
+                    subText: proxy.$t('index.focusText'),
                 };
             }
-        },
+        }
         //更多操作选择事件
-        handleOpera(index) {
+        const handleOpera = (index) => {
             if (index === 0) {
-                this.focus();
+                focus();
             } else if (index === 1) {
-                this.complain();
+                complain();
             } else if (index === 2) {
-                this.blacklist()
+                blacklist()
             } else if (index === 3) {
                 window.open(
-                    Backend.explorerViewhUrl(this.topicInfo.hash)
+                    Backend.explorerViewhUrl(props.topicInfo.hash)
                 );
             }
-        },
+        }
         //是否关注
-        focus() {
+        const focus = () => {
             let payload = {
-                action: this.topicInfo.isFocus ? 'false' : 'true',
-                content: this.topicInfo.users.userAddress,
+                action: props.topicInfo.isFocus ? 'false' : 'true',
+                content: props.topicInfo.users.userAddress,
             };
-            this.wetrueSend("focus", payload).then((res) => {
-                if (this.postList.length > 0) {
-                    for (let i = 0; i < this.postList.length; i++) {
+            proxy.wetrueSend("focus", payload).then((res) => {
+                if (props.postList.length > 0) {
+                    for (let i = 0; i < props.postList.length; i++) {
                         if (
-                            this.postList[i].users.userAddress ===
-                            this.topicInfo.users.userAddress
+                            props.postList[i].users.userAddress ===
+                            props.topicInfo.users.userAddress
                         ) {
-                            this.postList[i].isFocus = !this.postList[i].isFocus;
+                            props.postList[i].isFocus = !props.postList[i].isFocus;
                         }
                     }
                 } else {
-                    this.topicInfo.isFocus = !this.topicInfo.isFocus;
+                    props.topicInfo.isFocus = !props.topicInfo.isFocus;
                 }
-                this.uHideLoading();
+                proxy.uHideLoading();
             });
-        },
+        }
         //投诉
-        complain() {
-            let params = { hash: this.topicInfo.hash };
-            this.$http.post("/Submit/complain", params).then((res) => {
+        const complain = () => {
+            let params = { hash: props.topicInfo.hash };
+            proxy.$http.post("/Submit/complain", params).then((res) => {
                 if (res.code === 200) {
-                    this.uShowToast(this.$t('components.complainSuccess'));
+                    proxy.uShowToast(proxy.$t('components.complainSuccess'));
                 }
             });
-        },
+        }
         //黑名单
-        blacklist() {
-            let params = this.topicInfo.users.userAddress;
-            this.$store.dispatch("user/setBlacklist", params);
-            if (this.postList.length > 0) {
-                for (let i = 0; i < this.postList.length; i++) {
+        const blacklist = () => {
+            let params = props.topicInfo.users.userAddress;
+            userStore.setBlacklist(params)
+            if (props.postList.length > 0) {
+                for (let i = 0; i < props.postList.length; i++) {
                     if (
-                        this.postList[i].users.userAddress ===
-                        this.topicInfo.users.userAddress
+                        props.postList[i].users.userAddress ===
+                        props.topicInfo.users.userAddress
                     ) {
-                        this.postList.splice(i,1);
+                        props.postList.splice(i,1);
                     }
                 }
             }
-            this.uShowToast(this.$t('components.blacklistSuccess'));
-        },
+            proxy.uShowToast(proxy.$t('components.blacklistSuccess'));
+        }
+
+        return {
+            moreList,
+            handleOpera,
+            moreShow,
+            moreOpera,
+        }
     },
-};
+    
+}
 </script>
+
+<template>
+    <view class="topic-more">
+        <Icon
+            icon="fa:angle-down"
+            width="10"
+            color="#cecece"
+            @click="moreOpera"
+        />
+        <u-action-sheet
+            :list="moreList"
+            v-model="moreShow"
+            @click="handleOpera"
+        ></u-action-sheet>
+    </view>
+</template>
