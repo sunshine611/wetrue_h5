@@ -73,7 +73,7 @@ const momentCN={
     },
     relativeTime: {
         future: '%s内',
-        past: '%s前',
+        past: '%s',
         s: '几秒',
         ss: '%d秒',
         m: '1分钟',

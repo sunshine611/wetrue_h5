@@ -114,21 +114,29 @@ const getTopicInfo = () => {
         </u-navbar>
         <view class="tipic-info">
             <view class="topic-box">
-                <u-image v-if="postInfo.imgIcon" class="topic-img" width="100rpx" height="100rpx" :src="postInfo.imgIcon" border-radius="10" bg-color="#f04a82"></u-image>
-                <u-image v-else class="topic-img" width="100rpx" height="100rpx" src="../../static/logo_1.png" border-radius="10" bg-color="#f04a82"></u-image>
+                <u-image 
+                    class="topic-img" 
+                    width="100rpx" 
+                    height="100rpx" 
+                    border-radius="10" 
+                    bg-color="#f04a82"
+                    :src="postInfo.imgIcon || '../../static/logo_1.png'"
+                ></u-image>
                 <view class="topic-title">
                     <u-gap height="10"></u-gap>
-                    <b>{{postInfo.keyword}}</b>
+                    <b>{{ postInfo.keyword || '#' }}</b>
                     <u-gap height="10"></u-gap>
-                    <view class="font-26">{{postInfo.describe}}</view>
+                    <view class="font-26">{{ postInfo.describe }}</view>
                 </view>
             </view>
             <view class="topic-data">
-                <view>{{ $t('index.views') + '：' + postInfo.readSum }}</view>
-                <view>{{ $t('index.discuss') + '：' + postInfo.total }}</view>
+                <view>{{ $t('index.views') + '：' + (postInfo.readSum || 0) }}</view>
+                <view>{{ $t('index.discuss') + '：' + (postInfo.total || 0) }}</view>
                 <view 
                     @click="goUrl('/pages/my/userInfo?userAddress=' + postInfo.userAddress)"
-                >{{ $t('index.founder') + '：' + (postInfo.nickname ? postInfo.nickname : postInfo.userAddress?.slice(-4)) }}</view>
+                >{{ $t('index.founder') + '：' + ( 
+                    postInfo.nickname ? postInfo.nickname : postInfo.userAddress?.slice(-4) || "..." 
+                    )}}</view>
             </view>
         </view>
         <TopicList :postList="postList"></TopicList>

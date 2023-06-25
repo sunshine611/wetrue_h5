@@ -147,7 +147,7 @@ const changeLang = () => {
                                 @click="goUrl('topicList?type=myTopic')"
                             >
                                 <view class="value">
-                                    {{ userStore.userInfo?.topic || 0 }}
+                                    {{ userStore.userInfo.topic || 0}}
                                 </view>
                                 <view class="label">{{ $t('my.topic') }}</view>
                             </view>
@@ -156,13 +156,13 @@ const changeLang = () => {
                                 @click="goUrl('topicList?type=myStar')"
                             >
                                 <view class="value">
-                                    {{ userStore.userInfo?.star || 0 }}
+                                    {{ userStore.userInfo.star }}
                                 </view>
                                 <view class="label">{{ $t('my.star') }}</view>
                             </view>
                             <view class="item">
                                 <view class="value">
-                                    {{ userStore.userInfo?.active || 0 }}
+                                    {{ userStore.userInfo.active || 0 }}
                                 </view>
                                 <view class="label">{{ $t('my.active') }}</view>
                             </view>
@@ -171,7 +171,7 @@ const changeLang = () => {
                                 @click="goUrl('userList?type=focus')"
                             >
                                 <view class="value">
-                                    {{ userStore.userInfo?.focus || 0 }}
+                                    {{ userStore.userInfo.focus || 0 }}
                                 </view>
                                 <view class="label">{{ $t('my.focus') }}</view>
                             </view>
@@ -180,7 +180,7 @@ const changeLang = () => {
                                 @click="goUrl('userList?type=fans')"
                             >
                                 <view class="value">
-                                    {{ userStore.userInfo?.fans || 0 }}
+                                    {{ userStore.userInfo.fans || 0 }}
                                 </view>
                                 <view class="label">{{ $t('my.fans') }}</view>
                             </view>

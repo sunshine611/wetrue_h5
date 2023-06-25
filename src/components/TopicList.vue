@@ -135,8 +135,8 @@ const releaseCallback = (item) => {
                             <TopicMore :topicInfo="item" :postList="postList" class="mr-10"></TopicMore>
                         </view>
                         <view class="time">
-                            <text>{{ $moment(item.utcTime).fromNow() }}</text
-                            >{{ $t('index.source') + item.source /*+ '-' + item.chainId*/ }}
+                            <text>{{ $moment(item.utcTime).fromNow() }}</text>
+                            <text>{{ $t('index.source') + item.source }}</text>
                         </view>
                     </view>
                 </view>
@@ -184,8 +184,7 @@ const releaseCallback = (item) => {
                     >
                         <Icon
                             icon="fa-regular:comment-alt"
-                            width="15"
-                            class="mr-10"
+                            width="14"
                             color="#666"
                         />
                         {{ item.commentNumber }}
@@ -193,8 +192,7 @@ const releaseCallback = (item) => {
                     <view class="item" @tap="star(item)">
                         <Icon
                             :icon="item.isStar ? 'ph:star-fill' : 'ph:star'"
-                            width="18"
-                            class="mr-10"
+                            width="16"
                             :color="item.isStar ? '#ffc107' : '#666'"
                         />
                         {{ item.star }}
@@ -203,8 +201,7 @@ const releaseCallback = (item) => {
                         <Icon
                             :icon="item.isPraise ? 'ri:thumb-up-fill' : 'ri:thumb-up-line'"
                             :color="item.isPraise ? '#f04a82' : '#666'"
-                            class="mr-10"
-                            size="18"
+                            width="16"
                         />
                         {{ item.praise }}
                     </view>

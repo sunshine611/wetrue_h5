@@ -149,10 +149,13 @@ const share = () => {
                         ></TopicMore>
                     </view>
                     <view class="time">
-                        <text class="mr-20">{{
-                            $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm")
-                        }}</text
-                        >{{ $t('index.source') + postInfo.source /*+ '-' + postInfo.chainId */ }}
+                        <text class="mr-20">
+                            {{ $moment(postInfo.utcTime).format("yyyy-MM-DD HH:mm") }}
+                        </text>
+                        <text class="mr-20">
+                            {{ $t('index.source') + postInfo.source }}
+                        </text>
+                        
                     </view>
                 </view>
             </view>
@@ -225,15 +228,7 @@ const share = () => {
                     </view>
                 </view>
                 <view class="more">
-                    <text class="mr-24"
-                        >{{ postInfo.read }}
-                        <Icon
-                            icon="fe:bar-chart"
-                            width="18"
-                            class="ml-6"
-                            color="#666"
-                        />
-                    </text>
+                    
                     <Icon
                         :icon="postInfo.isStar ? 'ph:star-fill' : 'ph:star'"
                         width="18"
@@ -250,13 +245,22 @@ const share = () => {
                         @click="copy"
                     />
                     <Icon
-                        icon="fa:share-alt"
+                        icon="ri:share-line"
                         width="18"
-                        class="mr-10"
+                        class="mr-24"
                         color="#666"
                         id="share"
                         @click="share"
                     />
+                    <text class="mr-10">
+                        <Icon
+                            icon="fe:bar-chart"
+                            width="18"
+                            class="ml-6"
+                            color="#666"
+                        />
+                        {{ postInfo.read }}
+                    </text>
                 </view>
             </view>
         </view>
@@ -356,7 +360,7 @@ const share = () => {
                 padding: 20rpx 0 0 0;
                 border-top: 2rpx solid #e5e5e5;
                 color: #666;
-                text-align: right;
+                text-align: right;              
             }
         }
     }

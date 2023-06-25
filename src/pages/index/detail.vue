@@ -339,13 +339,13 @@ const praise = (type, item) => {
         <view :style="{height:`${statusBarHeight}px`, background:'#f04a82'}"></view>
         <u-navbar :is-fixed="false" :title="$t('index.contentDetails')" v-show="!validThirdPartySource()">
             <template v-slot:right>
-                <u-icon
-                    name="home"
-                    class="mr-30"
-                    size="34"
+                <Icon
+                    icon="octicon:home-16"
                     color="#f04a82"
+                    class="mr-30"
+                    width="18"
                     @click="reLaunchUrl('index')"
-                ></u-icon>
+                />
             </template>
         </u-navbar>
         <TopicContent :postInfo="postInfo"></TopicContent>
@@ -371,8 +371,8 @@ const praise = (type, item) => {
                             <HeadImg
                                 :userInfo="item.users"
                                 :isLink="true"
-                                width="70rpx"
-                                height="70rpx"
+                                width="80rpx"
+                                height="80rpx"
                             ></HeadImg>
                         </view>
                     </view>
@@ -384,19 +384,12 @@ const praise = (type, item) => {
                                 :class="{ highlight: item.isPraise }"
                             >
                                 <view class="num">{{ item.praise }}</view>
-                                <u-icon
-                                    v-if="!item.isPraise"
-                                    name="thumb-up"
-                                    :size="30"
-                                    color="#9a9a9a"
+                                <Icon
+                                    :icon="item.isPraise ? 'ri:thumb-up-fill' : 'ri:thumb-up-line'"
+                                    :color="item.isPraise ? '#f04a82' : ''"
+                                    class="mr-10"
                                     @click="praise('comment', item)"
-                                ></u-icon>
-                                <u-icon
-                                    v-if="item.isPraise"
-                                    name="thumb-up-fill"
-                                    :size="30"
-                                    @click="praise('comment', item)"
-                                ></u-icon>
+                                />
                                 <TopicMore
                                     :topicInfo="item"
                                     class="ml-20"
@@ -404,8 +397,8 @@ const praise = (type, item) => {
                             </view>
                         </view>
                         <view class="content">
-                            <mp-html :content="item.payload" :selectable="true"
-                        /></view>
+                            <mp-html :content="item.payload" :selectable="true"/>
+                        </view>
                         <view
                             class="reply-box"
                             v-show="item.commentList.length > 0"
@@ -415,54 +408,41 @@ const praise = (type, item) => {
                                 v-for="(item, index) in item.commentList"
                                 :key="index"
                             >
-                                <view class="text" @click="reply(item)"
-                                    ><text
-                                        :class="[
-                                            'name',
-                                            item.users.isAuth ? 'auth' : '',
-                                        ]"
-                                        @click.stop="
-                                            goUrl(
-                                                '/pages/my/userInfo?userAddress=' +
-                                                    item.users.userAddress
-                                            )">
-                                        
-                                        <Icon
-                                            v-if="item.users.isAuth"
-                                            icon="arcticons:2fas-auth"
-                                            width="10"
-                                            color="#2979FF"
-                                            class="mr-4"
-                                        />
-                                        {{
-                                            item.users.nickname ||
-                                            item.users.userAddress.slice(-4)
-                                        }}</text>
+                                <view class="text" @click="reply(item)">
+                                    <text
+                                    :class="['name', item.users.isAuth ? 'auth' : '']"
+                                    @click.stop="goUrl(
+                                            '/pages/my/userInfo?userAddress=' +
+                                                item.users.userAddress
+                                    )">
+                                    <Icon
+                                        v-if="item.users.isAuth"
+                                        icon="line-md:moon-to-sunny-outline-loop-transition"
+                                        width="10"
+                                        color="#2979FF"
+                                        class="mr-4"
+                                    />
+                                    {{ item.users.nickname || item.users.userAddress.slice(-4) }}
+                                    </text>
                                         <text v-if="item.replyHash">
                                             {{ $t('index.reply') }}
                                         </text>
-                                        <text
-                                        :class="[
-                                            'name',
-                                            item.receiverIsAuth ? 'auth' : '',
-                                        ]"
-                                        @click.stop="
-                                            goUrl(
+                                        <text :class="['name',item.receiverIsAuth ? 'auth' : '']"
+                                        @click.stop="goUrl(
                                                 '/pages/my/userInfo?userAddress=' +
                                                     item.toAddress
-                                            )
-                                        "
-                                        v-if="item.replyHash"
-                                        >{{
-                                            "@" +
-                                            (item.receiverName ||
-                                                item.toAddress.slice(-4))
-                                        }}</text
-                                    >: <mp-html
-                                        class="compiler"
-                                        :content="item.payload"
-                                        :selectable="true"
-                                /></view>
+                                        )"
+                                        v-show="item.replyHash">
+                                        {{"@" +
+                                            (item.receiverName || item.toAddress.slice(-4))
+                                        }}
+                                        </text>: 
+                                        <mp-html
+                                            class="compiler"
+                                            :content="item.payload"
+                                            :selectable="true"
+                                        />
+                                    </view>
                             </view>
                             <view
                                 v-if="item.replyNumber > 3"
